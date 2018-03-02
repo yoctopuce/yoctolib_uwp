@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YRelay.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YRelay.cs 30191 2018-02-28 12:57:32Z seb $
  *
  * Implements FindRelay(), the high-level API for Relay functions
  *
@@ -184,6 +184,18 @@ public class YRelay : YFunction
         }
         if (json_val.has("pulseTimer")) {
             _pulseTimer = json_val.getLong("pulseTimer");
+        }
+        if (json_val.has("delayedPulseTimer")) {
+            YJSONObject subjson = json_val.getYJSONObject("delayedPulseTimer");
+            if (subjson.has("moving")) {
+                _delayedPulseTimer.moving = subjson.getInt("moving");
+            }
+            if (subjson.has("target")) {
+                _delayedPulseTimer.target = subjson.getInt("target");
+            }
+            if (subjson.has("ms")) {
+                _delayedPulseTimer.ms = subjson.getInt("ms");
+            }
         }
         if (json_val.has("countdown")) {
             _countdown = json_val.getLong("countdown");
@@ -555,6 +567,63 @@ public class YRelay : YFunction
         string rest_val;
         rest_val = (ms_duration).ToString();
         await _setAttr("pulseTimer",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<YDelayedPulse> get_delayedPulseTimer()
+    {
+        YDelayedPulse res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+                return DELAYEDPULSETIMER_INVALID;
+            }
+        }
+        res = _delayedPulseTimer;
+        return res;
+    }
+
+
+    public async Task<int> set_delayedPulseTimer(YDelayedPulse  newval)
+    {
+        string rest_val;
+        rest_val = (newval.target).ToString()+":"+(newval.ms).ToString();
+        await _setAttr("delayedPulseTimer",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Schedules a pulse.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="ms_delay">
+     *   waiting time before the pulse, in millisecondes
+     * </param>
+     * <param name="ms_duration">
+     *   pulse duration, in millisecondes
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> delayedPulse(int ms_delay,int ms_duration)
+    {
+        string rest_val;
+        rest_val = (ms_delay).ToString()+":"+(ms_duration).ToString();
+        await _setAttr("delayedPulseTimer",rest_val);
         return YAPI.SUCCESS;
     }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YServo.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YServo.cs 30191 2018-02-28 12:57:32Z seb $
  *
  * Implements FindServo(), the high-level API for Servo functions
  *
@@ -165,6 +165,18 @@ public class YServo : YFunction
         }
         if (json_val.has("neutral")) {
             _neutral = json_val.getInt("neutral");
+        }
+        if (json_val.has("move")) {
+            YJSONObject subjson = json_val.getYJSONObject("move");
+            if (subjson.has("moving")) {
+                _move.moving = subjson.getInt("moving");
+            }
+            if (subjson.has("target")) {
+                _move.target = subjson.getInt("target");
+            }
+            if (subjson.has("ms")) {
+                _move.ms = subjson.getInt("ms");
+            }
         }
         if (json_val.has("positionAtPowerOn")) {
             _positionAtPowerOn = json_val.getInt("positionAtPowerOn");
@@ -412,6 +424,63 @@ public class YServo : YFunction
         string rest_val;
         rest_val = (newval).ToString();
         await _setAttr("neutral",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<YMove> get_move()
+    {
+        YMove res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+                return MOVE_INVALID;
+            }
+        }
+        res = _move;
+        return res;
+    }
+
+
+    public async Task<int> set_move(YMove  newval)
+    {
+        string rest_val;
+        rest_val = (newval.target).ToString()+":"+(newval.ms).ToString();
+        await _setAttr("move",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Performs a smooth move at constant speed toward a given position.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="target">
+     *   new position at the end of the move
+     * </param>
+     * <param name="ms_duration">
+     *   total duration of the move, in milliseconds
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> move(int target,int ms_duration)
+    {
+        string rest_val;
+        rest_val = (target).ToString()+":"+(ms_duration).ToString();
+        await _setAttr("move",rest_val);
         return YAPI.SUCCESS;
     }
 

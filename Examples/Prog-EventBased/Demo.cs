@@ -6,42 +6,42 @@ using com.yoctopuce.YoctoAPI;
 
 namespace Demo
 {
-    public class Demo : DemoBase
+  public class Demo : DemoBase
+  {
+    public Demo(string url, TextBlock textBlock) : base(url, textBlock)
+    { }
+
+    public string target { get; set; }
+    public string newname { get; set; }
+
+    public override async Task<int> Run()
     {
-        public Demo(string url, TextBlock textBlock) : base(url, textBlock)
-        { }
+      try {
+        YModule m;
 
-        public string target { get; set; }
-        public string newname { get; set; }
+        await YAPI.RegisterHub(_hubULR);
 
-        public override async Task<int> Run()
-        {
-            try {
-                YModule m;
+        m = YModule.FindModule(target); // use serial or logical name
 
-                await YAPI.RegisterHub(_hubULR);
+        if (await m.isOnline()) {
+          if (!YAPI.CheckLogicalName(newname)) {
+            WriteLine("Invalid name (" + newname + ")");
+            return -1;
+          }
 
-                m = YModule.FindModule(target); // use serial or logical name
+          await m.set_logicalName(newname);
+          await m.saveToFlash(); // do not forget this
 
-                if (await m.isOnline()) {
-                    if (!YAPI.CheckLogicalName(newname)) {
-                        WriteLine("Invalid name (" + newname + ")");
-                        return -1;
-                    }
-
-                    await m.set_logicalName(newname);
-                    await m.saveToFlash(); // do not forget this
-
-                    Write("Module: serial= " + await m.get_serialNumber());
-                    WriteLine(" / name= " + await m.get_logicalName());
-                } else {
-                    Write("not connected (check identification and USB cable");
-                }
-            } catch (YAPI_Exception ex) {
-                WriteLine("RegisterHub error: " + ex.Message);
-            }
-            YAPI.FreeAPI();
-            return 0;
+          Write("Module: serial= " + await m.get_serialNumber());
+          WriteLine(" / name= " + await m.get_logicalName());
+        } else {
+          Write("not connected (check identification and USB cable");
         }
+      } catch (YAPI_Exception ex) {
+        WriteLine("RegisterHub error: " + ex.Message);
+      }
+      YAPI.FreeAPI();
+      return 0;
     }
+  }
 }

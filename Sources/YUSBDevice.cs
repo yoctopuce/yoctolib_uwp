@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBDevice.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YUSBDevice.cs 30040 2018-02-22 11:23:12Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -40,6 +40,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
@@ -72,6 +73,7 @@ namespace com.yoctopuce.YoctoAPI
             if (debug_pos > 0) {
                 _debug_name = _debug_name.Substring(0, debug_pos);
             }
+
             _asyncResult = asyncResult;
             _asyncContext = asyncContext;
             _tm_start = YAPI.GetTickCount();
@@ -87,6 +89,7 @@ namespace com.yoctopuce.YoctoAPI
             if (_asyncResult != null) {
                 res += "async";
             }
+
             res += " res_len=" + _response_size;
             ulong now = YAPI.GetTickCount();
             res += " tmout=" + (_timeout - _tm_start);
@@ -103,6 +106,7 @@ namespace com.yoctopuce.YoctoAPI
                 Buffer.BlockCopy(_response, 0, tmp, 0, _response.Length);
                 _response = tmp;
             }
+
             uint len = stream.imm_CopyData(_response, _response_size);
             _response_size += len;
         }
@@ -142,6 +146,7 @@ namespace com.yoctopuce.YoctoAPI
                 ofs += hpos + 4;
                 size -= hpos + 4;
             }
+
             byte[] res = new byte[size];
             Buffer.BlockCopy(_response, ofs, res, 0, size);
             return res;
@@ -245,6 +250,7 @@ namespace com.yoctopuce.YoctoAPI
                 _devState = DevState.IOError;
                 throw new YAPI_Exception(YAPI.IO_ERROR, "Unable to send Reset PKT");
             }
+
             Task<bool> task = _currentTask.Task;
             Task taskDone = await Task.WhenAny(task, Task.Delay(1000));
             if (taskDone != task) {
@@ -291,6 +297,7 @@ namespace com.yoctopuce.YoctoAPI
                 } else {
                     _yctx._Log("Device is using an older protocol, consider upgrading the device firmware\n");
                 }
+
                 return 0;
             } else {
                 return 1;
@@ -314,6 +321,7 @@ namespace com.yoctopuce.YoctoAPI
                     if (s == null) {
                         break;
                     }
+
                     //Debug.WriteLine(s.ToString());
                     streams.Add(s);
                     ofs += s.Len + 2;
@@ -325,6 +333,7 @@ namespace com.yoctopuce.YoctoAPI
                         if (streamHead.PktType != YUSBPkt.YPKT_CONF || streamHead.StreamType != YUSBPkt.USB_CONF_RESET) {
                             return;
                         }
+
                         byte low = streamHead.imm_GetByte(0);
                         uint hig = streamHead.imm_GetByte(1);
                         uint devapi = (hig << 8) + low;
@@ -332,17 +341,20 @@ namespace com.yoctopuce.YoctoAPI
                         if (imm_CheckVersionCompatibility(devapi) < 0) {
                             return;
                         }
+
                         await Start(_pktAckDelay);
                         break;
                     case DevState.StartSend:
                         if (streamHead.PktType != YUSBPkt.YPKT_CONF || streamHead.StreamType != YUSBPkt.USB_CONF_START) {
                             return;
                         }
+
                         if (_devVersion >= YUSBPkt.YPKT_USB_VERSION_BCD) {
                             _pktAckDelay = streamHead.imm_GetByte(1);
                         } else {
                             _pktAckDelay = 0;
                         }
+
                         _lastpktno = streamHead.PktNumber;
                         _devState = DevState.StartReceived;
                         break;
@@ -353,6 +365,7 @@ namespace com.yoctopuce.YoctoAPI
                                 //late retry : drop it since we already have the packet.
                                 return;
                             }
+
                             uint expectedPktNo = (_lastpktno + 1) & 7;
                             if (streamHead.PktNumber != expectedPktNo) {
                                 String message = "Missing packet (look of pkt " + expectedPktNo + " but get " + streamHead.PktNumber + ")";
@@ -362,10 +375,12 @@ namespace com.yoctopuce.YoctoAPI
                                 _watcher.imm_removeUsableDevice(this);
                                 return;
                             }
+
                             _lastpktno = streamHead.PktNumber;
                             await streamHandler(streams);
                             await checkMetaUTC();
                         }
+
                         break;
                     default:
                         return;
@@ -389,6 +404,7 @@ namespace com.yoctopuce.YoctoAPI
                     return ypEntry;
                 }
             }
+
             return null;
         }
 
@@ -402,6 +418,7 @@ namespace com.yoctopuce.YoctoAPI
                     _devState = DevState.IOError;
                     throw new YAPI_Exception(YAPI.IO_ERROR, "Unable to send Start PKT");
                 }
+
                 _lastMetaUTC = YAPI.GetTickCount();
             }
         }
@@ -421,6 +438,7 @@ namespace com.yoctopuce.YoctoAPI
                         if (_devState != DevState.StreamReadyReceived || _currentRequest == null) {
                             continue;
                         }
+
                         _currentRequest.imm_AddIncommingData(s);
                         if (streamType == YGenericHub.YSTREAM_TCP_CLOSE) {
                             // construct a HID output report to send to the device
@@ -433,8 +451,10 @@ namespace com.yoctopuce.YoctoAPI
                                 _watcher.imm_removeUsableDevice(this);
                                 return;
                             }
+
                             _currentRequest.imm_Close();
                         }
+
                         break;
                     case YGenericHub.YSTREAM_EMPTY:
                         break;
@@ -442,11 +462,13 @@ namespace com.yoctopuce.YoctoAPI
                         if (_devState == DevState.StreamReadyReceived) {
                             imm_handleTimedNotification(s);
                         }
+
                         break;
                     case YGenericHub.YSTREAM_REPORT_V2:
                         if (_devState == DevState.StreamReadyReceived) {
                             handleTimedNotificationV2(s);
                         }
+
                         break;
                     default:
                         _yctx._Log("drop unknown ystream:" + s);
@@ -474,6 +496,7 @@ namespace com.yoctopuce.YoctoAPI
                                 // added on 2015-02-25, remove code below when confirmed dead code
                                 throw new YAPI_Exception(YAPI.IO_ERROR, "Hub Should not fwd notification");
                             }
+
                             int len = (int) ystream.Len;
                             byte[] data = new byte[len];
                             ystream.imm_CopyData(data, 0);
@@ -487,6 +510,7 @@ namespace com.yoctopuce.YoctoAPI
                 if (SerialNumber == null) {
                     SerialNumber = serial;
                 }
+
                 uint p = YAPI.YOCTO_SERIAL_LEN;
                 int type = ystream.imm_GetByte(p++);
                 switch (type) {
@@ -512,6 +536,7 @@ namespace com.yoctopuce.YoctoAPI
                         if (!_usbYP.ContainsKey(functionId)) {
                             _usbYP[functionId] = new YPEntry(serial, functionId, YPEntry.BaseClass.Function);
                         }
+
                         _usbYP[functionId].LogicalName = funcname;
                         break;
                     case NOTIFY_PKT_FUNCVAL:
@@ -539,6 +564,7 @@ namespace com.yoctopuce.YoctoAPI
                         if (!_usbYP.ContainsKey(functionId)) {
                             _usbYP[functionId] = new YPEntry(serial, functionId, YPEntry.BaseClass.forByte(funclass));
                         }
+
                         // update ydx
                         _usbYP[functionId].Index = funydx;
                         _usbYP[functionId].LogicalName = funcname;
@@ -571,11 +597,13 @@ namespace com.yoctopuce.YoctoAPI
                     _yctx._Log("drop invalid timedNotification");
                     return;
                 }
+
                 if (funYdx == 0xf) {
                     byte[] intData = new byte[len];
                     for (uint i = 0; i < len; i++) {
                         intData[i] = data.imm_GetByte(pos + i);
                     }
+
                     ydev.imm_setDeviceTime(intData);
                 } else {
                     YPEntry yp = imm_getYPEntryFromYdx(funYdx);
@@ -586,9 +614,11 @@ namespace com.yoctopuce.YoctoAPI
                             int b = data.imm_GetByte(pos + i) & 0xff;
                             report.Add(b);
                         }
+
                         _hub.imm_handleTimedNotification(yp.Serial, yp.FuncId, ydev.imm_getDeviceTime(), report);
                     }
                 }
+
                 pos += len;
             }
         }
@@ -602,6 +632,7 @@ namespace com.yoctopuce.YoctoAPI
                 // device has not been registered;
                 return;
             }
+
             while (pos < data.Len) {
                 int funYdx = data.imm_GetByte(pos) & 0xf;
                 uint extralen = (uint) ((data.imm_GetByte(pos) >> 4) & 0xf);
@@ -612,6 +643,7 @@ namespace com.yoctopuce.YoctoAPI
                     for (uint i = 0; i < len; i++) {
                         intData[i] = data.imm_GetByte(pos + i);
                     }
+
                     ydev.imm_setDeviceTime(intData);
                 } else {
                     YPEntry yp = imm_getYPEntryFromYdx(funYdx);
@@ -622,9 +654,11 @@ namespace com.yoctopuce.YoctoAPI
                             int b = data.imm_GetByte(pos + i) & 0xff;
                             report.Add(b);
                         }
+
                         _hub.imm_handleTimedNotification(yp.Serial, yp.FuncId, ydev.imm_getDeviceTime(), report);
                     }
                 }
+
                 pos += len;
             }
         }
@@ -650,26 +684,34 @@ namespace com.yoctopuce.YoctoAPI
         {
             int pos = 0;
 
-
-            if (_currentRequest != null) {
-                await _currentRequest.GetResponse();
-            }
-            //Debug.WriteLine(string.Format("{0}:Check last request is sent", Environment.CurrentManagedThreadId));
-            _currentRequest = new YRequest(request, asyncResult, asyncContext, 10000);
-            while (pos < request.Length) {
-                // construct a HID output report to send to the device
-                HidOutputReport outReport = Hid.CreateOutputReport();
-                int size = YUSBPkt.imm_FormatTCP(outReport, request, pos, true);
-                // Send the output report asynchronously
-                var u = await Hid.SendOutputReportAsync(outReport);
-                if (u != 65) {
-                    _devState = DevState.IOError;
-                    _watcher.imm_removeUsableDevice(this);
-                    return;
+            try {
+                if (_currentRequest != null) {
+                    await _currentRequest.GetResponse();
                 }
-                pos += size;
+
+                //Debug.WriteLine(string.Format("{0}:Check last request is sent", Environment.CurrentManagedThreadId));
+                _currentRequest = new YRequest(request, asyncResult, asyncContext, 10000);
+                while (pos < request.Length) {
+                    // construct a HID output report to send to the device
+                    HidOutputReport outReport = Hid.CreateOutputReport();
+                    int size = YUSBPkt.imm_FormatTCP(outReport, request, pos, true);
+                    // Send the output report asynchronously
+                    var u = await Hid.SendOutputReportAsync(outReport);
+                    if (u != 65) {
+                        _devState = DevState.IOError;
+                        _watcher.imm_removeUsableDevice(this);
+                        return;
+                    }
+
+                    pos += size;
+                }
+
+                //Debug.WriteLine(string.Format("{0}:sent", Environment.CurrentManagedThreadId));
+            } catch (Exception ex) {
+                _devState = DevState.IOError;
+                _currentRequest = null;
+                throw new YAPI_Exception(YAPI.IO_ERROR ,ex.Message);
             }
-            //Debug.WriteLine(string.Format("{0}:sent", Environment.CurrentManagedThreadId));
         }
 
 
@@ -678,6 +720,7 @@ namespace com.yoctopuce.YoctoAPI
             if (_devState != DevState.StreamReadyReceived) {
                 throw new YAPI_Exception(YAPI.IO_ERROR, "Device not ready");
             }
+
             await sendRequest(request, null, null);
             byte[] res = await _currentRequest.GetResponse();
             _currentRequest = null;
@@ -689,6 +732,7 @@ namespace com.yoctopuce.YoctoAPI
             if (_devState != DevState.StreamReadyReceived) {
                 throw new YAPI_Exception(YAPI.IO_ERROR, "Device not ready");
             }
+
             await sendRequest(request, asyncResult, asyncContext);
         }
 

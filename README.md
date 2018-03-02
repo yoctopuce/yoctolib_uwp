@@ -1,5 +1,5 @@
-Yoctopuce library for UWP
-=========================
+Yoctopuce library for Universal Windows Platform (UWP)
+======================================================
 
 ## License information
 
@@ -41,21 +41,21 @@ WARRANTY, OR OTHERWISE.
 
 		List of files contained in this archive
 
-* RELEASE.ms
+* RELEASE.txt
 
 		Release notes
 
 * Documentation/
 
-		API Reference, in HTML and PDF format
+		API Reference, in HTML
 
 * Examples/
 
-		Directory with sample programs in C#
+		Directory with sample Visual Studio 2017 project written C#
 
 * Sources/
 
-		Source code of the high-level library (in C#)
+		Source files (in C#) of the library to include in an UWP project
 
 
 

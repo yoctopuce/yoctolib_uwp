@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YColorLed.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YColorLed.cs 30191 2018-02-28 12:57:32Z seb $
  *
  * Implements FindColorLed(), the high-level API for ColorLed functions
  *
@@ -167,6 +167,30 @@ public class YColorLed : YFunction
         if (json_val.has("hslColor")) {
             _hslColor = json_val.getInt("hslColor");
         }
+        if (json_val.has("rgbMove")) {
+            YJSONObject subjson = json_val.getYJSONObject("rgbMove");
+            if (subjson.has("moving")) {
+                _rgbMove.moving = subjson.getInt("moving");
+            }
+            if (subjson.has("target")) {
+                _rgbMove.target = subjson.getInt("target");
+            }
+            if (subjson.has("ms")) {
+                _rgbMove.ms = subjson.getInt("ms");
+            }
+        }
+        if (json_val.has("hslMove")) {
+            YJSONObject subjson = json_val.getYJSONObject("hslMove");
+            if (subjson.has("moving")) {
+                _hslMove.moving = subjson.getInt("moving");
+            }
+            if (subjson.has("target")) {
+                _hslMove.target = subjson.getInt("target");
+            }
+            if (subjson.has("ms")) {
+                _hslMove.ms = subjson.getInt("ms");
+            }
+        }
         if (json_val.has("rgbColorAtPowerOn")) {
             _rgbColorAtPowerOn = json_val.getInt("rgbColorAtPowerOn");
         }
@@ -306,6 +330,120 @@ public class YColorLed : YFunction
         string rest_val;
         rest_val = "0x"+(newval).ToString("X");
         await _setAttr("hslColor",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<YMove> get_rgbMove()
+    {
+        YMove res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+                return RGBMOVE_INVALID;
+            }
+        }
+        res = _rgbMove;
+        return res;
+    }
+
+
+    public async Task<int> set_rgbMove(YMove  newval)
+    {
+        string rest_val;
+        rest_val = (newval.target).ToString()+":"+(newval.ms).ToString();
+        await _setAttr("rgbMove",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Performs a smooth transition in the RGB color space between the current color and a target color.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="rgb_target">
+     *   desired RGB color at the end of the transition
+     * </param>
+     * <param name="ms_duration">
+     *   duration of the transition, in millisecond
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> rgbMove(int rgb_target,int ms_duration)
+    {
+        string rest_val;
+        rest_val = (rgb_target).ToString()+":"+(ms_duration).ToString();
+        await _setAttr("rgbMove",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<YMove> get_hslMove()
+    {
+        YMove res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+                return HSLMOVE_INVALID;
+            }
+        }
+        res = _hslMove;
+        return res;
+    }
+
+
+    public async Task<int> set_hslMove(YMove  newval)
+    {
+        string rest_val;
+        rest_val = (newval.target).ToString()+":"+(newval.ms).ToString();
+        await _setAttr("hslMove",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Performs a smooth transition in the HSL color space between the current color and a target color.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="hsl_target">
+     *   desired HSL color at the end of the transition
+     * </param>
+     * <param name="ms_duration">
+     *   duration of the transition, in millisecond
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> hslMove(int hsl_target,int ms_duration)
+    {
+        string rest_val;
+        rest_val = (hsl_target).ToString()+":"+(ms_duration).ToString();
+        await _setAttr("hslMove",rest_val);
         return YAPI.SUCCESS;
     }
 
