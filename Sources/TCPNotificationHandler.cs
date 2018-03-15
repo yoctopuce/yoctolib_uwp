@@ -128,7 +128,7 @@ namespace com.yoctopuce.YoctoAPI
         {
             ulong start = YAPI.GetTickCount();
             if (!_httpReqByDev.ContainsKey(device)) {
-                _httpReqByDev[device] = new YHTTPRequest(_hub, "Device " + device.SerialNumber);
+                _httpReqByDev[device] = new YHTTPRequest(_hub, "Device " + device.imm_getSerialNumber());
             }
 
             YHTTPRequest req = _httpReqByDev[device];
@@ -143,7 +143,7 @@ namespace com.yoctopuce.YoctoAPI
         {
             ulong start = YAPI.GetTickCount();
             if (!_httpReqByDev.ContainsKey(device)) {
-                _httpReqByDev[device] = new YHTTPRequest(_hub, "Device " + device.SerialNumber);
+                _httpReqByDev[device] = new YHTTPRequest(_hub, "Device " + device.imm_getSerialNumber());
             }
 
             YHTTPRequest req = _httpReqByDev[device];

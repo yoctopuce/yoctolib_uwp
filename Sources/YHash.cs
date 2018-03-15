@@ -25,8 +25,8 @@ namespace com.yoctopuce.YoctoAPI
         // Reindex a device in YAPI after a name change detected by device refresh
         internal virtual void imm_reindexDevice(YDevice dev)
         {
-            string serial = dev.SerialNumber;
-            string lname = dev.LogicalName;
+            string serial = dev.imm_getSerialNumber();
+            string lname = dev.imm_getLogicalName();
             _devs[serial] = dev;
 
             if (!lname.Equals("")) {
@@ -78,7 +78,7 @@ namespace com.yoctopuce.YoctoAPI
             if (dev == null) {
                 return;
             }
-            string lname = dev.LogicalName;
+            string lname = dev.imm_getLogicalName();
             _devs.Remove(serial);
             if (_snByName.ContainsKey(lname) && _snByName[lname].Equals(serial)) {
                 _snByName.Remove(lname);

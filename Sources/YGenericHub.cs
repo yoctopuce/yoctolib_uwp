@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 29769 2018-01-26 08:54:48Z seb $
+ * $Id: YGenericHub.cs 30232 2018-03-05 14:15:57Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -240,11 +240,11 @@ namespace com.yoctopuce.YoctoAPI
                 if (_devices.ContainsKey(serial)) {
                     // already there
                     YDevice currdev = _devices[serial];
-                    if (!currdev.LogicalName.Equals(wp.LogicalName)) {
+                    if (!currdev.imm_getLogicalName().Equals(wp.LogicalName)) {
                         // Reindex device from its own data
                         await currdev.refresh();
                         _yctx._pushPlugEvent(YAPIContext.PlugEvent.Event.CHANGE, serial);
-                    } else if (currdev.Beacon > 0 != wp.Beacon > 0) {
+                    } else if (currdev.imm_getBeacon() > 0 != wp.Beacon > 0) {
                         await currdev.refresh();
                     }
 
@@ -259,7 +259,7 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             foreach (YDevice dev in toRemove) {
-                string serial = dev.SerialNumber;
+                string serial = dev.imm_getSerialNumber();
                 _yctx._pushPlugEvent(YAPIContext.PlugEvent.Event.UNPLUG, serial);
                 _yctx._Log("HUB: device " + serial + " has been unplugged\n");
                 _devices.Remove(serial);
@@ -283,7 +283,7 @@ namespace com.yoctopuce.YoctoAPI
         public virtual string imm_get_urlOf(string serialNumber)
         {
             foreach (YDevice dev in _devices.Values) {
-                string devSerialNumber = dev.SerialNumber;
+                string devSerialNumber = dev.imm_getSerialNumber();
                 if (devSerialNumber.Equals(serialNumber)) {
                     return _http_params.imm_getUrl(true, false) + dev._wpRec.NetworkUrl;
                 }
@@ -296,7 +296,7 @@ namespace com.yoctopuce.YoctoAPI
         {
             List<string> res = new List<string>();
             foreach (YDevice dev in _devices.Values) {
-                string devSerialNumber = dev.SerialNumber;
+                string devSerialNumber = dev.imm_getSerialNumber();
                 if (devSerialNumber.Equals(serialNumber)) {
                     if (!dev._wpRec.NetworkUrl.Equals("")) {
                         //

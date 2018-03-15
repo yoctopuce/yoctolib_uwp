@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDevice.cs 30017 2018-02-21 12:43:54Z seb $
+ * $Id: YDevice.cs 30232 2018-03-05 14:15:57Z seb $
  *
  * Internal YDevice class
  *
@@ -98,32 +98,38 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         // Return the serial number of the device, as found during discovery
-        public virtual string SerialNumber {
-            get { return _wpRec.SerialNumber; }
+        internal string imm_getSerialNumber()
+        {
+            return _wpRec.SerialNumber;
         }
 
         // Return the logical name of the device, as found during discovery
-        public virtual string LogicalName {
-            get { return _wpRec.LogicalName; }
+        internal virtual string imm_getLogicalName()
+        {
+            return _wpRec.LogicalName;
         }
 
         // Return the product name of the device, as found during discovery
-        public virtual string ProductName {
-            get { return _wpRec.ProductName; }
+        internal virtual string imm_getProductName()
+        {
+            return _wpRec.ProductName;
         }
 
         // Return the product Id of the device, as found during discovery
-        public virtual int ProductId {
-            get { return _wpRec.ProductId; }
+        internal virtual int imm_getProductId()
+        {
+            return _wpRec.ProductId;
         }
 
-        internal virtual string RelativePath {
-            get { return _wpRec.NetworkUrl; }
+        internal virtual string imm_getRelativePath()
+        {
+            return _wpRec.NetworkUrl;
         }
 
         // Return the beacon state of the device, as found during discovery
-        public virtual int Beacon {
-            get { return _wpRec.Beacon; }
+        internal virtual int imm_getBeacon()
+        {
+            return _wpRec.Beacon;
         }
 
         // Get the whole REST API string for a device, from cache if possible
@@ -305,7 +311,7 @@ namespace com.yoctopuce.YoctoAPI
             string logs = resultStr.Substring(0, pos);
             string posStr = resultStr.Substring(pos + 1);
             _logpos = Convert.ToInt32(posStr);
-            YModule module = YModule.FindModuleInContext(_hub._yctx, SerialNumber);
+            YModule module = YModule.FindModuleInContext(_hub._yctx, imm_getSerialNumber());
             string[] lines = logs.Split('\n');
             foreach (string line in lines) {
                 _logCallback(module, line);
@@ -376,7 +382,7 @@ namespace com.yoctopuce.YoctoAPI
 
         public string get_debugMsg()
         {
-            return _hub.get_debugMsg(SerialNumber);
+            return _hub.get_debugMsg(imm_getSerialNumber());
         }
     }
 }

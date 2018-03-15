@@ -1,1 +1,4 @@
-- First offical release with all examples
+- Fix tcp socket that was not correctly closed
+- Fix crash when USB device is unplugged
+- Add missing XXXMove methods in YColorLed
+- Fix Device that was not removed from inventory after unplug

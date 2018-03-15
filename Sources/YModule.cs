@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 29558 2018-01-04 15:44:28Z seb $
+ * $Id: YModule.cs 30232 2018-03-05 14:15:57Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -433,7 +433,12 @@ public class YModule : YFunction
     public async Task<string> get_productName()
     {
         string res;
+        YDevice dev;
         if (_cacheExpiration == 0) {
+            dev = this.imm_getDev();
+            if (!(dev == null)) {
+                return dev.imm_getProductName();
+            }
             if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
                 return PRODUCTNAME_INVALID;
             }
@@ -461,7 +466,12 @@ public class YModule : YFunction
     public async Task<string> get_serialNumber()
     {
         string res;
+        YDevice dev;
         if (_cacheExpiration == 0) {
+            dev = this.imm_getDev();
+            if (!(dev == null)) {
+                return dev.imm_getSerialNumber();
+            }
             if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
                 return SERIALNUMBER_INVALID;
             }
@@ -489,7 +499,12 @@ public class YModule : YFunction
     public async Task<int> get_productId()
     {
         int res;
+        YDevice dev;
         if (_cacheExpiration == 0) {
+            dev = this.imm_getDev();
+            if (!(dev == null)) {
+                return dev.imm_getProductId();
+            }
             if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
                 return PRODUCTID_INVALID;
             }
@@ -670,7 +685,12 @@ public class YModule : YFunction
     public async Task<int> get_beacon()
     {
         int res;
+        YDevice dev;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            dev = this.imm_getDev();
+            if (!(dev == null)) {
+                return dev.imm_getBeacon();
+            }
             if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
                 return BEACON_INVALID;
             }

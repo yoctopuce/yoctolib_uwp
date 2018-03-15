@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 30017 2018-02-21 12:43:54Z seb $
+ * $Id: YAPIContext.cs 30226 2018-03-05 10:35:53Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -94,12 +94,12 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             public Event ev;
-            public YModule module;
+            public string serial;
 
             public PlugEvent(YAPIContext yctx, Event ev, string serial)
             {
                 this.ev = ev;
-                this.module = YModule.FindModuleInContext(yctx, serial + ".module");
+                this.serial = serial;
             }
         }
 
@@ -694,19 +694,22 @@ namespace com.yoctopuce.YoctoAPI
                     switch (evt.ev) {
                         case com.yoctopuce.YoctoAPI.YAPIContext.PlugEvent.Event.PLUG:
                             if (_arrivalCallback != null) {
-                                await _arrivalCallback(evt.module);
+                                YModule module = YModule.FindModuleInContext(this, evt.serial+".module");
+                                await _arrivalCallback(module);
                             }
                             break;
                         case com.yoctopuce.YoctoAPI.YAPIContext.PlugEvent.Event.CHANGE:
                             if (_namechgCallback != null) {
-                                await _namechgCallback(evt.module);
+                                YModule module = YModule.FindModuleInContext(this, evt.serial + ".module");
+                                await _namechgCallback(module);
                             }
                             break;
                         case com.yoctopuce.YoctoAPI.YAPIContext.PlugEvent.Event.UNPLUG:
                             if (_removalCallback != null) {
-                                await _removalCallback(evt.module);
+                                YModule module = YModule.FindModuleInContext(this, evt.serial + ".module");
+                                await _removalCallback(module);
                             }
-                            _yHash.imm_forgetDevice(await evt.module.get_serialNumber());
+                            _yHash.imm_forgetDevice(evt.serial);
                             break;
                     }
                 }

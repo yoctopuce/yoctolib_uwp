@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunctionType.cs 25191 2016-08-15 12:43:02Z seb $
+ * $Id: YFunctionType.cs 30232 2018-03-05 14:15:57Z seb $
  *
  * Internal YFunctionType object
  *
@@ -178,7 +178,7 @@ namespace com.yoctopuce.YoctoAPI
                 if (dev == null) {
                     throw new YAPI_Exception(YAPI.DEVICE_NOT_FOUND, "Device [" + hwid.module + "] not online");
                 }
-                string serial = dev.SerialNumber;
+                string serial = dev.imm_getSerialNumber();
                 hwid = new HWID(serial, hwid.Function);
                 if (_ypEntries.ContainsKey(hwid.ToString())) {
                     return hwid;
