@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMultiAxisController.cs 29507 2017-12-28 14:14:56Z mvuilleu $
+ * $Id: YMultiAxisController.cs 30483 2018-03-29 07:43:07Z mvuilleu $
  *
  * Implements FindMultiAxisController(), the high-level API for MultiAxisController functions
  *
@@ -440,7 +440,7 @@ public class YMultiAxisController : YFunction
      */
     public virtual async Task<int> reset()
     {
-        return await this.sendCommand("Z");
+        return await this.set_command("Z");
     }
 
     /**
@@ -568,7 +568,7 @@ public class YMultiAxisController : YFunction
      */
     public virtual async Task<int> emergencyStop()
     {
-        return await this.sendCommand("!");
+        return await this.set_command("!");
     }
 
     /**
@@ -584,7 +584,7 @@ public class YMultiAxisController : YFunction
      */
     public virtual async Task<int> abortAndBrake()
     {
-        return await this.sendCommand("B");
+        return await this.set_command("B");
     }
 
     /**
@@ -600,7 +600,7 @@ public class YMultiAxisController : YFunction
      */
     public virtual async Task<int> abortAndHiZ()
     {
-        return await this.sendCommand("z");
+        return await this.set_command("z");
     }
 
     /**

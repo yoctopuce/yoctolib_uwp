@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YStepperMotor.cs 29507 2017-12-28 14:14:56Z mvuilleu $
+ * $Id: YStepperMotor.cs 30483 2018-03-29 07:43:07Z mvuilleu $
  *
  * Implements FindStepperMotor(), the high-level API for StepperMotor functions
  *
@@ -1138,7 +1138,7 @@ public class YStepperMotor : YFunction
      */
     public virtual async Task<int> reset()
     {
-        return await this.sendCommand("Z");
+        return await this.set_command("Z");
     }
 
     /**
@@ -1283,7 +1283,7 @@ public class YStepperMotor : YFunction
      */
     public virtual async Task<int> emergencyStop()
     {
-        return await this.sendCommand("!");
+        return await this.set_command("!");
     }
 
     /**
@@ -1301,7 +1301,7 @@ public class YStepperMotor : YFunction
      */
     public virtual async Task<int> alertStepOut()
     {
-        return await this.sendCommand(".");
+        return await this.set_command(".");
     }
 
     /**
@@ -1324,9 +1324,9 @@ public class YStepperMotor : YFunction
     {
         if (!(dir != 0)) { this._throw( YAPI.INVALID_ARGUMENT, "direction must be +1 or -1"); return YAPI.INVALID_ARGUMENT; }
         if (dir > 0) {
-            return await this.sendCommand(".+");
+            return await this.set_command(".+");
         }
-        return await this.sendCommand(".-");
+        return await this.set_command(".-");
     }
 
     /**
@@ -1342,7 +1342,7 @@ public class YStepperMotor : YFunction
      */
     public virtual async Task<int> abortAndBrake()
     {
-        return await this.sendCommand("B");
+        return await this.set_command("B");
     }
 
     /**
@@ -1358,7 +1358,7 @@ public class YStepperMotor : YFunction
      */
     public virtual async Task<int> abortAndHiZ()
     {
-        return await this.sendCommand("z");
+        return await this.set_command("z");
     }
 
     /**

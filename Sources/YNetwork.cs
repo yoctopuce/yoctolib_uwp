@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YNetwork.cs 29083 2017-11-03 17:48:44Z seb $
+ * $Id: YNetwork.cs 30462 2018-03-26 09:19:24Z mvuilleu $
  *
  * Implements FindNetwork(), the high-level API for Network functions
  *
@@ -187,6 +187,7 @@ public class YNetwork : YFunction
     public const int CALLBACKENCODING_INFLUXDB = 8;
     public const int CALLBACKENCODING_MQTT = 9;
     public const int CALLBACKENCODING_YOCTO_API_JZON = 10;
+    public const int CALLBACKENCODING_PRTG = 11;
     public const int CALLBACKENCODING_INVALID = -1;
     /**
      * <summary>
@@ -1248,9 +1249,9 @@ public class YNetwork : YFunction
      *   <c>YNetwork.CALLBACKENCODING_JSON_ARRAY</c>, <c>YNetwork.CALLBACKENCODING_CSV</c>,
      *   <c>YNetwork.CALLBACKENCODING_YOCTO_API</c>, <c>YNetwork.CALLBACKENCODING_JSON_NUM</c>,
      *   <c>YNetwork.CALLBACKENCODING_EMONCMS</c>, <c>YNetwork.CALLBACKENCODING_AZURE</c>,
-     *   <c>YNetwork.CALLBACKENCODING_INFLUXDB</c>, <c>YNetwork.CALLBACKENCODING_MQTT</c> and
-     *   <c>YNetwork.CALLBACKENCODING_YOCTO_API_JZON</c> corresponding to the encoding standard to use for
-     *   representing notification values
+     *   <c>YNetwork.CALLBACKENCODING_INFLUXDB</c>, <c>YNetwork.CALLBACKENCODING_MQTT</c>,
+     *   <c>YNetwork.CALLBACKENCODING_YOCTO_API_JZON</c> and <c>YNetwork.CALLBACKENCODING_PRTG</c>
+     *   corresponding to the encoding standard to use for representing notification values
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YNetwork.CALLBACKENCODING_INVALID</c>.
@@ -1282,9 +1283,9 @@ public class YNetwork : YFunction
      *   <c>YNetwork.CALLBACKENCODING_JSON_ARRAY</c>, <c>YNetwork.CALLBACKENCODING_CSV</c>,
      *   <c>YNetwork.CALLBACKENCODING_YOCTO_API</c>, <c>YNetwork.CALLBACKENCODING_JSON_NUM</c>,
      *   <c>YNetwork.CALLBACKENCODING_EMONCMS</c>, <c>YNetwork.CALLBACKENCODING_AZURE</c>,
-     *   <c>YNetwork.CALLBACKENCODING_INFLUXDB</c>, <c>YNetwork.CALLBACKENCODING_MQTT</c> and
-     *   <c>YNetwork.CALLBACKENCODING_YOCTO_API_JZON</c> corresponding to the encoding standard to use for
-     *   representing notification values
+     *   <c>YNetwork.CALLBACKENCODING_INFLUXDB</c>, <c>YNetwork.CALLBACKENCODING_MQTT</c>,
+     *   <c>YNetwork.CALLBACKENCODING_YOCTO_API_JZON</c> and <c>YNetwork.CALLBACKENCODING_PRTG</c>
+     *   corresponding to the encoding standard to use for representing notification values
      * </param>
      * <para>
      * </para>
