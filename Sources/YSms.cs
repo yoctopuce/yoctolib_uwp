@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSms.cs 28732 2017-10-02 13:34:20Z seb $
+ * $Id: YSms.cs 30654 2018-04-19 12:34:37Z seb $
  *
  * Implements FindSms(), the high-level API for Sms functions
  *
@@ -671,7 +671,7 @@ public class YSms
             i = 0;
             while (i < siz) {
                 byt = addr[ofs+i+1];
-                res = ""+ res+""+String.Format("{0:X}", ((byt) & (15)))+""+String.Format("{0:X}",((byt) >> (4)));
+                res = ""+ res+""+String.Format("{0:x}", ((byt) & (15)))+""+String.Format("{0:x}",((byt) >> (4)));
                 i = i + 1;
             }
             // remove padding digit if needed
@@ -799,7 +799,7 @@ public class YSms
         i = 0;
         while ((i < siz) && (i < 6)) {
             byt = exp[ofs+i];
-            res = ""+ res+""+String.Format("{0:X}", ((byt) & (15)))+""+String.Format("{0:X}",((byt) >> (4)));
+            res = ""+ res+""+String.Format("{0:x}", ((byt) & (15)))+""+String.Format("{0:x}",((byt) >> (4)));
             if (i < 3) {
                 if (i < 2) {
                     res = ""+res+"-";
@@ -1096,16 +1096,16 @@ public class YSms
             if (i + ielen <= udhlen) {
                 if ((iei == 0) && (ielen == 3)) {
                     // concatenated SMS, 8-bit ref
-                    sig = ""+ _orig+"-"+ _dest+"-"+String.Format("{0:X02}",
-                    _mref)+"-"+String.Format("{0:X02}",_udh[i]);
+                    sig = ""+ _orig+"-"+ _dest+"-"+String.Format("{0:x02}",
+                    _mref)+"-"+String.Format("{0:x02}",_udh[i]);
                     _aggSig = sig;
                     _aggCnt = _udh[i+1];
                     _aggIdx = _udh[i+2];
                 }
                 if ((iei == 8) && (ielen == 4)) {
                     // concatenated SMS, 16-bit ref
-                    sig = ""+ _orig+"-"+ _dest+"-"+String.Format("{0:X02}",
-                    _mref)+"-"+String.Format("{0:X02}", _udh[i])+""+String.Format("{0:X02}",_udh[i+1]);
+                    sig = ""+ _orig+"-"+ _dest+"-"+String.Format("{0:x02}",
+                    _mref)+"-"+String.Format("{0:x02}", _udh[i])+""+String.Format("{0:x02}",_udh[i+1]);
                     _aggSig = sig;
                     _aggCnt = _udh[i+2];
                     _aggIdx = _udh[i+3];

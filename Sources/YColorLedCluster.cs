@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YColorLedCluster.cs 30500 2018-04-04 07:53:46Z mvuilleu $
+ * $Id: YColorLedCluster.cs 30654 2018-04-19 12:34:37Z seb $
  *
  * Implements FindColorLedCluster(), the high-level API for ColorLedCluster functions
  *
@@ -584,7 +584,7 @@ public class YColorLedCluster : YFunction
      */
     public virtual async Task<int> set_rgbColor(int ledIndex,int count,int rgbValue)
     {
-        return await this.sendCommand("SR"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:X}",rgbValue));
+        return await this.sendCommand("SR"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:x}",rgbValue));
     }
 
     /**
@@ -614,7 +614,7 @@ public class YColorLedCluster : YFunction
      */
     public virtual async Task<int> set_rgbColorAtPowerOn(int ledIndex,int count,int rgbValue)
     {
-        return await this.sendCommand("SC"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:X}",rgbValue));
+        return await this.sendCommand("SC"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:x}",rgbValue));
     }
 
     /**
@@ -642,7 +642,7 @@ public class YColorLedCluster : YFunction
      */
     public virtual async Task<int> set_hslColor(int ledIndex,int count,int hslValue)
     {
-        return await this.sendCommand("SH"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:X}",hslValue));
+        return await this.sendCommand("SH"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:x}",hslValue));
     }
 
     /**
@@ -674,7 +674,7 @@ public class YColorLedCluster : YFunction
      */
     public virtual async Task<int> rgb_move(int ledIndex,int count,int rgbValue,int delay)
     {
-        return await this.sendCommand("MR"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:X}",rgbValue)+","+Convert.ToString(delay));
+        return await this.sendCommand("MR"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:x}",rgbValue)+","+Convert.ToString(delay));
     }
 
     /**
@@ -710,7 +710,7 @@ public class YColorLedCluster : YFunction
      */
     public virtual async Task<int> hsl_move(int ledIndex,int count,int hslValue,int delay)
     {
-        return await this.sendCommand("MH"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:X}",hslValue)+","+Convert.ToString(delay));
+        return await this.sendCommand("MH"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:x}",hslValue)+","+Convert.ToString(delay));
     }
 
     /**
@@ -740,7 +740,7 @@ public class YColorLedCluster : YFunction
      */
     public virtual async Task<int> addRgbMoveToBlinkSeq(int seqIndex,int rgbValue,int delay)
     {
-        return await this.sendCommand("AR"+Convert.ToString(seqIndex)+","+String.Format("{0:X}",rgbValue)+","+Convert.ToString(delay));
+        return await this.sendCommand("AR"+Convert.ToString(seqIndex)+","+String.Format("{0:x}",rgbValue)+","+Convert.ToString(delay));
     }
 
     /**
@@ -770,7 +770,7 @@ public class YColorLedCluster : YFunction
      */
     public virtual async Task<int> addHslMoveToBlinkSeq(int seqIndex,int hslValue,int delay)
     {
-        return await this.sendCommand("AH"+Convert.ToString(seqIndex)+","+String.Format("{0:X}",hslValue)+","+Convert.ToString(delay));
+        return await this.sendCommand("AH"+Convert.ToString(seqIndex)+","+String.Format("{0:x}",hslValue)+","+Convert.ToString(delay));
     }
 
     /**

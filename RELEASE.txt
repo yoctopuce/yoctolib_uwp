@@ -1,1 +1,4 @@
 - Add new PWMOutput methods
+- Add Prog-Display-DrawBitmap example
+- Improve function documentation in French for PWM-Tx
+- Fix Modbus ASCII message handling

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplayLayer.cs 27094 2017-04-06 21:00:57Z seb $
+ * $Id: YDisplayLayer.cs 30654 2018-04-19 12:34:37Z seb $
  *
  * Implements FindDisplayLayer(), the high-level API for DisplayLayer functions
  *
@@ -217,7 +217,7 @@ public class YDisplayLayer
      */
     public virtual async Task<int> selectColorPen(int color)
     {
-        return await this.command_push("c"+String.Format("{0:X06}",color));
+        return await this.command_push("c"+String.Format("{0:x06}",color));
     }
 
     /**

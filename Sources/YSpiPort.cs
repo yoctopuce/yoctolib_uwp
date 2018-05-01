@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSpiPort.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YSpiPort.cs 30685 2018-04-24 13:46:18Z seb $
  *
  * Implements FindSpiPort(), the high-level API for SpiPort functions
  *

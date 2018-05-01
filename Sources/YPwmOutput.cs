@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YPwmOutput.cs 30595 2018-04-12 21:36:11Z mvuilleu $
+ * $Id: YPwmOutput.cs 30679 2018-04-24 09:34:17Z mvuilleu $
  *
  * Implements FindPwmOutput(), the high-level API for PwmOutput functions
  *
@@ -962,6 +962,16 @@ public class YPwmOutput : YFunction
         }
         newval = ""+YAPIContext.imm_floatToStr( target)+"Hz*"+Convert.ToString(n_pulses);
         return await this.set_pwmTransition(newval);
+    }
+
+    public virtual async Task<int> markForRepeat()
+    {
+        return await this.set_pwmTransition(":");
+    }
+
+    public virtual async Task<int> repeatFromMark()
+    {
+        return await this.set_pwmTransition("R");
     }
 
     /**

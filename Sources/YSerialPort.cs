@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSerialPort.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YSerialPort.cs 30685 2018-04-24 13:46:18Z seb $
  *
  * Implements FindSerialPort(), the high-level API for SerialPort functions
  *
