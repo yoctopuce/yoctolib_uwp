@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YPwmOutput.cs 30679 2018-04-24 09:34:17Z mvuilleu $
+ * $Id: YPwmOutput.cs 31296 2018-07-19 12:34:36Z mvuilleu $
  *
  * Implements FindPwmOutput(), the high-level API for PwmOutput functions
  *
@@ -870,6 +870,37 @@ public class YPwmOutput : YFunction
 
     /**
      * <summary>
+     *   Performs a smooth transition toward a specified value of the phase shift between this channel
+     *   and the other channel.
+     * <para>
+     *   The phase shift is executed by slightly changing the frequency
+     *   temporarily during the specified duration. This function only makes sense when both channels
+     *   are running, either at the same frequency, or at a multiple of the channel frequency.
+     *   Any period, frequency, duty cycle or pulse width change will cancel any ongoing transition process.
+     * </para>
+     * </summary>
+     * <param name="target">
+     *   phase shift at the end of the transition, in milliseconds (floating-point number)
+     * </param>
+     * <param name="ms_duration">
+     *   total duration of the transition, in milliseconds
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> phaseMove(double target,int ms_duration)
+    {
+        string newval;
+        newval = ""+YAPIContext.imm_floatToStr( target)+"ps:"+Convert.ToString(ms_duration);
+        return await this.set_pwmTransition(newval);
+    }
+
+    /**
+     * <summary>
      *   Trigger a given number of pulses of specified duration, at current frequency.
      * <para>
      *   At the end of the pulse train, revert to the original state of the PWM generator.
@@ -942,7 +973,6 @@ public class YPwmOutput : YFunction
      * </summary>
      * <param name="target">
      *   desired frequency for the generated pulses (floating-point number)
-     *   (percentage, floating-point number between 0 and 100)
      * </param>
      * <param name="n_pulses">
      *   desired pulse count

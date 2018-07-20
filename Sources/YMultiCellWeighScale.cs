@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMultiCellWeighScale.cs 29804 2018-01-30 18:05:21Z mvuilleu $
+ * $Id: YMultiCellWeighScale.cs 31016 2018-06-04 08:45:40Z mvuilleu $
  *
  * Implements FindMultiCellWeighScale(), the high-level API for MultiCellWeighScale functions
  *
@@ -79,10 +79,16 @@ public class YMultiCellWeighScale : YSensor
     public const int EXCITATION_INVALID = -1;
     /**
      * <summary>
-     *   invalid compTempAdaptRatio value
+     *   invalid tempAvgAdaptRatio value
      * </summary>
      */
-    public const  double COMPTEMPADAPTRATIO_INVALID = YAPI.INVALID_DOUBLE;
+    public const  double TEMPAVGADAPTRATIO_INVALID = YAPI.INVALID_DOUBLE;
+    /**
+     * <summary>
+     *   invalid tempChgAdaptRatio value
+     * </summary>
+     */
+    public const  double TEMPCHGADAPTRATIO_INVALID = YAPI.INVALID_DOUBLE;
     /**
      * <summary>
      *   invalid compTempAvg value
@@ -115,7 +121,8 @@ public class YMultiCellWeighScale : YSensor
     public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
     protected int _cellCount = CELLCOUNT_INVALID;
     protected int _excitation = EXCITATION_INVALID;
-    protected double _compTempAdaptRatio = COMPTEMPADAPTRATIO_INVALID;
+    protected double _tempAvgAdaptRatio = TEMPAVGADAPTRATIO_INVALID;
+    protected double _tempChgAdaptRatio = TEMPCHGADAPTRATIO_INVALID;
     protected double _compTempAvg = COMPTEMPAVG_INVALID;
     protected double _compTempChg = COMPTEMPCHG_INVALID;
     protected double _compensation = COMPENSATION_INVALID;
@@ -165,8 +172,11 @@ public class YMultiCellWeighScale : YSensor
         if (json_val.has("excitation")) {
             _excitation = json_val.getInt("excitation");
         }
-        if (json_val.has("compTempAdaptRatio")) {
-            _compTempAdaptRatio = Math.Round(json_val.getDouble("compTempAdaptRatio") * 1000.0 / 65536.0) / 1000.0;
+        if (json_val.has("tempAvgAdaptRatio")) {
+            _tempAvgAdaptRatio = Math.Round(json_val.getDouble("tempAvgAdaptRatio") * 1000.0 / 65536.0) / 1000.0;
+        }
+        if (json_val.has("tempChgAdaptRatio")) {
+            _tempChgAdaptRatio = Math.Round(json_val.getDouble("tempChgAdaptRatio") * 1000.0 / 65536.0) / 1000.0;
         }
         if (json_val.has("compTempAvg")) {
             _compTempAvg = Math.Round(json_val.getDouble("compTempAvg") * 1000.0 / 65536.0) / 1000.0;
@@ -332,17 +342,18 @@ public class YMultiCellWeighScale : YSensor
 
     /**
      * <summary>
-     *   Changes the averaged temperature update rate, in percents.
+     *   Changes the averaged temperature update rate, in per mille.
      * <para>
+     *   The purpose of this adaptation ratio is to model the thermal inertia of the load cell.
      *   The averaged temperature is updated every 10 seconds, by applying this adaptation rate
      *   to the difference between the measures ambiant temperature and the current compensation
-     *   temperature. The standard rate is 0.04 percents, and the maximal rate is 65 percents.
+     *   temperature. The standard rate is 0.2 per mille, and the maximal rate is 65 per mille.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   a floating point number corresponding to the averaged temperature update rate, in percents
+     *   a floating point number corresponding to the averaged temperature update rate, in per mille
      * </param>
      * <para>
      * </para>
@@ -353,41 +364,104 @@ public class YMultiCellWeighScale : YSensor
      *   On failure, throws an exception or returns a negative error code.
      * </para>
      */
-    public async Task<int> set_compTempAdaptRatio(double  newval)
+    public async Task<int> set_tempAvgAdaptRatio(double  newval)
     {
         string rest_val;
         rest_val = Math.Round(newval * 65536.0).ToString();
-        await _setAttr("compTempAdaptRatio",rest_val);
+        await _setAttr("tempAvgAdaptRatio",rest_val);
         return YAPI.SUCCESS;
     }
 
     /**
      * <summary>
-     *   Returns the averaged temperature update rate, in percents.
+     *   Returns the averaged temperature update rate, in per mille.
      * <para>
+     *   The purpose of this adaptation ratio is to model the thermal inertia of the load cell.
      *   The averaged temperature is updated every 10 seconds, by applying this adaptation rate
      *   to the difference between the measures ambiant temperature and the current compensation
-     *   temperature. The standard rate is 0.04 percents, and the maximal rate is 65 percents.
+     *   temperature. The standard rate is 0.2 per mille, and the maximal rate is 65 per mille.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a floating point number corresponding to the averaged temperature update rate, in percents
+     *   a floating point number corresponding to the averaged temperature update rate, in per mille
      * </returns>
      * <para>
-     *   On failure, throws an exception or returns <c>YMultiCellWeighScale.COMPTEMPADAPTRATIO_INVALID</c>.
+     *   On failure, throws an exception or returns <c>YMultiCellWeighScale.TEMPAVGADAPTRATIO_INVALID</c>.
      * </para>
      */
-    public async Task<double> get_compTempAdaptRatio()
+    public async Task<double> get_tempAvgAdaptRatio()
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
             if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
-                return COMPTEMPADAPTRATIO_INVALID;
+                return TEMPAVGADAPTRATIO_INVALID;
             }
         }
-        res = _compTempAdaptRatio;
+        res = _tempAvgAdaptRatio;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the temperature change update rate, in per mille.
+     * <para>
+     *   The temperature change is updated every 10 seconds, by applying this adaptation rate
+     *   to the difference between the measures ambiant temperature and the current temperature used for
+     *   change compensation. The standard rate is 0.6 per mille, and the maximal rate is 65 pour mille.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a floating point number corresponding to the temperature change update rate, in per mille
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_tempChgAdaptRatio(double  newval)
+    {
+        string rest_val;
+        rest_val = Math.Round(newval * 65536.0).ToString();
+        await _setAttr("tempChgAdaptRatio",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the temperature change update rate, in per mille.
+     * <para>
+     *   The temperature change is updated every 10 seconds, by applying this adaptation rate
+     *   to the difference between the measures ambiant temperature and the current temperature used for
+     *   change compensation. The standard rate is 0.6 per mille, and the maximal rate is 65 pour mille.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating point number corresponding to the temperature change update rate, in per mille
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YMultiCellWeighScale.TEMPCHGADAPTRATIO_INVALID</c>.
+     * </para>
+     */
+    public async Task<double> get_tempChgAdaptRatio()
+    {
+        double res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+                return TEMPCHGADAPTRATIO_INVALID;
+            }
+        }
+        res = _tempChgAdaptRatio;
         return res;
     }
 

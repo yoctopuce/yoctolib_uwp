@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 30232 2018-03-05 14:15:57Z seb $
+ * $Id: YModule.cs 31238 2018-07-17 11:08:47Z mvuilleu $
  *
  * YModule Class: Module control interface
  *
@@ -152,8 +152,10 @@ public class YModule : YFunction
     protected int _userVar = USERVAR_INVALID;
     protected ValueCallback _valueCallbackModule = null;
     protected LogCallback _logCallback = null;
+    protected ConfigChangeCallback _confChangeCallback = null;
 
     public delegate Task LogCallback(YModule module, string logline);
+    public delegate Task ConfigChangeCallback(YModule module);
     public new delegate Task ValueCallback(YModule func, string value);
     public new delegate Task TimedReportCallback(YModule func, YMeasure measure);
     //--- (end of generated code: YModule definitions)
@@ -1106,6 +1108,46 @@ public class YModule : YFunction
     public virtual async Task<int> triggerFirmwareUpdate(int secBeforeReboot)
     {
         return await this.set_rebootCountdown(-secBeforeReboot);
+    }
+
+    /**
+     * <summary>
+     *   Register a callback function, to be called when a persistent settings in
+     *   a device configuration has been changed (e.g.
+     * <para>
+     *   change of unit, etc).
+     * </para>
+     * </summary>
+     * <param name="callback">
+     *   a procedure taking a YModule parameter, or <c>null</c>
+     *   to unregister a previously registered  callback.
+     * </param>
+     */
+    public virtual async Task<int> registerConfigChangeCallback(ConfigChangeCallback callback)
+    {
+        _confChangeCallback = callback;
+        return 0;
+    }
+
+    public virtual async Task<int> _invokeConfigChangeCallback()
+    {
+        if (_confChangeCallback != null) {
+            await _confChangeCallback(this);
+        }
+        return 0;
+    }
+
+    /**
+     * <summary>
+     *   Triggers a configuration change callback, to check if they are supported or not.
+     * <para>
+     * </para>
+     * </summary>
+     */
+    public virtual async Task<int> triggerConfigChangeCallback()
+    {
+        await this._setAttr("persistentSettings", "2");
+        return 0;
     }
 
     /**
