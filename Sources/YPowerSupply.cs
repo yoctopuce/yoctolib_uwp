@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YPowerSupply.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YPowerSupply.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindPowerSupply(), the high-level API for PowerSupply functions
  *
@@ -280,7 +280,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VOLTAGESETPOINT_INVALID;
             }
         }
@@ -336,7 +336,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return CURRENTLIMIT_INVALID;
             }
         }
@@ -365,7 +365,7 @@ public class YPowerSupply : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return POWEROUTPUT_INVALID;
             }
         }
@@ -423,7 +423,7 @@ public class YPowerSupply : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VOLTAGESENSE_INVALID;
             }
         }
@@ -480,7 +480,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return MEASUREDVOLTAGE_INVALID;
             }
         }
@@ -508,7 +508,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return MEASUREDCURRENT_INVALID;
             }
         }
@@ -536,7 +536,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return INPUTVOLTAGE_INVALID;
             }
         }
@@ -564,7 +564,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VINT_INVALID;
             }
         }
@@ -592,7 +592,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return LDOTEMPERATURE_INVALID;
             }
         }
@@ -610,7 +610,7 @@ public class YPowerSupply : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VOLTAGETRANSITION_INVALID;
             }
         }
@@ -676,7 +676,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VOLTAGEATSTARTUP_INVALID;
             }
         }
@@ -734,7 +734,7 @@ public class YPowerSupply : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return CURRENTATSTARTUP_INVALID;
             }
         }
@@ -752,7 +752,7 @@ public class YPowerSupply : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

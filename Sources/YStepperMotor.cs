@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YStepperMotor.cs 30483 2018-03-29 07:43:07Z mvuilleu $
+ * $Id: YStepperMotor.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindStepperMotor(), the high-level API for StepperMotor functions
  *
@@ -281,7 +281,7 @@ public class YStepperMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return MOTORSTATE_INVALID;
             }
         }
@@ -309,7 +309,7 @@ public class YStepperMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return DIAGS_INVALID;
             }
         }
@@ -371,7 +371,7 @@ public class YStepperMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return STEPPOS_INVALID;
             }
         }
@@ -400,7 +400,7 @@ public class YStepperMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return SPEED_INVALID;
             }
         }
@@ -458,7 +458,7 @@ public class YStepperMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PULLINSPEED_INVALID;
             }
         }
@@ -514,7 +514,7 @@ public class YStepperMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return MAXACCEL_INVALID;
             }
         }
@@ -570,7 +570,7 @@ public class YStepperMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return MAXSPEED_INVALID;
             }
         }
@@ -600,7 +600,7 @@ public class YStepperMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return STEPPING_INVALID;
             }
         }
@@ -658,7 +658,7 @@ public class YStepperMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return OVERCURRENT_INVALID;
             }
         }
@@ -714,7 +714,7 @@ public class YStepperMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return TCURRSTOP_INVALID;
             }
         }
@@ -770,7 +770,7 @@ public class YStepperMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return TCURRRUN_INVALID;
             }
         }
@@ -816,7 +816,7 @@ public class YStepperMotor : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ALERTMODE_INVALID;
             }
         }
@@ -842,7 +842,7 @@ public class YStepperMotor : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return AUXMODE_INVALID;
             }
         }
@@ -878,7 +878,7 @@ public class YStepperMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return AUXSIGNAL_INVALID;
             }
         }
@@ -925,7 +925,7 @@ public class YStepperMotor : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

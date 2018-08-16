@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YPwmPowerSource.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YPwmPowerSource.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindPwmPowerSource(), the high-level API for PwmPowerSource functions
  *
@@ -134,7 +134,7 @@ public class YPwmPowerSource : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return POWERMODE_INVALID;
             }
         }

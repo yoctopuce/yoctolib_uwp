@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YDisplay.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -242,7 +242,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ENABLED_INVALID;
             }
         }
@@ -299,7 +299,7 @@ public class YDisplay : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return STARTUPSEQ_INVALID;
             }
         }
@@ -357,7 +357,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return BRIGHTNESS_INVALID;
             }
         }
@@ -418,7 +418,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ORIENTATION_INVALID;
             }
         }
@@ -477,7 +477,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return DISPLAYWIDTH_INVALID;
             }
         }
@@ -505,7 +505,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return DISPLAYHEIGHT_INVALID;
             }
         }
@@ -534,7 +534,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration == 0) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return DISPLAYTYPE_INVALID;
             }
         }
@@ -562,7 +562,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration == 0) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return LAYERWIDTH_INVALID;
             }
         }
@@ -590,7 +590,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration == 0) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return LAYERHEIGHT_INVALID;
             }
         }
@@ -618,7 +618,7 @@ public class YDisplay : YFunction
     {
         int res;
         if (_cacheExpiration == 0) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return LAYERCOUNT_INVALID;
             }
         }
@@ -636,7 +636,7 @@ public class YDisplay : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

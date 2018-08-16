@@ -118,8 +118,7 @@ namespace com.yoctopuce.YoctoAPI
                         await yusbDevice.Setup(YUSBPkt.YPKT_USB_VERSION_BCD);
                         _allDevice.Add(yusbDevice);
                         _usableDevices.Add(yusbDevice);
-                    }
-                    else {
+                    } else {
                         Debug.WriteLine("drop" + device.VendorId + ":" + device.ProductId);
                         device.Dispose();
                     }

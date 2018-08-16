@@ -14,6 +14,7 @@ namespace com.yoctopuce.YoctoAPI
         protected internal const char NOTIFY_NETPKT_FUNCNAME = '4';
         protected internal const char NOTIFY_NETPKT_FUNCVAL = '5';
         protected internal const char NOTIFY_NETPKT_FUNCNAMEYDX = '8';
+        protected internal const char NOTIFY_NETPKT_CONFCHGYDX = 's';
         protected internal const char NOTIFY_NETPKT_FLUSHV2YDX = 't';
         protected internal const char NOTIFY_NETPKT_FUNCV2YDX = 'u';
         protected internal const char NOTIFY_NETPKT_TIMEV2YDX = 'v';
@@ -85,9 +86,14 @@ namespace com.yoctopuce.YoctoAPI
         protected internal virtual void handleNetNotification(string notification_line)
         {
             string ev = notification_line.Trim();
-            if (ev.Length >= 3 && ev[0] >= NOTIFY_NETPKT_FLUSHV2YDX && ev[0] <= NOTIFY_NETPKT_TIMEAVGYDX) {
+            if (ev == "") {
+                //empty (\n) ping notification drop it.
+                return;
+            }
+
+            if (ev.Length >= 3 && ev[0] >= NOTIFY_NETPKT_CONFCHGYDX && ev[0] <= NOTIFY_NETPKT_TIMEAVGYDX) {
                 // function value ydx (tiny notification)
-                _hub._devListValidity = 10000;
+                _hub._isNotifWorking = true;
                 _notifRetryCount = 0;
                 if (_notifyPos >= 0) {
                     _notifyPos += ev.Length + 1;
@@ -116,6 +122,9 @@ namespace com.yoctopuce.YoctoAPI
                             case NOTIFY_NETPKT_DEVLOGYDX:
                                 //fixme:
                                 //await ydev.triggerLogPull();
+                                break;
+                            case NOTIFY_NETPKT_CONFCHGYDX:
+                                _hub.handleConfigChangeNotification(serial);
                                 break;
                             case NOTIFY_NETPKT_TIMEVALYDX:
                             case NOTIFY_NETPKT_TIMEAVGYDX:
@@ -159,7 +168,7 @@ namespace com.yoctopuce.YoctoAPI
                     }
                 }
             } else if (ev.Length >= 5 && ev.StartsWith("YN01", StringComparison.Ordinal)) {
-                _hub._devListValidity = 10000;
+                _hub._isNotifWorking = true;
                 _notifRetryCount = 0;
                 if (_notifyPos >= 0) {
                     _notifyPos += ev.Length + 1;
@@ -183,7 +192,7 @@ namespace com.yoctopuce.YoctoAPI
                 }
             } else {
                 // oops, bad notification ? be safe until a good one comes
-                _hub._devListValidity = 500;
+                _hub._isNotifWorking = false;
                 _notifyPos = -1;
             }
         }

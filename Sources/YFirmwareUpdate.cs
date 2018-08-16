@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFirmwareUpdate.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YFirmwareUpdate.cs 31608 2018-08-14 08:22:18Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -165,10 +165,10 @@ public class YFirmwareUpdate
             _progress_msg = msg;
         }
 
-        private async Task _processMore(int start)
+        private async Task<int> _processMore_internal(int start)
         {
             if (start == 0)
-                return;
+                return 0;
             imm_reportprogress(0, "Firmware update started");
             YFirmwareFile firmware;
             try {
@@ -201,7 +201,7 @@ public class YFirmwareUpdate
                 }
                 if (hub == null) {
                     imm_reportprogress(-1, "Device " + _serial + " is not detected");
-                    return;
+                    return -1;
                 }
 
                 await hub.firmwareUpdate(_serial, firmware, _settings, imm_firmware_progress);
@@ -222,13 +222,16 @@ public class YFirmwareUpdate
                         await module.saveToFlash();
                     }
                     imm_reportprogress(100, "Success");
+                    return 100;
                 } else {
                     imm_reportprogress(-1, "Device did not reboot correctly");
+                    return -1;
                 }
             } catch (YAPI_Exception e) {
                 imm_reportprogress(e.errorType, e.Message);
                 Debug.WriteLine(e.ToString());
                 Debug.Write(e.StackTrace);
+                return e.errorType;
             }
         }
 
@@ -292,7 +295,7 @@ public class YFirmwareUpdate
         /// <returns> : the path of the byn file to use, or an empty string if no byn files matches the requirement
         /// 
         /// On failure, returns a string that starts with "error:". </returns>
-        public static async Task<string> CheckFirmware(string serial, string path, int minrelease)
+        public static async Task<string> CheckFirmware_internal(string serial, string path, int minrelease)
         {
             return await CheckFirmwareEx(serial, path, minrelease, false);
         }
@@ -305,7 +308,7 @@ public class YFirmwareUpdate
         /// <param name="yctx"> : a YAPI context.
         /// </param>
         /// <returns> an array of strings containing the serial numbers of devices in "firmware update" mode. </returns>
-        public static async Task<List<string>> GetAllBootLoadersInContext(YAPIContext yctx)
+        public static async Task<List<string>> GetAllBootLoadersInContext_internal(YAPIContext yctx)
         {
             List<string> res = new List<string>();
             foreach (YGenericHub h in yctx._hubs) {
@@ -328,7 +331,7 @@ public class YFirmwareUpdate
         /// must connect yourself to the YoctoHub web interface.
         /// </summary>
         /// <returns> an array of strings containing the serial numbers of devices in "firmware update" mode. </returns>
-        public static async Task<List<string>> GetAllBootLoaders()
+        public static async Task<List<string>> GetAllBootLoaders_internal()
         {
             return await GetAllBootLoadersInContext(YAPI.imm_GetYCtx());
         }
@@ -337,17 +340,91 @@ public class YFirmwareUpdate
         //--- (generated code: YFirmwareUpdate implementation)
 #pragma warning disable 1998
 
-    //cannot be generated for Java:
-    //public virtual async Task<int> _processMore(int newupdate)
+    //cannot be generated for UWP:
+    //public virtual async Task<int> _processMore_internal(int newupdate)
+    public virtual async Task<int> _processMore(int newupdate)
+    {
+        return await _processMore_internal(newupdate);
+    }
 
-    //cannot be generated for Java:
-    //public static List<string> GetAllBootLoaders()
+    //cannot be generated for UWP:
+    //public static async Task<List<string>> GetAllBootLoaders_internal()
+    /**
+     * <summary>
+     *   Returns a list of all the modules in "firmware update" mode.
+     * <para>
+     *   Only devices
+     *   connected over USB are listed. For devices connected to a YoctoHub, you
+     *   must connect yourself to the YoctoHub web interface.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an array of strings containing the serial numbers of devices in "firmware update" mode.
+     * </returns>
+     */
+    public static async Task<List<string>> GetAllBootLoaders()
+    {
+        return await GetAllBootLoaders_internal();
+    }
 
-    //cannot be generated for Java:
-    //public static List<string> GetAllBootLoadersInContext(YAPIContext yctx)
+    //cannot be generated for UWP:
+    //public static async Task<List<string>> GetAllBootLoadersInContext_internal(YAPIContext yctx)
+    /**
+     * <summary>
+     *   Returns a list of all the modules in "firmware update" mode.
+     * <para>
+     *   Only devices
+     *   connected over USB are listed. For devices connected to a YoctoHub, you
+     *   must connect to the YoctoHub web interface.
+     * </para>
+     * </summary>
+     * <param name="yctx">
+     *   a YAPI context.
+     * </param>
+     * <returns>
+     *   an array of strings containing the serial numbers of devices in "firmware update" mode.
+     * </returns>
+     */
+    public static async Task<List<string>> GetAllBootLoadersInContext(YAPIContext yctx)
+    {
+        return await GetAllBootLoadersInContext_internal(yctx);
+    }
 
-    //cannot be generated for Java:
-    //public static string CheckFirmware(string serial,string path,int minrelease)
+    //cannot be generated for UWP:
+    //public static async Task<string> CheckFirmware_internal(string serial,string path,int minrelease)
+    /**
+     * <summary>
+     *   Test if the byn file is valid for this module.
+     * <para>
+     *   It is possible to pass a directory instead of a file.
+     *   In that case, this method returns the path of the most recent appropriate byn file. This method will
+     *   ignore any firmware older than minrelease.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="serial">
+     *   the serial number of the module to update
+     * </param>
+     * <param name="path">
+     *   the path of a byn file or a directory that contains byn files
+     * </param>
+     * <param name="minrelease">
+     *   a positive integer
+     * </param>
+     * <returns>
+     *   : the path of the byn file to use, or an empty string if no byn files matches the requirement
+     * </returns>
+     * <para>
+     *   On failure, returns a string that starts with "error:".
+     * </para>
+     */
+    public static async Task<string> CheckFirmware(string serial,string path,int minrelease)
+    {
+        return await CheckFirmware_internal(serial, path, minrelease);
+    }
 
     /**
      * <summary>

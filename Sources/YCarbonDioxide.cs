@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCarbonDioxide.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YCarbonDioxide.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindCarbonDioxide(), the high-level API for CarbonDioxide functions
  *
@@ -143,7 +143,7 @@ public class YCarbonDioxide : YSensor
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ABCPERIOD_INVALID;
             }
         }
@@ -194,7 +194,7 @@ public class YCarbonDioxide : YSensor
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

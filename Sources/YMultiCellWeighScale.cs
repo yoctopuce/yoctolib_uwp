@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMultiCellWeighScale.cs 31016 2018-06-04 08:45:40Z mvuilleu $
+ * $Id: YMultiCellWeighScale.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindMultiCellWeighScale(), the high-level API for MultiCellWeighScale functions
  *
@@ -245,7 +245,7 @@ public class YMultiCellWeighScale : YSensor
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return CELLCOUNT_INVALID;
             }
         }
@@ -302,7 +302,7 @@ public class YMultiCellWeighScale : YSensor
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return EXCITATION_INVALID;
             }
         }
@@ -395,7 +395,7 @@ public class YMultiCellWeighScale : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return TEMPAVGADAPTRATIO_INVALID;
             }
         }
@@ -457,7 +457,7 @@ public class YMultiCellWeighScale : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return TEMPCHGADAPTRATIO_INVALID;
             }
         }
@@ -485,7 +485,7 @@ public class YMultiCellWeighScale : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMPTEMPAVG_INVALID;
             }
         }
@@ -513,7 +513,7 @@ public class YMultiCellWeighScale : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMPTEMPCHG_INVALID;
             }
         }
@@ -541,7 +541,7 @@ public class YMultiCellWeighScale : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMPENSATION_INVALID;
             }
         }
@@ -603,7 +603,7 @@ public class YMultiCellWeighScale : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ZEROTRACKING_INVALID;
             }
         }
@@ -621,7 +621,7 @@ public class YMultiCellWeighScale : YSensor
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

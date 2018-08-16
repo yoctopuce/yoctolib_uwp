@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YColorLed.cs 30191 2018-02-28 12:57:32Z seb $
+ * $Id: YColorLed.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindColorLed(), the high-level API for ColorLed functions
  *
@@ -238,7 +238,7 @@ public class YColorLed : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return RGBCOLOR_INVALID;
             }
         }
@@ -295,7 +295,7 @@ public class YColorLed : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return HSLCOLOR_INVALID;
             }
         }
@@ -342,7 +342,7 @@ public class YColorLed : YFunction
     {
         YMove res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return RGBMOVE_INVALID;
             }
         }
@@ -399,7 +399,7 @@ public class YColorLed : YFunction
     {
         YMove res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return HSLMOVE_INVALID;
             }
         }
@@ -466,7 +466,7 @@ public class YColorLed : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return RGBCOLORATPOWERON_INVALID;
             }
         }
@@ -522,7 +522,7 @@ public class YColorLed : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return BLINKSEQSIZE_INVALID;
             }
         }
@@ -550,7 +550,7 @@ public class YColorLed : YFunction
     {
         int res;
         if (_cacheExpiration == 0) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return BLINKSEQMAXSIZE_INVALID;
             }
         }
@@ -582,7 +582,7 @@ public class YColorLed : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return BLINKSEQSIGNATURE_INVALID;
             }
         }
@@ -600,7 +600,7 @@ public class YColorLed : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 31238 2018-07-17 11:08:47Z mvuilleu $
+ * $Id: YModule.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -297,7 +297,7 @@ public class YModule : YFunction
             return _logCallback;
         }
 
-        private byte[] imm_flattenJsonStruct(byte[] actualSettings)
+        private byte[] imm_flattenJsonStruct_internal(byte[] actualSettings)
         {
             YJSONArray jsonout = new YJSONArray();
             string accutalSettingsStr = YAPI.DefaultEncoding.GetString(actualSettings);
@@ -334,7 +334,7 @@ public class YModule : YFunction
         /// Otherwise, an empty array will be returned.
         /// </summary>
         /// <returns> an array of strings containing the sub modules. </returns>
-        public virtual async Task<List<string>> get_subDevices()
+        public virtual async Task<List<string>> get_subDevices_internal()
         {
             YDevice dev = imm_getDev();
             YGenericHub hub = dev.Hub;
@@ -348,7 +348,7 @@ public class YModule : YFunction
         /// empty string is returned.
         /// </summary>
         /// <returns> a string with the serial number of the YoctoHub or an empty string </returns>
-        public virtual async Task<string> get_parentHub()
+        public virtual async Task<string> get_parentHub_internal()
         {
             YDevice dev = imm_getDev();
             YGenericHub hub = dev.Hub;
@@ -365,7 +365,7 @@ public class YModule : YFunction
         /// string 'usb' is returned.
         /// </summary>
         /// <returns> a string with the URL of the module. </returns>
-        public virtual async Task<string> get_url()
+        public virtual async Task<string> get_url_internal()
         {
             YDevice dev = imm_getDev();
             YGenericHub hub = dev.Hub;
@@ -441,7 +441,7 @@ public class YModule : YFunction
             if (!(dev == null)) {
                 return dev.imm_getProductName();
             }
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PRODUCTNAME_INVALID;
             }
         }
@@ -474,7 +474,7 @@ public class YModule : YFunction
             if (!(dev == null)) {
                 return dev.imm_getSerialNumber();
             }
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return SERIALNUMBER_INVALID;
             }
         }
@@ -507,7 +507,7 @@ public class YModule : YFunction
             if (!(dev == null)) {
                 return dev.imm_getProductId();
             }
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PRODUCTID_INVALID;
             }
         }
@@ -535,7 +535,7 @@ public class YModule : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PRODUCTRELEASE_INVALID;
             }
         }
@@ -563,7 +563,7 @@ public class YModule : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return FIRMWARERELEASE_INVALID;
             }
         }
@@ -592,7 +592,7 @@ public class YModule : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PERSISTENTSETTINGS_INVALID;
             }
         }
@@ -628,7 +628,7 @@ public class YModule : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return LUMINOSITY_INVALID;
             }
         }
@@ -693,7 +693,7 @@ public class YModule : YFunction
             if (!(dev == null)) {
                 return dev.imm_getBeacon();
             }
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return BEACON_INVALID;
             }
         }
@@ -749,7 +749,7 @@ public class YModule : YFunction
     {
         long res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return UPTIME_INVALID;
             }
         }
@@ -777,7 +777,7 @@ public class YModule : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return USBCURRENT_INVALID;
             }
         }
@@ -807,7 +807,7 @@ public class YModule : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return REBOOTCOUNTDOWN_INVALID;
             }
         }
@@ -844,7 +844,7 @@ public class YModule : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return USERVAR_INVALID;
             }
         }
@@ -1512,8 +1512,12 @@ public class YModule : YFunction
         return res;
     }
 
-    //cannot be generated for Java:
-    //public virtual byte[] imm_flattenJsonStruct(byte[] jsoncomplex)
+    //cannot be generated for UWP:
+    //public virtual byte[] imm_flattenJsonStruct_internal(byte[] jsoncomplex)
+    public virtual byte[] imm_flattenJsonStruct(byte[] jsoncomplex)
+    {
+        return imm_flattenJsonStruct_internal(jsoncomplex);
+    }
 
     public virtual async Task<int> calibVersion(string cparams)
     {
@@ -2119,14 +2123,62 @@ public class YModule : YFunction
         return await this._upload("logs.txt", YAPI.DefaultEncoding.GetBytes(text));
     }
 
-    //cannot be generated for Java:
-    //public virtual async Task<List<string>> get_subDevices()
+    //cannot be generated for UWP:
+    //public virtual async Task<List<string>> get_subDevices_internal()
+    /**
+     * <summary>
+     *   Returns a list of all the modules that are plugged into the current module.
+     * <para>
+     *   This method only makes sense when called for a YoctoHub/VirtualHub.
+     *   Otherwise, an empty array will be returned.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an array of strings containing the sub modules.
+     * </returns>
+     */
+    public virtual async Task<List<string>> get_subDevices()
+    {
+        return await get_subDevices_internal();
+    }
 
-    //cannot be generated for Java:
-    //public virtual async Task<string> get_parentHub()
+    //cannot be generated for UWP:
+    //public virtual async Task<string> get_parentHub_internal()
+    /**
+     * <summary>
+     *   Returns the serial number of the YoctoHub on which this module is connected.
+     * <para>
+     *   If the module is connected by USB, or if the module is the root YoctoHub, an
+     *   empty string is returned.
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the serial number of the YoctoHub or an empty string
+     * </returns>
+     */
+    public virtual async Task<string> get_parentHub()
+    {
+        return await get_parentHub_internal();
+    }
 
-    //cannot be generated for Java:
-    //public virtual async Task<string> get_url()
+    //cannot be generated for UWP:
+    //public virtual async Task<string> get_url_internal()
+    /**
+     * <summary>
+     *   Returns the URL used to access the module.
+     * <para>
+     *   If the module is connected by USB, the
+     *   string 'usb' is returned.
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the URL of the module.
+     * </returns>
+     */
+    public virtual async Task<string> get_url()
+    {
+        return await get_url_internal();
+    }
 
     /**
      * <summary>

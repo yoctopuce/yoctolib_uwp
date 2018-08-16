@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YServo.cs 30191 2018-02-28 12:57:32Z seb $
+ * $Id: YServo.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindServo(), the high-level API for Servo functions
  *
@@ -211,7 +211,7 @@ public class YServo : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return POSITION_INVALID;
             }
         }
@@ -267,7 +267,7 @@ public class YServo : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ENABLED_INVALID;
             }
         }
@@ -323,7 +323,7 @@ public class YServo : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return RANGE_INVALID;
             }
         }
@@ -385,7 +385,7 @@ public class YServo : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return NEUTRAL_INVALID;
             }
         }
@@ -436,7 +436,7 @@ public class YServo : YFunction
     {
         YMove res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return MOVE_INVALID;
             }
         }
@@ -503,7 +503,7 @@ public class YServo : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return POSITIONATPOWERON_INVALID;
             }
         }
@@ -562,7 +562,7 @@ public class YServo : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ENABLEDATPOWERON_INVALID;
             }
         }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YBuzzer.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YBuzzer.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindBuzzer(), the high-level API for Buzzer functions
  *
@@ -208,7 +208,7 @@ public class YBuzzer : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return FREQUENCY_INVALID;
             }
         }
@@ -236,7 +236,7 @@ public class YBuzzer : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VOLUME_INVALID;
             }
         }
@@ -292,7 +292,7 @@ public class YBuzzer : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PLAYSEQSIZE_INVALID;
             }
         }
@@ -320,7 +320,7 @@ public class YBuzzer : YFunction
     {
         int res;
         if (_cacheExpiration == 0) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PLAYSEQMAXSIZE_INVALID;
             }
         }
@@ -352,7 +352,7 @@ public class YBuzzer : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PLAYSEQSIGNATURE_INVALID;
             }
         }
@@ -370,7 +370,7 @@ public class YBuzzer : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

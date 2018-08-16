@@ -250,7 +250,7 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             if (!_mustStop) {
-                _hub._devListValidity = 500;
+                _hub._isNotifWorking = false;
                 int error_delay = 100 << (_notifRetryCount > 4 ? 4 : _notifRetryCount);
                 _notifRetryCount++;
                 TimeSpan delay = TimeSpan.FromMilliseconds(error_delay);
@@ -571,203 +571,204 @@ namespace com.yoctopuce.YoctoAPI
         private async void WebSock_MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
         {
             try {
-                DataReader messageReader = args.GetDataReader();
-                messageReader.ByteOrder = ByteOrder.LittleEndian;
-                WSRequest workingRequest;
-                uint messageSize = messageReader.UnconsumedBufferLength;
-                byte first_byte = messageReader.ReadByte();
-                int tcpChanel = first_byte & 0x7;
-                int ystream = (first_byte & 0xff) >> 3;
+                using (DataReader messageReader = args.GetDataReader()) {
+                    messageReader.ByteOrder = ByteOrder.LittleEndian;
+                    WSRequest workingRequest;
+                    uint messageSize = messageReader.UnconsumedBufferLength;
+                    byte first_byte = messageReader.ReadByte();
+                    int tcpChanel = first_byte & 0x7;
+                    int ystream = (first_byte & 0xff) >> 3;
 
-                switch (ystream) {
-                    case YGenericHub.YSTREAM_TCP_NOTIF:
-                        if (_firstNotif) {
-                            if (!_hub._http_params.imm_hasAuthParam()) {
-                                _connectionState = ConnectionState.CONNECTED;
-                                _firstNotif = false;
-                            } else {
-                                return;
-                            }
-                        }
-
-                        byte[] chars = new byte[messageReader.UnconsumedBufferLength];
-                        messageReader.ReadBytes(chars);
-                        String tcpNotif = YAPI.DefaultEncoding.GetString(chars);
-                        decodeTCPNotif(tcpNotif);
-                        break;
-                    case YGenericHub.YSTREAM_EMPTY:
-                        return;
-                    case YGenericHub.YSTREAM_TCP_ASYNCCLOSE:
-                        workingRequest = _workingRequests[tcpChanel].Peek();
-                        if (workingRequest != null && messageReader.UnconsumedBufferLength >= 1) {
-                            uint contentSize = messageReader.UnconsumedBufferLength - 1;
-                            //todo: try to copy data more efficently
-                            byte[] data = new byte[contentSize];
-                            if (contentSize > 0) {
-                                messageReader.ReadBytes(data);
-                            }
-
-                            int asyncId = messageReader.ReadByte();
-                            if (workingRequest.AsyncId != asyncId) {
-                                _hub._yctx._Log("WS: Incorrect async-close signature on tcpChan " + tcpChanel + "\n");
-                                return;
-                            }
-
-                            workingRequest.imm_AppendResponseData(data);
-                            workingRequest.imm_close(YAPI.SUCCESS, "");
-                            _workingRequests[tcpChanel].Dequeue();
-                        }
-
-                        break;
-                    case YGenericHub.YSTREAM_TCP:
-                    case YGenericHub.YSTREAM_TCP_CLOSE:
-                        workingRequest = _workingRequests[tcpChanel].Peek();
-                        if (workingRequest != null) {
-                            uint contentSize = messageReader.UnconsumedBufferLength;
-                            //todo: try to copy data more efficently
-                            byte[] data = new byte[contentSize];
-                            if (contentSize > 0) {
-                                messageReader.ReadBytes(data);
-                            }
-
-                            workingRequest.imm_AppendResponseData(data);
-                            if (ystream == YGenericHub.YSTREAM_TCP_CLOSE) {
-                                await Send_WSStream(sender, YGenericHub.YSTREAM_TCP_CLOSE, tcpChanel, null, 0);
-                                _workingRequests[tcpChanel].Dequeue();
-                                workingRequest.imm_close(YAPI.SUCCESS, "");
-                            }
-                        }
-
-                        break;
-                    case YGenericHub.YSTREAM_META:
-                        int metatype = messageReader.ReadByte();
-                        long nounce;
-                        int version;
-                        switch (metatype) {
-                            case YGenericHub.USB_META_WS_ANNOUNCE:
-                                version = messageReader.ReadByte();
-                                if (version < YGenericHub.USB_META_WS_PROTO_V1 || messageSize < YGenericHub.USB_META_WS_ANNOUNCE_SIZE) {
-                                    return;
-                                }
-
-                                _remoteVersion = version;
-                                int maxtcpws = messageReader.ReadUInt16(); // ignore reserved word
-                                if (maxtcpws > 0) {
-                                    _tcpMaxWindowSize = maxtcpws;
-                                }
-
-                                nounce = messageReader.ReadUInt32();
-                                byte[] serial_char = new byte[messageReader.UnconsumedBufferLength];
-                                messageReader.ReadBytes(serial_char);
-                                int len;
-                                for (len = YAPI.YOCTO_BASE_SERIAL_LEN; len < serial_char.Length; len++) {
-                                    if (serial_char[len] == 0) {
-                                        break;
-                                    }
-                                }
-
-                                _remoteSerial = YAPI.DefaultEncoding.GetString(serial_char, 0, len);
-                                _remoteNouce = nounce;
-                                _connectionTime = YAPI.GetTickCount();
-                                Random randomGenerator = new Random();
-                                _nounce = (uint) randomGenerator.Next();
-                                _connectionState = ConnectionState.AUTHENTICATING;
-                                await sendAuthenticationMeta(_webSock);
-                                break;
-                            case YGenericHub.USB_META_WS_AUTHENTICATION:
-                                if (_connectionState != ConnectionState.AUTHENTICATING)
-                                    return;
-                                version = messageReader.ReadByte();
-                                if (version < YGenericHub.USB_META_WS_PROTO_V1 || messageSize < YGenericHub.USB_META_WS_AUTHENTICATION_SIZE) {
-                                    return;
-                                }
-
-                                _tcpRoundTripTime = YAPI.GetTickCount() - _connectionTime + 1;
-                                long uploadRate = _tcpMaxWindowSize * 1000 / (int) _tcpRoundTripTime;
-                                _hub._yctx._Log(string.Format("WS:RTT={0}ms, WS={1}, uploadRate={2} KB/s\n", _tcpRoundTripTime, _tcpMaxWindowSize, uploadRate / 1000.0));
-                                int flags = messageReader.ReadInt16();
-                                messageReader.ReadUInt32(); // drop nounce
-                                if ((flags & YGenericHub.USB_META_WS_AUTH_FLAGS_RW) != 0)
-                                    _rwAccess = true;
-                                if ((flags & YGenericHub.USB_META_WS_VALID_SHA1) != 0) {
-                                    byte[] remote_sha1 = new byte[20];
-                                    messageReader.ReadBytes(remote_sha1);
-                                    byte[] sha1 = imm_computeAUTH(_hub._http_params.User, _hub._http_params.Pass, _remoteSerial, _nounce);
-                                    if (remote_sha1.SequenceEqual(sha1)) {
-                                        _connectionState = ConnectionState.CONNECTED;
-                                    } else {
-                                        errorOnSession(YAPI.UNAUTHORIZED, string.Format("Authentication as {0} failed", _hub._http_params.User));
-                                    }
+                    switch (ystream) {
+                        case YGenericHub.YSTREAM_TCP_NOTIF:
+                            if (_firstNotif) {
+                                if (!_hub._http_params.imm_hasAuthParam()) {
+                                    _connectionState = ConnectionState.CONNECTED;
+                                    _firstNotif = false;
                                 } else {
-                                    if (!_hub._http_params.imm_hasAuthParam()) {
-                                        _connectionState = ConnectionState.CONNECTED;
-                                    } else {
-                                        if (_hub._http_params.User == "admin" && !_rwAccess) {
-                                            errorOnSession(YAPI.UNAUTHORIZED, string.Format("Authentication as {0} failed", _hub._http_params.User));
-                                        } else {
-                                            errorOnSession(YAPI.UNAUTHORIZED, string.Format("Authentication error : hub has no password for {0}", _hub._http_params.User));
+                                    return;
+                                }
+                            }
+
+                            byte[] chars = new byte[messageReader.UnconsumedBufferLength];
+                            messageReader.ReadBytes(chars);
+                            String tcpNotif = YAPI.DefaultEncoding.GetString(chars);
+                            decodeTCPNotif(tcpNotif);
+                            break;
+                        case YGenericHub.YSTREAM_EMPTY:
+                            return;
+                        case YGenericHub.YSTREAM_TCP_ASYNCCLOSE:
+                            workingRequest = _workingRequests[tcpChanel].Peek();
+                            if (workingRequest != null && messageReader.UnconsumedBufferLength >= 1) {
+                                uint contentSize = messageReader.UnconsumedBufferLength - 1;
+                                //todo: try to copy data more efficently
+                                byte[] data = new byte[contentSize];
+                                if (contentSize > 0) {
+                                    messageReader.ReadBytes(data);
+                                }
+
+                                int asyncId = messageReader.ReadByte();
+                                if (workingRequest.AsyncId != asyncId) {
+                                    _hub._yctx._Log("WS: Incorrect async-close signature on tcpChan " + tcpChanel + "\n");
+                                    return;
+                                }
+
+                                workingRequest.imm_AppendResponseData(data);
+                                workingRequest.imm_close(YAPI.SUCCESS, "");
+                                _workingRequests[tcpChanel].Dequeue();
+                            }
+
+                            break;
+                        case YGenericHub.YSTREAM_TCP:
+                        case YGenericHub.YSTREAM_TCP_CLOSE:
+                            workingRequest = _workingRequests[tcpChanel].Peek();
+                            if (workingRequest != null) {
+                                uint contentSize = messageReader.UnconsumedBufferLength;
+                                //todo: try to copy data more efficently
+                                byte[] data = new byte[contentSize];
+                                if (contentSize > 0) {
+                                    messageReader.ReadBytes(data);
+                                }
+
+                                workingRequest.imm_AppendResponseData(data);
+                                if (ystream == YGenericHub.YSTREAM_TCP_CLOSE) {
+                                    await Send_WSStream(sender, YGenericHub.YSTREAM_TCP_CLOSE, tcpChanel, null, 0);
+                                    _workingRequests[tcpChanel].Dequeue();
+                                    workingRequest.imm_close(YAPI.SUCCESS, "");
+                                }
+                            }
+
+                            break;
+                        case YGenericHub.YSTREAM_META:
+                            int metatype = messageReader.ReadByte();
+                            long nounce;
+                            int version;
+                            switch (metatype) {
+                                case YGenericHub.USB_META_WS_ANNOUNCE:
+                                    version = messageReader.ReadByte();
+                                    if (version < YGenericHub.USB_META_WS_PROTO_V1 || messageSize < YGenericHub.USB_META_WS_ANNOUNCE_SIZE) {
+                                        return;
+                                    }
+
+                                    _remoteVersion = version;
+                                    int maxtcpws = messageReader.ReadUInt16(); // ignore reserved word
+                                    if (maxtcpws > 0) {
+                                        _tcpMaxWindowSize = maxtcpws;
+                                    }
+
+                                    nounce = messageReader.ReadUInt32();
+                                    byte[] serial_char = new byte[messageReader.UnconsumedBufferLength];
+                                    messageReader.ReadBytes(serial_char);
+                                    int len;
+                                    for (len = YAPI.YOCTO_BASE_SERIAL_LEN; len < serial_char.Length; len++) {
+                                        if (serial_char[len] == 0) {
+                                            break;
                                         }
                                     }
-                                }
 
-                                break;
-                            case YGenericHub.USB_META_WS_ERROR:
-                                // drop reserved byte
-                                messageReader.ReadByte();
-                                int html_error = messageReader.ReadUInt16();
-                                if (html_error == 401) {
-                                    errorOnSession(YAPI.UNAUTHORIZED, "Authentication failed");
-                                } else {
-                                    errorOnSession(YAPI.IO_ERROR, string.Format("Remote hub closed connection with error %d", html_error));
-                                }
-
-                                break;
-                            case YGenericHub.USB_META_ACK_UPLOAD:
-                                int tcpchan = messageReader.ReadByte();
-                                workingRequest = _workingRequests[tcpchan].Peek();
-                                if (workingRequest != null) {
-                                    int b0 = messageReader.ReadByte();
-                                    int b1 = messageReader.ReadByte();
-                                    int b2 = messageReader.ReadByte();
-                                    int b3 = messageReader.ReadByte();
-                                    int ackBytes = b0 + (b1 << 8) + (b2 << 16) + (b3 << 24);
-                                    ulong ackTime = YAPI.GetTickCount();
-                                    if (_lastUploadAckTime[tcpchan] != 0 && ackBytes > _lastUploadAckBytes[tcpchan]) {
-                                        _lastUploadAckBytes[tcpchan] = ackBytes;
-                                        _lastUploadAckTime[tcpchan] = ackTime;
-
-                                        int deltaBytes = ackBytes - _lastUploadRateBytes[tcpchan];
-                                        ulong deltaTime = ackTime - _lastUploadRateTime[tcpchan];
-                                        if (deltaTime < 500)
-                                            break; // wait more
-                                        if (deltaTime < 1000 && deltaBytes < 65536)
-                                            break; // wait more
-                                        _lastUploadRateBytes[tcpchan] = ackBytes;
-                                        _lastUploadRateTime[tcpchan] = ackTime;
-                                        //fixme: workingRequest.reportProgress(ackBytes);
-                                        double newRate = deltaBytes * 1000.0 / deltaTime;
-                                        _uploadRate = (int) (0.8 * _uploadRate + 0.3 * newRate); // +10% intentionally
-                                        _hub._yctx._Log(string.Format("Upload rate: {0:F2} KB/s (based on {1:F2} KB in {2:F}s)\n", newRate / 1000.0, deltaBytes / 1000.0, deltaTime / 1000.0));
-                                    } else {
-                                        _hub._yctx._Log("First Ack received\n");
-                                        _lastUploadAckBytes[tcpchan] = ackBytes;
-                                        _lastUploadAckTime[tcpchan] = ackTime;
-                                        _lastUploadRateBytes[tcpchan] = ackBytes;
-                                        _lastUploadRateTime[tcpchan] = ackTime;
-                                        //fixme: workingRequest.reportProgress(ackBytes);
+                                    _remoteSerial = YAPI.DefaultEncoding.GetString(serial_char, 0, len);
+                                    _remoteNouce = nounce;
+                                    _connectionTime = YAPI.GetTickCount();
+                                    Random randomGenerator = new Random();
+                                    _nounce = (uint) randomGenerator.Next();
+                                    _connectionState = ConnectionState.AUTHENTICATING;
+                                    await sendAuthenticationMeta(_webSock);
+                                    break;
+                                case YGenericHub.USB_META_WS_AUTHENTICATION:
+                                    if (_connectionState != ConnectionState.AUTHENTICATING)
+                                        return;
+                                    version = messageReader.ReadByte();
+                                    if (version < YGenericHub.USB_META_WS_PROTO_V1 || messageSize < YGenericHub.USB_META_WS_AUTHENTICATION_SIZE) {
+                                        return;
                                     }
-                                }
 
-                                break;
-                            default:
-                                WSLOG(string.Format("unhandled Meta pkt {0}", ystream));
-                                break;
-                        }
+                                    _tcpRoundTripTime = YAPI.GetTickCount() - _connectionTime + 1;
+                                    long uploadRate = _tcpMaxWindowSize * 1000 / (int) _tcpRoundTripTime;
+                                    _hub._yctx._Log(string.Format("WS:RTT={0}ms, WS={1}, uploadRate={2} KB/s\n", _tcpRoundTripTime, _tcpMaxWindowSize, uploadRate / 1000.0));
+                                    int flags = messageReader.ReadInt16();
+                                    messageReader.ReadUInt32(); // drop nounce
+                                    if ((flags & YGenericHub.USB_META_WS_AUTH_FLAGS_RW) != 0)
+                                        _rwAccess = true;
+                                    if ((flags & YGenericHub.USB_META_WS_VALID_SHA1) != 0) {
+                                        byte[] remote_sha1 = new byte[20];
+                                        messageReader.ReadBytes(remote_sha1);
+                                        byte[] sha1 = imm_computeAUTH(_hub._http_params.User, _hub._http_params.Pass, _remoteSerial, _nounce);
+                                        if (remote_sha1.SequenceEqual(sha1)) {
+                                            _connectionState = ConnectionState.CONNECTED;
+                                        } else {
+                                            errorOnSession(YAPI.UNAUTHORIZED, string.Format("Authentication as {0} failed", _hub._http_params.User));
+                                        }
+                                    } else {
+                                        if (!_hub._http_params.imm_hasAuthParam()) {
+                                            _connectionState = ConnectionState.CONNECTED;
+                                        } else {
+                                            if (_hub._http_params.User == "admin" && !_rwAccess) {
+                                                errorOnSession(YAPI.UNAUTHORIZED, string.Format("Authentication as {0} failed", _hub._http_params.User));
+                                            } else {
+                                                errorOnSession(YAPI.UNAUTHORIZED, string.Format("Authentication error : hub has no password for {0}", _hub._http_params.User));
+                                            }
+                                        }
+                                    }
 
-                        break;
-                    default:
-                        _hub._yctx._Log(string.Format("Invalid WS stream type ({0})\n", ystream));
-                        break;
+                                    break;
+                                case YGenericHub.USB_META_WS_ERROR:
+                                    // drop reserved byte
+                                    messageReader.ReadByte();
+                                    int html_error = messageReader.ReadUInt16();
+                                    if (html_error == 401) {
+                                        errorOnSession(YAPI.UNAUTHORIZED, "Authentication failed");
+                                    } else {
+                                        errorOnSession(YAPI.IO_ERROR, string.Format("Remote hub closed connection with error %d", html_error));
+                                    }
+
+                                    break;
+                                case YGenericHub.USB_META_ACK_UPLOAD:
+                                    int tcpchan = messageReader.ReadByte();
+                                    workingRequest = _workingRequests[tcpchan].Peek();
+                                    if (workingRequest != null) {
+                                        int b0 = messageReader.ReadByte();
+                                        int b1 = messageReader.ReadByte();
+                                        int b2 = messageReader.ReadByte();
+                                        int b3 = messageReader.ReadByte();
+                                        int ackBytes = b0 + (b1 << 8) + (b2 << 16) + (b3 << 24);
+                                        ulong ackTime = YAPI.GetTickCount();
+                                        if (_lastUploadAckTime[tcpchan] != 0 && ackBytes > _lastUploadAckBytes[tcpchan]) {
+                                            _lastUploadAckBytes[tcpchan] = ackBytes;
+                                            _lastUploadAckTime[tcpchan] = ackTime;
+
+                                            int deltaBytes = ackBytes - _lastUploadRateBytes[tcpchan];
+                                            ulong deltaTime = ackTime - _lastUploadRateTime[tcpchan];
+                                            if (deltaTime < 500)
+                                                break; // wait more
+                                            if (deltaTime < 1000 && deltaBytes < 65536)
+                                                break; // wait more
+                                            _lastUploadRateBytes[tcpchan] = ackBytes;
+                                            _lastUploadRateTime[tcpchan] = ackTime;
+                                            //fixme: workingRequest.reportProgress(ackBytes);
+                                            double newRate = deltaBytes * 1000.0 / deltaTime;
+                                            _uploadRate = (int) (0.8 * _uploadRate + 0.3 * newRate); // +10% intentionally
+                                            _hub._yctx._Log(string.Format("Upload rate: {0:F2} KB/s (based on {1:F2} KB in {2:F}s)\n", newRate / 1000.0, deltaBytes / 1000.0, deltaTime / 1000.0));
+                                        } else {
+                                            _hub._yctx._Log("First Ack received\n");
+                                            _lastUploadAckBytes[tcpchan] = ackBytes;
+                                            _lastUploadAckTime[tcpchan] = ackTime;
+                                            _lastUploadRateBytes[tcpchan] = ackBytes;
+                                            _lastUploadRateTime[tcpchan] = ackTime;
+                                            //fixme: workingRequest.reportProgress(ackBytes);
+                                        }
+                                    }
+
+                                    break;
+                                default:
+                                    WSLOG(string.Format("unhandled Meta pkt {0}", ystream));
+                                    break;
+                            }
+
+                            break;
+                        default:
+                            _hub._yctx._Log(string.Format("Invalid WS stream type ({0})\n", ystream));
+                            break;
+                    }
                 }
             } catch (Exception ex) {
                 _hub._yctx._Log(string.Format("Exception during WS message decoding :{0}\n", ex.Message));

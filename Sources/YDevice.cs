@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDevice.cs 30232 2018-03-05 14:15:57Z seb $
+ * $Id: YDevice.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Internal YDevice class
  *
@@ -158,7 +158,7 @@ namespace com.yoctopuce.YoctoAPI
                 throw new YAPI_Exception(YAPI.IO_ERROR, "Request failed, could not parse API (" + ex.Message + ")");
             }
 
-            this._cache_expiration = YAPI.GetTickCount() + YAPI.DefaultCacheValidity;
+            this._cache_expiration = YAPI.GetTickCount() + await YAPI.imm_GetYCtx().GetCacheValidity();
             this._cache_json = cache_json;
             return cache_json;
         }

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataSet.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YDataSet.cs 31435 2018-08-07 14:11:47Z mvuilleu $
  *
  * Implements yFindDataSet(), the high-level API for DataSet functions
  *
@@ -445,7 +445,11 @@ public class YDataSet
                 url = stream.imm_get_url();
             }
         }
-        return await this.processMore(_progress, await _parent._download(url));
+        try {
+            return await this.processMore(_progress, await _parent._download(url));
+        } catch (Exception) {
+            return await this.processMore(_progress, await _parent._download(url));
+        }
     }
 
     /**

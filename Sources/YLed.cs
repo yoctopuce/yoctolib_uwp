@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YLed.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YLed.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindLed(), the high-level API for Led functions
  *
@@ -157,7 +157,7 @@ public class YLed : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return POWER_INVALID;
             }
         }
@@ -213,7 +213,7 @@ public class YLed : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return LUMINOSITY_INVALID;
             }
         }
@@ -271,7 +271,7 @@ public class YLed : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return BLINKING_INVALID;
             }
         }

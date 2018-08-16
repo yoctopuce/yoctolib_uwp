@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YVoltageOutput.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YVoltageOutput.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindVoltageOutput(), the high-level API for VoltageOutput functions
  *
@@ -176,7 +176,7 @@ public class YVoltageOutput : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return CURRENTVOLTAGE_INVALID;
             }
         }
@@ -194,7 +194,7 @@ public class YVoltageOutput : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VOLTAGETRANSITION_INVALID;
             }
         }
@@ -260,7 +260,7 @@ public class YVoltageOutput : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VOLTAGEATSTARTUP_INVALID;
             }
         }

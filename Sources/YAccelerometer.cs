@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YAccelerometer.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YAccelerometer.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindAccelerometer(), the high-level API for Accelerometer functions
  *
@@ -178,7 +178,7 @@ public class YAccelerometer : YSensor
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return BANDWIDTH_INVALID;
             }
         }
@@ -236,7 +236,7 @@ public class YAccelerometer : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return XVALUE_INVALID;
             }
         }
@@ -264,7 +264,7 @@ public class YAccelerometer : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return YVALUE_INVALID;
             }
         }
@@ -292,7 +292,7 @@ public class YAccelerometer : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ZVALUE_INVALID;
             }
         }
@@ -310,7 +310,7 @@ public class YAccelerometer : YSensor
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return GRAVITYCANCELLATION_INVALID;
             }
         }

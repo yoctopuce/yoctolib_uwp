@@ -37,11 +37,9 @@ namespace Prog_EventBased
         {
             int thid = Environment.CurrentManagedThreadId;
             Debug.Write("[" + thid + "]:" + line);
-            //Output.Text += "YAPI:"+line;
         }
 
 #pragma warning restore 1998
-
 
 
         async Task anButtonValueChangeCallBack(YFunction fct, string value)
@@ -64,11 +62,17 @@ namespace Prog_EventBased
             Output.Text += "log:" + await module.get_hardwareId() + ":" + logline;
         }
 
+        async Task configChange(YModule m)
+        {
+            Output.Text += "config change: " + await m.get_serialNumber() + "\n";
+        }
+
         async Task deviceArrival(YModule m)
         {
             string serial = await m.get_serialNumber();
             Output.Text += "Device arrival : " + serial + "\n";
             await m.registerLogCallback(deviceLog);
+            await m.registerConfigChangeCallback(configChange);
 
             // First solution: look for a specific type of function (eg. anButton)
             int fctcount = await m.functionCount();
@@ -91,6 +95,7 @@ namespace Prog_EventBased
                     await sensor.registerValueCallback(sensorValueChangeCallBack);
                     await sensor.registerTimedReportCallback(sensorTimedReportCallBack);
                 }
+
                 sensor = sensor.nextSensor();
             }
         }
@@ -105,14 +110,14 @@ namespace Prog_EventBased
             DispatcherTimer timer = (DispatcherTimer) sender;
             timer.Stop();
             try {
-                int res = await YAPI.UpdateDeviceList();
+                await YAPI.UpdateDeviceList();
                 await YAPI.HandleEvents();
             } catch (YAPI_Exception ex) {
                 Output.Text += "Error:" + ex.Message;
                 throw;
             }
-            timer.Start();
 
+            timer.Start();
         }
 
         private bool started = false;
@@ -130,11 +135,11 @@ namespace Prog_EventBased
                     Output.Text = "Error:" + ex.Message + "\n";
                     return;
                 }
+
                 timer = new DispatcherTimer();
                 timer.Interval = new TimeSpan(0, 0, 0, 0, 100); // 100 Milliseconds 
                 timer.Tick += new EventHandler<object>(Each_Tick);
                 timer.Start();
-                Output.Text = "Init done:\n";
                 initButton.Content = "Stop";
                 started = true;
             } else {
@@ -144,6 +149,5 @@ namespace Prog_EventBased
                 started = false;
             }
         }
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 30226 2018-03-05 10:35:53Z seb $
+ * $Id: YAPIContext.cs 31698 2018-08-16 14:40:28Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -45,10 +45,31 @@ using System.Threading.Tasks;
 
 namespace com.yoctopuce.YoctoAPI
 {
-    public class YAPIContext
-    {
+//--- (generated code: YAPIContext return codes)
+//--- (end of generated code: YAPIContext return codes)
+//--- (generated code: YAPIContext class start)
+/**
+ * <summary>
+ *   YAPIContext Class: Control interface for the firmware update process
+ * <para>
+ * </para>
+ * <para>
+ * </para>
+ * </summary>
+ */
+public class YAPIContext
+{
+//--- (end of generated code: YAPIContext class start)
+        internal ulong _deviceListValidityMs = 10000;
+
+        //--- (generated code: YAPIContext definitions)
+    protected ulong _cacheValidity = 5;
+
+    //--- (end of generated code: YAPIContext definitions)
+
         internal class DataEvent
         {
+            internal readonly YModule _module;
             internal readonly YFunction _fun;
             internal readonly string _value;
             internal readonly List<int> _report;
@@ -58,7 +79,17 @@ namespace com.yoctopuce.YoctoAPI
             public DataEvent(YFunction fun, string value)
             {
                 _fun = fun;
+                _module = null;
                 _value = value;
+                _report = null;
+                _timestamp = 0;
+            }
+
+            public DataEvent(YModule module)
+            {
+                _fun = null;
+                _module = module;
+                _value = null;
                 _report = null;
                 _timestamp = 0;
             }
@@ -66,6 +97,7 @@ namespace com.yoctopuce.YoctoAPI
             public DataEvent(YFunction fun, double timestamp, List<int> report)
             {
                 _fun = fun;
+                _module = null;
                 _value = null;
                 _timestamp = timestamp;
                 _report = report;
@@ -73,7 +105,9 @@ namespace com.yoctopuce.YoctoAPI
 
             public virtual async Task invoke()
             {
-                if (_value == null) {
+                if (_module != null) {
+                    await _module._invokeConfigChangeCallback();
+                } else if (_value == null) {
                     YSensor sensor = (YSensor) _fun;
                     YMeasure mesure = await sensor._decodeTimedReport(_timestamp, _report);
                     await sensor._invokeTimedReportCallback(mesure);
@@ -122,6 +156,7 @@ namespace com.yoctopuce.YoctoAPI
                 negate = true;
                 val = -val;
             }
+
             int exp = val >> 11;
             res = (double) (mantis) * decExp[exp];
             return (negate ? -res : res);
@@ -139,21 +174,25 @@ namespace com.yoctopuce.YoctoAPI
             if (val == 0.0) {
                 return 0;
             }
+
             if (val < 0) {
                 negate = 1;
                 val = -val;
             }
+
             comp = val / 1999.0;
             decpow = 0;
             while (comp > decExp[decpow] && decpow < 15) {
                 decpow++;
             }
+
             mant = val / decExp[decpow];
             if (decpow == 15 && mant > 2047.0) {
                 res = (15 << 11) + 2047; // overflow
             } else {
                 res = (decpow << 11) + Convert.ToInt32(mant);
             }
+
             return (negate != 0 ? -res : res);
         }
 
@@ -182,6 +221,7 @@ namespace com.yoctopuce.YoctoAPI
                     if (p + 2 > sdat.Length) {
                         return udat;
                     }
+
                     val = (c - '0');
                     c = sdat[p++];
                     val += (c - '0') << 5;
@@ -190,8 +230,10 @@ namespace com.yoctopuce.YoctoAPI
                         c = '\\';
                     val += (c - '0') << 10;
                 }
+
                 udat.Add((int) val);
             }
+
             return udat;
         }
 
@@ -209,15 +251,19 @@ namespace com.yoctopuce.YoctoAPI
                     if (p >= sdat.Length) {
                         return idat;
                     }
+
                     c = sdat[p++];
                 }
+
                 if (c == '-') {
                     if (p >= sdat.Length) {
                         return idat;
                     }
+
                     sign = -sign;
                     c = sdat[p++];
                 }
+
                 while ((c >= '0' && c <= '9') || c == '.') {
                     if (c == '.') {
                         decInc = 1;
@@ -225,12 +271,14 @@ namespace com.yoctopuce.YoctoAPI
                         val = val * 10 + (c - '0');
                         dec += decInc;
                     }
+
                     if (p < sdat.Length) {
                         c = sdat[p++];
                     } else {
                         c = 0;
                     }
                 }
+
                 if (dec < 3) {
                     if (dec == 0)
                         val *= 1000;
@@ -239,8 +287,10 @@ namespace com.yoctopuce.YoctoAPI
                     else
                         val *= 10;
                 }
+
                 idat.Add(sign * val);
             }
+
             return idat;
         }
 
@@ -252,9 +302,11 @@ namespace com.yoctopuce.YoctoAPI
             if (source == null || match == null) {
                 return -1;
             }
+
             if (source.Length == 0 || match.Length == 0) {
                 return -1;
             }
+
             int ret = -1;
             int spos = 0;
             int mpos = 0;
@@ -268,6 +320,7 @@ namespace com.yoctopuce.YoctoAPI
                     else if (mpos == match.Length - 1) {
                         return ret;
                     }
+
                     mpos++;
                     m = match[mpos];
                 } else {
@@ -276,6 +329,7 @@ namespace com.yoctopuce.YoctoAPI
                     m = match[mpos];
                 }
             }
+
             return ret;
         }
 
@@ -287,6 +341,7 @@ namespace com.yoctopuce.YoctoAPI
                 res += "-";
                 rounded = -rounded;
             }
+
             res += Convert.ToString((int) (rounded / 1000));
             int decim = rounded % 1000;
             if (decim > 0) {
@@ -301,6 +356,7 @@ namespace com.yoctopuce.YoctoAPI
                     decim /= 10;
                 res += Convert.ToString(decim);
             }
+
             return res;
         }
 
@@ -310,15 +366,18 @@ namespace com.yoctopuce.YoctoAPI
             while (p < val.Length && Char.IsWhiteSpace(val[p])) {
                 p++;
             }
+
             int start = p;
             if (p < val.Length && (val[p] == '-' || val[p] == '+'))
                 p++;
             while (p < val.Length && Char.IsDigit(val[p])) {
                 p++;
             }
+
             if (start < p) {
                 return int.Parse(val.Substring(start, p - start));
             }
+
             return 0;
         }
 
@@ -332,6 +391,7 @@ namespace com.yoctopuce.YoctoAPI
                 hexChars[j * 2] = _hexArray[v >> 4];
                 hexChars[j * 2 + 1] = _hexArray[v & 0x0F];
             }
+
             return new string(hexChars);
         }
 
@@ -352,8 +412,10 @@ namespace com.yoctopuce.YoctoAPI
                         val += c - 'a' + 10;
                     }
                 }
+
                 res[i] = (byte) val;
             }
+
             return res;
         }
 
@@ -374,6 +436,7 @@ namespace com.yoctopuce.YoctoAPI
             if (dotpos >= 0) {
                 funcid = funcid.Substring(dotpos + 1);
             }
+
             int classlen = funcid.Length;
 
             while (funcid[classlen - 1] <= 57) {
@@ -392,8 +455,7 @@ namespace com.yoctopuce.YoctoAPI
             string h = null;
             for (i = 0; i < changeval.Length; i++) {
                 c = changeval[i];
-                if (c <= ' ' || (c > 'z' && c != '~') || c == '"' || c == '%' || c == '&' ||
-                    c == '+' || c == '<' || c == '=' || c == '>' || c == '\\' || c == '^' || c == '`') {
+                if (c <= ' ' || (c > 'z' && c != '~') || c == '"' || c == '%' || c == '&' || c == '+' || c == '<' || c == '=' || c == '>' || c == '\\' || c == '^' || c == '`') {
                     int hh;
                     if ((c == 0xc2 || c == 0xc3) && (i + 1 < changeval.Length) && (changeval[i + 1] & 0xc0) == 0x80) {
                         // UTF8-encoded ISO-8859-1 character: translate to plain ISO-8859-1
@@ -403,6 +465,7 @@ namespace com.yoctopuce.YoctoAPI
                     } else {
                         hh = c;
                     }
+
                     h = hh.ToString("X");
                     if ((h.Length < 2))
                         h = "0" + h;
@@ -411,10 +474,10 @@ namespace com.yoctopuce.YoctoAPI
                     espcaped += c;
                 }
             }
+
             return espcaped;
         }
 
-        public ulong DefaultCacheValidity = 5;
 
         //todo: Replace global encding to the YAPIContext one
         //internal string _defaultEncoding = YAPI.DefaultEncoding;
@@ -438,12 +501,11 @@ namespace com.yoctopuce.YoctoAPI
         internal readonly YHash _yHash;
         private readonly List<YFunction> _ValueCallbackList = new List<YFunction>();
         private readonly List<YFunction> _TimedReportCallbackList = new List<YFunction>();
-        
+
         internal readonly Dictionary<string, YPEntry.BaseClass> _BaseType = new Dictionary<string, YPEntry.BaseClass>();
 
-       
 
-        // fixme: review SSDP code        
+        // fixme: review SSDP code
         internal async void HubDiscoveryCallback(string serial, string urlToRegister, string urlToUnregister)
         {
             if (urlToRegister != null) {
@@ -451,11 +513,13 @@ namespace com.yoctopuce.YoctoAPI
                     await _HubDiscoveryCallback(serial, urlToRegister);
                 }
             }
+
             if ((this._apiMode & YAPI.DETECT_NET) != 0) {
                 if (urlToRegister != null) {
                     if (urlToUnregister != null) {
                         await this.UnregisterHub(urlToUnregister);
                     }
+
                     try {
                         await this.PreregisterHub(urlToRegister);
                     } catch (YAPI_Exception ex) {
@@ -479,12 +543,14 @@ namespace com.yoctopuce.YoctoAPI
                 if (npt > rawValues.Count) {
                     npt = rawValues.Count;
                 }
+
                 if (npt > refValues.Count) {
                     npt = refValues.Count;
                 }
             } else {
                 npt = refValues.Count;
             }
+
             while (rawValue > rawValues[i] && ++i < npt) {
                 double x2 = x;
                 double adj2 = adj;
@@ -496,6 +562,7 @@ namespace com.yoctopuce.YoctoAPI
                     adj = adj2 + (adj - adj2) * (rawValue - x2) / (x - x2);
                 }
             }
+
             return rawValue + adj;
         }
 
@@ -506,6 +573,8 @@ namespace com.yoctopuce.YoctoAPI
             _yHash = new YHash(this);
             _ssdp = new YSSDP(this);
             imm_resetContext();
+            //--- (generated code: YAPIContext attributes initialization)
+        //--- (end of generated code: YAPIContext attributes initialization)        
         }
 
         private void imm_resetContext()
@@ -528,11 +597,11 @@ namespace com.yoctopuce.YoctoAPI
             for (int i = 1; i <= 20; i++) {
                 _calibHandlers[i] = linearCalibrationHandler;
             }
+
             _calibHandlers[YAPI.YOCTO_CALIB_TYPE_OFS] = linearCalibrationHandler;
             _BaseType.Clear();
             _BaseType["Function"] = YPEntry.BaseClass.Function;
             _BaseType["Sensor"] = YPEntry.BaseClass.Sensor;
-
         }
 
         internal void _pushPlugEvent(PlugEvent.Event ev, string serial)
@@ -555,6 +624,7 @@ namespace com.yoctopuce.YoctoAPI
             if (!_calibHandlers.ContainsKey(calibType)) {
                 return null;
             }
+
             return _calibHandlers[calibType];
         }
 
@@ -572,6 +642,7 @@ namespace com.yoctopuce.YoctoAPI
                     resolved = _yHash.imm_resolveSerial(className, func);
                 }
             }
+
             YDevice dev = _yHash.imm_getDevice(resolved);
             if (dev == null) {
                 // try to force a device list update to check if the device arrived
@@ -582,6 +653,7 @@ namespace com.yoctopuce.YoctoAPI
                     throw new YAPI_Exception(YAPI.DEVICE_NOT_FOUND, "Device [" + resolved + "] not online");
                 }
             }
+
             return dev;
         }
 
@@ -608,6 +680,7 @@ namespace com.yoctopuce.YoctoAPI
                     }
                 } catch (YAPI_Exception) { }
             }
+
             return null;
         }
 
@@ -634,6 +707,7 @@ namespace com.yoctopuce.YoctoAPI
                     }
                 } catch (YAPI_Exception) { }
             }
+
             return null;
         }
 
@@ -644,6 +718,7 @@ namespace com.yoctopuce.YoctoAPI
                     return YAPI.SUCCESS;
                 }
             }
+
             YGenericHub newhub;
             YGenericHub.HTTPParams parsedurl;
             parsedurl = new YGenericHub.HTTPParams(url);
@@ -658,6 +733,7 @@ namespace com.yoctopuce.YoctoAPI
                     // todo: review ssdp callback
                     //_ssdp.addCallback(_ssdpCallback);
                 }
+
                 return YAPI.SUCCESS;
             } else if (parsedurl.Host.Equals("callback")) {
                 //todo: add SUPPORT FOR CALLBACK
@@ -665,6 +741,7 @@ namespace com.yoctopuce.YoctoAPI
             } else {
                 newhub = new YHTTPHub(this, _hubs.Count, parsedurl, reportConnnectionLost);
             }
+
             _hubs.Add(newhub);
             await newhub.startNotifications();
             return YAPI.SUCCESS;
@@ -689,30 +766,35 @@ namespace com.yoctopuce.YoctoAPI
                     if (_pendingCallbacks.Count == 0) {
                         break;
                     }
+
                     evt = _pendingCallbacks.First.Value;
                     _pendingCallbacks.RemoveFirst();
                     switch (evt.ev) {
                         case com.yoctopuce.YoctoAPI.YAPIContext.PlugEvent.Event.PLUG:
                             if (_arrivalCallback != null) {
-                                YModule module = YModule.FindModuleInContext(this, evt.serial+".module");
+                                YModule module = YModule.FindModuleInContext(this, evt.serial + ".module");
                                 await _arrivalCallback(module);
                             }
+
                             break;
                         case com.yoctopuce.YoctoAPI.YAPIContext.PlugEvent.Event.CHANGE:
                             if (_namechgCallback != null) {
                                 YModule module = YModule.FindModuleInContext(this, evt.serial + ".module");
                                 await _namechgCallback(module);
                             }
+
                             break;
                         case com.yoctopuce.YoctoAPI.YAPIContext.PlugEvent.Event.UNPLUG:
                             if (_removalCallback != null) {
                                 YModule module = YModule.FindModuleInContext(this, evt.serial + ".module");
                                 await _removalCallback(module);
                             }
+
                             _yHash.imm_forgetDevice(evt.serial);
                             break;
                     }
                 }
+
                 if (_arrivalCallback != null && _firstArrival) {
                     _firstArrival = false;
                 }
@@ -725,21 +807,140 @@ namespace com.yoctopuce.YoctoAPI
                 _logCallback(message);
             }
         }
+#pragma warning disable 1998
+
+        private async Task SetDeviceListValidity_internal(int deviceListValidity)
+        {
+            _deviceListValidityMs = (ulong) (deviceListValidity * 1000);
+        }
+
+        private async Task<int> GetDeviceListValidity_internal()
+        {
+            return (int) (_deviceListValidityMs / 1000);
+
+        }
+#pragma warning restore 1998
 
 
         //PUBLIC METHOD:
 
+        //--- (generated code: YAPIContext implementation)
+#pragma warning disable 1998
+
+    //cannot be generated for UWP:
+    //public virtual async Task SetDeviceListValidity_internal(int deviceListValidity)
+    /**
+     * <summary>
+     *   Change the time between each forced enumeration of the YoctoHub used.
+     * <para>
+     *   By default, the library performs a complete enumeration every 10 seconds.
+     *   To reduce network traffic it is possible to increase this delay.
+     *   This is particularly useful when a YoctoHub is connected to a GSM network
+     *   where the traffic is charged. This setting does not affect modules connected by USB,
+     *   nor the operation of arrival/removal callbacks.
+     *   Note: This function must be called after <c>yInitAPI</c>.
+     * </para>
+     * </summary>
+     * <param name="deviceListValidity">
+     *   number of seconds between each enumeration.
+     * </param>
+     */
+    public virtual async Task SetDeviceListValidity(int deviceListValidity)
+    {
+        await SetDeviceListValidity_internal(deviceListValidity);
+    }
+
+    //cannot be generated for UWP:
+    //public virtual async Task<int> GetDeviceListValidity_internal()
+    /**
+     * <summary>
+     *   Returns the time between each forced enumeration of the YoctoHub used.
+     * <para>
+     *   Note: This function must be called after <c>yInitAPI</c>.
+     * </para>
+     * </summary>
+     * <returns>
+     *   the number of seconds between each enumeration.
+     * </returns>
+     */
+    public virtual async Task<int> GetDeviceListValidity()
+    {
+        return await GetDeviceListValidity_internal();
+    }
+
+    /**
+     * <summary>
+     *   Change the validity period of the data loaded by the library.
+     * <para>
+     *   By default, when accessing a module, all the attributes of the
+     *   module functions are automatically kept in cache for the standard
+     *   duration (5 ms). This method can be used to change this standard duration,
+     *   for example in order to reduce network or USB traffic. This parameter
+     *   does not affect value change callbacks
+     *   Note: This function must be called after <c>yInitAPI</c>.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="cacheValidityMs">
+     *   an integer corresponding to the validity attributed to the
+     *   loaded function parameters, in milliseconds
+     * </param>
+     */
+    public virtual async Task SetCacheValidity(ulong cacheValidityMs)
+    {
+        _cacheValidity = cacheValidityMs;
+    }
+
+    /**
+     * <summary>
+     *   Returns the validity period of the data loaded by the library.
+     * <para>
+     *   This method returns the cache validity of all attributes
+     *   module functions.
+     *   Note: This function must be called after <c>yInitAPI </c>.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the validity attributed to the
+     *   loaded function parameters, in milliseconds
+     * </returns>
+     */
+    public virtual async Task<ulong> GetCacheValidity()
+    {
+        return _cacheValidity;
+    }
+
+#pragma warning restore 1998
+    //--- (end of generated code: YAPIContext implementation)
 
         /**
-        *
-        */
+         * <summary>
+         *   Disables the use of exceptions to report runtime errors.
+         * <para>
+         *   When exceptions are disabled, every function returns a specific
+         *   error value which depends on its type and which is documented in
+         *   this reference manual.
+         * </para>
+         * </summary>
+         */
         public void DisableExceptions()
         {
             _exceptionsDisabled = true;
         }
 
         /**
-         *
+         * <summary>
+         *   Re-enables the use of exceptions for runtime error handling.
+         * <para>
+         *   Be aware than when exceptions are enabled, every function that fails
+         *   triggers an exception. If the exception is not caught by the user code,
+         *   it  either fires the debugger or aborts (i.e. crash) the program.
+         *   On failure, throws an exception or returns a negative error code.
+         * </para>
+         * </summary>
          */
         public void EnableExceptions()
         {
@@ -748,7 +949,28 @@ namespace com.yoctopuce.YoctoAPI
 
 
         /**
-         *
+         * <summary>
+         *   Returns the version identifier for the Yoctopuce library in use.
+         * <para>
+         *   The version is a string in the form <c>"Major.Minor.Build"</c>,
+         *   for instance <c>"1.01.5535"</c>. For languages using an external
+         *   DLL (for instance C#, VisualBasic or Delphi), the character string
+         *   includes as well the DLL version, for instance
+         *   <c>"1.01.5535 (1.01.5439)"</c>.
+         * </para>
+         * <para>
+         *   If you want to verify in your code that the library version is
+         *   compatible with the version that you have used during development,
+         *   verify that the major number is strictly equal and that the minor
+         *   number is greater or equal. The build number is not relevant
+         *   with respect to the library compatibility.
+         * </para>
+         * <para>
+         * </para>
+         * </summary>
+         * <returns>
+         *   a character string describing the library version.
+         * </returns>
          */
         public static string GetAPIVersion()
         {
@@ -757,7 +979,34 @@ namespace com.yoctopuce.YoctoAPI
 
 
         /**
-         *
+         * <summary>
+         *   Initializes the Yoctopuce programming library explicitly.
+         * <para>
+         *   It is not strictly needed to call <c>yInitAPI()</c>, as the library is
+         *   automatically  initialized when calling <c>yRegisterHub()</c> for the
+         *   first time.
+         * </para>
+         * <para>
+         *   When <c>YAPI.DETECT_NONE</c> is used as detection <c>mode</c>,
+         *   you must explicitly use <c>yRegisterHub()</c> to point the API to the
+         *   VirtualHub on which your devices are connected before trying to access them.
+         * </para>
+         * </summary>
+         * <param name="mode">
+         *   an integer corresponding to the type of automatic
+         *   device detection to use. Possible values are
+         *   <c>YAPI.DETECT_NONE</c>, <c>YAPI.DETECT_USB</c>, <c>YAPI.DETECT_NET</c>,
+         *   and <c>YAPI.DETECT_ALL</c>.
+         * </param>
+         * <param name="errmsg">
+         *   a string passed by reference to receive any error message.
+         * </param>
+         * <returns>
+         *   <c>YAPI.SUCCESS</c> when the call succeeds.
+         * </returns>
+         * <para>
+         *   On failure, throws an exception or returns a negative error code.
+         * </para>
          */
         public async Task<int> InitAPI(int mode)
         {
@@ -768,33 +1017,107 @@ namespace com.yoctopuce.YoctoAPI
                     return res;
                 }
             }
+
             if ((mode & YAPI.RESEND_MISSING_PKT) != 0) {
                 YAPI.pktAckDelay = YAPI.DEFAULT_PKT_RESEND_DELAY;
             }
+
             if ((mode & YAPI.DETECT_USB) != 0) {
                 res = await RegisterHub("usb");
             }
+
             return res;
         }
 
         /**
-         *
+         * <summary>
+         *   Frees dynamically allocated memory blocks used by the Yoctopuce library.
+         * <para>
+         *   It is generally not required to call this function, unless you
+         *   want to free all dynamically allocated memory blocks in order to
+         *   track a memory leak for instance.
+         *   You should not call any other library function after calling
+         *   <c>yFreeAPI()</c>, or your program will crash.
+         * </para>
+         * </summary>
          */
         public void FreeAPI()
         {
             if ((_apiMode & YAPI.DETECT_NET) != 0) {
                 _ssdp.Stop();
             }
+
             foreach (YGenericHub h in _hubs) {
                 h.stopNotifications();
                 h.imm_release();
             }
+
             imm_resetContext();
         }
 
 
         /**
-         *
+         * <summary>
+         *   Setup the Yoctopuce library to use modules connected on a given machine.
+         * <para>
+         *   The
+         *   parameter will determine how the API will work. Use the following values:
+         * </para>
+         * <para>
+         *   <b>usb</b>: When the <c>usb</c> keyword is used, the API will work with
+         *   devices connected directly to the USB bus. Some programming languages such a Javascript,
+         *   PHP, and Java don't provide direct access to USB hardware, so <c>usb</c> will
+         *   not work with these. In this case, use a VirtualHub or a networked YoctoHub (see below).
+         * </para>
+         * <para>
+         *   <b><i>x.x.x.x</i></b> or <b><i>hostname</i></b>: The API will use the devices connected to the
+         *   host with the given IP address or hostname. That host can be a regular computer
+         *   running a VirtualHub, or a networked YoctoHub such as YoctoHub-Ethernet or
+         *   YoctoHub-Wireless. If you want to use the VirtualHub running on you local
+         *   computer, use the IP address 127.0.0.1.
+         * </para>
+         * <para>
+         *   <b>callback</b>: that keyword make the API run in "<i>HTTP Callback</i>" mode.
+         *   This a special mode allowing to take control of Yoctopuce devices
+         *   through a NAT filter when using a VirtualHub or a networked YoctoHub. You only
+         *   need to configure your hub to call your server script on a regular basis.
+         *   This mode is currently available for PHP and Node.JS only.
+         * </para>
+         * <para>
+         *   Be aware that only one application can use direct USB access at a
+         *   given time on a machine. Multiple access would cause conflicts
+         *   while trying to access the USB modules. In particular, this means
+         *   that you must stop the VirtualHub software before starting
+         *   an application that uses direct USB access. The workaround
+         *   for this limitation is to setup the library to use the VirtualHub
+         *   rather than direct USB access.
+         * </para>
+         * <para>
+         *   If access control has been activated on the hub, virtual or not, you want to
+         *   reach, the URL parameter should look like:
+         * </para>
+         * <para>
+         *   <c>http://username:password@address:port</c>
+         * </para>
+         * <para>
+         *   You can call <i>RegisterHub</i> several times to connect to several machines.
+         * </para>
+         * <para>
+         * </para>
+         * </summary>
+         * <param name="url">
+         *   a string containing either <c>"usb"</c>,<c>"callback"</c> or the
+         *   root URL of the hub to monitor
+         * </param>
+         * <param name="errmsg">
+         *   a string passed by reference to receive any error message.
+         * </param>
+         * <returns>
+         *   <c>YAPI.SUCCESS</c> when the call succeeds.
+         * </returns>
+         * <para>
+         *   On failure, throws an exception or returns a negative error code.
+         * </para>
          */
         public async Task<int> RegisterHub(string url)
         {
@@ -806,7 +1129,31 @@ namespace com.yoctopuce.YoctoAPI
 
 
         /**
-         *
+         * <summary>
+         *   Fault-tolerant alternative to <c>RegisterHub()</c>.
+         * <para>
+         *   This function has the same
+         *   purpose and same arguments as <c>RegisterHub()</c>, but does not trigger
+         *   an error when the selected hub is not available at the time of the function call.
+         *   This makes it possible to register a network hub independently of the current
+         *   connectivity, and to try to contact it only when a device is actively needed.
+         * </para>
+         * <para>
+         * </para>
+         * </summary>
+         * <param name="url">
+         *   a string containing either <c>"usb"</c>,<c>"callback"</c> or the
+         *   root URL of the hub to monitor
+         * </param>
+         * <param name="errmsg">
+         *   a string passed by reference to receive any error message.
+         * </param>
+         * <returns>
+         *   <c>YAPI.SUCCESS</c> when the call succeeds.
+         * </returns>
+         * <para>
+         *   On failure, throws an exception or returns a negative error code.
+         * </para>
          */
         public async Task<int> PreregisterHub(string url)
         {
@@ -819,11 +1166,21 @@ namespace com.yoctopuce.YoctoAPI
                     throw ex;
                 }
             }
+
             return YAPI.SUCCESS;
         }
 
         /**
-         *
+         * <summary>
+         *   Setup the Yoctopuce library to no more use modules connected on a previously
+         *   registered machine with RegisterHub.
+         * <para>
+         * </para>
+         * </summary>
+         * <param name="url">
+         *   a string containing either <c>"usb"</c> or the
+         *   root URL of the hub to monitor
+         * </param>
          */
         public async Task UnregisterHub(string url)
         {
@@ -831,6 +1188,7 @@ namespace com.yoctopuce.YoctoAPI
                 _apiMode &= ~YAPI.DETECT_NET;
                 return;
             }
+
             await unregisterHubEx(url, null, null, null);
         }
 
@@ -842,6 +1200,7 @@ namespace com.yoctopuce.YoctoAPI
                     foreach (string serial in h._serialByYdx.Values) {
                         _yHash.imm_forgetDevice(serial);
                     }
+
                     h.imm_release();
                     _hubs.Remove(h);
                     return;
@@ -851,7 +1210,33 @@ namespace com.yoctopuce.YoctoAPI
 
 
         /**
-         *
+         * <summary>
+         *   Test if the hub is reachable.
+         * <para>
+         *   This method do not register the hub, it only test if the
+         *   hub is usable. The url parameter follow the same convention as the <c>RegisterHub</c>
+         *   method. This method is useful to verify the authentication parameters for a hub. It
+         *   is possible to force this method to return after mstimeout milliseconds.
+         * </para>
+         * <para>
+         * </para>
+         * </summary>
+         * <param name="url">
+         *   a string containing either <c>"usb"</c>,<c>"callback"</c> or the
+         *   root URL of the hub to monitor
+         * </param>
+         * <param name="mstimeout">
+         *   the number of millisecond available to test the connection.
+         * </param>
+         * <param name="errmsg">
+         *   a string passed by reference to receive any error message.
+         * </param>
+         * <returns>
+         *   <c>YAPI.SUCCESS</c> when the call succeeds.
+         * </returns>
+         * <para>
+         *   On failure returns a negative error code.
+         * </para>
          */
         public async Task<int> TestHub(string url, uint mstimeout)
         {
@@ -867,12 +1252,33 @@ namespace com.yoctopuce.YoctoAPI
             } else {
                 newhub = new YHTTPHub(this, 0, parsedurl, true);
             }
+
             return await newhub.ping(mstimeout);
         }
 
 
         /**
-         *
+         * <summary>
+         *   Triggers a (re)detection of connected Yoctopuce modules.
+         * <para>
+         *   The library searches the machines or USB ports previously registered using
+         *   <c>yRegisterHub()</c>, and invokes any user-defined callback function
+         *   in case a change in the list of connected devices is detected.
+         * </para>
+         * <para>
+         *   This function can be called as frequently as desired to refresh the device list
+         *   and to make the application aware of hot-plug events.
+         * </para>
+         * </summary>
+         * <param name="errmsg">
+         *   a string passed by reference to receive any error message.
+         * </param>
+         * <returns>
+         *   <c>YAPI.SUCCESS</c> when the call succeeds.
+         * </returns>
+         * <para>
+         *   On failure, throws an exception or returns a negative error code.
+         * </para>
          */
         public async Task<int> UpdateDeviceList()
         {
@@ -881,7 +1287,29 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         /**
-         *
+         * <summary>
+         *   Maintains the device-to-library communication channel.
+         * <para>
+         *   If your program includes significant loops, you may want to include
+         *   a call to this function to make sure that the library takes care of
+         *   the information pushed by the modules on the communication channels.
+         *   This is not strictly necessary, but it may improve the reactivity
+         *   of the library for the following commands.
+         * </para>
+         * <para>
+         *   This function may signal an error in case there is a communication problem
+         *   while contacting a module.
+         * </para>
+         * </summary>
+         * <param name="errmsg">
+         *   a string passed by reference to receive any error message.
+         * </param>
+         * <returns>
+         *   <c>YAPI.SUCCESS</c> when the call succeeds.
+         * </returns>
+         * <para>
+         *   On failure, throws an exception or returns a negative error code.
+         * </para>
          */
         public async Task<int> HandleEvents()
         {
@@ -892,6 +1320,7 @@ namespace com.yoctopuce.YoctoAPI
                     if (_data_events.Count == 0) {
                         break;
                     }
+
                     pv = _data_events.First.Value;
                     _data_events.RemoveFirst();
                     if (pv != null) {
@@ -905,12 +1334,39 @@ namespace com.yoctopuce.YoctoAPI
                     throw ex;
                 }
             }
+
             return YAPI.SUCCESS;
         }
 
         /**
-        *
-        */
+         * <summary>
+         *   Pauses the execution flow for a specified duration.
+         * <para>
+         *   This function implements a passive waiting loop, meaning that it does not
+         *   consume CPU cycles significantly. The processor is left available for
+         *   other threads and processes. During the pause, the library nevertheless
+         *   reads from time to time information from the Yoctopuce modules by
+         *   calling <c>yHandleEvents()</c>, in order to stay up-to-date.
+         * </para>
+         * <para>
+         *   This function may signal an error in case there is a communication problem
+         *   while contacting a module.
+         * </para>
+         * </summary>
+         * <param name="ms_duration">
+         *   an integer corresponding to the duration of the pause,
+         *   in milliseconds.
+         * </param>
+         * <param name="errmsg">
+         *   a string passed by reference to receive any error message.
+         * </param>
+         * <returns>
+         *   <c>YAPI.SUCCESS</c> when the call succeeds.
+         * </returns>
+         * <para>
+         *   On failure, throws an exception or returns a negative error code.
+         * </para>
+         */
         public async Task<int> Sleep(ulong ms_duration)
         {
             try {
@@ -922,6 +1378,7 @@ namespace com.yoctopuce.YoctoAPI
                         await Task.Delay(new TimeSpan(0, 0, 0, 0, 2));
                     }
                 } while (end > GetTickCount());
+
                 return YAPI.SUCCESS;
             } catch (YAPI_Exception ex) {
                 if (_exceptionsDisabled) {
@@ -934,7 +1391,19 @@ namespace com.yoctopuce.YoctoAPI
 
 
         /**
-         *
+         * <summary>
+         *   Force a hub discovery, if a callback as been registered with <c>yRegisterHubDiscoveryCallback</c> it
+         *   will be called for each net work hub that will respond to the discovery.
+         * <para>
+         * </para>
+         * </summary>
+         * <param name="errmsg">
+         *   a string passed by reference to receive any error message.
+         * </param>
+         * <returns>
+         *   <c>YAPI.SUCCESS</c> when the call succeeds.
+         *   On failure, throws an exception or returns a negative error code.
+         * </returns>
          */
         public Task<int> TriggerHubDiscovery()
         {
@@ -945,7 +1414,16 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         /**
-         *
+         * <summary>
+         *   Returns the current value of a monotone millisecond-based time counter.
+         * <para>
+         *   This counter can be used to compute delays in relation with
+         *   Yoctopuce devices, which also uses the millisecond as timebase.
+         * </para>
+         * </summary>
+         * <returns>
+         *   a long integer corresponding to the millisecond counter.
+         * </returns>
          */
         public static ulong GetTickCount()
         {
@@ -953,7 +1431,21 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         /**
-         *
+         * <summary>
+         *   Checks if a given string is valid as logical name for a module or a function.
+         * <para>
+         *   A valid logical name has a maximum of 19 characters, all among
+         *   <c>A..Z</c>, <c>a..z</c>, <c>0..9</c>, <c>_</c>, and <c>-</c>.
+         *   If you try to configure a logical name with an incorrect string,
+         *   the invalid characters are ignored.
+         * </para>
+         * </summary>
+         * <param name="name">
+         *   a string containing the name to check.
+         * </param>
+         * <returns>
+         *   <c>true</c> if the name is valid, <c>false</c> otherwise.
+         * </returns>
          */
         public bool CheckLogicalName(string name)
         {
@@ -961,7 +1453,18 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         /**
-         *
+         * <summary>
+         *   Register a callback function, to be called each time
+         *   a device is plugged.
+         * <para>
+         *   This callback will be invoked while <c>yUpdateDeviceList</c>
+         *   is running. You will have to call this function on a regular basis.
+         * </para>
+         * </summary>
+         * <param name="arrivalCallback">
+         *   a procedure taking a <c>YModule</c> parameter, or <c>null</c>
+         *   to unregister a previously registered  callback.
+         * </param>
          */
         public void RegisterDeviceArrivalCallback(YAPI.DeviceUpdateHandler arrivalCallback)
         {
@@ -974,7 +1477,18 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         /**
-         *
+         * <summary>
+         *   Register a callback function, to be called each time
+         *   a device is unplugged.
+         * <para>
+         *   This callback will be invoked while <c>yUpdateDeviceList</c>
+         *   is running. You will have to call this function on a regular basis.
+         * </para>
+         * </summary>
+         * <param name="removalCallback">
+         *   a procedure taking a <c>YModule</c> parameter, or <c>null</c>
+         *   to unregister a previously registered  callback.
+         * </param>
          */
         public void RegisterDeviceRemovalCallback(YAPI.DeviceUpdateHandler removalCallback)
         {
@@ -982,7 +1496,22 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         /**
-         *
+         * <summary>
+         *   Register a callback function, to be called each time an Network Hub send
+         *   an SSDP message.
+         * <para>
+         *   The callback has two string parameter, the first one
+         *   contain the serial number of the hub and the second contain the URL of the
+         *   network hub (this URL can be passed to RegisterHub). This callback will be invoked
+         *   while yUpdateDeviceList is running. You will have to call this function on a regular basis.
+         * </para>
+         * <para>
+         * </para>
+         * </summary>
+         * <param name="hubDiscoveryCallback">
+         *   a procedure taking two string parameter, the serial
+         *   number and the hub URL. Use <c>null</c> to unregister a previously registered  callback.
+         * </param>
          */
         public async Task RegisterHubDiscoveryCallback(YAPI.HubDiscoveryHandler hubDiscoveryCallback)
         {
@@ -993,7 +1522,17 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         /**
-         *
+         * <summary>
+         *   Registers a log callback function.
+         * <para>
+         *   This callback will be called each time
+         *   the API have something to say. Quite useful to debug the API.
+         * </para>
+         * </summary>
+         * <param name="logfun">
+         *   a procedure taking a string parameter, or <c>null</c>
+         *   to unregister a previously registered  callback.
+         * </param>
          */
         public void RegisterLogFunction(YAPI.LogHandler logfun)
         {
@@ -1007,6 +1546,7 @@ namespace com.yoctopuce.YoctoAPI
             foreach (YGenericHub h in _hubs) {
                 res += h.get_debugMsg(serial);
             }
+
             return res;
         }
     }

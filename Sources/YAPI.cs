@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 29463 2017-12-20 07:40:43Z mvuilleu $
+ * $Id: YAPI.cs 31698 2018-08-16 14:40:28Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -53,16 +53,11 @@ namespace com.yoctopuce.YoctoAPI
         public string Value { get; set; }
     }
 
-
-    /// 
-    public class YAPI
-    {
-        // Default cache validity (in [ms]) before reloading data from device. This
-        // saves a lots of traffic.
-        // Note that a value under 2 ms makes little sense since a USB bus itself
-        // has a 2ms round trip period
-        //todo: generated code must use defautl cachevalidity form YAPIContext
-        public static ulong DefaultCacheValidity = 5;
+/**
+ *
+ */
+public class YAPI
+{
 
         // Return value for invalid strings
         public const string INVALID_STRING = "!INVALID!";
@@ -71,7 +66,7 @@ namespace com.yoctopuce.YoctoAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "31315";
+        public const string YOCTO_API_BUILD_STR = "31701";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -133,10 +128,7 @@ namespace com.yoctopuce.YoctoAPI
         public delegate double CalibrationHandler(double rawValue, int calibType, List<int> parameters, List<double> rawValues, List<double> refValues);
         public delegate Task HubDiscoveryHandler(string serial, string url);
 
-
         private static YAPIContext _SingleYAPI = null;
-            
-
 
         //todo: Look how to impement YAPIContext strategy
         internal static YAPIContext imm_GetYCtx()
@@ -149,6 +141,89 @@ namespace com.yoctopuce.YoctoAPI
 
 
         //PUBLIC STATIC METHOD:
+
+
+//--- (generated code: YAPIContext yapiwrapper)
+    /**
+     * <summary>
+     *   Change the time between each forced enumeration of the YoctoHub used.
+     * <para>
+     *   By default, the library performs a complete enumeration every 10 seconds.
+     *   To reduce network traffic it is possible to increase this delay.
+     *   This is particularly useful when a YoctoHub is connected to a GSM network
+     *   where the traffic is charged. This setting does not affect modules connected by USB,
+     *   nor the operation of arrival/removal callbacks.
+     *   Note: This function must be called after <c>yInitAPI</c>.
+     * </para>
+     * </summary>
+     * <param name="deviceListValidity">
+     *   number of seconds between each enumeration.
+     * </param>
+     */
+    public static async Task SetDeviceListValidity(int deviceListValidity)
+    {
+        await imm_GetYCtx().SetDeviceListValidity(deviceListValidity);
+    }
+    /**
+     * <summary>
+     *   Returns the time between each forced enumeration of the YoctoHub used.
+     * <para>
+     *   Note: This function must be called after <c>yInitAPI</c>.
+     * </para>
+     * </summary>
+     * <returns>
+     *   the number of seconds between each enumeration.
+     * </returns>
+     */
+    public static async Task<int> GetDeviceListValidity()
+    {
+        return await imm_GetYCtx().GetDeviceListValidity();
+    }
+    /**
+     * <summary>
+     *   Change the validity period of the data loaded by the library.
+     * <para>
+     *   By default, when accessing a module, all the attributes of the
+     *   module functions are automatically kept in cache for the standard
+     *   duration (5 ms). This method can be used to change this standard duration,
+     *   for example in order to reduce network or USB traffic. This parameter
+     *   does not affect value change callbacks
+     *   Note: This function must be called after <c>yInitAPI</c>.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="cacheValidityMs">
+     *   an integer corresponding to the validity attributed to the
+     *   loaded function parameters, in milliseconds
+     * </param>
+     */
+    public static async Task SetCacheValidity(ulong cacheValidityMs)
+    {
+        await imm_GetYCtx().SetCacheValidity(cacheValidityMs);
+    }
+    /**
+     * <summary>
+     *   Returns the validity period of the data loaded by the library.
+     * <para>
+     *   This method returns the cache validity of all attributes
+     *   module functions.
+     *   Note: This function must be called after <c>yInitAPI </c>.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the validity attributed to the
+     *   loaded function parameters, in milliseconds
+     * </returns>
+     */
+    public static async Task<ulong> GetCacheValidity()
+    {
+        return await imm_GetYCtx().GetCacheValidity();
+    }
+//--- (end of generated code: YAPIContext yapiwrapper)
+
 
         /**
          * <summary>
@@ -176,7 +251,7 @@ namespace com.yoctopuce.YoctoAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".31315" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".31701" + YUSBHub.imm_getAPIVersion();
         }
 
         /**

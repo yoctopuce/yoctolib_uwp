@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBDevice.cs 30040 2018-02-22 11:23:12Z seb $
+ * $Id: YUSBDevice.cs 31338 2018-07-23 11:21:01Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -176,6 +176,7 @@ namespace com.yoctopuce.YoctoAPI
         protected const int NOTIFY_PKT_LOG = 7;
         protected const int NOTIFY_PKT_FUNCNAMEYDX = 8;
         protected const int NOTIFY_PKT_PRODINFO = 9;
+        protected const int NOTIFY_PKT_CONFCHANGE = 10;
 
         private const ulong META_UTC_DELAY = 60000;
 
@@ -292,6 +293,9 @@ namespace com.yoctopuce.YoctoAPI
                     return 1;
                 }
             } else if (version != YUSBPkt.YPKT_USB_VERSION_BCD) {
+                if (_devVersion == YUSBPkt.YPKT_USB_VERSION_NO_CONFCHG_BCD && YUSBPkt.YPKT_USB_VERSION_BCD == _devVersion + 1) {
+                    return 0;
+                }
                 if (version > YUSBPkt.YPKT_USB_VERSION_BCD) {
                     _yctx._Log("Device is using a newer protocol, consider upgrading your Yoctopuce library\n");
                 } else {
@@ -389,9 +393,8 @@ namespace com.yoctopuce.YoctoAPI
                 _yctx._Log(ex.Message + "\n");
                 _yctx._Log("Set YAPI.RESEND_MISSING_PKT on YAPI.InitAPI()\n");
                 _devState = DevState.IOError;
-                _watcher.imm_removeUsableDevice(this);
                 if (_currentTask != null) {
-                    _currentTask.SetException(ex);
+                   _currentTask.TrySetException(ex);
                 }
             }
         }
@@ -554,6 +557,11 @@ namespace com.yoctopuce.YoctoAPI
                     case NOTIFY_PKT_LOG:
                         //FIXME: handle log notification
                         break;
+                    case NOTIFY_PKT_CONFCHANGE:
+                        if (_devState == DevState.StreamReadyReceived) {
+                            _hub.handleConfigChangeNotification(SerialNumber);
+                        }
+                        break;;
                     case NOTIFY_PKT_FUNCNAMEYDX:
                         functionId = ystream.imm_GetString(p, YAPI.YOCTO_FUNCTION_LEN - 1);
                         p += YAPI.YOCTO_FUNCTION_LEN - 1;
@@ -570,10 +578,9 @@ namespace com.yoctopuce.YoctoAPI
                         _usbYP[functionId].LogicalName = funcname;
                         break;
                     case NOTIFY_PKT_PRODINFO:
-                        break;
                     default:
-                        //fixme: Find why this happening on my dev computer 
-                        throw new YAPI_Exception(YAPI.IO_ERROR, "Invalid Notification");
+                        // silently ignore unknown notifications
+                        break;
                 }
             }
         }
@@ -710,7 +717,7 @@ namespace com.yoctopuce.YoctoAPI
             } catch (Exception ex) {
                 _devState = DevState.IOError;
                 _currentRequest = null;
-                throw new YAPI_Exception(YAPI.IO_ERROR ,ex.Message);
+                throw new YAPI_Exception(YAPI.IO_ERROR, ex.Message);
             }
         }
 

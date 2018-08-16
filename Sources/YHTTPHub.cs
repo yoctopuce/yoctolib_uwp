@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPHub.cs 29694 2018-01-23 08:52:49Z seb $
+ * $Id: YHTTPHub.cs 31623 2018-08-14 11:31:28Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -292,7 +292,11 @@ namespace com.yoctopuce.YoctoAPI
 
             // reset device list cache timeout for this hub
             now = YAPI.GetTickCount();
-            _devListExpires = now + _devListValidity;
+            if (_isNotifWorking) {
+                _devListExpires = now + _yctx._deviceListValidityMs;
+            } else {
+                _devListExpires = now + 500;
+            }
         }
 
         internal override async Task<List<string>> firmwareUpdate(string serial, YFirmwareFile firmware, byte[] settings,

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YHumidity.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YHumidity.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindHumidity(), the high-level API for Humidity functions
  *
@@ -176,7 +176,7 @@ public class YHumidity : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return RELHUM_INVALID;
             }
         }
@@ -204,7 +204,7 @@ public class YHumidity : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ABSHUM_INVALID;
             }
         }

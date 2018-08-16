@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YRangeFinder.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YRangeFinder.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindRangeFinder(), the high-level API for RangeFinder functions
  *
@@ -203,7 +203,7 @@ public class YRangeFinder : YSensor
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return RANGEFINDERMODE_INVALID;
             }
         }
@@ -253,7 +253,7 @@ public class YRangeFinder : YSensor
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return HARDWARECALIBRATION_INVALID;
             }
         }
@@ -289,7 +289,7 @@ public class YRangeFinder : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return CURRENTTEMPERATURE_INVALID;
             }
         }
@@ -307,7 +307,7 @@ public class YRangeFinder : YSensor
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YGenericSensor.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YGenericSensor.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindGenericSensor(), the high-level API for GenericSensor functions
  *
@@ -216,7 +216,7 @@ public class YGenericSensor : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return SIGNALVALUE_INVALID;
             }
         }
@@ -244,7 +244,7 @@ public class YGenericSensor : YSensor
     {
         string res;
         if (_cacheExpiration == 0) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return SIGNALUNIT_INVALID;
             }
         }
@@ -272,7 +272,7 @@ public class YGenericSensor : YSensor
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return SIGNALRANGE_INVALID;
             }
         }
@@ -329,7 +329,7 @@ public class YGenericSensor : YSensor
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return VALUERANGE_INVALID;
             }
         }
@@ -419,7 +419,7 @@ public class YGenericSensor : YSensor
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return SIGNALBIAS_INVALID;
             }
         }
@@ -455,7 +455,7 @@ public class YGenericSensor : YSensor
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return SIGNALSAMPLING_INVALID;
             }
         }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMotor.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YMotor.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindMotor(), the high-level API for Motor functions
  *
@@ -235,7 +235,7 @@ public class YMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return MOTORSTATUS_INVALID;
             }
         }
@@ -304,7 +304,7 @@ public class YMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return DRIVINGFORCE_INVALID;
             }
         }
@@ -363,7 +363,7 @@ public class YMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return BRAKINGFORCE_INVALID;
             }
         }
@@ -431,7 +431,7 @@ public class YMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return CUTOFFVOLTAGE_INVALID;
             }
         }
@@ -462,7 +462,7 @@ public class YMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return OVERCURRENTLIMIT_INVALID;
             }
         }
@@ -555,7 +555,7 @@ public class YMotor : YFunction
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return FREQUENCY_INVALID;
             }
         }
@@ -585,7 +585,7 @@ public class YMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return STARTERTIME_INVALID;
             }
         }
@@ -648,7 +648,7 @@ public class YMotor : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return FAILSAFETIMEOUT_INVALID;
             }
         }
@@ -699,7 +699,7 @@ public class YMotor : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

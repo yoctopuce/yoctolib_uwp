@@ -1,7 +1,7 @@
 ﻿
 /*********************************************************************
  *
- * $Id: YUSBPkt.cs 25307 2016-09-06 08:31:29Z seb $
+ * $Id: YUSBPkt.cs 31338 2018-07-23 11:21:01Z seb $
  *
  * YUSBPkt Class: USB packet definitions
  *
@@ -185,7 +185,8 @@ namespace com.yoctopuce.YoctoAPI
 
         // generic pkt definitions
         protected internal const int YPKT_USB_LEGACY_VERSION_BCD = 0x0207;
-        protected internal const int YPKT_USB_VERSION_BCD = 0x0208;
+        protected internal const int YPKT_USB_VERSION_NO_CONFCHG_BCD = 0x0208;
+        protected internal const int YPKT_USB_VERSION_BCD = 0x0209;
         public const int USB_PKT_SIZE = 64;
         protected internal const int USB_MAX_PKT_CONTENT_SIZE = 62;
         protected internal int _pktno = 0;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YLightSensor.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YLightSensor.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindLightSensor(), the high-level API for LightSensor functions
  *
@@ -182,7 +182,7 @@ public class YLightSensor : YSensor
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return MEASURETYPE_INVALID;
             }
         }

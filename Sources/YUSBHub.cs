@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBHub.cs 30232 2018-03-05 14:15:57Z seb $
+ * $Id: YUSBHub.cs 31623 2018-08-14 11:31:28Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -113,7 +113,7 @@ namespace com.yoctopuce.YoctoAPI
             await updateFromWpAndYp(whitePages, yellowPages);
             // reset device list cache timeout for this hub
             now = YAPI.GetTickCount();
-            _devListExpires = now + _devListValidity;
+            _devListExpires = now + 500;
         }
 
         public override  Task<List<string>> getBootloaders()

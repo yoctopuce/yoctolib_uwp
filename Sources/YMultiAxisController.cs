@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMultiAxisController.cs 30483 2018-03-29 07:43:07Z mvuilleu $
+ * $Id: YMultiAxisController.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * Implements FindMultiAxisController(), the high-level API for MultiAxisController functions
  *
@@ -153,7 +153,7 @@ public class YMultiAxisController : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return NAXIS_INVALID;
             }
         }
@@ -212,7 +212,7 @@ public class YMultiAxisController : YFunction
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return GLOBALSTATE_INVALID;
             }
         }
@@ -230,7 +230,7 @@ public class YMultiAxisController : YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return COMMAND_INVALID;
             }
         }

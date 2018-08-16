@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 30232 2018-03-05 14:15:57Z seb $
+ * $Id: YGenericHub.cs 31624 2018-08-14 11:32:11Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -110,7 +110,7 @@ namespace com.yoctopuce.YoctoAPI
         protected internal int _hubidx;
         protected internal long _notifyTrigger = 0;
         protected internal object _notifyHandle = null;
-        protected internal ulong _devListValidity = 500;
+        protected internal bool _isNotifWorking = false;
         protected internal ulong _devListExpires = 0;
 
         protected internal readonly ConcurrentDictionary<int, string> _serialByYdx = new ConcurrentDictionary<int, string>();
@@ -342,6 +342,12 @@ namespace com.yoctopuce.YoctoAPI
             if (func != null) {
                 _yctx._PushDataEvent(new YAPIContext.DataEvent(func, deviceTime, report));
             }
+        }
+
+        protected internal virtual void handleConfigChangeNotification(String serial)
+        {
+            YModule module = YModule.FindModuleInContext(_yctx, serial + ".module");
+            _yctx._PushDataEvent(new YAPIContext.DataEvent(module));
         }
 
         internal abstract Task updateDeviceListAsync(bool forceupdate);

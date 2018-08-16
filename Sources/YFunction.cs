@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 30017 2018-02-21 12:43:54Z seb $
+ * $Id: YFunction.cs 31620 2018-08-14 10:04:12Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -195,7 +195,7 @@ public class YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return LOGICALNAME_INVALID;
             }
         }
@@ -257,7 +257,7 @@ public class YFunction
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(YAPI.DefaultCacheValidity) != YAPI.SUCCESS) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return ADVERTISEDVALUE_INVALID;
             }
         }
@@ -879,7 +879,7 @@ public class YFunction
             }
             try {
                 // Check that the function is available without throwing exceptions
-                await load(_yapi.DefaultCacheValidity);
+                await load(await _yapi.GetCacheValidity());
             } catch (YAPI_Exception) {
                 return false;
             }
@@ -989,15 +989,25 @@ public class YFunction
             if (_serial != null && !_serial.Equals("")) {
                 return YModule.FindModuleInContext(_yapi, _serial + ".module");
             }
-            if (_func.IndexOf('.') == -1) {
+
+            int ofs = _func.IndexOf('.');
+            if (ofs == -1) {
                 try {
                     string serial = _yapi._yHash.imm_resolveSerial(_className, _func);
                     return YModule.FindModuleInContext(_yapi, serial + ".module");
                 } catch (YAPI_Exception) { }
             }
+
+            if (ofs >= 0) {
+                try {
+                    string serial = _func.Substring(0, ofs);
+                    return YModule.FindModuleInContext(_yapi, serial + ".module");
+                } catch (YAPI_Exception) { }
+            }
+
             try {
                 // device not resolved for now, force a communication for a last chance resolution
-                if (await load(YAPI.DefaultCacheValidity) == YAPI.SUCCESS) {
+                if (await load(await _yapi.GetCacheValidity()) == YAPI.SUCCESS) {
                     string serial = _yapi._yHash.imm_resolveSerial(_className, _func);
                     return YModule.FindModuleInContext(_yapi, serial + ".module");
                 }
