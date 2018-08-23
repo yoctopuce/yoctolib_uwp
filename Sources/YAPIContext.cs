@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 31698 2018-08-16 14:40:28Z seb $
+ * $Id: YAPIContext.cs 31770 2018-08-20 09:54:36Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -63,7 +63,7 @@ public class YAPIContext
         internal ulong _deviceListValidityMs = 10000;
 
         //--- (generated code: YAPIContext definitions)
-    protected ulong _cacheValidity = 5;
+    protected ulong _defaultCacheValidity = 5;
 
     //--- (end of generated code: YAPIContext definitions)
 
@@ -840,9 +840,12 @@ public class YAPIContext
      *   nor the operation of arrival/removal callbacks.
      *   Note: This function must be called after <c>yInitAPI</c>.
      * </para>
+     * <para>
+     * </para>
      * </summary>
      * <param name="deviceListValidity">
      *   number of seconds between each enumeration.
+     * @noreturn
      * </param>
      */
     public virtual async Task SetDeviceListValidity(int deviceListValidity)
@@ -884,12 +887,13 @@ public class YAPIContext
      * </summary>
      * <param name="cacheValidityMs">
      *   an integer corresponding to the validity attributed to the
-     *   loaded function parameters, in milliseconds
+     *   loaded function parameters, in milliseconds.
+     * @noreturn
      * </param>
      */
     public virtual async Task SetCacheValidity(ulong cacheValidityMs)
     {
-        _cacheValidity = cacheValidityMs;
+        _defaultCacheValidity = cacheValidityMs;
     }
 
     /**
@@ -910,7 +914,7 @@ public class YAPIContext
      */
     public virtual async Task<ulong> GetCacheValidity()
     {
-        return _cacheValidity;
+        return _defaultCacheValidity;
     }
 
 #pragma warning restore 1998

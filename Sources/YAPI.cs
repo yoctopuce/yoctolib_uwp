@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 31698 2018-08-16 14:40:28Z seb $
+ * $Id: YAPI.cs 31770 2018-08-20 09:54:36Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "31701";
+        public const string YOCTO_API_BUILD_STR = "31874";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -155,9 +155,12 @@ public class YAPI
      *   nor the operation of arrival/removal callbacks.
      *   Note: This function must be called after <c>yInitAPI</c>.
      * </para>
+     * <para>
+     * </para>
      * </summary>
      * <param name="deviceListValidity">
      *   number of seconds between each enumeration.
+     * @noreturn
      * </param>
      */
     public static async Task SetDeviceListValidity(int deviceListValidity)
@@ -195,7 +198,8 @@ public class YAPI
      * </summary>
      * <param name="cacheValidityMs">
      *   an integer corresponding to the validity attributed to the
-     *   loaded function parameters, in milliseconds
+     *   loaded function parameters, in milliseconds.
+     * @noreturn
      * </param>
      */
     public static async Task SetCacheValidity(ulong cacheValidityMs)
@@ -251,7 +255,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".31701" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".31874" + YUSBHub.imm_getAPIVersion();
         }
 
         /**
