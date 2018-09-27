@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 31770 2018-08-20 09:54:36Z seb $
+ * $Id: YAPIContext.cs 32362 2018-09-26 16:35:13Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -74,6 +74,7 @@ public class YAPIContext
             internal readonly string _value;
             internal readonly List<int> _report;
             internal readonly double _timestamp;
+            internal readonly int _beacon;
 
 
             public DataEvent(YFunction fun, string value)
@@ -83,6 +84,7 @@ public class YAPIContext
                 _value = value;
                 _report = null;
                 _timestamp = 0;
+                _beacon = -1;
             }
 
             public DataEvent(YModule module)
@@ -92,6 +94,7 @@ public class YAPIContext
                 _value = null;
                 _report = null;
                 _timestamp = 0;
+                _beacon = -1;
             }
 
             public DataEvent(YFunction fun, double timestamp, List<int> report)
@@ -101,12 +104,27 @@ public class YAPIContext
                 _value = null;
                 _timestamp = timestamp;
                 _report = report;
+                _beacon = -1;
+            }
+
+            public DataEvent(YModule module, int beacon)
+            {
+                _fun = null;
+                _module = module;
+                _value = null;
+                _report = null;
+                _timestamp = 0;
+                _beacon = beacon;
             }
 
             public virtual async Task invoke()
             {
                 if (_module != null) {
-                    await _module._invokeConfigChangeCallback();
+                    if (_beacon < 0) {
+                        await _module._invokeConfigChangeCallback();
+                    } else {
+                        await _module._invokeBeaconCallback(_beacon);
+                    }
                 } else if (_value == null) {
                     YSensor sensor = (YSensor) _fun;
                     YMeasure mesure = await sensor._decodeTimedReport(_timestamp, _report);
@@ -501,6 +519,7 @@ public class YAPIContext
         internal readonly YHash _yHash;
         private readonly List<YFunction> _ValueCallbackList = new List<YFunction>();
         private readonly List<YFunction> _TimedReportCallbackList = new List<YFunction>();
+        private readonly Dictionary<YModule, int> _moduleCallbackList = new Dictionary<YModule, int>();
 
         internal readonly Dictionary<string, YPEntry.BaseClass> _BaseType = new Dictionary<string, YPEntry.BaseClass>();
 
@@ -574,7 +593,7 @@ public class YAPIContext
             _ssdp = new YSSDP(this);
             imm_resetContext();
             //--- (generated code: YAPIContext attributes initialization)
-        //--- (end of generated code: YAPIContext attributes initialization)        
+        //--- (end of generated code: YAPIContext attributes initialization)
         }
 
         private void imm_resetContext()
@@ -711,6 +730,34 @@ public class YAPIContext
             return null;
         }
 
+
+        internal async Task _UpdateModuleCallbackList(YModule module, bool add)
+        {
+            if (add) {
+                await module.isOnline();
+                if (!_moduleCallbackList.ContainsKey(module)) {
+                    _moduleCallbackList[module] = 1;
+                } else {
+                    _moduleCallbackList[module] += 1;
+                }
+            } else {
+                if (_moduleCallbackList.ContainsKey(module) && _moduleCallbackList[module] > 1) {
+                    _moduleCallbackList[module] -= 1;
+                }
+            }
+        }
+
+        internal YModule _GetModuleCallack(String serial)
+        {
+            YModule module = YModule.FindModuleInContext(this, serial + ".module");
+            if (_moduleCallbackList.ContainsKey(module) && _moduleCallbackList[module] > 0) {
+                return module;
+            }
+
+            return null;
+        }
+
+
         private async Task<int> AddNewHub(string url, bool reportConnnectionLost, System.IO.Stream request, System.IO.Stream response, object session)
         {
             foreach (YGenericHub h in _hubs) {
@@ -817,7 +864,6 @@ public class YAPIContext
         private async Task<int> GetDeviceListValidity_internal()
         {
             return (int) (_deviceListValidityMs / 1000);
-
         }
 #pragma warning restore 1998
 

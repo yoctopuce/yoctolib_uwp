@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBDevice.cs 31338 2018-07-23 11:21:01Z seb $
+ * $Id: YUSBDevice.cs 32362 2018-09-26 16:35:13Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -519,7 +519,11 @@ namespace com.yoctopuce.YoctoAPI
                 switch (type) {
                     case NOTIFY_PKT_NAME:
                         _logicalname = ystream.imm_GetString(p, YAPI.YOCTO_LOGICAL_LEN);
-                        _beacon = ystream.imm_GetByte(p + YAPI.YOCTO_LOGICAL_LEN);
+                        byte b = ystream.imm_GetByte(p + YAPI.YOCTO_LOGICAL_LEN);
+                        if (_beacon != b) {
+                            _hub.imm_handleBeaconNotification(SerialNumber, b);
+                            _beacon = b;
+                        }
                         break;
                     case NOTIFY_PKT_PRODNAME:
                         _product = ystream.imm_GetString(p, YAPI.YOCTO_PRODUCTNAME_LEN);
@@ -559,7 +563,7 @@ namespace com.yoctopuce.YoctoAPI
                         break;
                     case NOTIFY_PKT_CONFCHANGE:
                         if (_devState == DevState.StreamReadyReceived) {
-                            _hub.handleConfigChangeNotification(SerialNumber);
+                            _hub.imm_handleConfigChangeNotification(SerialNumber);
                         }
                         break;;
                     case NOTIFY_PKT_FUNCNAMEYDX:

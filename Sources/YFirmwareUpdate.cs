@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFirmwareUpdate.cs 31608 2018-08-14 08:22:18Z seb $
+ * $Id: YFirmwareUpdate.cs 32362 2018-09-26 16:35:13Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -496,7 +496,7 @@ public class YFirmwareUpdate
         int leng;
         err = YAPI.DefaultEncoding.GetString(_settings);
         leng = (err).Length;
-        if (( leng >= 6) && ("error:" == (err).Substring(0, 6))) {
+        if ((leng >= 6) && ("error:" == (err).Substring(0, 6))) {
             _progress = -1;
             _progress_msg = (err).Substring( 6, leng - 6);
         } else {

@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 namespace com.yoctopuce.YoctoAPI
 {
-
-
     internal abstract class NotificationHandler
     {
         protected internal const char NOTIFY_NETPKT_NAME = '0';
@@ -58,9 +56,10 @@ namespace com.yoctopuce.YoctoAPI
             if (ch < 32 || ch > 32 + 127) {
                 return null;
             }
+
             // get the 7 first bits
             ch -= 32;
-            funcVal[0] = (byte)((ch & 0x40) != 0 ? YGenericHub.NOTIFY_V2_6RAWBYTES : YGenericHub.NOTIFY_V2_TYPEDDATA);
+            funcVal[0] = (byte) ((ch & 0x40) != 0 ? YGenericHub.NOTIFY_V2_6RAWBYTES : YGenericHub.NOTIFY_V2_TYPEDDATA);
             // clear flag
             ch &= 0x3f;
             while (len < YAPI.YOCTO_PUBVAL_SIZE) {
@@ -68,18 +67,22 @@ namespace com.yoctopuce.YoctoAPI
                 if (p_ofs >= p.Length) {
                     break;
                 }
+
                 int newCh = p[p_ofs] & 0xff;
                 if (newCh == NOTIFY_NETPKT_STOP) {
                     break;
                 }
+
                 if (newCh < 32 || newCh > 32 + 127) {
                     return null;
                 }
+
                 newCh -= 32;
                 ch = (ch << 7) + newCh;
-                funcVal[len + 1] = (byte)(ch >> (5 - len));
+                funcVal[len + 1] = (byte) (ch >> (5 - len));
                 len++;
             }
+
             return funcVal;
         }
 
@@ -98,13 +101,16 @@ namespace com.yoctopuce.YoctoAPI
                 if (_notifyPos >= 0) {
                     _notifyPos += ev.Length + 1;
                 }
+
                 int devydx = ev[1] - 65; // from 'A'
                 int funydx = ev[2] - 48; // from '0'
 
-                if ((funydx & 64) != 0) { // high bit of devydx is on second character
+                if ((funydx & 64) != 0) {
+                    // high bit of devydx is on second character
                     funydx -= 64;
                     devydx += 128;
                 }
+
                 string value = ev.Substring(3);
                 if (_hub._serialByYdx.ContainsKey(devydx)) {
                     string serial = _hub._serialByYdx[devydx];
@@ -118,13 +124,14 @@ namespace com.yoctopuce.YoctoAPI
                                     // function value ydx (tiny notification)
                                     _hub.imm_handleValueNotification(serial, funcid, value);
                                 }
+
                                 break;
                             case NOTIFY_NETPKT_DEVLOGYDX:
                                 //fixme:
                                 //await ydev.triggerLogPull();
                                 break;
                             case NOTIFY_NETPKT_CONFCHGYDX:
-                                _hub.handleConfigChangeNotification(serial);
+                                _hub.imm_handleConfigChangeNotification(serial);
                                 break;
                             case NOTIFY_NETPKT_TIMEVALYDX:
                             case NOTIFY_NETPKT_TIMEAVGYDX:
@@ -135,6 +142,7 @@ namespace com.yoctopuce.YoctoAPI
                                         string part = value.Substring(i * 2, 2);
                                         data[i] = Convert.ToByte(part, 16);
                                     }
+
                                     ydev.imm_setDeviceTime(data);
                                 } else {
                                     funcid = ydev.imm_getYPEntry(funydx).FuncId;
@@ -146,9 +154,11 @@ namespace com.yoctopuce.YoctoAPI
                                             int intval = Convert.ToInt32(value.Substring(pos, 2), 16);
                                             report.Add(intval);
                                         }
+
                                         _hub.imm_handleTimedNotification(serial, funcid, ydev.imm_getDeviceTime(), report);
                                     }
                                 }
+
                                 break;
                             case NOTIFY_NETPKT_FUNCV2YDX:
                                 funcid = ydev.imm_getYPEntry(funydx).FuncId;
@@ -160,6 +170,7 @@ namespace com.yoctopuce.YoctoAPI
                                         _hub.imm_handleValueNotification(serial, funcid, decodedval);
                                     }
                                 }
+
                                 break;
                             case NOTIFY_NETPKT_FLUSHV2YDX:
                                 // To be implemented later
@@ -173,19 +184,25 @@ namespace com.yoctopuce.YoctoAPI
                 if (_notifyPos >= 0) {
                     _notifyPos += ev.Length + 1;
                 }
+
                 char notype = ev[4];
                 if (notype == NOTIFY_NETPKT_NOT_SYNC) {
                     _notifyPos = Convert.ToInt32(ev.Substring(5));
                 } else {
+                    string[] parts;
                     switch (notype) {
                         case NOTIFY_NETPKT_NAME: // device name change, or arrival
+                            parts = ev.Substring(5).Split(',');
+                            _hub.imm_handleBeaconNotification(parts[0], Convert.ToInt32(parts[2]));
+                            _hub._devListExpires = 0;
+                            break;
                         case NOTIFY_NETPKT_CHILD: // device plug/unplug
                         case NOTIFY_NETPKT_FUNCNAME: // function name change
                         case NOTIFY_NETPKT_FUNCNAMEYDX: // function name change (ydx)
                             _hub._devListExpires = 0;
                             break;
                         case NOTIFY_NETPKT_FUNCVAL: // function value (long notification)
-                            string[] parts = ev.Substring(5).Split(',');
+                            parts = ev.Substring(5).Split(',');
                             _hub.imm_handleValueNotification(parts[0], parts[1], parts[2]);
                             break;
                     }
@@ -229,5 +246,4 @@ namespace com.yoctopuce.YoctoAPI
 
         public abstract Task Start();
     }
-
 }

@@ -67,12 +67,19 @@ namespace Prog_EventBased
             Output.Text += "config change: " + await m.get_serialNumber() + "\n";
         }
 
+
+        async Task beaconChange(YModule m, int beacon)
+        {
+            Output.Text += "Beacon change to " + beacon + ": " + await m.get_serialNumber() + "\n";
+        }
+
         async Task deviceArrival(YModule m)
         {
             string serial = await m.get_serialNumber();
             Output.Text += "Device arrival : " + serial + "\n";
             await m.registerLogCallback(deviceLog);
             await m.registerConfigChangeCallback(configChange);
+            await m.registerBeaconCallback(beaconChange);
 
             // First solution: look for a specific type of function (eg. anButton)
             int fctcount = await m.functionCount();

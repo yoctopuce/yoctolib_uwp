@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 31620 2018-08-14 10:04:12Z seb $
+ * $Id: YModule.cs 32376 2018-09-27 07:57:07Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -41,6 +41,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.UI.Notifications;
 
 namespace com.yoctopuce.YoctoAPI
 {
@@ -153,9 +154,11 @@ public class YModule : YFunction
     protected ValueCallback _valueCallbackModule = null;
     protected LogCallback _logCallback = null;
     protected ConfigChangeCallback _confChangeCallback = null;
+    protected BeaconCallback _beaconCallback = null;
 
     public delegate Task LogCallback(YModule module, string logline);
     public delegate Task ConfigChangeCallback(YModule module);
+    public delegate Task BeaconCallback(YModule module, int beacon);
     public new delegate Task ValueCallback(YModule func, string value);
     public new delegate Task TimedReportCallback(YModule func, YMeasure measure);
     //--- (end of generated code: YModule definitions)
@@ -169,10 +172,12 @@ public class YModule : YFunction
             if (dotidx >= 0) {
                 devid = devid.Substring(0, dotidx);
             }
+
             YDevice dev = _yapi._yHash.imm_getDevice(devid);
             if (dev == null) {
                 throw new YAPI_Exception(YAPI.DEVICE_NOT_FOUND, "Device [" + devid + "] is not online");
             }
+
             return dev;
         }
 
@@ -185,6 +190,13 @@ public class YModule : YFunction
 
         protected internal YModule(string func) : this(YAPI.imm_GetYCtx(), func)
         { }
+
+        private static async Task _updateModuleCallbackList(YModule module, bool add)
+        {
+            await module._yapi._UpdateModuleCallbackList(module, add);
+        }
+
+
 #pragma warning disable 1998
 
         /// <summary>
@@ -310,20 +322,24 @@ public class YModule : YFunction
                     if (functionJson == null) {
                         continue;
                     }
+
                     List<string> attr_keys = functionJson.keys();
                     foreach (string attr_key in attr_keys) {
                         if (!functionJson.has(attr_key)) {
                             continue;
                         }
+
                         YJSONContent value = functionJson.get(attr_key);
                         if (value == null) {
                             continue;
                         }
+
                         string flat_attr = fun_key + "/" + attr_key + "=" + value.ToString();
                         jsonout.put(flat_attr);
                     }
                 }
             }
+
             return YAPI.DefaultEncoding.GetBytes(jsonout.toJSON());
         }
 
@@ -356,6 +372,7 @@ public class YModule : YFunction
             if (hubSerial.Equals(_serialNumber)) {
                 return "";
             }
+
             return hubSerial;
         }
 
@@ -1125,6 +1142,11 @@ public class YModule : YFunction
      */
     public virtual async Task<int> registerConfigChangeCallback(ConfigChangeCallback callback)
     {
+        if (callback != null) {
+            await YModule._updateModuleCallbackList(this, true);
+        } else {
+            await YModule._updateModuleCallbackList(this, false);
+        }
         _confChangeCallback = callback;
         return 0;
     }
@@ -1133,6 +1155,39 @@ public class YModule : YFunction
     {
         if (_confChangeCallback != null) {
             await _confChangeCallback(this);
+        }
+        return 0;
+    }
+
+    /**
+     * <summary>
+     *   Register a callback function, to be called when the localization beacon of the module
+     *   has been changed.
+     * <para>
+     *   The callback function should take two arguments: the YModule object of
+     *   which the beacon has changed, and an integer describing the new beacon state.
+     * </para>
+     * </summary>
+     * <param name="callback">
+     *   The callback function to call, or <c>null</c> to unregister a
+     *   previously registered callback.
+     * </param>
+     */
+    public virtual async Task<int> registerBeaconCallback(BeaconCallback callback)
+    {
+        if (callback != null) {
+            await YModule._updateModuleCallbackList(this, true);
+        } else {
+            await YModule._updateModuleCallbackList(this, false);
+        }
+        _beaconCallback = callback;
+        return 0;
+    }
+
+    public virtual async Task<int> _invokeBeaconCallback(int beaconState)
+    {
+        if (_beaconCallback != null) {
+            await _beaconCallback(this, beaconState);
         }
         return 0;
     }
@@ -1191,7 +1246,7 @@ public class YModule : YFunction
         }
         //may throw an exception
         serial = await this.get_serialNumber();
-        tmp_res = await YFirmwareUpdate.CheckFirmware(serial, path, release);
+        tmp_res = await YFirmwareUpdate.CheckFirmware(serial,  path, release);
         if ((tmp_res).IndexOf("error:") == 0) {
             this._throw(YAPI.INVALID_ARGUMENT, tmp_res);
         }
@@ -1461,10 +1516,10 @@ public class YModule : YFunction
         int i;
         string fid;
 
-        count  = await this.functionCount();
+        count = await this.functionCount();
         i = 0;
         while (i < count) {
-            fid  = await this.functionId(i);
+            fid = await this.functionId(i);
             if (fid == funcId) {
                 return true;
             }

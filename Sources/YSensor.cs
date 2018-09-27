@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 31620 2018-08-14 10:04:12Z seb $
+ * $Id: YSensor.cs 32362 2018-09-26 16:35:13Z seb $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -1199,7 +1199,7 @@ public class YSensor : YFunction
             return null;
         }
         hwid = serial + ".dataLogger";
-        logger  = YDataLogger.FindDataLogger(hwid);
+        logger = YDataLogger.FindDataLogger(hwid);
         return logger;
     }
 

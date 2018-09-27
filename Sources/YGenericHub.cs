@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 31624 2018-08-14 11:32:11Z seb $
+ * $Id: YGenericHub.cs 32362 2018-09-26 16:35:13Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -322,7 +322,6 @@ namespace com.yoctopuce.YoctoAPI
             }
         }
 
-        //called from Jni
         protected internal virtual void imm_handleTimedNotification(string serial, string funcid, double deviceTime, sbyte[] report)
         {
             List<int> arrayList = new List<int>(report.Length);
@@ -344,10 +343,21 @@ namespace com.yoctopuce.YoctoAPI
             }
         }
 
-        protected internal virtual void handleConfigChangeNotification(String serial)
+        protected internal virtual void imm_handleConfigChangeNotification(String serial)
         {
-            YModule module = YModule.FindModuleInContext(_yctx, serial + ".module");
-            _yctx._PushDataEvent(new YAPIContext.DataEvent(module));
+            YModule module = _yctx._GetModuleCallack(serial);
+            if (module != null) {
+                _yctx._PushDataEvent(new YAPIContext.DataEvent(module));
+            }
+        }
+
+        protected internal virtual void imm_handleBeaconNotification(string serial, int beacon)
+        {
+            
+            YModule module = _yctx._GetModuleCallack(serial);
+            if (module != null) {
+                _yctx._PushDataEvent(new YAPIContext.DataEvent(module, beacon));
+            }
         }
 
         internal abstract Task updateDeviceListAsync(bool forceupdate);
