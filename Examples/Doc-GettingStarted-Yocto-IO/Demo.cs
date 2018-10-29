@@ -1,4 +1,18 @@
-﻿using System;
+/*********************************************************************
+ *
+ *  $Id: Demo.cs 32629 2018-10-10 13:38:20Z seb $
+ *
+ *  An example that show how to use a  Yocto-IO
+ *
+ *  You can find more information on our web site:
+ *   Yocto-IO documentation:
+ *      https://www.yoctopuce.com/EN/products/yocto-io/doc.html
+ *   uwp API Reference:
+ *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-uwp-EN.html
+ *
+ *********************************************************************/
+
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;

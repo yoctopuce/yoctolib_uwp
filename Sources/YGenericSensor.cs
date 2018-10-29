@@ -1,10 +1,10 @@
 /*********************************************************************
  *
- * $Id: YGenericSensor.cs 31620 2018-08-14 10:04:12Z seb $
+ *  $Id: YGenericSensor.cs 32610 2018-10-10 06:52:20Z seb $
  *
- * Implements FindGenericSensor(), the high-level API for GenericSensor functions
+ *  Implements FindGenericSensor(), the high-level API for GenericSensor functions
  *
- * - - - - - - - - - License information: - - - - - - - - -
+ *  - - - - - - - - - License information: - - - - - - - - -
  *
  *  Copyright (C) 2011 and beyond by Yoctopuce Sarl, Switzerland.
  *

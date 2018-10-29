@@ -1,4 +1,18 @@
-﻿using System;
+/*********************************************************************
+ *
+ *  $Id: Demo.cs 32629 2018-10-10 13:38:20Z seb $
+ *
+ *  An example that show how to use a  Yocto-4-20mA-Tx
+ *
+ *  You can find more information on our web site:
+ *   Yocto-4-20mA-Tx documentation:
+ *      https://www.yoctopuce.com/EN/products/yocto-4-20ma-tx/doc.html
+ *   uwp API Reference:
+ *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-uwp-EN.html
+ *
+ *********************************************************************/
+
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;

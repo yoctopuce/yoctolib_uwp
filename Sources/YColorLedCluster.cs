@@ -1,10 +1,10 @@
 /*********************************************************************
  *
- * $Id: YColorLedCluster.cs 31894 2018-08-24 21:29:05Z seb $
+ *  $Id: YColorLedCluster.cs 32610 2018-10-10 06:52:20Z seb $
  *
- * Implements FindColorLedCluster(), the high-level API for ColorLedCluster functions
+ *  Implements FindColorLedCluster(), the high-level API for ColorLedCluster functions
  *
- * - - - - - - - - - License information: - - - - - - - - -
+ *  - - - - - - - - - License information: - - - - - - - - -
  *
  *  Copyright (C) 2011 and beyond by Yoctopuce Sarl, Switzerland.
  *

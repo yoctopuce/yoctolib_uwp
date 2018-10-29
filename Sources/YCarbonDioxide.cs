@@ -1,10 +1,10 @@
 /*********************************************************************
  *
- * $Id: YCarbonDioxide.cs 31620 2018-08-14 10:04:12Z seb $
+ *  $Id: YCarbonDioxide.cs 32610 2018-10-10 06:52:20Z seb $
  *
- * Implements FindCarbonDioxide(), the high-level API for CarbonDioxide functions
+ *  Implements FindCarbonDioxide(), the high-level API for CarbonDioxide functions
  *
- * - - - - - - - - - License information: - - - - - - - - -
+ *  - - - - - - - - - License information: - - - - - - - - -
  *
  *  Copyright (C) 2011 and beyond by Yoctopuce Sarl, Switzerland.
  *

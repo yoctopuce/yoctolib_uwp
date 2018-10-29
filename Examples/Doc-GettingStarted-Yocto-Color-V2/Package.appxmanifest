@@ -3,7 +3,7 @@
   <Identity Name="743649b1-00eb-4946-b21b-6c4c60cb46a7" Publisher="CN=seb" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="743649b1-00eb-4946-b21b-6c4c60cb46a7" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Doc-GettingStarted-Yocto-Color</DisplayName>
+    <DisplayName>Doc-GettingStarted-Yocto-Color-V2</DisplayName>
     <PublisherDisplayName>Yoctopuce</PublisherDisplayName>
     <Logo>Assets\PackageLogo.png</Logo>
   </Properties>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Demo.App">
-      <uap:VisualElements DisplayName="Doc-GettingStarted-Yocto-Color" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Demo" BackgroundColor="white">
+      <uap:VisualElements DisplayName="Doc-GettingStarted-Yocto-Color-V2" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Demo" BackgroundColor="white">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
@@ -251,6 +251,14 @@
       </Device>
       <!-- Yocto-MaxiBridge -->
       <Device Id="vidpid:24e0 007f">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-Meteo-V2 -->
+      <Device Id="vidpid:24e0 0084">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-PowerRelay-V3 -->
+      <Device Id="vidpid:24e0 008a">
         <Function Type="usage:ff00 0001" />
       </Device>
 <!-- USABLE DEVICES STOP -->

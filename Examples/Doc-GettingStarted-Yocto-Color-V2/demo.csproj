@@ -95,9 +95,18 @@
     <Compile Include="..\..\Sources\NotificationHandler.cs">
       <Link>yoctolib\NotificationHandler.cs</Link>
     </Compile>
-
+    
+    <Compile Include="..\..\Sources\YColorLed.cs">
+      <Link>yoctolib\YColorLed.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YColorLedCluster.cs">
       <Link>yoctolib\YColorLedCluster.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YFileRecord.cs">
+      <Link>yoctolib\YFileRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YFiles.cs">
+      <Link>yoctolib\YFiles.cs</Link>
     </Compile>
 
 

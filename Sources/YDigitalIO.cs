@@ -1,10 +1,10 @@
 /*********************************************************************
  *
- * $Id: YDigitalIO.cs 31620 2018-08-14 10:04:12Z seb $
+ *  $Id: YDigitalIO.cs 32610 2018-10-10 06:52:20Z seb $
  *
- * Implements FindDigitalIO(), the high-level API for DigitalIO functions
+ *  Implements FindDigitalIO(), the high-level API for DigitalIO functions
  *
- * - - - - - - - - - License information: - - - - - - - - -
+ *  - - - - - - - - - License information: - - - - - - - - -
  *
  *  Copyright (C) 2011 and beyond by Yoctopuce Sarl, Switzerland.
  *

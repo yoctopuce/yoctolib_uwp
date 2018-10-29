@@ -1,10 +1,10 @@
 /*********************************************************************
  *
- * $Id: YPwmInput.cs 31620 2018-08-14 10:04:12Z seb $
+ *  $Id: YPwmInput.cs 32610 2018-10-10 06:52:20Z seb $
  *
- * Implements FindPwmInput(), the high-level API for PwmInput functions
+ *  Implements FindPwmInput(), the high-level API for PwmInput functions
  *
- * - - - - - - - - - License information: - - - - - - - - -
+ *  - - - - - - - - - License information: - - - - - - - - -
  *
  *  Copyright (C) 2011 and beyond by Yoctopuce Sarl, Switzerland.
  *
@@ -191,6 +191,38 @@ public class YPwmInput : YSensor
             _debouncePeriod = json_val.getInt("debouncePeriod");
         }
         base.imm_parseAttr(json_val);
+    }
+
+    /**
+     * <summary>
+     *   Changes the measuring unit for the measured quantity.
+     * <para>
+     *   That unit
+     *   is just a string which is automatically initialized each time
+     *   the measurement mode is changed. But is can be set to an
+     *   arbitrary value.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a string corresponding to the measuring unit for the measured quantity
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_unit(string  newval)
+    {
+        string rest_val;
+        rest_val = newval;
+        await _setAttr("unit",rest_val);
+        return YAPI.SUCCESS;
     }
 
     /**

@@ -1,4 +1,18 @@
-﻿using System;
+/*********************************************************************
+ *
+ *  $Id: Demo.cs 32629 2018-10-10 13:38:20Z seb $
+ *
+ *  An example that show how to use a  Yocto-0-10V-Tx
+ *
+ *  You can find more information on our web site:
+ *   Yocto-0-10V-Tx documentation:
+ *      https://www.yoctopuce.com/EN/products/yocto-0-10v-tx/doc.html
+ *   uwp API Reference:
+ *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-uwp-EN.html
+ *
+ *********************************************************************/
+
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;

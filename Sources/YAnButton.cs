@@ -1,10 +1,10 @@
 /*********************************************************************
  *
- * $Id: YAnButton.cs 31620 2018-08-14 10:04:12Z seb $
+ *  $Id: YAnButton.cs 32610 2018-10-10 06:52:20Z seb $
  *
- * Implements FindAnButton(), the high-level API for AnButton functions
+ *  Implements FindAnButton(), the high-level API for AnButton functions
  *
- * - - - - - - - - - License information: - - - - - - - - -
+ *  - - - - - - - - - License information: - - - - - - - - -
  *
  *  Copyright (C) 2011 and beyond by Yoctopuce Sarl, Switzerland.
  *

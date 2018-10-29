@@ -253,6 +253,14 @@
       <Device Id="vidpid:24e0 007f">
         <Function Type="usage:ff00 0001" />
       </Device>
+      <!-- Yocto-Meteo-V2 -->
+      <Device Id="vidpid:24e0 0084">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-PowerRelay-V3 -->
+      <Device Id="vidpid:24e0 008a">
+        <Function Type="usage:ff00 0001" />
+      </Device>
 <!-- USABLE DEVICES STOP -->
     </DeviceCapability>
   </Capabilities>

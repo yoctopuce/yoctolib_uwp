@@ -1,10 +1,10 @@
 /*********************************************************************
  *
- * $Id: YPressure.cs 28741 2017-10-03 08:10:04Z seb $
+ *  $Id: YPressure.cs 32610 2018-10-10 06:52:20Z seb $
  *
- * Implements FindPressure(), the high-level API for Pressure functions
+ *  Implements FindPressure(), the high-level API for Pressure functions
  *
- * - - - - - - - - - License information: - - - - - - - - -
+ *  - - - - - - - - - License information: - - - - - - - - -
  *
  *  Copyright (C) 2011 and beyond by Yoctopuce Sarl, Switzerland.
  *

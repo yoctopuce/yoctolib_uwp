@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 32376 2018-09-27 07:57:07Z seb $
+ * $Id: YModule.cs 32518 2018-10-05 08:23:53Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -2088,6 +2088,28 @@ public class YModule : YFunction
         }
         await this.clearCache();
         return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the unique hardware identifier of the module.
+     * <para>
+     *   The unique hardware identifier is made of the device serial
+     *   number followed by string ".module".
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string that uniquely identifies the module
+     * </returns>
+     */
+    public override async Task<string> get_hardwareId()
+    {
+        string serial;
+
+        serial = await this.get_serialNumber();
+        return serial + ".module";
     }
 
     /**

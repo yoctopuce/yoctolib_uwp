@@ -1,10 +1,10 @@
 /*********************************************************************
  *
- * $Id: YSegmentedDisplay.cs 31620 2018-08-14 10:04:12Z seb $
+ *  $Id: YSegmentedDisplay.cs 32610 2018-10-10 06:52:20Z seb $
  *
- * Implements FindSegmentedDisplay(), the high-level API for SegmentedDisplay functions
+ *  Implements FindSegmentedDisplay(), the high-level API for SegmentedDisplay functions
  *
- * - - - - - - - - - License information: - - - - - - - - -
+ *  - - - - - - - - - License information: - - - - - - - - -
  *
  *  Copyright (C) 2011 and beyond by Yoctopuce Sarl, Switzerland.
  *

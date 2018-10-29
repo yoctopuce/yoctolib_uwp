@@ -1,4 +1,16 @@
-﻿using System;
+/*********************************************************************
+ *
+ *  $Id: Demo.cs 32629 2018-10-10 13:38:20Z seb $
+ *
+ *  Doc-SaveSettings example
+ *
+ *  You can find more information on our web site:
+ *   uwp API Reference:
+ *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-uwp-EN.html
+ *
+ *********************************************************************/
+
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
