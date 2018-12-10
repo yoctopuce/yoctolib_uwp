@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 32362 2018-09-26 16:35:13Z seb $
+ * $Id: YSensor.cs 33400 2018-11-27 07:58:29Z seb $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -153,8 +153,6 @@ public class YSensor : YFunction
     protected double _offset = 0;
     protected double _scale = 0;
     protected double _decexp = 0;
-    protected bool _isScal;
-    protected bool _isScal32;
     protected int _caltyp = 0;
     protected List<int> _calpar = new List<int>();
     protected List<double> _calraw = new List<double>();
@@ -1014,7 +1012,6 @@ public class YSensor : YFunction
         double fRef;
         _caltyp = -1;
         _scale = -1;
-        _isScal32 = false;
         _calpar.Clear();
         _calraw.Clear();
         _calref.Clear();
@@ -1048,8 +1045,6 @@ public class YSensor : YFunction
                 }
             }
             // New 32bit text format
-            _isScal = true;
-            _isScal32 = true;
             _offset = 0;
             _scale = 1000;
             maxpos = iCalib.Count;
@@ -1080,23 +1075,13 @@ public class YSensor : YFunction
                 return 0;
             }
             // Save variable format (scale for scalar, or decimal exponent)
-            _isScal = (iCalib[1] > 0);
-            if (_isScal) {
-                _offset = iCalib[0];
-                if (_offset > 32767) {
-                    _offset = _offset - 65536;
-                }
-                _scale = iCalib[1];
-                _decexp = 0;
-            } else {
-                _offset = 0;
-                _scale = 1;
-                _decexp = 1.0;
-                position = iCalib[0];
-                while (position > 0) {
-                    _decexp = _decexp * 10;
-                    position = position - 1;
-                }
+            _offset = 0;
+            _scale = 1;
+            _decexp = 1.0;
+            position = iCalib[0];
+            while (position > 0) {
+                _decexp = _decexp * 10;
+                position = position - 1;
             }
             // Shortcut when there is no calibration parameter
             if (iCalib.Count == 2) {
@@ -1128,17 +1113,8 @@ public class YSensor : YFunction
                 iRef = iCalib[position + 1];
                 _calpar.Add(iRaw);
                 _calpar.Add(iRef);
-                if (_isScal) {
-                    fRaw = iRaw;
-                    fRaw = (fRaw - _offset) / _scale;
-                    fRef = iRef;
-                    fRef = (fRef - _offset) / _scale;
-                    _calraw.Add(fRaw);
-                    _calref.Add(fRef);
-                } else {
-                    _calraw.Add(YAPIContext.imm_decimalToDouble(iRaw));
-                    _calref.Add(YAPIContext.imm_decimalToDouble(iRef));
-                }
+                _calraw.Add(YAPIContext.imm_decimalToDouble(iRaw));
+                _calref.Add(YAPIContext.imm_decimalToDouble(iRef));
                 position = position + 2;
             }
         }
@@ -1282,7 +1258,7 @@ public class YSensor : YFunction
      *   using methods from the YDataSet object.
      * </returns>
      */
-    public virtual async Task<YDataSet> get_recordedData(long startTime,long endTime)
+    public virtual async Task<YDataSet> get_recordedData(double startTime,double endTime)
     {
         string funcid;
         string funit;
@@ -1430,8 +1406,6 @@ public class YSensor : YFunction
         string res;
         int npt;
         int idx;
-        int iRaw;
-        int iRef;
         npt = rawValues.Count;
         if (npt != refValues.Count) {
             this._throw(YAPI.INVALID_ARGUMENT, "Invalid calibration parameters (size mismatch)");
@@ -1452,36 +1426,12 @@ public class YSensor : YFunction
             this._throw(YAPI.NOT_SUPPORTED, "Calibration parameters format mismatch. Please upgrade your library or firmware.");
             return "0";
         }
-        if (_isScal32) {
-            // 32-bit fixed-point encoding
-            res = ""+Convert.ToString(YAPI.YOCTO_CALIB_TYPE_OFS);
-            idx = 0;
-            while (idx < npt) {
-                res = ""+ res+","+YAPIContext.imm_floatToStr( rawValues[idx])+","+YAPIContext.imm_floatToStr(refValues[idx]);
-                idx = idx + 1;
-            }
-        } else {
-            if (_isScal) {
-                // 16-bit fixed-point encoding
-                res = ""+Convert.ToString(npt);
-                idx = 0;
-                while (idx < npt) {
-                    iRaw = (int) Math.Round(rawValues[idx] * _scale + _offset);
-                    iRef = (int) Math.Round(refValues[idx] * _scale + _offset);
-                    res = ""+ res+","+Convert.ToString( iRaw)+","+Convert.ToString(iRef);
-                    idx = idx + 1;
-                }
-            } else {
-                // 16-bit floating-point decimal encoding
-                res = ""+Convert.ToString(10 + npt);
-                idx = 0;
-                while (idx < npt) {
-                    iRaw = (int) YAPIContext.imm_doubleToDecimal(rawValues[idx]);
-                    iRef = (int) YAPIContext.imm_doubleToDecimal(refValues[idx]);
-                    res = ""+ res+","+Convert.ToString( iRaw)+","+Convert.ToString(iRef);
-                    idx = idx + 1;
-                }
-            }
+        // 32-bit fixed-point encoding
+        res = ""+Convert.ToString(YAPI.YOCTO_CALIB_TYPE_OFS);
+        idx = 0;
+        while (idx < npt) {
+            res = ""+ res+","+YAPIContext.imm_floatToStr( rawValues[idx])+","+YAPIContext.imm_floatToStr(refValues[idx]);
+            idx = idx + 1;
         }
         return res;
     }
@@ -1503,140 +1453,103 @@ public class YSensor : YFunction
         return imm_calhdl(rawValue, _caltyp, _calpar, _calraw, _calref);
     }
 
-    public virtual async Task<YMeasure> _decodeTimedReport(double timestamp,List<int> report)
+    public virtual async Task<YMeasure> _decodeTimedReport(double timestamp,double duration,List<int> report)
     {
         int i;
         int byteVal;
-        int poww;
-        int minRaw;
-        int avgRaw;
-        int maxRaw;
+        double poww;
+        double minRaw;
+        double avgRaw;
+        double maxRaw;
         int sublen;
-        int difRaw;
+        double difRaw;
         double startTime;
         double endTime;
         double minVal;
         double avgVal;
         double maxVal;
-        startTime = _prevTimedReport;
+        if (duration > 0) {
+            startTime = timestamp - duration;
+        } else {
+            startTime = _prevTimedReport;
+        }
         endTime = timestamp;
         _prevTimedReport = endTime;
         if (startTime == 0) {
             startTime = endTime;
         }
-        if (report[0] == 2) {
-            // 32bit timed report format
-            if (report.Count <= 5) {
-                // sub-second report, 1-4 bytes
-                poww = 1;
-                avgRaw = 0;
-                byteVal = 0;
-                i = 1;
-                while (i < report.Count) {
-                    byteVal = report[i];
-                    avgRaw = avgRaw + poww * byteVal;
-                    poww = poww * 0x100;
-                    i = i + 1;
-                }
-                if (((byteVal) & (0x80)) != 0) {
-                    avgRaw = avgRaw - poww;
-                }
-                avgVal = avgRaw / 1000.0;
-                if (_caltyp != 0) {
-                    if (imm_calhdl != null) {
-                        avgVal = imm_calhdl(avgVal, _caltyp, _calpar, _calraw, _calref);
-                    }
-                }
-                minVal = avgVal;
-                maxVal = avgVal;
-            } else {
-                // averaged report: avg,avg-min,max-avg
-                sublen = 1 + ((report[1]) & (3));
-                poww = 1;
-                avgRaw = 0;
-                byteVal = 0;
-                i = 2;
-                while ((sublen > 0) && (i < report.Count)) {
-                    byteVal = report[i];
-                    avgRaw = avgRaw + poww * byteVal;
-                    poww = poww * 0x100;
-                    i = i + 1;
-                    sublen = sublen - 1;
-                }
-                if (((byteVal) & (0x80)) != 0) {
-                    avgRaw = avgRaw - poww;
-                }
-                sublen = 1 + ((((report[1]) >> (2))) & (3));
-                poww = 1;
-                difRaw = 0;
-                while ((sublen > 0) && (i < report.Count)) {
-                    byteVal = report[i];
-                    difRaw = difRaw + poww * byteVal;
-                    poww = poww * 0x100;
-                    i = i + 1;
-                    sublen = sublen - 1;
-                }
-                minRaw = avgRaw - difRaw;
-                sublen = 1 + ((((report[1]) >> (4))) & (3));
-                poww = 1;
-                difRaw = 0;
-                while ((sublen > 0) && (i < report.Count)) {
-                    byteVal = report[i];
-                    difRaw = difRaw + poww * byteVal;
-                    poww = poww * 0x100;
-                    i = i + 1;
-                    sublen = sublen - 1;
-                }
-                maxRaw = avgRaw + difRaw;
-                avgVal = avgRaw / 1000.0;
-                minVal = minRaw / 1000.0;
-                maxVal = maxRaw / 1000.0;
-                if (_caltyp != 0) {
-                    if (imm_calhdl != null) {
-                        avgVal = imm_calhdl(avgVal, _caltyp, _calpar, _calraw, _calref);
-                        minVal = imm_calhdl(minVal, _caltyp, _calpar, _calraw, _calref);
-                        maxVal = imm_calhdl(maxVal, _caltyp, _calpar, _calraw, _calref);
-                    }
+        // 32bit timed report format
+        if (report.Count <= 5) {
+            // sub-second report, 1-4 bytes
+            poww = 1;
+            avgRaw = 0;
+            byteVal = 0;
+            i = 1;
+            while (i < report.Count) {
+                byteVal = report[i];
+                avgRaw = avgRaw + poww * byteVal;
+                poww = poww * 0x100;
+                i = i + 1;
+            }
+            if (((byteVal) & (0x80)) != 0) {
+                avgRaw = avgRaw - poww;
+            }
+            avgVal = avgRaw / 1000.0;
+            if (_caltyp != 0) {
+                if (imm_calhdl != null) {
+                    avgVal = imm_calhdl(avgVal, _caltyp, _calpar, _calraw, _calref);
                 }
             }
+            minVal = avgVal;
+            maxVal = avgVal;
         } else {
-            // 16bit timed report format
-            if (report[0] == 0) {
-                // sub-second report, 1-4 bytes
-                poww = 1;
-                avgRaw = 0;
-                byteVal = 0;
-                i = 1;
-                while (i < report.Count) {
-                    byteVal = report[i];
-                    avgRaw = avgRaw + poww * byteVal;
-                    poww = poww * 0x100;
-                    i = i + 1;
+            // averaged report: avg,avg-min,max-avg
+            sublen = 1 + ((report[1]) & (3));
+            poww = 1;
+            avgRaw = 0;
+            byteVal = 0;
+            i = 2;
+            while ((sublen > 0) && (i < report.Count)) {
+                byteVal = report[i];
+                avgRaw = avgRaw + poww * byteVal;
+                poww = poww * 0x100;
+                i = i + 1;
+                sublen = sublen - 1;
+            }
+            if (((byteVal) & (0x80)) != 0) {
+                avgRaw = avgRaw - poww;
+            }
+            sublen = 1 + ((((report[1]) >> (2))) & (3));
+            poww = 1;
+            difRaw = 0;
+            while ((sublen > 0) && (i < report.Count)) {
+                byteVal = report[i];
+                difRaw = difRaw + poww * byteVal;
+                poww = poww * 0x100;
+                i = i + 1;
+                sublen = sublen - 1;
+            }
+            minRaw = avgRaw - difRaw;
+            sublen = 1 + ((((report[1]) >> (4))) & (3));
+            poww = 1;
+            difRaw = 0;
+            while ((sublen > 0) && (i < report.Count)) {
+                byteVal = report[i];
+                difRaw = difRaw + poww * byteVal;
+                poww = poww * 0x100;
+                i = i + 1;
+                sublen = sublen - 1;
+            }
+            maxRaw = avgRaw + difRaw;
+            avgVal = avgRaw / 1000.0;
+            minVal = minRaw / 1000.0;
+            maxVal = maxRaw / 1000.0;
+            if (_caltyp != 0) {
+                if (imm_calhdl != null) {
+                    avgVal = imm_calhdl(avgVal, _caltyp, _calpar, _calraw, _calref);
+                    minVal = imm_calhdl(minVal, _caltyp, _calpar, _calraw, _calref);
+                    maxVal = imm_calhdl(maxVal, _caltyp, _calpar, _calraw, _calref);
                 }
-                if (_isScal) {
-                    avgVal = this.imm_decodeVal(avgRaw);
-                } else {
-                    if (((byteVal) & (0x80)) != 0) {
-                        avgRaw = avgRaw - poww;
-                    }
-                    avgVal = this.imm_decodeAvg(avgRaw);
-                }
-                minVal = avgVal;
-                maxVal = avgVal;
-            } else {
-                // averaged report 2+4+2 bytes
-                minRaw = report[1] + 0x100 * report[2];
-                maxRaw = report[3] + 0x100 * report[4];
-                avgRaw = report[5] + 0x100 * report[6] + 0x10000 * report[7];
-                byteVal = report[8];
-                if (((byteVal) & (0x80)) == 0) {
-                    avgRaw = avgRaw + 0x1000000 * byteVal;
-                } else {
-                    avgRaw = avgRaw - 0x1000000 * (0x100 - byteVal);
-                }
-                minVal = this.imm_decodeVal(minRaw);
-                avgVal = this.imm_decodeAvg(avgRaw);
-                maxVal = this.imm_decodeVal(maxRaw);
             }
         }
         return new YMeasure(startTime, endTime, minVal, avgVal, maxVal);
@@ -1646,11 +1559,6 @@ public class YSensor : YFunction
     {
         double val;
         val = w;
-        if (_isScal) {
-            val = (val - _offset) / _scale;
-        } else {
-            val = YAPIContext.imm_decimalToDouble(w);
-        }
         if (_caltyp != 0) {
             if (imm_calhdl != null) {
                 val = imm_calhdl(val, _caltyp, _calpar, _calraw, _calref);
@@ -1663,11 +1571,6 @@ public class YSensor : YFunction
     {
         double val;
         val = dw;
-        if (_isScal) {
-            val = (val / 100 - _offset) / _scale;
-        } else {
-            val = val / _decexp;
-        }
         if (_caltyp != 0) {
             if (imm_calhdl != null) {
                 val = imm_calhdl(val, _caltyp, _calpar, _calraw, _calref);
@@ -1680,6 +1583,9 @@ public class YSensor : YFunction
      * <summary>
      *   Continues the enumeration of sensors started using <c>yFirstSensor()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned sensors order.
+     *   If you want to find a specific a sensor, use <c>Sensor.findSensor()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

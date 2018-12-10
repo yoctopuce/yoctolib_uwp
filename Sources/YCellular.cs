@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellular.cs 31620 2018-08-14 10:04:12Z seb $
+ * $Id: YCellular.cs 32911 2018-11-02 10:21:06Z seb $
  *
  * Implements FindCellular(), the high-level API for Cellular functions
  *
@@ -1456,6 +1456,9 @@ public class YCellular : YFunction
      * <summary>
      *   Continues the enumeration of cellular interfaces started using <c>yFirstCellular()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned cellular interfaces order.
+     *   If you want to find a specific a cellular interface, use <c>Cellular.findCellular()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

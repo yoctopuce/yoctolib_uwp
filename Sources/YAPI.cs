@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 31770 2018-08-20 09:54:36Z seb $
+ * $Id: YAPI.cs 33482 2018-12-03 16:20:36Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,11 +66,13 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "32759";
+        public const string YOCTO_API_BUILD_STR = "33636";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
         public const int YOCTO_DEVID_BOOTLOADER = 2;
+        public const double MAX_DOUBLE = Double.MaxValue;
+        public const double MIN_DOUBLE = Double.MinValue;
         // --- (generated code: YFunction return codes)
     // Yoctopuce error codes, used by default as function return value
         public const int SUCCESS = 0;                   // everything worked all right
@@ -255,7 +257,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".32759" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".33636" + YUSBHub.imm_getAPIVersion();
         }
 
         /**

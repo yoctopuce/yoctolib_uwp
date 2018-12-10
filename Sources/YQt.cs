@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YQt.cs 27700 2017-06-01 12:27:09Z seb $
+ * $Id: YQt.cs 32911 2018-11-02 10:21:06Z seb $
  *
  * Implements FindQt(), the high-level API for Qt functions
  *
@@ -309,6 +309,9 @@ public class YQt : YSensor
      * <summary>
      *   Continues the enumeration of quaternion components started using <c>yFirstQt()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned quaternion components order.
+     *   If you want to find a specific a quaternion component, use <c>Qt.findQt()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

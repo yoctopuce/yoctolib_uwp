@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWeighScale.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YWeighScale.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindWeighScale(), the high-level API for WeighScale functions
  *
@@ -1147,6 +1147,9 @@ public class YWeighScale : YSensor
      * <summary>
      *   Continues the enumeration of weighing scale sensors started using <c>yFirstWeighScale()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned weighing scale sensors order.
+     *   If you want to find a specific a weighing scale sensor, use <c>WeighScale.findWeighScale()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

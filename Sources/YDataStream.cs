@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 /// <summary>
 ///*******************************************************************
 /// 
-/// $Id: YDataStream.cs 27281 2017-04-25 15:44:20Z seb $
+/// $Id: YDataStream.cs 33293 2018-11-22 11:10:33Z seb $
 /// 
 /// YDataStream Class: Sequence of measured data, stored by the data logger
 /// 
@@ -74,21 +74,17 @@ public class YDataStream
     protected long _utcStamp = 0;
     protected int _nCols = 0;
     protected int _nRows = 0;
-    protected int _duration = 0;
+    protected double _startTime = 0;
+    protected double _duration = 0;
+    protected double _dataSamplesInterval = 0;
+    protected double _firstMeasureDuration = 0;
     protected List<string> _columnNames = new List<string>();
     protected string _functionId;
     protected bool _isClosed;
     protected bool _isAvg;
-    protected bool _isScal;
-    protected bool _isScal32;
-    protected int _decimals = 0;
-    protected double _offset = 0;
-    protected double _scale = 0;
-    protected int _samplesPerHour = 0;
     protected double _minVal = 0;
     protected double _avgVal = 0;
     protected double _maxVal = 0;
-    protected double _decexp = 0;
     protected int _caltyp = 0;
     protected List<int> _calpar = new List<int>();
     protected List<double> _calraw = new List<double>();
@@ -115,51 +111,45 @@ public class YDataStream
         int val;
         int i;
         int maxpos;
-        int iRaw;
-        int iRef;
+        int ms_offset;
+        int samplesPerHour;
         double fRaw;
         double fRef;
-        double duration_float;
         List<int> iCalib = new List<int>();
         // decode sequence header to extract data
         _runNo = encoded[0] + (((encoded[1]) << (16)));
         _utcStamp = encoded[2] + (((encoded[3]) << (16)));
         val = encoded[4];
         _isAvg = (((val) & (0x100)) == 0);
-        _samplesPerHour = ((val) & (0xff));
+        samplesPerHour = ((val) & (0xff));
         if (((val) & (0x100)) != 0) {
-            _samplesPerHour = _samplesPerHour * 3600;
+            samplesPerHour = samplesPerHour * 3600;
         } else {
             if (((val) & (0x200)) != 0) {
-                _samplesPerHour = _samplesPerHour * 60;
+                samplesPerHour = samplesPerHour * 60;
             }
         }
-        val = encoded[5];
-        if (val > 32767) {
-            val = val - 65536;
+        _dataSamplesInterval = 3600.0 / samplesPerHour;
+        ms_offset = encoded[6];
+        if (ms_offset < 1000) {
+            // new encoding -> add the ms to the UTC timestamp
+            _startTime = _utcStamp + (ms_offset / 1000.0);
+        } else {
+            // legacy encoding subtract the measure interval form the UTC timestamp
+            _startTime = _utcStamp -  _dataSamplesInterval;
         }
-        _decimals = val;
-        _offset = val;
-        _scale = encoded[6];
-        _isScal = (_scale != 0);
-        _isScal32 = (encoded.Count >= 14);
+        _firstMeasureDuration = encoded[5];
+        if (!(_isAvg)) {
+            _firstMeasureDuration = _firstMeasureDuration / 1000.0;
+        }
         val = encoded[7];
         _isClosed = (val != 0xffff);
         if (val == 0xffff) {
             val = 0;
         }
         _nRows = val;
-        duration_float = _nRows * 3600 / _samplesPerHour;
-        _duration = (int) Math.Round(duration_float);
+        _duration = _nRows * _dataSamplesInterval;
         // precompute decoding parameters
-        _decexp = 1.0;
-        if (_scale == 0) {
-            i = 0;
-            while (i < _decimals) {
-                _decexp = _decexp * 10.0;
-                i = i + 1;
-            }
-        }
         iCalib = dataset.imm_get_calibration();
         _caltyp = iCalib[0];
         if (_caltyp != 0) {
@@ -168,42 +158,20 @@ public class YDataStream
             _calpar.Clear();
             _calraw.Clear();
             _calref.Clear();
-            if (_isScal32) {
-                i = 1;
-                while (i < maxpos) {
-                    _calpar.Add(iCalib[i]);
-                    i = i + 1;
-                }
-                i = 1;
-                while (i + 1 < maxpos) {
-                    fRaw = iCalib[i];
-                    fRaw = fRaw / 1000.0;
-                    fRef = iCalib[i + 1];
-                    fRef = fRef / 1000.0;
-                    _calraw.Add(fRaw);
-                    _calref.Add(fRef);
-                    i = i + 2;
-                }
-            } else {
-                i = 1;
-                while (i + 1 < maxpos) {
-                    iRaw = iCalib[i];
-                    iRef = iCalib[i + 1];
-                    _calpar.Add(iRaw);
-                    _calpar.Add(iRef);
-                    if (_isScal) {
-                        fRaw = iRaw;
-                        fRaw = (fRaw - _offset) / _scale;
-                        fRef = iRef;
-                        fRef = (fRef - _offset) / _scale;
-                        _calraw.Add(fRaw);
-                        _calref.Add(fRef);
-                    } else {
-                        _calraw.Add(YAPIContext.imm_decimalToDouble(iRaw));
-                        _calref.Add(YAPIContext.imm_decimalToDouble(iRef));
-                    }
-                    i = i + 2;
-                }
+            i = 1;
+            while (i < maxpos) {
+                _calpar.Add(iCalib[i]);
+                i = i + 1;
+            }
+            i = 1;
+            while (i + 1 < maxpos) {
+                fRaw = iCalib[i];
+                fRaw = fRaw / 1000.0;
+                fRef = iCalib[i + 1];
+                fRef = fRef / 1000.0;
+                _calraw.Add(fRaw);
+                _calref.Add(fRef);
+                i = i + 2;
             }
         }
         // preload column names for backward-compatibility
@@ -221,15 +189,9 @@ public class YDataStream
         }
         // decode min/avg/max values for the sequence
         if (_nRows > 0) {
-            if (_isScal32) {
-                _avgVal = this.imm_decodeAvg(encoded[8] + (((((encoded[9]) ^ (0x8000))) << (16))), 1);
-                _minVal = this.imm_decodeVal(encoded[10] + (((encoded[11]) << (16))));
-                _maxVal = this.imm_decodeVal(encoded[12] + (((encoded[13]) << (16))));
-            } else {
-                _minVal = this.imm_decodeVal(encoded[8]);
-                _maxVal = this.imm_decodeVal(encoded[9]);
-                _avgVal = this.imm_decodeAvg(encoded[10] + (((encoded[11]) << (16))), _nRows);
-            }
+            _avgVal = this.imm_decodeAvg(encoded[8] + (((((encoded[9]) ^ (0x8000))) << (16))), 1);
+            _minVal = this.imm_decodeVal(encoded[10] + (((encoded[11]) << (16))));
+            _maxVal = this.imm_decodeVal(encoded[12] + (((encoded[13]) << (16))));
         }
         return 0;
     }
@@ -250,34 +212,18 @@ public class YDataStream
         if (_isAvg) {
             while (idx + 3 < udat.Count) {
                 dat.Clear();
-                if (_isScal32) {
-                    dat.Add(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
-                    dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
-                    dat.Add(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
-                    idx = idx + 6;
-                } else {
-                    dat.Add(this.imm_decodeVal(udat[idx]));
-                    dat.Add(this.imm_decodeAvg(udat[idx + 2] + (((udat[idx + 3]) << (16))), 1));
-                    dat.Add(this.imm_decodeVal(udat[idx + 1]));
-                    idx = idx + 4;
-                }
+                dat.Add(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
+                dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                dat.Add(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
+                idx = idx + 6;
                 _values.Add(new List<double>(dat));
             }
         } else {
-            if (_isScal && !(_isScal32)) {
-                while (idx < udat.Count) {
-                    dat.Clear();
-                    dat.Add(this.imm_decodeVal(udat[idx]));
-                    _values.Add(new List<double>(dat));
-                    idx = idx + 1;
-                }
-            } else {
-                while (idx + 1 < udat.Count) {
-                    dat.Clear();
-                    dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
-                    _values.Add(new List<double>(dat));
-                    idx = idx + 2;
-                }
+            while (idx + 1 < udat.Count) {
+                dat.Clear();
+                dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                _values.Add(new List<double>(dat));
+                idx = idx + 2;
             }
         }
 
@@ -302,15 +248,7 @@ public class YDataStream
     {
         double val;
         val = w;
-        if (_isScal32) {
-            val = val / 1000.0;
-        } else {
-            if (_isScal) {
-                val = (val - _offset) / _scale;
-            } else {
-                val = YAPIContext.imm_decimalToDouble(w);
-            }
-        }
+        val = val / 1000.0;
         if (_caltyp != 0) {
             if (imm_calhdl != null) {
                 val = imm_calhdl(val, _caltyp, _calpar, _calraw, _calref);
@@ -323,15 +261,7 @@ public class YDataStream
     {
         double val;
         val = dw;
-        if (_isScal32) {
-            val = val / 1000.0;
-        } else {
-            if (_isScal) {
-                val = (val / (100 * count) - _offset) / _scale;
-            } else {
-                val = val / (count * _decexp);
-            }
-        }
+        val = val / 1000.0;
         if (_caltyp != 0) {
             if (imm_calhdl != null) {
                 val = imm_calhdl(val, _caltyp, _calpar, _calraw, _calref);
@@ -373,7 +303,10 @@ public class YDataStream
      *   If the device uses a firmware older than version 13000, value is
      *   relative to the start of the time the device was powered on, and
      *   is always positive.
-     *   If you need an absolute UTC timestamp, use <c>get_startTimeUTC()</c>.
+     *   If you need an absolute UTC timestamp, use <c>get_realStartTimeUTC()</c>.
+     * </para>
+     * <para>
+     *   <b>DEPRECATED</b>: This method has been replaced by <c>get_realStartTimeUTC()</c>.
      * </para>
      * <para>
      * </para>
@@ -397,6 +330,9 @@ public class YDataStream
      *   of this data stream, this method returns 0.
      * </para>
      * <para>
+     *   <b>DEPRECATED</b>: This method has been replaced by <c>get_realStartTimeUTC()</c>.
+     * </para>
+     * <para>
      * </para>
      * </summary>
      * <returns>
@@ -407,7 +343,28 @@ public class YDataStream
      */
     public virtual async Task<long> get_startTimeUTC()
     {
-        return _utcStamp;
+        return (int) Math.Round(_startTime);
+    }
+
+    /**
+     * <summary>
+     *   Returns the start time of the data stream, relative to the Jan 1, 1970.
+     * <para>
+     *   If the UTC time was not set in the datalogger at the time of the recording
+     *   of this data stream, this method returns 0.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating-point number  corresponding to the number of seconds
+     *   between the Jan 1, 1970 and the beginning of this data
+     *   stream (i.e. Unix time representation of the absolute time).
+     * </returns>
+     */
+    public virtual async Task<double> get_realStartTimeUTC()
+    {
+        return _startTime;
     }
 
     /**
@@ -428,12 +385,17 @@ public class YDataStream
      */
     public virtual async Task<int> get_dataSamplesIntervalMs()
     {
-        return ((3600000) / (_samplesPerHour));
+        return (int) Math.Round(_dataSamplesInterval*1000);
     }
 
     public virtual async Task<double> get_dataSamplesInterval()
     {
-        return 3600.0 / _samplesPerHour;
+        return _dataSamplesInterval;
+    }
+
+    public virtual async Task<double> get_firstDataSamplesInterval()
+    {
+        return _firstMeasureDuration;
     }
 
     /**
@@ -600,27 +562,12 @@ public class YDataStream
         return _maxVal;
     }
 
-    /**
-     * <summary>
-     *   Returns the approximate duration of this stream, in seconds.
-     * <para>
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <returns>
-     *   the number of seconds covered by this stream.
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns YDataStream.DURATION_INVALID.
-     * </para>
-     */
-    public virtual async Task<int> get_duration()
+    public virtual async Task<double> get_realDuration()
     {
         if (_isClosed) {
             return _duration;
         }
-        return (int)(Convert.ToUInt32((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds) - _utcStamp);
+        return (double) Convert.ToUInt32((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds) - _utcStamp;
     }
 
     /**

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCompass.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YCompass.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindCompass(), the high-level API for Compass functions
  *
@@ -452,6 +452,9 @@ public class YCompass : YSensor
      * <summary>
      *   Continues the enumeration of compasses started using <c>yFirstCompass()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned compasses order.
+     *   If you want to find a specific a compass, use <c>Compass.findCompass()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

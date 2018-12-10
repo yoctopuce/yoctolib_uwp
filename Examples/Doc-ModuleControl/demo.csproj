@@ -210,6 +210,9 @@
     <Compile Include="..\..\Sources\YMultiCellWeighScale.cs">
       <Link>yoctolib\YMultiCellWeighScale.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YMultiSensController.cs">
+      <Link>yoctolib\YMultiSensController.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YNetwork.cs">
       <Link>yoctolib\YNetwork.cs</Link>
     </Compile>
@@ -281,6 +284,9 @@
     </Compile>
     <Compile Include="..\..\Sources\YTilt.cs">
       <Link>yoctolib\YTilt.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YTvoc.cs">
+      <Link>yoctolib\YTvoc.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YVoc.cs">
       <Link>yoctolib\YVoc.cs</Link>

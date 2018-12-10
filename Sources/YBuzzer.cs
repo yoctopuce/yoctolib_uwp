@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YBuzzer.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YBuzzer.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindBuzzer(), the high-level API for Buzzer functions
  *
@@ -975,6 +975,9 @@ public class YBuzzer : YFunction
      * <summary>
      *   Continues the enumeration of buzzers started using <c>yFirstBuzzer()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned buzzers order.
+     *   If you want to find a specific a buzzer, use <c>Buzzer.findBuzzer()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

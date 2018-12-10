@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLed.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YLed.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindLed(), the high-level API for Led functions
  *
@@ -477,6 +477,9 @@ public class YLed : YFunction
      * <summary>
      *   Continues the enumeration of LEDs started using <c>yFirstLed()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned LEDs order.
+     *   If you want to find a specific a LED, use <c>Led.findLed()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

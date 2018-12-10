@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 32362 2018-09-26 16:35:13Z seb $
+ * $Id: YAPIContext.cs 33209 2018-11-20 14:52:42Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -74,6 +74,7 @@ public class YAPIContext
             internal readonly string _value;
             internal readonly List<int> _report;
             internal readonly double _timestamp;
+            internal readonly double _duration;
             internal readonly int _beacon;
 
 
@@ -84,6 +85,7 @@ public class YAPIContext
                 _value = value;
                 _report = null;
                 _timestamp = 0;
+                _duration = 0;
                 _beacon = -1;
             }
 
@@ -94,15 +96,17 @@ public class YAPIContext
                 _value = null;
                 _report = null;
                 _timestamp = 0;
+                _duration = 0;
                 _beacon = -1;
             }
 
-            public DataEvent(YFunction fun, double timestamp, List<int> report)
+            public DataEvent(YFunction fun, double timestamp, double duration, List<int> report)
             {
                 _fun = fun;
                 _module = null;
                 _value = null;
                 _timestamp = timestamp;
+                _duration = duration;
                 _report = report;
                 _beacon = -1;
             }
@@ -114,6 +118,7 @@ public class YAPIContext
                 _value = null;
                 _report = null;
                 _timestamp = 0;
+                _duration = 0;
                 _beacon = beacon;
             }
 
@@ -127,7 +132,7 @@ public class YAPIContext
                     }
                 } else if (_value == null) {
                     YSensor sensor = (YSensor) _fun;
-                    YMeasure mesure = await sensor._decodeTimedReport(_timestamp, _report);
+                    YMeasure mesure = await sensor._decodeTimedReport(_timestamp, _duration, _report);
                     await sensor._invokeTimedReportCallback(mesure);
                 } else {
                     // new value
@@ -160,11 +165,11 @@ public class YAPIContext
 
         // Convert Yoctopuce 16-bit decimal floats to standard double-precision floats
         //
-        internal static double imm_decimalToDouble(int val)
+        internal static double imm_decimalToDouble(long val)
         {
             bool negate = false;
             double res;
-            int mantis = val & 2047;
+            long mantis = val & 2047;
             if (mantis == 0)
                 return 0.0;
             if (val > 32767) {
@@ -175,7 +180,7 @@ public class YAPIContext
                 val = -val;
             }
 
-            int exp = val >> 11;
+            long exp = val >> 11;
             res = (double) (mantis) * decExp[exp];
             return (negate ? -res : res);
         }

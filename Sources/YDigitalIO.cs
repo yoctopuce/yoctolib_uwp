@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YDigitalIO.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YDigitalIO.cs 33135 2018-11-12 15:32:32Z mvuilleu $
  *
  *  Implements FindDigitalIO(), the high-level API for DigitalIO functions
  *
@@ -51,7 +51,10 @@ namespace com.yoctopuce.YoctoAPI
  *   YDigitalIO Class: Digital IO function interface
  * <para>
  *   The Yoctopuce application programming interface allows you to switch the state of each
- *   bit of the I/O port. You can switch all bits at once, or one by one. The library
+ *   channel of the I/O port. You can switch all channels at once, or one by one. Most functions
+ *   use a binary represention for channels where bit 0 matches channel #0 , bit 1 matches channel
+ *   #1 and so on.... If you are not familiar with numbers binary representation, you will find more
+ *   information here: en.wikipedia.org/wiki/Binary_number#Representation . The library
  *   can also automatically generate short pulses of a determined duration. Electrical behavior
  *   of each I/O can be modified (open drain and reverse polarity).
  * </para>
@@ -186,14 +189,29 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Returns the digital IO port state: bit 0 represents input 0, and so on.
+     *   Returns the digital IO port state as an integer with each bit
+     *   representing a channel
+     *   value 0 = <c>0b00000000</c> -> all channels are OFF
+     *   value 1 = <c>0b00000001</c> -> channel #0 is ON
+     *   value 2 = <c>0b00000010</c> -> channel #1 is ON
+     *   value 3 = <c>0b00000011</c> -> channels #0 and #1 are ON
+     *   value 4 = <c>0b00000100</c> -> channel #2 is ON
+     *   and so on..
      * <para>
+     *   .
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the digital IO port state: bit 0 represents input 0, and so on
+     *   an integer corresponding to the digital IO port state as an integer with each bit
+     *   representing a channel
+     *   value 0 = <c>0b00000000</c> -> all channels are OFF
+     *   value 1 = <c>0b00000001</c> -> channel #0 is ON
+     *   value 2 = <c>0b00000010</c> -> channel #1 is ON
+     *   value 3 = <c>0b00000011</c> -> channels #0 and #1 are ON
+     *   value 4 = <c>0b00000100</c> -> channel #2 is ON
+     *   and so on.
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YDigitalIO.PORTSTATE_INVALID</c>.
@@ -214,16 +232,25 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Changes the digital IO port state: bit 0 represents input 0, and so on.
+     *   Changes the state of all digital IO port's channels at once,
+     *   the parameter is an integer with  each bit representing a channel.
      * <para>
-     *   This function has no effect
-     *   on bits configured as input in <c>portDirection</c>.
+     *   Bit 0 matches channel #0. So:
+     *   To set all channels to  0 -> <c>0b00000000</c> -> parameter = 0
+     *   To set channel #0 to 1 -> <c>0b00000001</c> -> parameter =  1
+     *   To set channel #1 to  1 -> <c>0b00000010</c> -> parameter = 2
+     *   To set channel #0 and #1 -> <c>0b00000011</c> -> parameter =  3
+     *   To set channel #2 to 1 -> <c>0b00000100</c> -> parameter =  4
+     *   an so on....
+     *   Only channels configured as output, thanks to <c>portDirection</c>,
+     *   are affected.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the digital IO port state: bit 0 represents input 0, and so on
+     *   an integer corresponding to the state of all digital IO port's channels at once,
+     *   the parameter is an integer with  each bit representing a channel
      * </param>
      * <para>
      * </para>
@@ -244,15 +271,15 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Returns the IO direction of all bits of the port: 0 makes a bit an input, 1 makes it an output.
+     *   Returns the IO direction of all bits (i.e.
      * <para>
+     *   channels) of the port: 0 makes a bit an input, 1 makes it an output.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the IO direction of all bits of the port: 0 makes a bit an input, 1
-     *   makes it an output
+     *   an integer corresponding to the IO direction of all bits (i.e
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YDigitalIO.PORTDIRECTION_INVALID</c>.
@@ -273,16 +300,16 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Changes the IO direction of all bits of the port: 0 makes a bit an input, 1 makes it an output.
+     *   Changes the IO direction of all bits (i.e.
      * <para>
+     *   channels) of the port: 0 makes a bit an input, 1 makes it an output.
      *   Remember to call the <c>saveToFlash()</c> method  to make sure the setting is kept after a reboot.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the IO direction of all bits of the port: 0 makes a bit an input, 1
-     *   makes it an output
+     *   an integer corresponding to the IO direction of all bits (i.e
      * </param>
      * <para>
      * </para>
@@ -457,14 +484,15 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Returns the number of bits implemented in the I/O port.
+     *   Returns the number of bits (i.e.
      * <para>
+     *   channels)implemented in the I/O port.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the number of bits implemented in the I/O port
+     *   an integer corresponding to the number of bits (i.e
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YDigitalIO.PORTSIZE_INVALID</c>.
@@ -733,8 +761,9 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Sets a single bit of the I/O port.
+     *   Sets a single bit (i.e.
      * <para>
+     *   channel) of the I/O port.
      * </para>
      * </summary>
      * <param name="bitno">
@@ -759,8 +788,9 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Returns the state of a single bit of the I/O port.
+     *   Returns the state of a single bit (i.e.
      * <para>
+     *   channel)  of the I/O port.
      * </para>
      * </summary>
      * <param name="bitno">
@@ -782,8 +812,9 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Reverts a single bit of the I/O port.
+     *   Reverts a single bit (i.e.
      * <para>
+     *   channel) of the I/O port.
      * </para>
      * </summary>
      * <param name="bitno">
@@ -803,8 +834,9 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Changes  the direction of a single bit from the I/O port.
+     *   Changes  the direction of a single bit (i.e.
      * <para>
+     *   channel) from the I/O port.
      * </para>
      * </summary>
      * <param name="bitno">
@@ -830,8 +862,9 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Returns the direction of a single bit from the I/O port (0 means the bit is an input, 1  an output).
+     *   Returns the direction of a single bit (i.e.
      * <para>
+     *   channel) from the I/O port (0 means the bit is an input, 1  an output).
      * </para>
      * </summary>
      * <param name="bitno">
@@ -1015,6 +1048,9 @@ public class YDigitalIO : YFunction
      * <summary>
      *   Continues the enumeration of digital IO ports started using <c>yFirstDigitalIO()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned digital IO ports order.
+     *   If you want to find a specific a digital IO port, use <c>DigitalIO.findDigitalIO()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

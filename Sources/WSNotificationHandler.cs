@@ -22,6 +22,8 @@ namespace com.yoctopuce.YoctoAPI
         private readonly byte _asyncId;
         private readonly Object _progressCtx;
         private readonly YGenericHub.RequestProgress _progressCb;
+        private readonly YGenericHub.RequestAsyncResult _asyncResultCb;
+        private readonly Object _asyncCtx;
         private int _errorCode = YAPI.SUCCESS;
         private string _errorMsg = null;
         private readonly ulong _tmOpen = YAPI.GetTickCount();
@@ -60,7 +62,7 @@ namespace com.yoctopuce.YoctoAPI
             get { return _errorMsg; }
         }
 
-        internal WSRequest(string dbglabel, int tcpchanel, byte asyncid, byte[] full_request)
+        internal WSRequest(string dbglabel, int tcpchanel, byte asyncid, byte[] full_request, YGenericHub.RequestAsyncResult asyncResult, Object asyncContext)
         {
             _async = true;
             _asyncId = asyncid;
@@ -69,6 +71,8 @@ namespace com.yoctopuce.YoctoAPI
             _dbglabel = dbglabel;
             _progressCb = null;
             _progressCtx = null;
+            _asyncResultCb = asyncResult;
+            _asyncCtx = asyncContext;
         }
 
         internal WSRequest(string dbglabel, int tcpchanel, byte[] full_request, YGenericHub.RequestProgress progress, Object context)
@@ -80,6 +84,8 @@ namespace com.yoctopuce.YoctoAPI
             _dbglabel = dbglabel;
             _progressCb = progress;
             _progressCtx = context;
+            _asyncResultCb = null;
+            _asyncCtx = null;
         }
 
         internal IBuffer imm_GetRequestData(int ofs, int length)
@@ -97,6 +103,10 @@ namespace com.yoctopuce.YoctoAPI
             //imm_logReq("close:" + reasonPhrase);
             byte[] finalData = new byte[_responseLen];
             Array.Copy(_responseData, finalData, finalData.Length);
+            if (_asyncResultCb != null) {
+                _asyncResultCb(_asyncCtx, finalData, YAPI.SUCCESS, "");
+            }
+
             _tcs.SetResult(finalData);
         }
 
@@ -267,7 +277,7 @@ namespace com.yoctopuce.YoctoAPI
         }
 
 
-        private async Task<WSRequest> sendRequest(string req_first_line, byte[] req_head_and_body, int tcpchanel, bool async, YGenericHub.RequestProgress progress, Object context)
+        private async Task<WSRequest> sendRequest(string req_first_line, byte[] req_head_and_body, int tcpchanel, bool async, YGenericHub.RequestProgress progress, Object context, YGenericHub.RequestAsyncResult asyncResult, Object asyncContext)
         {
             WSRequest request;
             string debug = req_first_line.Trim();
@@ -301,7 +311,7 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             if (async) {
-                request = new WSRequest(debug, tcpchanel, _nextAsyncId++, full_request);
+                request = new WSRequest(debug, tcpchanel, _nextAsyncId++, full_request,asyncResult, asyncContext);
                 if (_nextAsyncId >= 127) {
                     _nextAsyncId = 48;
                 }
@@ -321,10 +331,10 @@ namespace com.yoctopuce.YoctoAPI
         }
 
 
-        /*
-    *   look through all pending request if there is some data that we can send
-    *
-    */
+        /**
+        *   look through all pending request if there is some data that we can send
+        *
+        */
         private async Task processRequests(WSRequest request)
         {
             int tcpchan = request.Channel;
@@ -440,7 +450,7 @@ namespace com.yoctopuce.YoctoAPI
 
         internal override async Task<byte[]> hubRequestSync(string req_first_line, byte[] req_head_and_body, uint mstimeout)
         {
-            WSRequest wsRequest = await sendRequest(req_first_line, req_head_and_body, HUB_TCP_CHANNEL, false, null, null);
+            WSRequest wsRequest = await sendRequest(req_first_line, req_head_and_body, HUB_TCP_CHANNEL, false, null, null, null, null);
             byte[] full_result = await wsRequest.getResponseBytes();
             byte[] immVerifyHttPheader = imm_verifyHTTPheader(full_result);
             return immVerifyHttPheader;
@@ -454,7 +464,7 @@ namespace com.yoctopuce.YoctoAPI
                 mstimeout = 86400000; //24h
             }
 
-            WSRequest wsRequest = await sendRequest(req_first_line, req_head_and_body, DEVICE_TCP_CHANNEL, false, progress, context);
+            WSRequest wsRequest = await sendRequest(req_first_line, req_head_and_body, DEVICE_TCP_CHANNEL, false, progress, context, null, null);
             byte[] full_result = await wsRequest.getResponseBytes();
             return imm_verifyHTTPheader(full_result);
         }
@@ -462,7 +472,7 @@ namespace com.yoctopuce.YoctoAPI
 
         internal override async Task devRequestAsync(YDevice device, string req_first_line, byte[] req_head_and_body, YGenericHub.RequestAsyncResult asyncResult, object asyncContext)
         {
-            WSRequest wsRequest = await sendRequest(req_first_line, req_head_and_body, DEVICE_TCP_CHANNEL, true, null, null);
+            WSRequest wsRequest = await sendRequest(req_first_line, req_head_and_body, DEVICE_TCP_CHANNEL, true, null, null, asyncResult, asyncContext);
         }
 
         internal override async Task<bool> Stop(ulong timeout)

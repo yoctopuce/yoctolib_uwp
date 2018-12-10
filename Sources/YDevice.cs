@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDevice.cs 31620 2018-08-14 10:04:12Z seb $
+ * $Id: YDevice.cs 33592 2018-12-07 17:57:00Z seb $
  *
  * Internal YDevice class
  *
@@ -39,6 +39,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -65,11 +66,13 @@ namespace com.yoctopuce.YoctoAPI
         private ulong _cache_expiration;
         private YJSONObject _cache_json;
         private readonly Dictionary<int?, YPEntry> _ypRecs;
-        private double _deviceTime;
+        private double _lastTimeRef;
+        private double _lastDuration;
         private YPEntry _moduleYPEntry;
         private YModule.LogCallback _logCallback = null;
         private int _logpos = 0;
         private bool _logIsPulling = false;
+        private bool _logNeedPulling = false;
 
         // Device constructor. Automatically call the YAPI functin to reindex device
         internal YDevice(YGenericHub hub, WPEntry wpRec, Dictionary<string, List<YPEntry>> ypRecs)
@@ -243,7 +246,11 @@ namespace com.yoctopuce.YoctoAPI
         internal virtual async Task<byte[]> requestHTTPSync(string request, byte[] rest_of_request)
         {
             string shortRequest = imm_formatRequest(request);
-            return await _hub.devRequestSync(this, shortRequest, rest_of_request, null, null);
+            byte[] res = await _hub.devRequestSync(this, shortRequest, rest_of_request, null, null);
+            if (_logNeedPulling) {
+                await triggerLogPull();
+            }
+            return res;
         }
 
         internal virtual async Task<string> requestHTTPSyncAsString(string request, byte[] rest_of_request)
@@ -256,6 +263,10 @@ namespace com.yoctopuce.YoctoAPI
         {
             string shortRequest = imm_formatRequest(request);
             await _hub.devRequestAsync(this, shortRequest, rest_of_request, asyncResult, context);
+            if (_logNeedPulling) {
+                await triggerLogPull();
+            }
+
         }
 
         private string imm_formatRequest(string request)
@@ -273,23 +284,41 @@ namespace com.yoctopuce.YoctoAPI
             return string.Format("{0} {1}{2}", words[0], _wpRec.NetworkUrl, relativeUrl);
         }
 
-
-        public virtual double imm_getDeviceTime()
+        public virtual double imm_getLastTimeRef()
         {
-            return _deviceTime;
+            return _lastTimeRef;
         }
 
-        public virtual void imm_setDeviceTime(byte[] data)
+        public virtual double imm_getLastDuration()
+        {
+            return _lastDuration;
+        }
+
+        public virtual void imm_setLastTimeRef(byte[] data)
         {
             double time = data[0] + 0x100 * data[1] + 0x10000 * data[2] + 0x1000000 * data[3];
-            _deviceTime = time + data[4] / 250.0;
+            long ms = data[4] * 4;
+            if (data.Length >= 6) {
+                ms += data[5] >> 6;
+                long freq = data[6];
+                freq += (data[5] & 0xf) * 0x100;
+                if ((data[5] & 0x10) != 0) {
+                    _lastDuration = freq;
+                } else {
+                    _lastDuration = freq / 1000.0;
+                }
+            } else {
+                _lastDuration = 0;
+            }
+
+            _lastTimeRef = time + ms / 1000.0;
         }
 
         internal virtual YPEntry ModuleYPEntry {
             get { return _moduleYPEntry; }
         }
 
-        private void imm_logCallbackHandle(object context, byte[] result, int error, string errmsg)
+        private async Task logCallbackHandle(object context, byte[] result, int error, string errmsg)
         {
             if (result == null) {
                 _logIsPulling = false;
@@ -302,26 +331,34 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             string resultStr = YAPI.DefaultEncoding.GetString(result, 0, result.Length);
-            int pos = resultStr.LastIndexOf("@", StringComparison.Ordinal);
+            int pos = resultStr.LastIndexOf("\n@", StringComparison.Ordinal);
             if (pos < 0) {
                 _logIsPulling = false;
                 return;
             }
 
             string logs = resultStr.Substring(0, pos);
-            string posStr = resultStr.Substring(pos + 1);
+            string posStr = resultStr.Substring(pos + 2);
             _logpos = Convert.ToInt32(posStr);
-            YModule module = YModule.FindModuleInContext(_hub._yctx, imm_getSerialNumber());
-            string[] lines = logs.Split('\n');
+            YModule module = YModule.FindModuleInContext(_hub._yctx, imm_getSerialNumber()+".module");
+            string[] lines = logs.TrimEnd().Split('\n');
             foreach (string line in lines) {
-                _logCallback(module, line);
+                await _logCallback(module, line);
             }
 
             _logIsPulling = false;
         }
 
+
+        internal void imm_setDeviceLogPending()
+        {
+            _logNeedPulling = true;
+        }
+
+
         internal virtual async Task triggerLogPull()
         {
+            _logNeedPulling = false;
             if (_logCallback == null || _logIsPulling) {
                 return;
             }
@@ -329,7 +366,7 @@ namespace com.yoctopuce.YoctoAPI
             _logIsPulling = true;
             string request = "GET logs.txt?pos=" + _logpos;
             try {
-                await requestHTTPAsync(request, null, imm_logCallbackHandle, _logpos);
+                await requestHTTPAsync(request, null, logCallbackHandle, _logpos);
             } catch (YAPI_Exception ex) {
                 _hub._yctx._Log("LOG error:" + ex.Message);
             }
@@ -341,7 +378,7 @@ namespace com.yoctopuce.YoctoAPI
             await triggerLogPull();
         }
 
-        //todo: look if we can rewrite this function in c# to be more efficent
+        //todo: look if we can rewrite this function in c# to be more efficient
         internal static byte[] imm_formatHTTPUpload(string path, byte[] content)
         {
             Random randomGenerator = new Random();

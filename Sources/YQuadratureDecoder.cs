@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YQuadratureDecoder.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YQuadratureDecoder.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindQuadratureDecoder(), the high-level API for QuadratureDecoder functions
  *
@@ -446,6 +446,9 @@ public class YQuadratureDecoder : YSensor
      * <summary>
      *   Continues the enumeration of quadrature decoders started using <c>yFirstQuadratureDecoder()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned quadrature decoders order.
+     *   If you want to find a specific a quadrature decoder, use <c>QuadratureDecoder.findQuadratureDecoder()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

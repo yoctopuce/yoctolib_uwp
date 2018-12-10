@@ -127,8 +127,7 @@ namespace com.yoctopuce.YoctoAPI
 
                                 break;
                             case NOTIFY_NETPKT_DEVLOGYDX:
-                                //fixme:
-                                //await ydev.triggerLogPull();
+                                ydev.imm_setDeviceLogPending();
                                 break;
                             case NOTIFY_NETPKT_CONFCHGYDX:
                                 _hub.imm_handleConfigChangeNotification(serial);
@@ -137,13 +136,13 @@ namespace com.yoctopuce.YoctoAPI
                             case NOTIFY_NETPKT_TIMEAVGYDX:
                             case NOTIFY_NETPKT_TIMEV2YDX:
                                 if (funydx == 0xf) {
-                                    byte[] data = new byte[5];
-                                    for (int i = 0; i < 5; i++) {
+                                    int not_len = value.Length / 2;
+                                    byte[] data = new byte[not_len];
+                                    for (int i = 0; i < not_len; i++) {
                                         string part = value.Substring(i * 2, 2);
                                         data[i] = Convert.ToByte(part, 16);
                                     }
-
-                                    ydev.imm_setDeviceTime(data);
+                                    ydev.imm_setLastTimeRef(data);
                                 } else {
                                     funcid = ydev.imm_getYPEntry(funydx).FuncId;
                                     if (!funcid.Equals("")) {
@@ -154,8 +153,7 @@ namespace com.yoctopuce.YoctoAPI
                                             int intval = Convert.ToInt32(value.Substring(pos, 2), 16);
                                             report.Add(intval);
                                         }
-
-                                        _hub.imm_handleTimedNotification(serial, funcid, ydev.imm_getDeviceTime(), report);
+                                        _hub.imm_handleTimedNotification(serial, funcid, ydev.imm_getLastTimeRef(), ydev.imm_getLastDuration(), report);
                                     }
                                 }
 

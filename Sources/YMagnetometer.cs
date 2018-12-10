@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMagnetometer.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YMagnetometer.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindMagnetometer(), the high-level API for Magnetometer functions
  *
@@ -497,6 +497,9 @@ public class YMagnetometer : YSensor
      * <summary>
      *   Continues the enumeration of magnetometers started using <c>yFirstMagnetometer()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned magnetometers order.
+     *   If you want to find a specific a magnetometer, use <c>Magnetometer.findMagnetometer()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

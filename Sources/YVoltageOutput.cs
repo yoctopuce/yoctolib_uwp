@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YVoltageOutput.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YVoltageOutput.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindVoltageOutput(), the high-level API for VoltageOutput functions
  *
@@ -469,6 +469,9 @@ public class YVoltageOutput : YFunction
      * <summary>
      *   Continues the enumeration of voltage outputs started using <c>yFirstVoltageOutput()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned voltage outputs order.
+     *   If you want to find a specific a voltage output, use <c>VoltageOutput.findVoltageOutput()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

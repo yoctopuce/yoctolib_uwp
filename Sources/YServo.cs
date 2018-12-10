@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YServo.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YServo.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindServo(), the high-level API for Servo functions
  *
@@ -768,6 +768,9 @@ public class YServo : YFunction
      * <summary>
      *   Continues the enumeration of servos started using <c>yFirstServo()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned servos order.
+     *   If you want to find a specific a servo, use <c>Servo.findServo()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

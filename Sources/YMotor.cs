@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMotor.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YMotor.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindMotor(), the high-level API for Motor functions
  *
@@ -961,6 +961,9 @@ public class YMotor : YFunction
      * <summary>
      *   Continues the enumeration of motors started using <c>yFirstMotor()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned motors order.
+     *   If you want to find a specific a motor, use <c>Motor.findMotor()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

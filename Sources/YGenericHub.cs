@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 32362 2018-09-26 16:35:13Z seb $
+ * $Id: YGenericHub.cs 33592 2018-12-07 17:57:00Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -322,24 +322,13 @@ namespace com.yoctopuce.YoctoAPI
             }
         }
 
-        protected internal virtual void imm_handleTimedNotification(string serial, string funcid, double deviceTime, sbyte[] report)
-        {
-            List<int> arrayList = new List<int>(report.Length);
-            foreach (sbyte b in report) {
-                int i = b & 0xff;
-                arrayList.Add(i);
-            }
 
-            imm_handleTimedNotification(serial, funcid, deviceTime, arrayList);
-        }
-
-
-        protected internal virtual void imm_handleTimedNotification(string serial, string funcid, double deviceTime, List<int> report)
+        protected internal virtual void imm_handleTimedNotification(string serial, string funcid, double time, double duration, List<int> report)
         {
             string hwid = serial + "." + funcid;
             YFunction func = _yctx._GetTimedReportCallback(hwid);
             if (func != null) {
-                _yctx._PushDataEvent(new YAPIContext.DataEvent(func, deviceTime, report));
+                _yctx._PushDataEvent(new YAPIContext.DataEvent(func, time, duration, report));
             }
         }
 
@@ -375,7 +364,7 @@ namespace com.yoctopuce.YoctoAPI
 
         internal abstract Task<List<string>> firmwareUpdate(string serial, YFirmwareFile firmware, byte[] settings, UpdateProgress progress);
 
-        internal delegate void RequestAsyncResult(object context, byte[] result, int error, string errmsg);
+        internal delegate Task RequestAsyncResult(object context, byte[] result, int error, string errmsg);
 
         internal delegate void RequestProgress(object context, int acked, int total);
 

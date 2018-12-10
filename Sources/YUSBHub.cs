@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBHub.cs 31623 2018-08-14 11:31:28Z seb $
+ * $Id: YUSBHub.cs 33591 2018-12-07 16:37:37Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -109,6 +109,10 @@ namespace com.yoctopuce.YoctoAPI
             foreach (YUSBDevice d in devices) {
                 whitePages.Add(d.imm_GetWhitesPagesEntry());
                 d.imm_UpdateYellowPages(yellowPages);
+            }
+            // Reindex all devices from white pages
+            for (int i = 0; i < whitePages.Count; i++) {
+                _serialByYdx[i] =  whitePages[i].SerialNumber;
             }
             await updateFromWpAndYp(whitePages, yellowPages);
             // reset device list cache timeout for this hub

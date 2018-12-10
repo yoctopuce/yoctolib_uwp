@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataSet.cs 31435 2018-08-07 14:11:47Z mvuilleu $
+ * $Id: YDataSet.cs 33505 2018-12-05 14:45:46Z seb $
  *
  * Implements yFindDataSet(), the high-level API for DataSet functions
  *
@@ -80,25 +80,29 @@ public class YDataSet
     protected string _hardwareId;
     protected string _functionId;
     protected string _unit;
-    protected long _startTime = 0;
-    protected long _endTime = 0;
+    protected double _startTimeMs = 0;
+    protected double _endTimeMs = 0;
     protected int _progress = 0;
     protected List<int> _calib = new List<int>();
     protected List<YDataStream> _streams = new List<YDataStream>();
     protected YMeasure _summary;
     protected List<YMeasure> _preview = new List<YMeasure>();
     protected List<YMeasure> _measures = new List<YMeasure>();
+    protected double _summaryMinVal = 0;
+    protected double _summaryMaxVal = 0;
+    protected double _summaryTotalAvg = 0;
+    protected double _summaryTotalTime = 0;
 
     //--- (end of generated code: YDataSet definitions)
 
         // YDataSet constructor, when instantiated directly by a function
-        public YDataSet(YFunction parent, string functionId, string unit, long startTime, long endTime)
+        public YDataSet(YFunction parent, string functionId, string unit, double startTime, double endTime)
         {
             _parent = parent;
             _functionId = functionId;
             _unit = unit;
-            _startTime = startTime;
-            _endTime = endTime;
+            _startTimeMs = startTime * 1000;
+            _endTimeMs = endTime * 1000;
             _progress = -1;
             _hardwareId = "";
             _summary = new YMeasure();
@@ -108,8 +112,8 @@ public class YDataSet
         public YDataSet(YFunction parent)
         {
             _parent = parent;
-            _startTime = 0;
-            _endTime = 0;
+            _startTimeMs = 0;
+            _endTimeMs = 0;
             _hardwareId = "";
             _summary = new YMeasure();
         }
@@ -119,14 +123,8 @@ public class YDataSet
         {
             YJSONObject json;
             YJSONArray jstreams;
-            double summaryMinVal = double.MaxValue;
-            double summaryMaxVal = double.Epsilon;
-            double summaryTotalTime = 0;
-            double summaryTotalAvg = 0;
-            long streamStartTime;
-            long streamEndTime;
-            long startTime = 0x7fffffff;
-            long endTime = 0;
+            double streamStartTime;
+            double streamEndTime;
 
             json = new YJSONObject(json_str);
             json.parse();
@@ -144,45 +142,17 @@ public class YDataSet
             jstreams = json.getYJSONArray("streams");
             for (int i = 0; i < jstreams.Length; i++) {
                 YDataStream stream = _parent.imm_findDataStream(this, jstreams.getString(i));
-                streamStartTime = await stream.get_startTimeUTC() - await stream.get_dataSamplesIntervalMs() / 1000;
-                streamEndTime = await stream.get_startTimeUTC() + await stream.get_duration();
-                if (_startTime > 0 && streamEndTime <= _startTime) {
+                // the timestamp in the data streams is the end of the measure, so the actual
+                // measurement start time is computed as one interval before the first timestamp
+                streamStartTime = await stream.get_realStartTimeUTC() * 1000;
+                streamEndTime = streamStartTime + await stream.get_realDuration() * 1000;
+                if (_startTimeMs > 0 && streamEndTime <= _startTimeMs) {
                     // this stream is too early, drop it
-                } else if (_endTime > 0 && await stream.get_startTimeUTC() > _endTime) {
+                } else if (_endTimeMs > 0 && streamStartTime >= _endTimeMs) {
                     // this stream is too late, drop it
                 } else {
                     _streams.Add(stream);
-                    if (startTime > streamStartTime) {
-                        startTime = streamStartTime;
-                    }
-                    if (endTime < streamEndTime) {
-                        endTime = streamEndTime;
-                    }
-
-                    if (await stream.isClosed() && await stream.get_startTimeUTC() >= _startTime && (_endTime == 0 || streamEndTime <= _endTime)) {
-                        if (summaryMinVal > await stream.get_minValue()) {
-                            summaryMinVal = await stream.get_minValue();
-                        }
-                        if (summaryMaxVal < await stream.get_maxValue()) {
-                            summaryMaxVal = await stream.get_maxValue();
-                        }
-                        summaryTotalAvg += await stream.get_averageValue() * await stream.get_duration();
-                        summaryTotalTime += await stream.get_duration();
-
-                        YMeasure rec = new YMeasure(await stream.get_startTimeUTC(), streamEndTime, await stream.get_minValue(), await stream.get_averageValue(), await stream.get_maxValue());
-                        _preview.Add(rec);
-                    }
                 }
-            }
-            if ((_streams.Count > 0) && (summaryTotalTime > 0)) {
-                // update time boundaries with actual data
-                if (_startTime < startTime) {
-                    _startTime = startTime;
-                }
-                if (_endTime == 0 || _endTime > endTime) {
-                    _endTime = endTime;
-                }
-                _summary = new YMeasure(_startTime, _endTime, summaryMinVal, summaryTotalAvg / summaryTotalTime, summaryMaxVal);
             }
             _progress = 0;
             return await this.get_progress();
@@ -200,28 +170,194 @@ public class YDataSet
         return _calib;
     }
 
-    public virtual async Task<int> processMore(int progress,byte[] data)
+    public virtual async Task<int> loadSummary(byte[] data)
     {
-        YDataStream stream;
         List<List<double>> dataRows = new List<List<double>>();
-        string strdata;
         double tim;
+        double mitv;
         double itv;
+        double fitv;
+        double end_;
         int nCols;
         int minCol;
         int avgCol;
         int maxCol;
+        int res;
+        int m_pos;
+        double previewTotalTime;
+        double previewTotalAvg;
+        double previewMinVal;
+        double previewMaxVal;
+        double previewAvgVal;
+        double previewStartMs;
+        double previewStopMs;
+        double previewDuration;
+        double streamStartTimeMs;
+        double streamDuration;
+        double streamEndTimeMs;
+        double minVal;
+        double avgVal;
+        double maxVal;
+        double summaryStartMs;
+        double summaryStopMs;
+        double summaryTotalTime;
+        double summaryTotalAvg;
+        double summaryMinVal;
+        double summaryMaxVal;
+        string url;
+        string strdata;
+        List<double> measure_data = new List<double>();
 
-        if (progress != _progress) {
-            return _progress;
-        }
         if (_progress < 0) {
             strdata = YAPI.DefaultEncoding.GetString(data);
             if (strdata == "{}") {
                 _parent._throw(YAPI.VERSION_MISMATCH, "device firmware is too old");
                 return YAPI.VERSION_MISMATCH;
             }
-            return await this._parse(strdata);
+            res = await this._parse(strdata);
+            if (res < 0) {
+                return res;
+            }
+        }
+        summaryTotalTime = 0;
+        summaryTotalAvg = 0;
+        summaryMinVal = YAPI.MAX_DOUBLE;
+        summaryMaxVal = YAPI.MIN_DOUBLE;
+        summaryStartMs = YAPI.MAX_DOUBLE;
+        summaryStopMs = YAPI.MIN_DOUBLE;
+
+        // Parse comlete streams
+        for (int ii = 0; ii <  _streams.Count; ii++) {
+            streamStartTimeMs = Math.Round(await  _streams[ii].get_realStartTimeUTC() *1000);
+            streamDuration = await  _streams[ii].get_realDuration() ;
+            streamEndTimeMs = streamStartTimeMs + Math.Round(streamDuration * 1000);
+            if ((streamStartTimeMs >= _startTimeMs) && ((_endTimeMs == 0) || (streamEndTimeMs <= _endTimeMs))) {
+                // stream that are completely inside the dataset
+                previewMinVal = await  _streams[ii].get_minValue();
+                previewAvgVal = await  _streams[ii].get_averageValue();
+                previewMaxVal = await  _streams[ii].get_maxValue();
+                previewStartMs = streamStartTimeMs;
+                previewStopMs = streamEndTimeMs;
+                previewDuration = streamDuration;
+            } else {
+                // stream that are partially in the dataset
+                // we need to parse data to filter value outide the dataset
+                url =  _streams[ii].imm_get_url();
+                data = await _parent._download(url);
+                _streams[ii].imm_parseStream(data);
+                dataRows = await  _streams[ii].get_dataRows();
+                if (dataRows.Count == 0) {
+                    return await this.get_progress();
+                }
+                tim = streamStartTimeMs;
+                fitv = Math.Round(await  _streams[ii].get_firstDataSamplesInterval() * 1000);
+                itv = Math.Round(await  _streams[ii].get_dataSamplesInterval() * 1000);
+                nCols = dataRows[0].Count;
+                minCol = 0;
+                if (nCols > 2) {
+                    avgCol = 1;
+                } else {
+                    avgCol = 0;
+                }
+                if (nCols > 2) {
+                    maxCol = 2;
+                } else {
+                    maxCol = 0;
+                }
+                previewTotalTime = 0;
+                previewTotalAvg = 0;
+                previewStartMs = streamEndTimeMs;
+                previewStopMs = streamStartTimeMs;
+                previewMinVal = YAPI.MAX_DOUBLE;
+                previewMaxVal = YAPI.MIN_DOUBLE;
+                m_pos = 0;
+                while (m_pos < dataRows.Count) {
+                    measure_data  = dataRows[m_pos];
+                    if (m_pos == 0) {
+                        mitv = fitv;
+                    } else {
+                        mitv = itv;
+                    }
+                    end_ = tim + mitv;
+                    if ((end_ > _startTimeMs) && ((_endTimeMs == 0) || (tim < _endTimeMs))) {
+                        minVal = measure_data[minCol];
+                        avgVal = measure_data[avgCol];
+                        maxVal = measure_data[maxCol];
+                        if (previewStartMs > tim) {
+                            previewStartMs = tim;
+                        }
+                        if (previewStopMs < end_) {
+                            previewStopMs = end_;
+                        }
+                        if (previewMinVal > minVal) {
+                            previewMinVal = minVal;
+                        }
+                        if (previewMaxVal < maxVal) {
+                            previewMaxVal = maxVal;
+                        }
+                        previewTotalAvg = previewTotalAvg + (avgVal * mitv);
+                        previewTotalTime = previewTotalTime + mitv;
+                    }
+                    tim = end_;
+                    m_pos = m_pos + 1;
+                }
+                if (previewTotalTime > 0) {
+                    previewAvgVal = previewTotalAvg / previewTotalTime;
+                    previewDuration = (previewStopMs - previewStartMs) / 1000.0;
+                } else {
+                    previewAvgVal = 0.0;
+                    previewDuration = 0.0;
+                }
+            }
+            _preview.Add(new YMeasure(previewStartMs / 1000.0, previewStopMs / 1000.0, previewMinVal, previewAvgVal, previewMaxVal));
+            if (summaryMinVal > previewMinVal) {
+                summaryMinVal = previewMinVal;
+            }
+            if (summaryMaxVal < previewMaxVal) {
+                summaryMaxVal = previewMaxVal;
+            }
+            if (summaryStartMs > previewStartMs) {
+                summaryStartMs = previewStartMs;
+            }
+            if (summaryStopMs < previewStopMs) {
+                summaryStopMs = previewStopMs;
+            }
+            summaryTotalAvg = summaryTotalAvg + (previewAvgVal * previewDuration);
+            summaryTotalTime = summaryTotalTime + previewDuration;
+        }
+        if ((_startTimeMs == 0) || (_startTimeMs > summaryStartMs)) {
+            _startTimeMs = summaryStartMs;
+        }
+        if ((_endTimeMs == 0) || (_endTimeMs < summaryStopMs)) {
+            _endTimeMs = summaryStopMs;
+        }
+        if (summaryTotalTime > 0) {
+            _summary = new YMeasure(summaryStartMs / 1000.0, summaryStopMs / 1000.0, summaryMinVal, summaryTotalAvg / summaryTotalTime, summaryMaxVal);
+        } else {
+            _summary = new YMeasure(0.0, 0.0, YAPI.INVALID_DOUBLE, YAPI.INVALID_DOUBLE, YAPI.INVALID_DOUBLE);
+        }
+        return await this.get_progress();
+    }
+
+    public virtual async Task<int> processMore(int progress,byte[] data)
+    {
+        YDataStream stream;
+        List<List<double>> dataRows = new List<List<double>>();
+        double tim;
+        double itv;
+        double fitv;
+        double end_;
+        int nCols;
+        int minCol;
+        int avgCol;
+        int maxCol;
+        bool firstMeasure;
+
+        if (progress != _progress) {
+            return _progress;
+        }
+        if (_progress < 0) {
+            return await this.loadSummary(data);
         }
         stream = _streams[_progress];
         stream.imm_parseStream(data);
@@ -230,8 +366,12 @@ public class YDataSet
         if (dataRows.Count == 0) {
             return await this.get_progress();
         }
-        tim = (double) await stream.get_startTimeUTC();
-        itv = await stream.get_dataSamplesInterval();
+        tim = Math.Round(await stream.get_realStartTimeUTC() * 1000);
+        fitv = Math.Round(await stream.get_firstDataSamplesInterval() * 1000);
+        itv = Math.Round(await stream.get_dataSamplesInterval() * 1000);
+        if (fitv == 0) {
+            fitv = itv;
+        }
         if (tim < itv) {
             tim = itv;
         }
@@ -248,12 +388,18 @@ public class YDataSet
             maxCol = 0;
         }
 
+        firstMeasure = true;
         for (int ii = 0; ii < dataRows.Count; ii++) {
-            if ((tim >= _startTime) && ((_endTime == 0) || (tim <= _endTime))) {
-                _measures.Add(new YMeasure(tim - itv, tim, dataRows[ii][minCol], dataRows[ii][avgCol], dataRows[ii][maxCol]));
+            if (firstMeasure) {
+                end_ = tim + fitv;
+                firstMeasure = false;
+            } else {
+                end_ = tim + itv;
             }
-            tim = tim + itv;
-            tim = Math.Round(tim * 1000) / 1000.0;
+            if ((end_ > _startTimeMs) && ((_endTimeMs == 0) || (tim < _endTimeMs))) {
+                _measures.Add(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], dataRows[ii][avgCol], dataRows[ii][maxCol]));
+            }
+            tim = end_;
         }
         return await this.get_progress();
     }
@@ -343,6 +489,10 @@ public class YDataSet
      *   dataLogger within the specified range.
      * </para>
      * <para>
+     *   <b>DEPRECATED</b>: This method has been replaced by <c>get_summary()</c>
+     *   which contain more precise informations on the YDataSet.
+     * </para>
+     * <para>
      * </para>
      * </summary>
      * <returns>
@@ -353,7 +503,12 @@ public class YDataSet
      */
     public virtual async Task<long> get_startTimeUTC()
     {
-        return _startTime;
+        return this.imm_get_startTimeUTC();
+    }
+
+    public virtual long imm_get_startTimeUTC()
+    {
+        return (long) (_startTimeMs / 1000.0);
     }
 
     /**
@@ -367,6 +522,12 @@ public class YDataSet
      *   dataLogger within the specified range.
      * </para>
      * <para>
+     *   <b>DEPRECATED</b>: This method has been replaced by <c>get_summary()</c>
+     *   which contain more precise informations on the YDataSet.
+     * </para>
+     * <para>
+     * </para>
+     * <para>
      * </para>
      * </summary>
      * <returns>
@@ -377,7 +538,12 @@ public class YDataSet
      */
     public virtual async Task<long> get_endTimeUTC()
     {
-        return _endTime;
+        return this.imm_get_endTimeUTC();
+    }
+
+    public virtual long imm_get_endTimeUTC()
+    {
+        return (long) Math.Round(_endTimeMs / 1000.0);
     }
 
     /**
@@ -431,11 +597,11 @@ public class YDataSet
         YDataStream stream;
         if (_progress < 0) {
             url = "logger.json?id="+_functionId;
-            if (_startTime != 0) {
-                url = ""+url+"&from="+Convert.ToString(_startTime);
+            if (_startTimeMs != 0) {
+                url = ""+url+"&from="+Convert.ToString(this.imm_get_startTimeUTC());
             }
-            if (_endTime != 0) {
-                url = ""+url+"&to="+Convert.ToString(_endTime);
+            if (_endTimeMs != 0) {
+                url = ""+url+"&to="+Convert.ToString(this.imm_get_endTimeUTC()+1);
             }
         } else {
             if (_progress >= _streams.Count) {
@@ -537,21 +703,22 @@ public class YDataSet
      */
     public virtual async Task<List<YMeasure>> get_measuresAt(YMeasure measure)
     {
-        long startUtc;
+        double startUtcMs;
         YDataStream stream;
         List<List<double>> dataRows = new List<List<double>>();
         List<YMeasure> measures = new List<YMeasure>();
         double tim;
         double itv;
+        double end_;
         int nCols;
         int minCol;
         int avgCol;
         int maxCol;
 
-        startUtc = (long) Math.Round(measure.get_startTimeUTC());
+        startUtcMs = measure.get_startTimeUTC() * 1000;
         stream = null;
         for (int ii = 0; ii < _streams.Count; ii++) {
-            if (await _streams[ii].get_startTimeUTC() == startUtc) {
+            if (Math.Round(await _streams[ii].get_realStartTimeUTC() *1000) == startUtcMs) {
                 stream = _streams[ii];
             }
         }
@@ -562,8 +729,8 @@ public class YDataSet
         if (dataRows.Count == 0) {
             return measures;
         }
-        tim = (double) await stream.get_startTimeUTC();
-        itv = await stream.get_dataSamplesInterval();
+        tim = Math.Round(await stream.get_realStartTimeUTC() * 1000);
+        itv = Math.Round(await stream.get_dataSamplesInterval() * 1000);
         if (tim < itv) {
             tim = itv;
         }
@@ -581,10 +748,11 @@ public class YDataSet
         }
 
         for (int ii = 0; ii < dataRows.Count; ii++) {
-            if ((tim >= _startTime) && ((_endTime == 0) || (tim <= _endTime))) {
-                measures.Add(new YMeasure(tim - itv, tim, dataRows[ii][minCol], dataRows[ii][avgCol], dataRows[ii][maxCol]));
+            end_ = tim + itv;
+            if ((end_ > _startTimeMs) && ((_endTimeMs == 0) || (tim < _endTimeMs))) {
+                measures.Add(new YMeasure(tim / 1000.0, end_ / 1000.0, dataRows[ii][minCol], dataRows[ii][avgCol], dataRows[ii][maxCol]));
             }
-            tim = tim + itv;
+            tim = end_;
         }
         return measures;
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRefFrame.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YRefFrame.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindRefFrame(), the high-level API for RefFrame functions
  *
@@ -1254,6 +1254,9 @@ public class YRefFrame : YFunction
      * <summary>
      *   Continues the enumeration of reference frames started using <c>yFirstRefFrame()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned reference frames order.
+     *   If you want to find a specific a reference frame, use <c>RefFrame.findRefFrame()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

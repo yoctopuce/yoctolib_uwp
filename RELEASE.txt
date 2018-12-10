@@ -1,4 +1,13 @@
-UWP v1.10.32759
+UWP v1.10.33636
 
-- YModule.get_hardwareId() method return last know hardwareId when the module is disconnected
-- Code clean-up in Doc-XXX examples
+- Add TVoc and MultiSensController class
+- Add support for devices with dynamic functions activation (ex: Yocto-Temperature-IR)
+- Add support for beacon change callback
+- Add support for device log callback
+- Add support for data logger usage attribute
+- Fix missing measure in YDataSet
+- Fix restart of serial scripts after settings restoration
+- Fix timed notifications with wrong start time
+- Fix YAPI.FreeAPI and YAPI.UnregisterHub that was not working correctly with USB devices.
+- Fix "short request" error with HTTP hubs
+- Fix YAPI.TestHub() that was not working with GatewayHub

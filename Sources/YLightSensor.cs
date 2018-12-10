@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLightSensor.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YLightSensor.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindLightSensor(), the high-level API for LightSensor functions
  *
@@ -434,6 +434,9 @@ public class YLightSensor : YSensor
      * <summary>
      *   Continues the enumeration of light sensors started using <c>yFirstLightSensor()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned light sensors order.
+     *   If you want to find a specific a light sensor, use <c>LightSensor.findLightSensor()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

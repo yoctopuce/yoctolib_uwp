@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPHub.cs 31623 2018-08-14 11:31:28Z seb $
+ * $Id: YHTTPHub.cs 33629 2018-12-10 13:38:59Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -495,9 +495,10 @@ namespace com.yoctopuce.YoctoAPI
 
         internal override async Task<int> ping(uint mstimeout)
         {
-            // ping dot not use Notification handler but a one shot http request
-            YHTTPRequest req = new YHTTPRequest(this, "ping");
-            await req.RequestSync("GET /api/module/firmwareRelease.json", null, mstimeout);
+
+            await startNotifications();
+            await _notificationHandler.hubRequestSync("GET /api/module/firmwareRelease.json", null, mstimeout);
+            await stopNotifications();
             return YAPI.SUCCESS;
         }
 

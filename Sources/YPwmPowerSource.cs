@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmPowerSource.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YPwmPowerSource.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindPwmPowerSource(), the high-level API for PwmPowerSource functions
  *
@@ -347,6 +347,9 @@ public class YPwmPowerSource : YFunction
      * <summary>
      *   Continues the enumeration of Voltage sources started using <c>yFirstPwmPowerSource()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned Voltage sources order.
+     *   If you want to find a specific a voltage source, use <c>PwmPowerSource.findPwmPowerSource()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRelay.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YRelay.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindRelay(), the high-level API for Relay functions
  *
@@ -824,6 +824,9 @@ public class YRelay : YFunction
      * <summary>
      *   Continues the enumeration of relays started using <c>yFirstRelay()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned relays order.
+     *   If you want to find a specific a relay, use <c>Relay.findRelay()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

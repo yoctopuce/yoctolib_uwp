@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPRequest.cs 30019 2018-02-21 12:52:03Z seb $
+ * $Id: YHTTPRequest.cs 33617 2018-12-10 09:45:16Z seb $
  *
  * internal yHTTPRequest object
  *
@@ -55,8 +55,10 @@ namespace com.yoctopuce.YoctoAPI
         internal delegate void HandleIncommingData(byte[] result, int size);
 
         private HandleIncommingData _progressCallback;
+
         // ReSharper disable once NotAccessedField.Local
         private object _context;
+
         // ReSharper disable once NotAccessedField.Local
         private YGenericHub.RequestAsyncResult _resultCallback;
 
@@ -72,6 +74,7 @@ namespace com.yoctopuce.YoctoAPI
 
 
         private static ulong global_reqNum;
+
         // ReSharper disable once NotAccessedField.Local
         private ulong _reqNum;
         private Stream _out;
@@ -90,7 +93,8 @@ namespace com.yoctopuce.YoctoAPI
         // ReSharper disable once UnusedParameter.Local
         private void log(string msg)
         {
-            //debugLogs.Append(string.Format("{0}:{1}:{2}:{3}\n", Environment.CurrentManagedThreadId, _dbglabel, _reqNum, msg));
+            //string ti = DateTime.Now.ToString("hh:mm:ss.fff");
+            //debugLogs.Append(string.Format("{4}-{0}:{1}:{2}:{3}\n", Environment.CurrentManagedThreadId, _dbglabel, _reqNum, msg, ti));
         }
 
 
@@ -99,14 +103,19 @@ namespace com.yoctopuce.YoctoAPI
             if (_currentReq != null) {
                 ulong now = YAPI.GetTickCount();
                 ulong timeout = _startRequestTime + _requestTimeout;
+                int msTimeout;
                 if (timeout <= now) {
-                    throw new YAPI_Exception(YAPI.TIMEOUT, "Last Http request did not finished");
+                    // task has already been finished. Check status with timeout of 1 ms
+                    msTimeout = 1;
+                } else {
+                    msTimeout = (int) (timeout - now);
                 }
-                int msTimeout = (int) (timeout - now);
+
                 Task task = await Task.WhenAny(_currentReq, Task.Delay(msTimeout));
                 if (task != _currentReq) {
                     throw new YAPI_Exception(YAPI.TIMEOUT, "Last Http request did not finished");
                 }
+
                 _currentReq = null;
             }
         }
@@ -119,18 +128,31 @@ namespace com.yoctopuce.YoctoAPI
                 _in = null;
                 _out = null;
             }
+
             _reuse_socket = false;
         }
 
         internal async Task<byte[]> doRequestTask(string firstLine, byte[] rest_of_request, ulong mstimeout, object context, YGenericHub.RequestAsyncResult resultCallback, HandleIncommingData progressCb)
         {
             byte[] full_request;
+            int retrycount = 0;
             _context = context;
             _resultCallback = resultCallback;
             _requestTimeout = mstimeout;
             _progressCallback = progressCb;
-            log(String.Format("Start({0}):{1}", _reuse_socket ? "reuse" : "new", firstLine));
+
             retry:
+            if (retrycount++ == 2) {
+                string msg = "too many retry";
+                if (resultCallback != null) {
+                    await resultCallback(context, null, YAPI.IO_ERROR, msg);
+                    return null;
+                } else {
+                    throw new YAPI_Exception(YAPI.IO_ERROR, msg);
+                }
+            }
+
+            log(String.Format("Start({0}):{1}", _reuse_socket ? "reuse" : "new", firstLine));
             _startRequestTime = YAPI.GetTickCount();
             _header_found = false;
             string persistent_tag = firstLine.Substring(firstLine.Length - 2);
@@ -139,6 +161,7 @@ namespace com.yoctopuce.YoctoAPI
             } else {
                 firstLine += " \r\nConnection: close\r\n";
             }
+
             if (rest_of_request == null) {
                 string str_request = firstLine + _hub.imm_getAuthorization(firstLine) + "\r\n";
                 full_request = YAPI.DefaultEncoding.GetBytes(str_request);
@@ -149,6 +172,7 @@ namespace com.yoctopuce.YoctoAPI
                 Array.Copy(YAPI.DefaultEncoding.GetBytes(str_request), 0, full_request, 0, len);
                 Array.Copy(rest_of_request, 0, full_request, len, rest_of_request.Length);
             }
+
             _result.SetLength(0);
             _header.Length = 0;
             byte[] buffer = new byte[1024];
@@ -167,6 +191,7 @@ namespace com.yoctopuce.YoctoAPI
                     _in = _socket.InputStream.AsStreamForRead();
                     log(String.Format(" - new socket ({0} / {1})", _socket.ToString(), _in.ToString()));
                 }
+
                 readTask = _in.ReadAsync(buffer, 0, buffer.Length);
                 if (_reuse_socket) {
                     try {
@@ -193,16 +218,28 @@ namespace com.yoctopuce.YoctoAPI
             } catch (Exception e) {
                 log("Exception on socket connection:" + e.Message);
                 closeSocket();
-                throw new YAPI_Exception(YAPI.IO_ERROR, e.Message);
+                if (resultCallback != null) {
+                    await resultCallback(context, null, YAPI.IO_ERROR, e.Message);
+                    return null;
+                } else {
+                    throw new YAPI_Exception(YAPI.IO_ERROR, e.Message);
+                }
             }
+
             // write request
             try {
                 await _out.WriteAsync(full_request, 0, full_request.Length);
                 await _out.FlushAsync();
             } catch (Exception e) {
                 closeSocket();
-                throw new YAPI_Exception(YAPI.IO_ERROR, e.Message);
+                if (resultCallback != null) {
+                    await resultCallback(context, null, YAPI.IO_ERROR, e.Message);
+                    return null;
+                } else {
+                    throw new YAPI_Exception(YAPI.IO_ERROR, e.Message);
+                }
             }
+
             _reuse_socket = false;
             bool eof = false;
             do {
@@ -214,28 +251,49 @@ namespace com.yoctopuce.YoctoAPI
                         now = YAPI.GetTickCount();
                         ulong read_timeout = _startRequestTime + _requestTimeout;
                         if (read_timeout < now) {
-                            throw new YAPI_Exception(YAPI.TIMEOUT, string.Format("Request took too long {0:D}ms", now - _startRequestTime));
+                            string msg = string.Format("Request took too long {0:D}ms", now - _startRequestTime);
+                            if (resultCallback != null) {
+                                await resultCallback(context, null, YAPI.TIMEOUT, msg);
+                                return null;
+                            } else {
+                                throw new YAPI_Exception(YAPI.TIMEOUT, msg);
+                            }
                         }
+
                         read_timeout -= now;
                         if (read_timeout > YIO_IDLE_TCP_TIMEOUT) {
                             read_timeout = YIO_IDLE_TCP_TIMEOUT;
                         }
+
                         waitms = (int) read_timeout;
                     } else {
                         waitms = YIO_IDLE_TCP_TIMEOUT;
                     }
+
                     Task task = await Task.WhenAny(readTask, Task.Delay(waitms));
                     now = YAPI.GetTickCount();
                     if (task != readTask) {
                         string msg = string.Format("Hub did not send data during {0:D}ms", waitms);
-                        throw new YAPI_Exception(YAPI.TIMEOUT, msg);
+                        if (resultCallback != null) {
+                            await resultCallback(context, null, YAPI.IO_ERROR, msg);
+                            return null;
+                        } else {
+                            throw new YAPI_Exception(YAPI.TIMEOUT, msg);
+                        }
                     }
+
                     read = readTask.Result;
                     log(String.Format("_requestProcesss read ={0:d} after{1}", read, now - _startRequestTime));
                 } catch (IOException e) {
                     closeSocket();
-                    throw new YAPI_Exception(YAPI.IO_ERROR, e.Message);
+                    if (resultCallback != null) {
+                        await resultCallback(context, null, YAPI.IO_ERROR, e.Message);
+                        return null;
+                    } else {
+                        throw new YAPI_Exception(YAPI.IO_ERROR, e.Message);
+                    }
                 }
+
                 if (read <= 0) {
                     // end of connection
                     closeSocket();
@@ -246,6 +304,7 @@ namespace com.yoctopuce.YoctoAPI
                         closeSocket();
                         goto retry;
                     }
+
                     if (_reuse_socket) {
                         byte[] tmp = _result.ToArray();
                         if (tmp[tmp.Length - 1] == 10 && tmp[tmp.Length - 2] == 13) {
@@ -254,17 +313,25 @@ namespace com.yoctopuce.YoctoAPI
                         }
                     }
                 }
+
                 if (!eof) {
                     readTask = _in.ReadAsync(buffer, 0, buffer.Length);
                 }
             } while (!eof);
 
-            if (_header.Length==0 && _result.Length == 0) {
-                //String full_log = debugLogs.ToString();
-                // todo: remove debug logs
-                Debug.WriteLine("Short request detected");
+            if (_header.Length == 0 && _result.Length == 0) {
+                log("Short request detected");
+                closeSocket();
+                goto retry;
             }
-            return _result.ToArray();
+
+
+            byte[] final_res = _result.ToArray();
+            if (resultCallback != null) {
+                await resultCallback(context, final_res, YAPI.SUCCESS, "");
+            }
+
+            return final_res;
         }
 
 
@@ -288,19 +355,23 @@ namespace com.yoctopuce.YoctoAPI
                         if (full_header_str.IndexOf("HTTP/1.1 ") != 0) {
                             throw new YAPI_Exception(YAPI.IO_ERROR, "Invalid HTTP response header");
                         }
+
                         string[] parts = full_header_str.Substring(9, lpos - 9).Split(' ');
                         if (parts[0].Equals("401")) {
                             if (!_hub.imm_needRetryWithAuth()) {
                                 // No credential provided, give up immediately
                                 throw new YAPI_Exception(YAPI.UNAUTHORIZED, "Authentication required");
                             }
+
                             _hub.imm_parseWWWAuthenticate(_header.ToString());
                             return true;
                         }
+
                         if (!parts[0].Equals("200") && !parts[0].Equals("304")) {
                             throw new YAPI_Exception(YAPI.IO_ERROR, "Received HTTP status " + parts[0] + " (" + parts[1] + ")");
                         }
                     }
+
                     _hub.imm_authSucceded();
                     byte[] data = YAPI.DefaultEncoding.GetBytes(full_header_str.Substring(pos));
                     if (_progressCallback != null) {
@@ -316,6 +387,7 @@ namespace com.yoctopuce.YoctoAPI
                     _result.Write(buffer, 0, read);
                 }
             }
+
             return false;
         }
 

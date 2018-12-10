@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPowerOutput.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YPowerOutput.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindPowerOutput(), the high-level API for PowerOutput functions
  *
@@ -341,6 +341,9 @@ public class YPowerOutput : YFunction
      * <summary>
      *   Continues the enumeration of dual power ouput controls started using <c>yFirstPowerOutput()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned dual power ouput controls order.
+     *   If you want to find a specific a dual power  ouput control, use <c>PowerOutput.findPowerOutput()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

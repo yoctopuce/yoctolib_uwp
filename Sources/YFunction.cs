@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 31620 2018-08-14 10:04:12Z seb $
+ * $Id: YFunction.cs 33209 2018-11-20 14:52:42Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -852,7 +852,13 @@ public class YFunction
                 return _dataStreams[key];
             }
 
-            YDataStream newDataStream = new YDataStream(this, dataset, YAPIContext.imm_decodeWords(def));
+            List<int> words = YAPIContext.imm_decodeWords(def);
+            if (words.Count < 14) {
+                _throw(YAPI.VERSION_MISMATCH, "device firmware is too old");
+                return null;
+            }
+
+            YDataStream newDataStream = new YDataStream(this, dataset, words);
             _dataStreams[key] = newDataStream;
             return newDataStream;
         }

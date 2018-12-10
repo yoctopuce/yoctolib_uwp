@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSerialPort.cs 31620 2018-08-14 10:04:12Z seb $
+ * $Id: YSerialPort.cs 32911 2018-11-02 10:21:06Z seb $
  *
  * Implements FindSerialPort(), the high-level API for SerialPort functions
  *
@@ -2446,6 +2446,9 @@ public class YSerialPort : YFunction
      * <summary>
      *   Continues the enumeration of serial ports started using <c>yFirstSerialPort()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned serial ports order.
+     *   If you want to find a specific a serial port, use <c>SerialPort.findSerialPort()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 32518 2018-10-05 08:23:53Z seb $
+ * $Id: YModule.cs 33272 2018-11-22 09:04:14Z mvuilleu $
  *
  * YModule Class: Module control interface
  *
@@ -287,28 +287,6 @@ public class YModule : YFunction
         }
 
 
-        /// <summary>
-        /// Registers a device log callback function. This callback will be called each time
-        /// that a module sends a new log message. Mostly useful to debug a Yoctopuce module.
-        /// </summary>
-        /// <param name="callback"> : the callback function to call, or a null pointer. The callback function should take two
-        ///         arguments: the module object that emitted the log message, and the character string containing the log.
-        ///  </param>
-        public virtual async Task registerLogCallback(LogCallback callback)
-        {
-            _logCallback = callback;
-            YDevice ydev = _yapi._yHash.imm_getDevice(_serialNumber);
-            if (ydev != null) {
-                await ydev.registerLogCallback(callback);
-            }
-        }
-
-
-        internal virtual async Task<LogCallback> get_logCallback()
-        {
-            return _logCallback;
-        }
-
         private byte[] imm_flattenJsonStruct_internal(byte[] actualSettings)
         {
             YJSONArray jsonout = new YJSONArray();
@@ -388,6 +366,16 @@ public class YModule : YFunction
             YGenericHub hub = dev.Hub;
             return hub.imm_get_urlOf(_serialNumber);
         }
+
+        private async Task _startStopDevLog_internal(string serial, bool start)
+        {
+            YDevice ydev = _yapi._yHash.imm_getDevice(serial);
+            if (ydev != null) {
+                await ydev.registerLogCallback(_logCallback);
+            }
+        }
+
+
 #pragma warning restore 1998
 
 
@@ -916,6 +904,8 @@ public class YModule : YFunction
      *   then by logical name.
      * </para>
      * <para>
+     * </para>
+     * <para>
      *   If a call to this object's is_online() method returns FALSE although
      *   you are certain that the device is plugged, make sure that you did
      *   call registerHub() at application initialization time.
@@ -1125,6 +1115,47 @@ public class YModule : YFunction
     public virtual async Task<int> triggerFirmwareUpdate(int secBeforeReboot)
     {
         return await this.set_rebootCountdown(-secBeforeReboot);
+    }
+
+    //cannot be generated for UWP:
+    //public virtual async Task _startStopDevLog_internal(string serial,bool start)
+    public virtual async Task _startStopDevLog(string serial,bool start)
+    {
+        await _startStopDevLog_internal(serial, start);
+    }
+
+    /**
+     * <summary>
+     *   Registers a device log callback function.
+     * <para>
+     *   This callback will be called each time
+     *   that a module sends a new log message. Mostly useful to debug a Yoctopuce module.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="callback">
+     *   the callback function to call, or a null pointer. The callback function should take two
+     *   arguments: the module object that emitted the log message, and the character string containing the log.
+     *   On failure, throws an exception or returns a negative error code.
+     * </param>
+     */
+    public virtual async Task<int> registerLogCallback(LogCallback callback)
+    {
+        string serial;
+
+        serial = await this.get_serialNumber();
+        if (serial == YAPI.INVALID_STRING) {
+            return YAPI.DEVICE_NOT_FOUND;
+        }
+        _logCallback = callback;
+        await this._startStopDevLog(serial, callback != null);
+        return 0;
+    }
+
+    public virtual async Task<LogCallback> get_logCallback()
+    {
+        return _logCallback;
     }
 
     /**
@@ -1490,6 +1521,8 @@ public class YModule : YFunction
                 await this._upload(name, YAPIContext.imm_hexStrToBin(data));
             }
         }
+        // Apply settings a second time for file-dependent settings and dynamic sensor nodes
+        await this.set_allSettings(YAPI.DefaultEncoding.GetBytes(json_api));
         return YAPI.SUCCESS;
     }
 
@@ -2261,6 +2294,9 @@ public class YModule : YFunction
      * <summary>
      *   Continues the module enumeration started using <c>yFirstModule()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned modules order.
+     *   If you want to find a specific module, use <c>Module.findModule()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

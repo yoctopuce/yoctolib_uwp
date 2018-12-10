@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiCellWeighScale.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YMultiCellWeighScale.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindMultiCellWeighScale(), the high-level API for MultiCellWeighScale functions
  *
@@ -894,6 +894,10 @@ public class YMultiCellWeighScale : YSensor
      * <summary>
      *   Continues the enumeration of multi-cell weighing scale sensors started using <c>yFirstMultiCellWeighScale()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned multi-cell weighing scale sensors order.
+     *   If you want to find a specific a multi-cell weighing scale sensor, use
+     *   <c>MultiCellWeighScale.findMultiCellWeighScale()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

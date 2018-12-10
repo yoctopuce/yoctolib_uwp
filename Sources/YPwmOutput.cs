@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmOutput.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YPwmOutput.cs 33313 2018-11-22 16:11:56Z seb $
  *
  *  Implements FindPwmOutput(), the high-level API for PwmOutput functions
  *
@@ -243,7 +243,11 @@ public class YPwmOutput : YFunction
      *   Changes the PWM frequency.
      * <para>
      *   The duty cycle is kept unchanged thanks to an
-     *   automatic pulse width change.
+     *   automatic pulse width change, in other words, the change will not be applied
+     *   before the end of the current period. This can significantly affect reaction
+     *   time at low frequencies.
+     *   To stop the PWM signal, do not set the frequency to zero, use the set_enabled()
+     *   method instead.
      * </para>
      * <para>
      * </para>
@@ -300,6 +304,10 @@ public class YPwmOutput : YFunction
      * <summary>
      *   Changes the PWM period in milliseconds.
      * <para>
+     *   Caution: in order to avoid  random truncation of
+     *   the current pulse, the change will not be applied
+     *   before the end of the current period. This can significantly affect reaction
+     *   time at low frequencies.
      * </para>
      * <para>
      * </para>
@@ -1008,6 +1016,9 @@ public class YPwmOutput : YFunction
      * <summary>
      *   Continues the enumeration of PWMs started using <c>yFirstPwmOutput()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned PWMs order.
+     *   If you want to find a specific a PWM, use <c>PwmOutput.findPwmOutput()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

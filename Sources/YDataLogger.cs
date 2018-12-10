@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataLogger.cs 31620 2018-08-14 10:04:12Z seb $
+ * $Id: YDataLogger.cs 33601 2018-12-09 14:30:31Z mvuilleu $
  *
  * Implements yFindDataLogger(), the high-level API for DataLogger functions
  *
@@ -98,6 +98,12 @@ public class YDataLogger : YFunction
     public const int BEACONDRIVEN_INVALID = -1;
     /**
      * <summary>
+     *   invalid usage value
+     * </summary>
+     */
+    public const  int USAGE_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
      *   invalid clearHistory value
      * </summary>
      */
@@ -109,6 +115,7 @@ public class YDataLogger : YFunction
     protected int _recording = RECORDING_INVALID;
     protected int _autoStart = AUTOSTART_INVALID;
     protected int _beaconDriven = BEACONDRIVEN_INVALID;
+    protected int _usage = USAGE_INVALID;
     protected int _clearHistory = CLEARHISTORY_INVALID;
     protected ValueCallback _valueCallbackDataLogger = null;
 
@@ -219,6 +226,9 @@ public class YDataLogger : YFunction
         }
         if (json_val.has("beaconDriven")) {
             _beaconDriven = json_val.getInt("beaconDriven") > 0 ? 1 : 0;
+        }
+        if (json_val.has("usage")) {
+            _usage = json_val.getInt("usage");
         }
         if (json_val.has("clearHistory")) {
             _clearHistory = json_val.getInt("clearHistory") > 0 ? 1 : 0;
@@ -493,6 +503,34 @@ public class YDataLogger : YFunction
 
     /**
      * <summary>
+     *   Returns the percentage of datalogger memory in use.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the percentage of datalogger memory in use
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YDataLogger.USAGE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_usage()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return USAGE_INVALID;
+            }
+        }
+        res = _usage;
+        return res;
+    }
+
+
+    /**
+     * <summary>
      *   throws an exception on error
      * </summary>
      */
@@ -745,6 +783,9 @@ public class YDataLogger : YFunction
      * <summary>
      *   Continues the enumeration of data loggers started using <c>yFirstDataLogger()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned data loggers order.
+     *   If you want to find a specific a data logger, use <c>DataLogger.findDataLogger()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>

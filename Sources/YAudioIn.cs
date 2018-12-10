@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAudioIn.cs 32610 2018-10-10 06:52:20Z seb $
+ *  $Id: YAudioIn.cs 32911 2018-11-02 10:21:06Z seb $
  *
  *  Implements FindAudioIn(), the high-level API for AudioIn functions
  *
@@ -519,6 +519,9 @@ public class YAudioIn : YFunction
      * <summary>
      *   Continues the enumeration of audio inputs started using <c>yFirstAudioIn()</c>.
      * <para>
+     *   Caution: You can't make any assumption about the returned audio inputs order.
+     *   If you want to find a specific an audio input, use <c>AudioIn.findAudioIn()</c>
+     *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>
