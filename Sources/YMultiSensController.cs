@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiSensController.cs 33270 2018-11-22 08:41:15Z seb $
+ *  $Id: YMultiSensController.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindMultiSensController(), the high-level API for MultiSensController functions
  *
@@ -174,8 +174,8 @@ public class YMultiSensController : YFunction
      * <para>
      *   Remember to call the
      *   <c>saveToFlash()</c> method of the module if the
-     *   modification must be kept. Il is recommended to restart the
-     *   device with  <c>module->reboot()</c> after modifing
+     *   modification must be kept. It's recommended to restart the
+     *   device with  <c>module->reboot()</c> after modifying
      *   (and saving) this settings
      * </para>
      * <para>
@@ -482,10 +482,10 @@ public class YMultiSensController : YFunction
      * <summary>
      *   Configure the I2C address of the only sensor connected to the device.
      * <para>
-     *   It is recommanded to put the the device in maintenance mode before
+     *   It is recommended to put the the device in maintenance mode before
      *   changing Sensors addresses.  This method is only intended to work with a single
      *   sensor connected to the device, if several sensors are connected, result
-     *   is unpredictible.
+     *   is unpredictable.
      *   Note that the device is probably expecting to find a string of sensors with specific
      *   addresses. Check the device documentation to find out which addresses should be used.
      * </para>

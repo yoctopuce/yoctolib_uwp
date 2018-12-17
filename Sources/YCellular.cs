@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellular.cs 32911 2018-11-02 10:21:06Z seb $
+ * $Id: YCellular.cs 33718 2018-12-14 14:22:23Z seb $
  *
  * Implements FindCellular(), the high-level API for Cellular functions
  *
@@ -1163,7 +1163,7 @@ public class YCellular : YFunction
      *   Sends a PUK code to unlock the SIM card after three failed PIN code attempts, and
      *   setup a new PIN into the SIM card.
      * <para>
-     *   Only ten consecutives tentatives are permitted:
+     *   Only ten consecutive tentatives are permitted:
      *   after that, the SIM card will be blocked permanently without any mean of recovery
      *   to use it again. Note that after calling this method, you have usually to invoke
      *   method <c>set_pin()</c> to tell the YoctoHub which PIN to use in the future.
@@ -1375,7 +1375,7 @@ public class YCellular : YFunction
      *   geolocation of the device.
      * <para>
      *   The first cell listed is the serving
-     *   cell, and the next ones are the neighboor cells reported by the
+     *   cell, and the next ones are the neighbor cells reported by the
      *   serving cell.
      * </para>
      * </summary>

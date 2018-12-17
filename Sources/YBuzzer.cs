@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YBuzzer.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YBuzzer.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindBuzzer(), the high-level API for Buzzer functions
  *
@@ -882,7 +882,7 @@ public class YBuzzer : YFunction
      *   pulse frequency, in hertz
      * </param>
      * <param name="duration">
-     *   pulse duration in millseconds
+     *   pulse duration in milliseconds
      * </param>
      * <returns>
      *   <c>YAPI.SUCCESS</c> if the call succeeds.
@@ -906,7 +906,7 @@ public class YBuzzer : YFunction
      *   frequency to reach, in hertz. A frequency under 25Hz stops the buzzer.
      * </param>
      * <param name="duration">
-     *   pulse duration in millseconds
+     *   pulse duration in milliseconds
      * </param>
      * <returns>
      *   <c>YAPI.SUCCESS</c> if the call succeeds.
@@ -930,7 +930,7 @@ public class YBuzzer : YFunction
      *   volume to reach in %
      * </param>
      * <param name="duration">
-     *   change duration in millseconds
+     *   change duration in milliseconds
      * </param>
      * <returns>
      *   <c>YAPI.SUCCESS</c> if the call succeeds.

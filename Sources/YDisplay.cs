@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 32911 2018-11-02 10:21:06Z seb $
+ * $Id: YDisplay.cs 33718 2018-12-14 14:22:23Z seb $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -340,14 +340,14 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
-     *   Returns the luminosity of the  module informative leds (from 0 to 100).
+     *   Returns the luminosity of the  module informative LEDs (from 0 to 100).
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the luminosity of the  module informative leds (from 0 to 100)
+     *   an integer corresponding to the luminosity of the  module informative LEDs (from 0 to 100)
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YDisplay.BRIGHTNESS_INVALID</c>.
@@ -1053,7 +1053,7 @@ public class YDisplay : YFunction
      *   The color and transparency of all the pixels from
      *   the two layers are swapped. This method only affects the displayed content, but does
      *   not change any property of the layer objects. In particular, the visibility of each
-     *   layer stays unchanged. When used between onae hidden layer and a visible layer,
+     *   layer stays unchanged. When used between one hidden layer and a visible layer,
      *   this method makes it possible to easily implement double-buffering.
      *   Note that layer 0 has no transparency support (it is always completely opaque).
      * </para>

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFiles.cs 32911 2018-11-02 10:21:06Z seb $
+ * $Id: YFiles.cs 33718 2018-12-14 14:22:23Z seb $
  *
  * Implements FindFiles(), the high-level API for Files functions
  *
@@ -379,7 +379,7 @@ public class YFiles : YFunction
      * </summary>
      * <param name="pattern">
      *   an optional filter pattern, using star and question marks
-     *   as wildcards. When an empty pattern is provided, all file records
+     *   as wild cards. When an empty pattern is provided, all file records
      *   are returned.
      * </param>
      * <returns>
@@ -414,7 +414,7 @@ public class YFiles : YFunction
      *   the file name to test.
      * </param>
      * <returns>
-     *   a true if the file existe, false ortherwise.
+     *   a true if the file exist, false otherwise.
      * </returns>
      * <para>
      *   On failure, throws an exception.

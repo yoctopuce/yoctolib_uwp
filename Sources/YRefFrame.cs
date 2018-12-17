@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRefFrame.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YRefFrame.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindRefFrame(), the high-level API for RefFrame functions
  *
@@ -739,7 +739,7 @@ public class YRefFrame : YFunction
      *   The calibration procedure is completed when the method
      *   <c>get_3DCalibrationProgress</c> returns 100. At this point,
      *   the computed calibration parameters can be applied using method
-     *   <c>save3DCalibration</c>. The calibration process can be canceled
+     *   <c>save3DCalibration</c>. The calibration process can be cancelled
      *   at any time using method <c>cancel3DCalibration</c>.
      * </para>
      * <para>
@@ -818,7 +818,7 @@ public class YRefFrame : YFunction
         if (_calibProgress == 100) {
             return YAPI.SUCCESS;
         }
-        // make sure we leave at least 160ms between samples
+        // make sure we leave at least 160 ms between samples
         currTick =  (int) ((YAPIContext.GetTickCount()) & (0x7FFFFFFF));
         if (((currTick - _calibPrevTick) & (0x7FFFFFFF)) < 160) {
             return YAPI.SUCCESS;

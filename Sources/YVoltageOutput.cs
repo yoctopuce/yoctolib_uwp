@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YVoltageOutput.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YVoltageOutput.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindVoltageOutput(), the high-level API for VoltageOutput functions
  *
@@ -434,7 +434,7 @@ public class YVoltageOutput : YFunction
 
     /**
      * <summary>
-     *   Performs a smooth transistion of output voltage.
+     *   Performs a smooth transition of output voltage.
      * <para>
      *   Any explicit voltage
      *   change cancels any ongoing transition process.

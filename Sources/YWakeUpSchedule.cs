@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpSchedule.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YWakeUpSchedule.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindWakeUpSchedule(), the high-level API for WakeUpSchedule functions
  *
@@ -228,14 +228,14 @@ public class YWakeUpSchedule : YFunction
 
     /**
      * <summary>
-     *   Returns the minutes in the 30-59 intervalof each hour scheduled for wake up.
+     *   Returns the minutes in the 30-59 interval of each hour scheduled for wake up.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the minutes in the 30-59 intervalof each hour scheduled for wake up
+     *   an integer corresponding to the minutes in the 30-59 interval of each hour scheduled for wake up
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YWakeUpSchedule.MINUTESB_INVALID</c>.
@@ -508,14 +508,14 @@ public class YWakeUpSchedule : YFunction
 
     /**
      * <summary>
-     *   Returns the date/time (seconds) of the next wake up occurence.
+     *   Returns the date/time (seconds) of the next wake up occurrence.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the date/time (seconds) of the next wake up occurence
+     *   an integer corresponding to the date/time (seconds) of the next wake up occurrence
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YWakeUpSchedule.NEXTOCCURENCE_INVALID</c>.

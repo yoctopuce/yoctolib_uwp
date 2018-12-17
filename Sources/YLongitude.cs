@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLongitude.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YLongitude.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindLongitude(), the high-level API for Longitude functions
  *
@@ -51,7 +51,7 @@ namespace com.yoctopuce.YoctoAPI
  *   YLongitude Class: Longitude function interface
  * <para>
  *   The Yoctopuce class YLongitude allows you to read the longitude from Yoctopuce
- *   geolocalization sensors. It inherits from the YSensor class the core functions to
+ *   geolocation sensors. It inherits from the YSensor class the core functions to
  *   read measurements, register callback functions, access the autonomous
  *   datalogger.
  * </para>

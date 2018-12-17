@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTemperature.cs 33082 2018-11-08 18:08:16Z seb $
+ *  $Id: YTemperature.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindTemperature(), the high-level API for Temperature functions
  *
@@ -616,7 +616,7 @@ public class YTemperature : YSensor
      * </summary>
      * <param name="tempValues">
      *   array of floating point numbers, corresponding to all
-     *   temperatures (in degrees Celcius) for which the resistance of the
+     *   temperatures (in degrees Celsius) for which the resistance of the
      *   thermistor is specified.
      * </param>
      * <param name="resValues">
@@ -686,7 +686,7 @@ public class YTemperature : YSensor
      * </summary>
      * <param name="tempValues">
      *   array of floating point numbers, that is filled by the function
-     *   with all temperatures (in degrees Celcius) for which the resistance
+     *   with all temperatures (in degrees Celsius) for which the resistance
      *   of the thermistor is specified.
      * </param>
      * <param name="resValues">

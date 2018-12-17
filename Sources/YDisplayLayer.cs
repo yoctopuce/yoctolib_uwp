@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplayLayer.cs 30654 2018-04-19 12:34:37Z seb $
+ * $Id: YDisplayLayer.cs 33718 2018-12-14 14:22:23Z seb $
  *
  * Implements FindDisplayLayer(), the high-level API for DisplayLayer functions
  *
@@ -226,7 +226,7 @@ public class YDisplayLayer
      *   including text drawing.
      * <para>
      *   The gray level is provided as a number between
-     *   0 (black) and 255 (white, or whichever the lighest color is).
+     *   0 (black) and 255 (white, or whichever the lightest color is).
      *   For monochrome displays (without gray levels), any value
      *   lower than 128 is rendered as black, and any value equal
      *   or above to 128 is non-black.
@@ -274,7 +274,7 @@ public class YDisplayLayer
      *   Enables or disables anti-aliasing for drawing oblique lines and circles.
      * <para>
      *   Anti-aliasing provides a smoother aspect when looked from far enough,
-     *   but it can add fuzzyness when the display is looked from very close.
+     *   but it can add fuzziness when the display is looked from very close.
      *   At the end of the day, it is your personal choice.
      *   Anti-aliasing is enabled by default on grayscale and color displays,
      *   but you can disable it if you prefer. This setting has no effect
@@ -282,7 +282,7 @@ public class YDisplayLayer
      * </para>
      * </summary>
      * <param name="mode">
-     *   <c>true</c> to enable antialiasing, <c>false</c> to
+     *   <c>true</c> to enable anti-aliasing, <c>false</c> to
      *   disable it.
      * </param>
      * <returns>
@@ -706,7 +706,7 @@ public class YDisplayLayer
 
     /**
      * <summary>
-     *   Sets up the wrapping behaviour used by the <c>consoleOut</c> function.
+     *   Sets up the wrapping behavior used by the <c>consoleOut</c> function.
      * <para>
      * </para>
      * </summary>
@@ -779,7 +779,7 @@ public class YDisplayLayer
      * <summary>
      *   Hides the layer.
      * <para>
-     *   The state of the layer is perserved but the layer is not displayed
+     *   The state of the layer is preserved but the layer is not displayed
      *   on the screen until the next call to <c>unhide()</c>. Hiding the layer can positively
      *   affect the drawing speed, since it postpones the rendering until all operations are
      *   completed (double-buffering).

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGenericSensor.cs 33114 2018-11-09 21:58:19Z mvuilleu $
+ *  $Id: YGenericSensor.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindGenericSensor(), the high-level API for GenericSensor functions
  *
@@ -373,7 +373,7 @@ public class YGenericSensor : YSensor
      * <summary>
      *   Changes the electric signal bias for zero shift adjustment.
      * <para>
-     *   If your electric signal reads positif when it should be zero, setup
+     *   If your electric signal reads positive when it should be zero, setup
      *   a positive signalBias of the same value to fix the zero shift.
      * </para>
      * <para>
@@ -404,7 +404,7 @@ public class YGenericSensor : YSensor
      *   Returns the electric signal bias for zero shift adjustment.
      * <para>
      *   A positive bias means that the signal is over-reporting the measure,
-     *   while a negative bias means that the signal is underreporting the measure.
+     *   while a negative bias means that the signal is under-reporting the measure.
      * </para>
      * <para>
      * </para>

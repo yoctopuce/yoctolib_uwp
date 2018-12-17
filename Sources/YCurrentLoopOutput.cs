@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCurrentLoopOutput.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YCurrentLoopOutput.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindCurrentLoopOutput(), the high-level API for CurrentLoopOutput functions
  *
@@ -147,7 +147,7 @@ public class YCurrentLoopOutput : YFunction
      *   Changes the current loop, the valid range is from 3 to 21mA.
      * <para>
      *   If the loop is
-     *   not propely powered, the  target current is not reached and
+     *   not properly powered, the  target current is not reached and
      *   loopPower is set to LOWPWR.
      * </para>
      * <para>
@@ -482,7 +482,7 @@ public class YCurrentLoopOutput : YFunction
 
     /**
      * <summary>
-     *   Performs a smooth transistion of current flowing in the loop.
+     *   Performs a smooth transition of current flowing in the loop.
      * <para>
      *   Any current explicit
      *   change cancels any ongoing transition process.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YColorLed.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YColorLed.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindColorLed(), the high-level API for ColorLed functions
  *
@@ -793,7 +793,7 @@ public class YColorLed : YFunction
      * </para>
      * </summary>
      * <param name="HSLcolor">
-     *   desired HSL color when the traisntion is completed
+     *   desired HSL color when the transition is completed
      * </param>
      * <param name="msDelay">
      *   duration of the color transition, in milliseconds.

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 33272 2018-11-22 09:04:14Z mvuilleu $
+ * $Id: YModule.cs 33718 2018-12-14 14:22:23Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -616,14 +616,14 @@ public class YModule : YFunction
 
     /**
      * <summary>
-     *   Returns the luminosity of the  module informative leds (from 0 to 100).
+     *   Returns the luminosity of the  module informative LEDs (from 0 to 100).
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the luminosity of the  module informative leds (from 0 to 100)
+     *   an integer corresponding to the luminosity of the  module informative LEDs (from 0 to 100)
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YModule.LUMINOSITY_INVALID</c>.

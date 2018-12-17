@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YWireless.cs 32911 2018-11-02 10:21:06Z seb $
+ * $Id: YWireless.cs 33718 2018-12-14 14:22:23Z seb $
  *
  * Implements FindWireless(), the high-level API for Wireless functions
  *
@@ -680,7 +680,7 @@ public class YWireless : YFunction
      * <summary>
      *   Returns a list of YWlanRecord objects that describe detected Wireless networks.
      * <para>
-     *   This list is not updated when the module is already connected to an acces point (infrastructure mode).
+     *   This list is not updated when the module is already connected to an access point (infrastructure mode).
      *   To force an update of this list, <c>startWlanScan()</c> must be called.
      *   Note that an languages without garbage collections, the returned list must be freed by the caller.
      * </para>

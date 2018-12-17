@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRelay.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YRelay.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindRelay(), the high-level API for Relay functions
  *
@@ -551,7 +551,7 @@ public class YRelay : YFunction
      * </para>
      * </summary>
      * <param name="ms_duration">
-     *   pulse duration, in millisecondes
+     *   pulse duration, in milliseconds
      * </param>
      * <para>
      * </para>
@@ -605,10 +605,10 @@ public class YRelay : YFunction
      * </para>
      * </summary>
      * <param name="ms_delay">
-     *   waiting time before the pulse, in millisecondes
+     *   waiting time before the pulse, in milliseconds
      * </param>
      * <param name="ms_duration">
-     *   pulse duration, in millisecondes
+     *   pulse duration, in milliseconds
      * </param>
      * <para>
      * </para>

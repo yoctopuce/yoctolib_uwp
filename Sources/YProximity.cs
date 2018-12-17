@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YProximity.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YProximity.cs 33718 2018-12-14 14:22:23Z seb $
  *
  *  Implements FindProximity(), the high-level API for Proximity functions
  *
@@ -372,7 +372,7 @@ public class YProximity : YSensor
 
     /**
      * <summary>
-     *   Returns the minimal detection duration before signaling a presence event.
+     *   Returns the minimal detection duration before signalling a presence event.
      * <para>
      *   Any shorter detection is
      *   considered as noise or bounce (false positive) and filtered out.
@@ -381,7 +381,7 @@ public class YProximity : YSensor
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the minimal detection duration before signaling a presence event
+     *   an integer corresponding to the minimal detection duration before signalling a presence event
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YProximity.PRESENCEMINTIME_INVALID</c>.
@@ -402,7 +402,7 @@ public class YProximity : YSensor
 
     /**
      * <summary>
-     *   Changes the minimal detection duration before signaling a presence event.
+     *   Changes the minimal detection duration before signalling a presence event.
      * <para>
      *   Any shorter detection is
      *   considered as noise or bounce (false positive) and filtered out.
@@ -411,7 +411,7 @@ public class YProximity : YSensor
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the minimal detection duration before signaling a presence event
+     *   an integer corresponding to the minimal detection duration before signalling a presence event
      * </param>
      * <para>
      * </para>
@@ -432,7 +432,7 @@ public class YProximity : YSensor
 
     /**
      * <summary>
-     *   Returns the minimal detection duration before signaling a removal event.
+     *   Returns the minimal detection duration before signalling a removal event.
      * <para>
      *   Any shorter detection is
      *   considered as noise or bounce (false positive) and filtered out.
@@ -441,7 +441,7 @@ public class YProximity : YSensor
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the minimal detection duration before signaling a removal event
+     *   an integer corresponding to the minimal detection duration before signalling a removal event
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YProximity.REMOVALMINTIME_INVALID</c>.
@@ -462,7 +462,7 @@ public class YProximity : YSensor
 
     /**
      * <summary>
-     *   Changes the minimal detection duration before signaling a removal event.
+     *   Changes the minimal detection duration before signalling a removal event.
      * <para>
      *   Any shorter detection is
      *   considered as noise or bounce (false positive) and filtered out.
@@ -471,7 +471,7 @@ public class YProximity : YSensor
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the minimal detection duration before signaling a removal event
+     *   an integer corresponding to the minimal detection duration before signalling a removal event
      * </param>
      * <para>
      * </para>

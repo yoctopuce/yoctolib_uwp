@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 33209 2018-11-20 14:52:42Z seb $
+ * $Id: YAPIContext.cs 33718 2018-12-14 14:22:23Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -1120,7 +1120,7 @@ public class YAPIContext
          * </para>
          * <para>
          *   <b>usb</b>: When the <c>usb</c> keyword is used, the API will work with
-         *   devices connected directly to the USB bus. Some programming languages such a Javascript,
+         *   devices connected directly to the USB bus. Some programming languages such a JavaScript,
          *   PHP, and Java don't provide direct access to USB hardware, so <c>usb</c> will
          *   not work with these. In this case, use a VirtualHub or a networked YoctoHub (see below).
          * </para>

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YDigitalIO.cs 33135 2018-11-12 15:32:32Z mvuilleu $
+ *  $Id: YDigitalIO.cs 33722 2018-12-14 15:04:43Z seb $
  *
  *  Implements FindDigitalIO(), the high-level API for DigitalIO functions
  *
@@ -52,7 +52,7 @@ namespace com.yoctopuce.YoctoAPI
  * <para>
  *   The Yoctopuce application programming interface allows you to switch the state of each
  *   channel of the I/O port. You can switch all channels at once, or one by one. Most functions
- *   use a binary represention for channels where bit 0 matches channel #0 , bit 1 matches channel
+ *   use a binary representation for channels where bit 0 matches channel #0 , bit 1 matches channel
  *   #1 and so on.... If you are not familiar with numbers binary representation, you will find more
  *   information here: en.wikipedia.org/wiki/Binary_number#Representation . The library
  *   can also automatically generate short pulses of a determined duration. Electrical behavior
@@ -781,8 +781,8 @@ public class YDigitalIO : YFunction
      */
     public virtual async Task<int> set_bitState(int bitno,int bitstate)
     {
-        if (!(bitstate >= 0)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bitstate"); return YAPI.INVALID_ARGUMENT; }
-        if (!(bitstate <= 1)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bitstate"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitstate >= 0)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bit state"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitstate <= 1)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bit state"); return YAPI.INVALID_ARGUMENT; }
         return await this.set_command(""+((char)(82+bitstate)).ToString()+""+Convert.ToString(bitno));
     }
 
@@ -906,8 +906,8 @@ public class YDigitalIO : YFunction
      */
     public virtual async Task<int> set_bitPolarity(int bitno,int bitpolarity)
     {
-        if (!(bitpolarity >= 0)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bitpolarity"); return YAPI.INVALID_ARGUMENT; }
-        if (!(bitpolarity <= 1)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bitpolarity"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitpolarity >= 0)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bit polarity"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitpolarity <= 1)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bit polarity"); return YAPI.INVALID_ARGUMENT; }
         return await this.set_command(""+((char)(110+4*bitpolarity)).ToString()+""+Convert.ToString(bitno));
     }
 

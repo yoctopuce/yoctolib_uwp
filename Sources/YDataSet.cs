@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataSet.cs 33505 2018-12-05 14:45:46Z seb $
+ * $Id: YDataSet.cs 33718 2018-12-14 14:22:23Z seb $
  *
  * Implements yFindDataSet(), the high-level API for DataSet functions
  *
@@ -226,7 +226,7 @@ public class YDataSet
         summaryStartMs = YAPI.MAX_DOUBLE;
         summaryStopMs = YAPI.MIN_DOUBLE;
 
-        // Parse comlete streams
+        // Parse complete streams
         for (int ii = 0; ii <  _streams.Count; ii++) {
             streamStartTimeMs = Math.Round(await  _streams[ii].get_realStartTimeUTC() *1000);
             streamDuration = await  _streams[ii].get_realDuration() ;
@@ -241,7 +241,7 @@ public class YDataSet
                 previewDuration = streamDuration;
             } else {
                 // stream that are partially in the dataset
-                // we need to parse data to filter value outide the dataset
+                // we need to parse data to filter value outside the dataset
                 url =  _streams[ii].imm_get_url();
                 data = await _parent._download(url);
                 _streams[ii].imm_parseStream(data);
