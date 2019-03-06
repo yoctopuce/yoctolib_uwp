@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFirmwareUpdate.cs 32362 2018-09-26 16:35:13Z seb $
+ * $Id: YFirmwareUpdate.cs 34554 2019-03-06 10:21:57Z seb $
  *
  * High-level programming interface, common to all modules
  *

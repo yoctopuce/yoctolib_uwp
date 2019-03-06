@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YBuzzer.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YBuzzer.cs 34289 2019-02-03 21:12:49Z mvuilleu $
  *
  *  Implements FindBuzzer(), the high-level API for Buzzer functions
  *
@@ -870,6 +870,38 @@ public class YBuzzer : YFunction
     public virtual async Task<int> oncePlaySeq()
     {
         return await this.sendCommand("s");
+    }
+
+    /**
+     * <summary>
+     *   Saves the preprogrammed playing sequence to flash memory.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     *   On failure, throws an exception or returns a negative error code.
+     * </returns>
+     */
+    public virtual async Task<int> savePlaySeq()
+    {
+        return await this.sendCommand("W");
+    }
+
+    /**
+     * <summary>
+     *   Reloads the preprogrammed playing sequence from the flash memory.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     *   On failure, throws an exception or returns a negative error code.
+     * </returns>
+     */
+    public virtual async Task<int> reloadPlaySeq()
+    {
+        return await this.sendCommand("R");
     }
 
     /**

@@ -100,6 +100,7 @@ namespace com.yoctopuce.YoctoAPI
             char sti = data[start];
             while (start < stop && (sti == '\n' || sti == '\r' || sti == ' ')) {
                 start++;
+                sti = data[start];
             }
             return start;
         }
@@ -145,7 +146,7 @@ namespace com.yoctopuce.YoctoAPI
         {
             int cur_pos = SkipGarbage(_data, _data_start, _data_boundary);
 
-            if (_data[cur_pos] != '[') {
+            if (cur_pos >=  _data_boundary || _data[cur_pos] != '[') {
                 throw new System.Exception(FormatError("Opening braces was expected", cur_pos));
             }
             cur_pos++;
@@ -303,7 +304,7 @@ namespace com.yoctopuce.YoctoAPI
             string value = "";
             int cur_pos = SkipGarbage(_data, _data_start, _data_boundary);
 
-            if (_data[cur_pos] != '"') {
+            if (cur_pos >= _data_boundary || _data[cur_pos] != '"') {
                 throw new System.Exception(FormatError("double quote was expected", cur_pos));
             }
             cur_pos++;
@@ -502,7 +503,7 @@ namespace com.yoctopuce.YoctoAPI
             int name_start = _data_start;
             int cur_pos = SkipGarbage(_data, _data_start, _data_boundary);
 
-            if (_data.Length <= cur_pos || _data[cur_pos] != '{') {
+            if (cur_pos >= _data_boundary || _data.Length <= cur_pos || _data[cur_pos] != '{') {
                 throw new System.Exception(FormatError("Opening braces was expected", cur_pos));
             }
             cur_pos++;

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 33592 2018-12-07 17:57:00Z seb $
+ * $Id: YGenericHub.cs 34157 2019-01-28 13:24:25Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -75,7 +75,7 @@ namespace com.yoctopuce.YoctoAPI
         internal const int USB_META_WS_ERROR = 6;
         internal const int USB_META_ACK_UPLOAD = 7;
 
-        internal const int USB_META_UTCTIME_SIZE = 5;
+        internal const int USB_META_UTCTIME_SIZE = 6;
         internal const int USB_META_DLFLUSH_SIZE = 1;
         internal const int USB_META_ACK_D2H_PACKET_SIZE = 2;
         internal static readonly int USB_META_WS_ANNOUNCE_SIZE = 8 + YAPI.YOCTO_SERIAL_LEN;
@@ -342,7 +342,6 @@ namespace com.yoctopuce.YoctoAPI
 
         protected internal virtual void imm_handleBeaconNotification(string serial, int beacon)
         {
-            
             YModule module = _yctx._GetModuleCallack(serial);
             if (module != null) {
                 _yctx._PushDataEvent(new YAPIContext.DataEvent(module, beacon));

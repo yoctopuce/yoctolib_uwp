@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 33718 2018-12-14 14:22:23Z seb $
+ * $Id: YAPIContext.cs 33827 2018-12-21 15:09:19Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -1322,7 +1322,9 @@ public class YAPIContext
          * </para>
          * <para>
          *   This function can be called as frequently as desired to refresh the device list
-         *   and to make the application aware of hot-plug events.
+         *   and to make the application aware of hot-plug events. However, since device
+         *   detection is quite a heavy process, UpdateDeviceList shouldn't be called more
+         *   than once every two seconds.
          * </para>
          * </summary>
          * <param name="errmsg">

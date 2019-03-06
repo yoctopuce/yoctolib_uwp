@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 33718 2018-12-14 14:22:23Z seb $
+ * $Id: YAPI.cs 33827 2018-12-21 15:09:19Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "33736";
+        public const string YOCTO_API_BUILD_STR = "34560";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -257,7 +257,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".33736" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".34560" + YUSBHub.imm_getAPIVersion();
         }
 
         /**
@@ -680,7 +680,9 @@ public class YAPI
          * </para>
          * <para>
          *   This function can be called as frequently as desired to refresh the device list
-         *   and to make the application aware of hot-plug events.
+         *   and to make the application aware of hot-plug events. However, since device
+         *   detection is quite a heavy process, UpdateDeviceList shouldn't be called more
+         *   than once every two seconds.
          * </para>
          * </summary>
          * <param name="errmsg">
@@ -716,7 +718,9 @@ public class YAPI
          * </para>
          * <para>
          *   This function can be called as frequently as desired to refresh the device list
-         *   and to make the application aware of hot-plug events.
+         *   and to make the application aware of hot-plug events. However, since device
+         *   detection is quite a heavy process, UpdateDeviceList shouldn't be called more
+         *   than once every two seconds.
          * </para>
          * </summary>
          * <param name="errmsg">

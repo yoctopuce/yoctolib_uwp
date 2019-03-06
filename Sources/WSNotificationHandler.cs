@@ -33,6 +33,10 @@ namespace com.yoctopuce.YoctoAPI
         private TaskCompletionSource<byte[]> _tcs = new TaskCompletionSource<byte[]>();
         private string _dbglabel;
 
+        public override string ToString()
+        {
+            return "WSRequest[" + _dbglabel + ":" + _asyncId + ":" + _async + "/" + _finished + ":" + ReqPosition + "/" + ReqSize + "]";
+        }
 
         internal int ReqPosition { get; set; }
 
@@ -108,6 +112,11 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             _tcs.SetResult(finalData);
+        }
+
+        internal async Task WaitEnd()
+        {
+            await _tcs.Task;
         }
 
         internal async Task<byte[]> getResponseBytes()
@@ -311,13 +320,18 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             if (async) {
-                request = new WSRequest(debug, tcpchanel, _nextAsyncId++, full_request,asyncResult, asyncContext);
+                request = new WSRequest(debug, tcpchanel, _nextAsyncId++, full_request, asyncResult, asyncContext);
                 if (_nextAsyncId >= 127) {
                     _nextAsyncId = 48;
                 }
             } else {
                 request = new WSRequest(debug, tcpchanel, full_request, progress, context);
             }
+
+            try {
+                WSRequest wsRequest = _workingRequests[tcpchanel].Peek();
+                await wsRequest.WaitEnd();
+            } catch (InvalidOperationException) {}
 
             _workingRequests[tcpchanel].Enqueue(request);
 
@@ -611,7 +625,7 @@ namespace com.yoctopuce.YoctoAPI
                             workingRequest = _workingRequests[tcpChanel].Peek();
                             if (workingRequest != null && messageReader.UnconsumedBufferLength >= 1) {
                                 uint contentSize = messageReader.UnconsumedBufferLength - 1;
-                                //todo: try to copy data more efficently
+                                //todo: try to copy data more efficiently
                                 byte[] data = new byte[contentSize];
                                 if (contentSize > 0) {
                                     messageReader.ReadBytes(data);

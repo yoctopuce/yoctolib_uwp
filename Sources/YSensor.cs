@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 33718 2018-12-14 14:22:23Z seb $
+ * $Id: YSensor.cs 33853 2018-12-24 08:38:31Z seb $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -359,6 +359,14 @@ public class YSensor : YFunction
      * <summary>
      *   Returns the current value of the measure, in the specified unit, as a floating point number.
      * <para>
+     *   Note that a get_currentValue() call will *not* start a measure in the device, it
+     *   will just return the last measure that occurred in the device. Indeed, internally, each Yoctopuce
+     *   devices is continuously making measurements at a hardware specific frequency.
+     * </para>
+     * <para>
+     *   If continuously calling  get_currentValue() leads you to performances issues, then
+     *   you might consider to switch to callback programming model. Check the "advanced
+     *   programming" chapter in in your device user manual for more information.
      * </para>
      * <para>
      * </para>
@@ -575,7 +583,9 @@ public class YSensor : YFunction
      *   The frequency can be specified as samples per second,
      *   as sample per minute (for instance "15/m") or in samples per
      *   hour (eg. "4/h"). To disable recording for this function, use
-     *   the value "OFF".
+     *   the value "OFF". Note that setting the  datalogger recording frequency
+     *   to a greater value than the sensor native sampling frequency is useless,
+     *   and even counterproductive: those two frequencies are not related.
      * </para>
      * <para>
      * </para>
@@ -637,7 +647,10 @@ public class YSensor : YFunction
      *   The frequency can be specified as samples per second,
      *   as sample per minute (for instance "15/m") or in samples per
      *   hour (e.g. "4/h"). To disable timed value notifications for this
-     *   function, use the value "OFF".
+     *   function, use the value "OFF". Note that setting the  timed value
+     *   notification frequency to a greater value than the sensor native
+     *   sampling frequency is unless, and even counterproductive: those two
+     *   frequencies are not related.
      * </para>
      * <para>
      * </para>

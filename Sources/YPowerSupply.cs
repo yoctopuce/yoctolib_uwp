@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPowerSupply.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YPowerSupply.cs 34118 2019-01-23 15:25:11Z seb $
  *
  *  Implements FindPowerSupply(), the high-level API for PowerSupply functions
  *
@@ -934,7 +934,7 @@ public class YPowerSupply : YFunction
 
     /**
      * <summary>
-     *   Performs a smooth transistion of output voltage.
+     *   Performs a smooth transition of output voltage.
      * <para>
      *   Any explicit voltage
      *   change cancels any ongoing transition process.

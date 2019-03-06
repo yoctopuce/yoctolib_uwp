@@ -1,3 +1,6 @@
-UWP v1.10.33736
+UWP v1.10.34560
 
-- Fix some typos in error messages
+- Fix in Json parser.
+- Add get_serialNumber to all YFunction
+- Fix quick device reboot (or quick uplug->plug) that was not detected by API
+- Improve error recovery (Request API implictly do an updateDeviceList when device does not respond)

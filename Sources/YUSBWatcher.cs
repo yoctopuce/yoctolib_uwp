@@ -95,7 +95,7 @@ namespace com.yoctopuce.YoctoAPI
                     }
                     bool found = false;
                     foreach (YUSBDevice yusbDevice in _usableDevices) {
-                        if (yusbDevice.Info.Id == devinfo.Id) {
+                        if (yusbDevice.Info.Id == devinfo.Id && yusbDevice.imm_isWorking()) {
                             yusbDevice.MarkForUnplug = false;
                             found = true;
                             break;

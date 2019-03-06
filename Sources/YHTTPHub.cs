@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPHub.cs 33629 2018-12-10 13:38:59Z seb $
+ * $Id: YHTTPHub.cs 34554 2019-03-06 10:21:57Z seb $
  *
  * High-level programming interface, common to all modules
  *

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBDevice.cs 33591 2018-12-07 16:37:37Z seb $
+ * $Id: YUSBDevice.cs 33880 2018-12-26 16:49:04Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -787,6 +787,11 @@ namespace com.yoctopuce.YoctoAPI
 
             res += "  lastMetaUTC=" + _lastMetaUTC + "\n";
             return res;
+        }
+
+        public bool imm_isWorking()
+        {
+            return _devState == DevState.StreamReadyReceived;
         }
     }
 }

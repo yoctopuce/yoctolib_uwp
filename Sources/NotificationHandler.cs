@@ -127,7 +127,7 @@ namespace com.yoctopuce.YoctoAPI
 
                                 break;
                             case NOTIFY_NETPKT_DEVLOGYDX:
-                                ydev.imm_setDeviceLogPending();
+                                Task dummyTask = ydev.triggerLogPull();
                                 break;
                             case NOTIFY_NETPKT_CONFCHGYDX:
                                 _hub.imm_handleConfigChangeNotification(serial);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplayLayer.cs 33718 2018-12-14 14:22:23Z seb $
+ * $Id: YDisplayLayer.cs 33877 2018-12-26 12:19:48Z seb $
  *
  * Implements FindDisplayLayer(), the high-level API for DisplayLayer functions
  *
@@ -447,7 +447,8 @@ public class YDisplayLayer
      * </para>
      * </summary>
      * <param name="fontname">
-     *   the font file name
+     *   the font file name, embedded fonts are 8x8.yfm, Small.yfm, Medium.yfm, Large.yfm (not available on
+     *   Yocto-MiniDisplay).
      * </param>
      * <returns>
      *   <c>YAPI.SUCCESS</c> if the call succeeds.

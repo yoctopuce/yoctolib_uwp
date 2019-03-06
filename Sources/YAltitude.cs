@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAltitude.cs 32950 2018-11-05 17:15:46Z seb $
+ *  $Id: YAltitude.cs 34118 2019-01-23 15:25:11Z seb $
  *
  *  Implements FindAltitude(), the high-level API for Altitude functions
  *
@@ -127,7 +127,7 @@ public class YAltitude : YSensor
      * <summary>
      *   Changes the current estimated altitude.
      * <para>
-     *   This allows to compensate for
+     *   This allows one to compensate for
      *   ambient pressure variations and to work in relative mode.
      * </para>
      * <para>

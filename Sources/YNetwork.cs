@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YNetwork.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YNetwork.cs 34022 2019-01-15 18:21:34Z seb $
  *
  *  Implements FindNetwork(), the high-level API for Network functions
  *
@@ -718,6 +718,8 @@ public class YNetwork : YFunction
      * <summary>
      *   Changes the IP address of the NTP server to be used by the module.
      * <para>
+     *   Use an empty
+     *   string to restore the factory set  address.
      *   Remember to call the <c>saveToFlash()</c> method and then to reboot the module to apply this setting.
      * </para>
      * <para>

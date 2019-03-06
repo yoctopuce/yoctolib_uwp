@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 33209 2018-11-20 14:52:42Z seb $
+ * $Id: YFunction.cs 33903 2018-12-28 08:49:26Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -505,6 +505,26 @@ public class YFunction
         url = "api/"+ await this.get_functionId()+"/"+attrName;
         attrVal = await this._download(url);
         return YAPI.DefaultEncoding.GetString(attrVal);
+    }
+
+    /**
+     * <summary>
+     *   Returns the serial number of the module, as set by the factory.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string corresponding to the serial number of the module, as set by the factory.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns YModule.SERIALNUMBER_INVALID.
+     * </para>
+     */
+    public virtual async Task<string> get_serialNumber()
+    {
+        YModule m;
+        m = await this.get_module();
+        return await m.get_serialNumber();
     }
 
     public virtual async Task<int> _parserHelper()

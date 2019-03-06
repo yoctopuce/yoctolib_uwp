@@ -1,7 +1,6 @@
-﻿
-/*********************************************************************
+﻿/*********************************************************************
  *
- * $Id: YUSBPkt.cs 31338 2018-07-23 11:21:01Z seb $
+ * $Id: YUSBPkt.cs 34157 2019-01-28 13:24:25Z seb $
  *
  * YUSBPkt Class: USB packet definitions
  *
@@ -50,8 +49,6 @@ namespace com.yoctopuce.YoctoAPI
 {
     public class YPktStreamHead
     {
-
-
         internal uint PktNumber { get; set; }
         internal uint StreamType { get; set; }
         internal uint PktType { get; set; }
@@ -91,6 +88,7 @@ namespace com.yoctopuce.YoctoAPI
                             stream = "INVALID!";
                             break;
                     }
+
                     break;
                 case YUSBPkt.YPKT_STREAM:
                     type = "STREAM";
@@ -123,12 +121,14 @@ namespace com.yoctopuce.YoctoAPI
                             stream = "INVALID!";
                             break;
                     }
+
                     break;
                 default:
                     type = "INVALID!";
                     stream = "INVALID!";
                     break;
             }
+
             return string.Format("Stream: type={0:D}({1}) stream/cmd={2:D}({3}) size={4:D} (pktno={5:D})", PktType, type, StreamType, stream, Len, PktNumber);
         }
 
@@ -138,17 +138,19 @@ namespace com.yoctopuce.YoctoAPI
             if (pkt.Length < YUSBPkt.USB_PKT_STREAM_HEAD + pos) {
                 return null;
             }
-            uint b = (uint)(pkt[pos++] & 0xff);
+
+            uint b = (uint) (pkt[pos++] & 0xff);
             uint pktNumber = b & 7;
             uint streamType = (b >> 3);
-            b = (uint)(pkt[pos++] & 0xff);
+            b = (uint) (pkt[pos++] & 0xff);
             uint pktType = b & 3;
             uint dataLen = b >> 2;
-            uint remaining = (uint)(pkt.Length - pos);
+            uint remaining = (uint) (pkt.Length - pos);
             if (dataLen > remaining) {
                 throw new YAPI_Exception(YAPI.IO_ERROR, string.Format("invalid ystream header (invalid length {0:D}>{1:D})", dataLen, remaining));
             }
-            return new YPktStreamHead(pktNumber, pktType, streamType, pkt, (uint)pos, dataLen);
+
+            return new YPktStreamHead(pktNumber, pktType, streamType, pkt, (uint) pos, dataLen);
         }
 
 
@@ -161,12 +163,13 @@ namespace com.yoctopuce.YoctoAPI
                     break;
                 len++;
             }
-            return YAPI.DefaultEncoding.GetString(Data, (int)start, len);
+
+            return YAPI.DefaultEncoding.GetString(Data, (int) start, len);
         }
 
         public uint imm_CopyData(byte[] response, uint ofs)
         {
-            Buffer.BlockCopy(Data, (int)Ofs, response, (int)ofs, (int)Len);
+            Buffer.BlockCopy(Data, (int) Ofs, response, (int) ofs, (int) Len);
             return Len;
         }
     }
@@ -174,11 +177,13 @@ namespace com.yoctopuce.YoctoAPI
 
     public class YUSBPkt
     {
-
         protected internal const int USB_PKT_STREAM_HEAD = 2;
+
         // pkt type definitions
         protected internal const int YPKT_STREAM = 0;
+
         protected internal const int YPKT_CONF = 1;
+
         // pkt config type
         protected internal const int USB_CONF_RESET = 0;
         protected internal const int USB_CONF_START = 1;
@@ -201,15 +206,11 @@ namespace com.yoctopuce.YoctoAPI
 
 
         internal virtual int Pktno {
-            get {
-                return _pktno;
-            }
+            get { return _pktno; }
         }
 
         public virtual List<YPktStreamHead> Streams {
-            get {
-                return _streams;
-            }
+            get { return _streams; }
         }
 
         public override string ToString()
@@ -218,6 +219,7 @@ namespace com.yoctopuce.YoctoAPI
             foreach (YPktStreamHead s in _streams) {
                 dump += "\n" + s.ToString();
             }
+
             return dump;
         }
 
@@ -229,10 +231,9 @@ namespace com.yoctopuce.YoctoAPI
             foreach (YPktStreamHead s in _streams) {
                 dump[pos++] = s.ToString();
             }
+
             return dump;
         }
-
-
 
 
         protected internal class ConfPktReset
@@ -251,40 +252,30 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             public virtual int Api {
-                get {
-                    return _api;
-                }
+                get { return _api; }
             }
 
             public virtual int Ok {
-                get {
-                    return _ok;
-                }
+                get { return _ok; }
             }
 
             public virtual int IfaceNo {
-                get {
-                    return _ifaceNo;
-                }
+                get { return _ifaceNo; }
             }
 
             public virtual int NbIface {
-                get {
-                    return _nbIface;
-                }
+                get { return _nbIface; }
             }
 
             public static ConfPktReset imm_Decode(sbyte[] data)
             {
-                int api = data[0] + ((int)data[1] << 8);
+                int api = data[0] + ((int) data[1] << 8);
                 return new ConfPktReset(api, data[2], data[3], data[4]);
             }
-
         }
 
         protected internal class ConfPktStart
         {
-
             internal readonly int _nbIface;
             internal readonly int _ack_delay;
 
@@ -304,13 +295,12 @@ namespace com.yoctopuce.YoctoAPI
                 } else {
                     ackDelay = 0;
                 }
+
                 return new ConfPktStart(nbiface, ackDelay);
             }
 
             public virtual int AckDelay {
-                get {
-                    return _ack_delay;
-                }
+                get { return _ack_delay; }
             }
         }
 
@@ -320,8 +310,8 @@ namespace com.yoctopuce.YoctoAPI
             raw[0] = 0;
             raw[1] = 0 + (USB_CONF_RESET << 3);
             raw[2] = YPKT_CONF + (USB_MAX_PKT_CONTENT_SIZE << 2);
-            raw[3] = (byte)(api_version & 0xff);
-            raw[4] = (byte)(api_version >> 8);
+            raw[3] = (byte) (api_version & 0xff);
+            raw[4] = (byte) (api_version >> 8);
             raw[5] = 1; // nbifac
             raw[6] = 0; // ifaceno
             raw[7] = 1; // nbifac
@@ -363,15 +353,17 @@ namespace com.yoctopuce.YoctoAPI
 
             byte[] raw = new byte[USB_PKT_SIZE + 1];
             raw[0] = 0;
-            raw[1] = (byte)( streamType << 3);
-            raw[2] = (byte)(YPKT_STREAM + (size << 2));
+            raw[1] = (byte) (streamType << 3);
+            raw[2] = (byte) (YPKT_STREAM + (size << 2));
             if (size > 0) {
                 Buffer.BlockCopy(request, pos, raw, 3, size);
             }
+
             if (remaining > 2 && padWithEmpty) {
                 raw[3 + size] = 0 + (YGenericHub.YSTREAM_EMPTY << 3);
-                raw[4 + size] = (byte)(YPKT_STREAM + ((remaining - 2) << 2));
+                raw[4 + size] = (byte) (YPKT_STREAM + ((remaining - 2) << 2));
             }
+
             outReport.Data = raw.AsBuffer();
             return size;
         }
@@ -380,20 +372,24 @@ namespace com.yoctopuce.YoctoAPI
         {
             byte[] raw = new byte[USB_PKT_SIZE + 1];
             raw[0] = 0;
-            raw[1] =  (YGenericHub.YSTREAM_META << 3);
-            raw[2] = (byte)(YPKT_STREAM + (5 << 2));
+            raw[1] = (YGenericHub.YSTREAM_META << 3);
+            raw[2] = (byte) (YPKT_STREAM + (YGenericHub.USB_META_UTCTIME_SIZE << 2));
             raw[3] = YGenericHub.USB_META_UTCTIME;
-            UInt32 currUtcTime = (UInt32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            raw[4] = (byte)(currUtcTime & 0xff);
-            raw[5] = (byte)((currUtcTime >> 8) & 0xff);
-            raw[6] = (byte)((currUtcTime >> 16) & 0xff);
-            raw[7] = (byte)((currUtcTime >> 24) & 0xff);
+            double totalSeconds = (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            UInt32 currUtcTime = (UInt32) totalSeconds;
+            raw[4] = (byte) (currUtcTime & 0xff);
+            raw[5] = (byte) ((currUtcTime >> 8) & 0xff);
+            raw[6] = (byte) ((currUtcTime >> 16) & 0xff);
+            raw[7] = (byte) ((currUtcTime >> 24) & 0xff);
+            // 1/250 seconds
+            double val = (totalSeconds * 250) % 250;
+            raw[8] = (byte) ((uint) val & 0xff);
             if (padWithEmpty) {
-                raw[8] = 0 + (YGenericHub.YSTREAM_EMPTY << 3);
-                raw[9] = (byte)(YPKT_STREAM + ((55) << 2));
+                raw[9] = 0 + (YGenericHub.YSTREAM_EMPTY << 3);
+                raw[10] = (byte) (YPKT_STREAM + ((55) << 2));
             }
+
             report.Data = raw.AsBuffer();
         }
     }
-
 }

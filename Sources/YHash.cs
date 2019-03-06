@@ -38,7 +38,7 @@ namespace com.yoctopuce.YoctoAPI
             module.imm_reindexFunction(moduleYPEntry);
             int count = dev.imm_functionCount();
             for (int i = 0; i < count; i++) {
-                YPEntry yp = dev.imm_getYPEntry(i);
+                YPEntry yp = dev.imm_getYPEntryFromOfs(i);
                 string classname = yp.Classname;
                 YFunctionType functionType;
                 if (_fnByType.ContainsKey(classname)) {
@@ -87,7 +87,7 @@ namespace com.yoctopuce.YoctoAPI
             module.imm_forgetFunction(serial + ".module");
             int count = dev.imm_functionCount();
             for (int i = 0; i < count; i++) {
-                YPEntry yp = dev.imm_getYPEntry(i);
+                YPEntry yp = dev.imm_getYPEntryFromOfs(i);
                 if (_fnByType.ContainsKey(yp.Classname)) {
                     YFunctionType functionType = _fnByType[yp.Classname];
                     functionType.imm_forgetFunction(yp.HardwareId);

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunctionType.cs 30232 2018-03-05 14:15:57Z seb $
+ * $Id: YFunctionType.cs 33878 2018-12-26 14:03:05Z seb $
  *
  * Internal YFunctionType object
  *
@@ -186,7 +186,7 @@ namespace com.yoctopuce.YoctoAPI
                 // not found neither, may be funcid is a function logicalname
                 int nfun = dev.imm_functionCount();
                 for (int i = 0; i < nfun; i++) {
-                    YPEntry yp = dev.imm_getYPEntry(i);
+                    YPEntry yp = dev.imm_getYPEntryFromOfs(i);
                     if (yp.LogicalName.Equals(hwid.Function) && _ypEntries.ContainsValue(yp)) {
                         return new HWID(serial, yp.FuncId);
                     }

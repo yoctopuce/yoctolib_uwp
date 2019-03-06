@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDevice.cs 33592 2018-12-07 17:57:00Z seb $
+ * $Id: YDevice.cs 33915 2018-12-28 10:06:01Z seb $
  *
  * Internal YDevice class
  *
@@ -72,7 +72,6 @@ namespace com.yoctopuce.YoctoAPI
         private YModule.LogCallback _logCallback = null;
         private int _logpos = 0;
         private bool _logIsPulling = false;
-        private bool _logNeedPulling = false;
 
         // Device constructor. Automatically call the YAPI functin to reindex device
         internal YDevice(YGenericHub hub, WPEntry wpRec, Dictionary<string, List<YPEntry>> ypRecs)
@@ -150,7 +149,14 @@ namespace com.yoctopuce.YoctoAPI
                 request = "GET /api.json?fw=" + YAPIContext.imm_escapeAttr(fw) + " \r\n\r\n";
             }
 
-            string yreq = await requestHTTPSyncAsString(request, null);
+            string yreq;
+
+            try {
+                yreq = await requestHTTPSyncAsString(request, null);
+            } catch (YAPI_Exception) {
+                await _hub.updateDeviceListAsync(true);
+                yreq = await requestHTTPSyncAsString(request, null);
+            }
 
             YJSONObject cache_json;
             try {
@@ -234,10 +240,29 @@ namespace com.yoctopuce.YoctoAPI
             return _ypRecs.Count;
         }
 
-        internal virtual YPEntry imm_getYPEntry(int idx)
+        internal virtual YPEntry imm_getYPEntryFromOfs(int number)
         {
-            if (idx < _ypRecs.Count) {
-                return _ypRecs[idx];
+            if (number > _ypRecs.Count) {
+                return null;
+            }
+
+            int ofs = 0;
+            foreach (YPEntry ypEntry in _ypRecs.Values) {
+                if (ofs == number) {
+                    return ypEntry;
+                }
+
+                ofs++;
+            }
+
+            return null;
+        }
+
+
+        internal virtual YPEntry imm_getYPEntry(int funydx)
+        {
+            if (_ypRecs.ContainsKey(funydx)) {
+                return _ypRecs[funydx];
             }
 
             return null;
@@ -247,9 +272,6 @@ namespace com.yoctopuce.YoctoAPI
         {
             string shortRequest = imm_formatRequest(request);
             byte[] res = await _hub.devRequestSync(this, shortRequest, rest_of_request, null, null);
-            if (_logNeedPulling) {
-                await triggerLogPull();
-            }
             return res;
         }
 
@@ -263,10 +285,6 @@ namespace com.yoctopuce.YoctoAPI
         {
             string shortRequest = imm_formatRequest(request);
             await _hub.devRequestAsync(this, shortRequest, rest_of_request, asyncResult, context);
-            if (_logNeedPulling) {
-                await triggerLogPull();
-            }
-
         }
 
         private string imm_formatRequest(string request)
@@ -318,7 +336,8 @@ namespace com.yoctopuce.YoctoAPI
             get { return _moduleYPEntry; }
         }
 
-        private async Task logCallbackHandle(object context, byte[] result, int error, string errmsg)
+
+        private async Task _logCallbackHandler(object context, byte[] result, int error, string errmsg)
         {
             if (result == null) {
                 _logIsPulling = false;
@@ -340,7 +359,7 @@ namespace com.yoctopuce.YoctoAPI
             string logs = resultStr.Substring(0, pos);
             string posStr = resultStr.Substring(pos + 2);
             _logpos = Convert.ToInt32(posStr);
-            YModule module = YModule.FindModuleInContext(_hub._yctx, imm_getSerialNumber()+".module");
+            YModule module = YModule.FindModuleInContext(_hub._yctx, imm_getSerialNumber() + ".module");
             string[] lines = logs.TrimEnd().Split('\n');
             foreach (string line in lines) {
                 await _logCallback(module, line);
@@ -349,28 +368,14 @@ namespace com.yoctopuce.YoctoAPI
             _logIsPulling = false;
         }
 
-
-        internal void imm_setDeviceLogPending()
+        internal async Task triggerLogPull()
         {
-            _logNeedPulling = true;
-        }
-
-
-        internal virtual async Task triggerLogPull()
-        {
-            _logNeedPulling = false;
-            if (_logCallback == null || _logIsPulling) {
+              if (_logIsPulling || _logCallback == null)
                 return;
-            }
-
-            _logIsPulling = true;
-            string request = "GET logs.txt?pos=" + _logpos;
-            try {
-                await requestHTTPAsync(request, null, logCallbackHandle, _logpos);
-            } catch (YAPI_Exception ex) {
-                _hub._yctx._Log("LOG error:" + ex.Message);
-            }
+            string logRequest = imm_formatRequest("GET logs.txt?pos=" + _logpos);
+            await _hub.devRequestAsync(this, logRequest, null, _logCallbackHandler, null);
         }
+
 
         internal virtual async Task registerLogCallback(YModule.LogCallback callback)
         {

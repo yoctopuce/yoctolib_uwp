@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 33718 2018-12-14 14:22:23Z seb $
+ * $Id: YModule.cs 34510 2019-02-28 08:23:42Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -41,7 +41,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.UI.Notifications;
 
 namespace com.yoctopuce.YoctoAPI
 {
@@ -223,7 +222,7 @@ public class YModule : YFunction
         public virtual async Task<string> functionId(int functionIndex)
         {
             YDevice dev = imm_getDev();
-            return dev.imm_getYPEntry(functionIndex).FuncId;
+            return dev.imm_getYPEntryFromOfs(functionIndex).FuncId;
         }
 
         /// <summary>
@@ -238,7 +237,7 @@ public class YModule : YFunction
         public virtual async Task<string> functionType(int functionIndex)
         {
             YDevice dev = imm_getDev();
-            return dev.imm_getYPEntry(functionIndex).Classname;
+            return dev.imm_getYPEntryFromOfs(functionIndex).Classname;
         }
 
         /// <summary>
@@ -252,7 +251,7 @@ public class YModule : YFunction
         public virtual async Task<string> functionBaseType(int functionIndex)
         {
             YDevice dev = imm_getDev();
-            return dev.imm_getYPEntry(functionIndex).BaseType;
+            return dev.imm_getYPEntryFromOfs(functionIndex).BaseType;
         }
 
         /// <summary>
@@ -267,7 +266,7 @@ public class YModule : YFunction
         public virtual async Task<string> functionName(int functionIndex)
         {
             YDevice dev = imm_getDev();
-            return dev.imm_getYPEntry(functionIndex).LogicalName;
+            return dev.imm_getYPEntryFromOfs(functionIndex).LogicalName;
         }
 
         /// <summary>
@@ -283,7 +282,7 @@ public class YModule : YFunction
         public virtual async Task<string> functionValue(int functionIndex)
         {
             YDevice dev = imm_getDev();
-            return dev.imm_getYPEntry(functionIndex).AdvertisedValue;
+            return dev.imm_getYPEntryFromOfs(functionIndex).AdvertisedValue;
         }
 
 
@@ -470,7 +469,7 @@ public class YModule : YFunction
      *   On failure, throws an exception or returns <c>YModule.SERIALNUMBER_INVALID</c>.
      * </para>
      */
-    public async Task<string> get_serialNumber()
+    public override async Task<string> get_serialNumber()
     {
         string res;
         YDevice dev;

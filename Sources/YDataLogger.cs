@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataLogger.cs 33601 2018-12-09 14:30:31Z mvuilleu $
+ * $Id: YDataLogger.cs 33795 2018-12-20 15:52:19Z seb $
  *
  * Implements yFindDataLogger(), the high-level API for DataLogger functions
  *
@@ -51,7 +51,8 @@ namespace com.yoctopuce.YoctoAPI {
  *   Yoctopuce sensors include a non-volatile memory capable of storing ongoing measured
  *   data automatically, without requiring a permanent connection to a computer.
  *   The DataLogger function controls the global parameters of the internal data
- *   logger.
+ *   logger. Recording control (start/stop) as well as data retreival is done at
+ *   sensor objects level.
  * </para>
  * </summary>
  */
@@ -414,8 +415,10 @@ public class YDataLogger : YFunction
      * <summary>
      *   Changes the default activation state of the data logger on power up.
      * <para>
-     *   Remember to call the <c>saveToFlash()</c> method of the module if the
-     *   modification must be kept.
+     *   Do not forget to call the <c>saveToFlash()</c> method of the module to save the
+     *   configuration change.  Note: if the device doesn't have any time source at his disposal when
+     *   starting up, it will wait for ~8 seconds before automatically starting to record  with
+     *   an arbitrary timestamp
      * </para>
      * <para>
      * </para>
