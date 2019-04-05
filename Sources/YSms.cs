@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSms.cs 30654 2018-04-19 12:34:37Z seb $
+ * $Id: YSms.cs 34661 2019-03-18 11:02:50Z seb $
  *
  * Implements FindSms(), the high-level API for Sms functions
  *
@@ -51,8 +51,8 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YSms Class: SMS message sent or received
  * <para>
- * </para>
- * <para>
+ *   YSms objects are used to describe a SMS.
+ *   These objects are used in particular in conjunction with the YMessageBox class.
  * </para>
  * </summary>
  */
@@ -162,6 +162,18 @@ public class YSms
         return _udata;
     }
 
+    /**
+     * <summary>
+     *   Returns the content of the message.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the content of the message.
+     * </returns>
+     */
     public virtual async Task<string> get_textData()
     {
         byte[] isolatin;
@@ -389,6 +401,25 @@ public class YSms
         return YAPI.SUCCESS;
     }
 
+    /**
+     * <summary>
+     *   Add a regular text to the SMS.
+     * <para>
+     *   This function support messages
+     *   of more than 160 characters. ISO-latin accented characters
+     *   are supported. For messages with special unicode characters such as asian
+     *   characters and emoticons, use the  <c>addUnicodeData</c> method.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="val">
+     *   the text to be sent in the message
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     */
     public virtual async Task<int> addText(string val)
     {
         byte[] udata;
@@ -446,6 +477,23 @@ public class YSms
         return await this.set_userData(udata);
     }
 
+    /**
+     * <summary>
+     *   Add a unicode text to the SMS.
+     * <para>
+     *   This function support messages
+     *   of more than 160 characters, using SMS concatenation.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="val">
+     *   an array of special unicode characters
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     */
     public virtual async Task<int> addUnicodeData(List<int> val)
     {
         int arrlen;
@@ -1235,6 +1283,23 @@ public class YSms
         return YAPI.SUCCESS;
     }
 
+    /**
+     * <summary>
+     *   Sends the SMS to the recipient.
+     * <para>
+     *   Messages of more than 160 characters are supported
+     *   using SMS concatenation.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
     public virtual async Task<int> send()
     {
         int i;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFileRecord.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YFileRecord.cs 34651 2019-03-15 17:21:54Z seb $
  *
  * Implements FindFileRecord(), the high-level API for FileRecord functions
  *
@@ -50,8 +50,8 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YFileRecord Class: Description of a file on the device filesystem
  * <para>
- * </para>
- * <para>
+ *   YFileRecord objects are used to describe a file that is stored on a Yoctopuce device.
+ *   These objects are used in particular in conjunction with the YFiles class.
  * </para>
  * </summary>
  */
@@ -78,16 +78,46 @@ public class YFileRecord
         //--- (generated code: YFileRecord implementation)
 #pragma warning disable 1998
 
+    /**
+     * <summary>
+     *   Returns the name of the file.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the name of the file.
+     * </returns>
+     */
     public virtual async Task<string> get_name()
     {
         return _name;
     }
 
+    /**
+     * <summary>
+     *   Returns the size of the file in bytes.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the size of the file.
+     * </returns>
+     */
     public virtual async Task<int> get_size()
     {
         return _size;
     }
 
+    /**
+     * <summary>
+     *   Returns the 32-bit CRC of the file content.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the 32-bit CRC of the file content.
+     * </returns>
+     */
     public virtual async Task<int> get_crc()
     {
         return _crc;

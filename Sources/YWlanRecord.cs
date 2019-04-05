@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YWlanRecord.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YWlanRecord.cs 34651 2019-03-15 17:21:54Z seb $
  *
  * Implements FindWlanRecord(), the high-level API for WlanRecord functions
  *
@@ -50,8 +50,9 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YWlanRecord Class: Description of a wireless network
  * <para>
- * </para>
- * <para>
+ *   YWlanRecord objects are used to describe a wireless network.
+ *   These objects are  used in particular in conjunction with the
+ *   YWireless class.
  * </para>
  * </summary>
  */
@@ -79,21 +80,61 @@ public class YWlanRecord
     //--- (generated code: YWlanRecord implementation)
 #pragma warning disable 1998
 
+    /**
+     * <summary>
+     *   Returns the name of the wireless network (SSID).
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the name of the wireless network (SSID).
+     * </returns>
+     */
     public virtual string get_ssid()
     {
         return _ssid;
     }
 
+    /**
+     * <summary>
+     *   Returns the 802.11 channel.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the 802.11 channel.
+     * </returns>
+     */
     public virtual int get_channel()
     {
         return _channel;
     }
 
+    /**
+     * <summary>
+     *   Returns the security algorithm used by the wireless network.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the security algorithm.
+     * </returns>
+     */
     public virtual string get_security()
     {
         return _sec;
     }
 
+    /**
+     * <summary>
+     *   Returns the quality of the wireless network link, in per cents.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the quality of the wireless network link, in per cents.
+     * </returns>
+     */
     public virtual int get_linkQuality()
     {
         return _rssi;

@@ -1,6 +1,5 @@
-UWP v1.10.34560
+UWP v1.10.34990
 
-- Fix in Json parser.
-- Add get_serialNumber to all YFunction
-- Fix quick device reboot (or quick uplug->plug) that was not detected by API
-- Improve error recovery (Request API implictly do an updateDeviceList when device does not respond)
+- Fix loadThermistorResponseTable() method of YTemperature
+- Add documentation for YFileRecord and YWlanRecord class
+- Add toggle() method in YRelay class

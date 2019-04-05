@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWatchdog.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YWatchdog.cs 34976 2019-04-05 06:47:49Z seb $
  *
  *  Implements FindWatchdog(), the high-level API for Watchdog functions
  *
@@ -162,6 +162,7 @@ public class YWatchdog : YFunction
     protected long _triggerDelay = TRIGGERDELAY_INVALID;
     protected long _triggerDuration = TRIGGERDURATION_INVALID;
     protected ValueCallback _valueCallbackWatchdog = null;
+    protected int _firm = 0;
 
     public new delegate Task ValueCallback(YWatchdog func, string value);
     public new delegate Task TimedReportCallback(YWatchdog func, YMeasure measure);
@@ -1118,6 +1119,48 @@ public class YWatchdog : YFunction
             await base._invokeValueCallback(value);
         }
         return 0;
+    }
+
+    /**
+     * <summary>
+     *   Switch the relay to the opposite state.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> toggle()
+    {
+        int sta;
+        string fw;
+        YModule mo;
+        if (_firm == 0) {
+            mo = await this.get_module();
+            fw = await mo.get_firmwareRelease();
+            if (fw == YModule.FIRMWARERELEASE_INVALID) {
+                return STATE_INVALID;
+            }
+            _firm = YAPIContext.imm_atoi(fw);
+        }
+        if (_firm < 34921) {
+            sta = await this.get_state();
+            if (sta == STATE_INVALID) {
+                return STATE_INVALID;
+            }
+            if (sta == STATE_B) {
+                await this.set_state(STATE_A);
+            } else {
+                await this.set_state(STATE_B);
+            }
+            return YAPI.SUCCESS;
+        } else {
+            return await this._setAttr("state", "X");
+        }
     }
 
     /**
