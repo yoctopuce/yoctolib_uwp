@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 34510 2019-02-28 08:23:42Z seb $
+ * $Id: YModule.cs 35620 2019-06-04 08:29:58Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -924,10 +924,17 @@ public class YModule : YFunction
     public static YModule FindModule(string func)
     {
         YModule obj;
-        obj = (YModule) YFunction._FindFromCache("Module", func);
+        string cleanHwId;
+        int modpos;
+        cleanHwId = func;
+        modpos = (func).IndexOf(".module");
+        if (modpos != ((func).Length - 7)) {
+            cleanHwId = func + ".module";
+        }
+        obj = (YModule) YFunction._FindFromCache("Module", cleanHwId);
         if (obj == null) {
-            obj = new YModule(func);
-            YFunction._AddToCache("Module",  func, obj);
+            obj = new YModule(cleanHwId);
+            YFunction._AddToCache("Module",  cleanHwId, obj);
         }
         return obj;
     }
@@ -980,10 +987,17 @@ public class YModule : YFunction
     public static YModule FindModuleInContext(YAPIContext yctx,string func)
     {
         YModule obj;
-        obj = (YModule) YFunction._FindFromCacheInContext(yctx,  "Module", func);
+        string cleanHwId;
+        int modpos;
+        cleanHwId = func;
+        modpos = (func).IndexOf(".module");
+        if (modpos != ((func).Length - 7)) {
+            cleanHwId = func + ".module";
+        }
+        obj = (YModule) YFunction._FindFromCacheInContext(yctx,  "Module", cleanHwId);
         if (obj == null) {
-            obj = new YModule(yctx, func);
-            YFunction._AddToCache("Module",  func, obj);
+            obj = new YModule(yctx, cleanHwId);
+            YFunction._AddToCache("Module",  cleanHwId, obj);
         }
         return obj;
     }
@@ -1385,15 +1399,17 @@ public class YModule : YFunction
             if (YAPIContext.imm_atoi(await this.get_firmwareRelease()) > 9000) {
                 url = "api/"+ templist[ii]+"/sensorType";
                 t_type = YAPI.DefaultEncoding.GetString(await this._download(url));
-                if (t_type == "RES_NTC") {
+                if (t_type == "RES_NTC" || t_type == "RES_LINEAR") {
                     id = ( templist[ii]).Substring( 11, ( templist[ii]).Length - 11);
-                    temp_data_bin = await this._download("extra.json?page="+id);
-                    if ((temp_data_bin).Length == 0) {
-                        return temp_data_bin;
+                    if (id == "") {
+                        id = "1";
                     }
-                    item = ""+ sep+"{\"fid\":\""+  templist[ii]+"\", \"json\":"+YAPI.DefaultEncoding.GetString(temp_data_bin)+"}\n";
-                    ext_settings = ext_settings + item;
-                    sep = ",";
+                    temp_data_bin = await this._download("extra.json?page="+id);
+                    if ((temp_data_bin).Length > 0) {
+                        item = ""+ sep+"{\"fid\":\""+  templist[ii]+"\", \"json\":"+YAPI.DefaultEncoding.GetString(temp_data_bin)+"}\n";
+                        ext_settings = ext_settings + item;
+                        sep = ",";
+                    }
                 }
             }
         }
@@ -1438,7 +1454,7 @@ public class YModule : YFunction
         while (ofs + 1 < size) {
             curr = values[ofs];
             currTemp = values[ofs + 1];
-            url = "api/"+  funcId+"/.json?command=m"+ curr+":"+currTemp;
+            url = "api/"+ funcId+".json?command=m"+ curr+":"+currTemp;
             await this._download(url);
             ofs = ofs + 2;
         }

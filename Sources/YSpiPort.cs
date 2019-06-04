@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YSpiPort.cs 35124 2019-04-12 09:03:41Z seb $
+ *  $Id: YSpiPort.cs 35464 2019-05-16 14:39:59Z seb $
  *
  *  Implements FindSpiPort(), the high-level API for SpiPort functions
  *
@@ -128,6 +128,7 @@ public class YSpiPort : YFunction
     public const int VOLTAGELEVEL_TTL5VR = 4;
     public const int VOLTAGELEVEL_RS232 = 5;
     public const int VOLTAGELEVEL_RS485 = 6;
+    public const int VOLTAGELEVEL_TTL1V8 = 7;
     public const int VOLTAGELEVEL_INVALID = -1;
     /**
      * <summary>
@@ -577,8 +578,9 @@ public class YSpiPort : YFunction
      * <returns>
      *   a value among <c>YSpiPort.VOLTAGELEVEL_OFF</c>, <c>YSpiPort.VOLTAGELEVEL_TTL3V</c>,
      *   <c>YSpiPort.VOLTAGELEVEL_TTL3VR</c>, <c>YSpiPort.VOLTAGELEVEL_TTL5V</c>,
-     *   <c>YSpiPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSpiPort.VOLTAGELEVEL_RS232</c> and
-     *   <c>YSpiPort.VOLTAGELEVEL_RS485</c> corresponding to the voltage level used on the serial line
+     *   <c>YSpiPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSpiPort.VOLTAGELEVEL_RS232</c>,
+     *   <c>YSpiPort.VOLTAGELEVEL_RS485</c> and <c>YSpiPort.VOLTAGELEVEL_TTL1V8</c> corresponding to the
+     *   voltage level used on the serial line
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YSpiPort.VOLTAGELEVEL_INVALID</c>.
@@ -613,8 +615,9 @@ public class YSpiPort : YFunction
      * <param name="newval">
      *   a value among <c>YSpiPort.VOLTAGELEVEL_OFF</c>, <c>YSpiPort.VOLTAGELEVEL_TTL3V</c>,
      *   <c>YSpiPort.VOLTAGELEVEL_TTL3VR</c>, <c>YSpiPort.VOLTAGELEVEL_TTL5V</c>,
-     *   <c>YSpiPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSpiPort.VOLTAGELEVEL_RS232</c> and
-     *   <c>YSpiPort.VOLTAGELEVEL_RS485</c> corresponding to the voltage type used on the serial line
+     *   <c>YSpiPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSpiPort.VOLTAGELEVEL_RS232</c>,
+     *   <c>YSpiPort.VOLTAGELEVEL_RS485</c> and <c>YSpiPort.VOLTAGELEVEL_TTL1V8</c> corresponding to the
+     *   voltage type used on the serial line
      * </param>
      * <para>
      * </para>

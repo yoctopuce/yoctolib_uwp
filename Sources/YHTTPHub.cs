@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPHub.cs 34554 2019-03-06 10:21:57Z seb $
+ * $Id: YHTTPHub.cs 35437 2019-05-14 15:09:33Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -468,6 +468,11 @@ namespace com.yoctopuce.YoctoAPI
         internal override string get_debugMsg(string serial)
         {
             throw new NotImplementedException();
+        }
+
+        public override bool isReadOnly()
+        {
+            return _writeProtected && !_notificationHandler.hasRwAccess();
         }
 
         internal virtual string Host {

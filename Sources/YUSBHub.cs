@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBHub.cs 33591 2018-12-07 16:37:37Z seb $
+ * $Id: YUSBHub.cs 35437 2019-05-14 15:09:33Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -171,6 +171,11 @@ namespace com.yoctopuce.YoctoAPI
         internal override string get_debugMsg(string serial)
         {
             return _ywatcher.dumpDebug(serial);
+        }
+
+        public override bool isReadOnly()
+        {
+            return false;
         }
 
 

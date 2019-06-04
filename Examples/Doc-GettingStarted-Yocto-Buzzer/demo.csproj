@@ -102,6 +102,12 @@
     <Compile Include="..\..\Sources\YBuzzer.cs">
       <Link>yoctolib\YBuzzer.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YFileRecord.cs">
+      <Link>yoctolib\YFileRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YFiles.cs">
+      <Link>yoctolib\YFiles.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YLed.cs">
       <Link>yoctolib\YLed.cs</Link>
     </Compile>

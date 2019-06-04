@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 34157 2019-01-28 13:24:25Z seb $
+ * $Id: YGenericHub.cs 35437 2019-05-14 15:09:33Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -383,9 +383,9 @@ namespace com.yoctopuce.YoctoAPI
             public HTTPParams(string url)
             {
                 int pos = 0;
-                if (url.StartsWith("ws://", StringComparison.Ordinal)) {
-                    pos = 5;
-                    _proto = "ws";
+                if (url.StartsWith("http://", StringComparison.Ordinal)) {
+                    pos = 7;
+                    _proto = "http";
                 } else if (url.StartsWith("wss://", StringComparison.Ordinal)) {
                     pos = 6;
                     _proto = "wss";
@@ -393,9 +393,9 @@ namespace com.yoctopuce.YoctoAPI
                     pos = 6;
                     _proto = "usb";
                 } else {
-                    _proto = "http";
-                    if (url.StartsWith("http://", StringComparison.Ordinal)) {
-                        pos = 7;
+                    _proto = "ws";
+                    if (url.StartsWith("ws://", StringComparison.Ordinal)) {
+                        pos = 5;
                     }
                 }
 
@@ -496,5 +496,6 @@ namespace com.yoctopuce.YoctoAPI
         }
 
         abstract internal string get_debugMsg(string serial);
+        public abstract bool isReadOnly();
     }
 }

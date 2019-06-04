@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YVoltage.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YVoltage.cs 35360 2019-05-09 09:02:29Z mvuilleu $
  *
  *  Implements FindVoltage(), the high-level API for Voltage functions
  *
@@ -115,8 +115,19 @@ public class YVoltage : YSensor
 
     /**
      * <summary>
-     *   throws an exception on error
+     *   Returns the activation state of this input.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
      * </summary>
+     * <returns>
+     *   either <c>YVoltage.ENABLED_FALSE</c> or <c>YVoltage.ENABLED_TRUE</c>, according to the activation
+     *   state of this input
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YVoltage.ENABLED_INVALID</c>.
+     * </para>
      */
     public async Task<int> get_enabled()
     {
@@ -131,6 +142,30 @@ public class YVoltage : YSensor
     }
 
 
+    /**
+     * <summary>
+     *   Changes the activation state of this input.
+     * <para>
+     *   When an input is disabled,
+     *   its value is no more updated. On some devices, disabling an input can
+     *   improve the refresh rate of the other active inputs.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YVoltage.ENABLED_FALSE</c> or <c>YVoltage.ENABLED_TRUE</c>, according to the activation
+     *   state of this input
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
     public async Task<int> set_enabled(int  newval)
     {
         string rest_val;

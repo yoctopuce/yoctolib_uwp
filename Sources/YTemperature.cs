@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTemperature.cs 34584 2019-03-08 09:36:55Z mvuilleu $
+ *  $Id: YTemperature.cs 35464 2019-05-16 14:39:59Z seb $
  *
  *  Implements FindTemperature(), the high-level API for Temperature functions
  *
@@ -83,6 +83,7 @@ public class YTemperature : YSensor
     public const int SENSORTYPE_RES_LINEAR = 13;
     public const int SENSORTYPE_RES_INTERNAL = 14;
     public const int SENSORTYPE_IR = 15;
+    public const int SENSORTYPE_RES_PT1000 = 16;
     public const int SENSORTYPE_INVALID = -1;
     /**
      * <summary>
@@ -212,8 +213,8 @@ public class YTemperature : YSensor
      *   <c>YTemperature.SENSORTYPE_PT100_4WIRES</c>, <c>YTemperature.SENSORTYPE_PT100_3WIRES</c>,
      *   <c>YTemperature.SENSORTYPE_PT100_2WIRES</c>, <c>YTemperature.SENSORTYPE_RES_OHM</c>,
      *   <c>YTemperature.SENSORTYPE_RES_NTC</c>, <c>YTemperature.SENSORTYPE_RES_LINEAR</c>,
-     *   <c>YTemperature.SENSORTYPE_RES_INTERNAL</c> and <c>YTemperature.SENSORTYPE_IR</c> corresponding to
-     *   the temperature sensor type
+     *   <c>YTemperature.SENSORTYPE_RES_INTERNAL</c>, <c>YTemperature.SENSORTYPE_IR</c> and
+     *   <c>YTemperature.SENSORTYPE_RES_PT1000</c> corresponding to the temperature sensor type
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YTemperature.SENSORTYPE_INVALID</c>.
@@ -253,8 +254,8 @@ public class YTemperature : YSensor
      *   <c>YTemperature.SENSORTYPE_PT100_4WIRES</c>, <c>YTemperature.SENSORTYPE_PT100_3WIRES</c>,
      *   <c>YTemperature.SENSORTYPE_PT100_2WIRES</c>, <c>YTemperature.SENSORTYPE_RES_OHM</c>,
      *   <c>YTemperature.SENSORTYPE_RES_NTC</c>, <c>YTemperature.SENSORTYPE_RES_LINEAR</c>,
-     *   <c>YTemperature.SENSORTYPE_RES_INTERNAL</c> and <c>YTemperature.SENSORTYPE_IR</c> corresponding to
-     *   the temperature sensor type
+     *   <c>YTemperature.SENSORTYPE_RES_INTERNAL</c>, <c>YTemperature.SENSORTYPE_IR</c> and
+     *   <c>YTemperature.SENSORTYPE_RES_PT1000</c> corresponding to the temperature sensor type
      * </param>
      * <para>
      * </para>

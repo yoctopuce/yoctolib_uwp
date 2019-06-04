@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRangeFinder.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YRangeFinder.cs 35185 2019-04-16 19:43:18Z mvuilleu $
  *
  *  Implements FindRangeFinder(), the high-level API for RangeFinder functions
  *
@@ -74,6 +74,18 @@ public class YRangeFinder : YSensor
     public const int RANGEFINDERMODE_INVALID = -1;
     /**
      * <summary>
+     *   invalid timeFrame value
+     * </summary>
+     */
+    public const  long TIMEFRAME_INVALID = YAPI.INVALID_LONG;
+    /**
+     * <summary>
+     *   invalid quality value
+     * </summary>
+     */
+    public const  int QUALITY_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
      *   invalid hardwareCalibration value
      * </summary>
      */
@@ -91,6 +103,8 @@ public class YRangeFinder : YSensor
      */
     public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
     protected int _rangeFinderMode = RANGEFINDERMODE_INVALID;
+    protected long _timeFrame = TIMEFRAME_INVALID;
+    protected int _quality = QUALITY_INVALID;
     protected string _hardwareCalibration = HARDWARECALIBRATION_INVALID;
     protected double _currentTemperature = CURRENTTEMPERATURE_INVALID;
     protected string _command = COMMAND_INVALID;
@@ -134,6 +148,12 @@ public class YRangeFinder : YSensor
     {
         if (json_val.has("rangeFinderMode")) {
             _rangeFinderMode = json_val.getInt("rangeFinderMode");
+        }
+        if (json_val.has("timeFrame")) {
+            _timeFrame = json_val.getLong("timeFrame");
+        }
+        if (json_val.has("quality")) {
+            _quality = json_val.getInt("quality");
         }
         if (json_val.has("hardwareCalibration")) {
             _hardwareCalibration = json_val.getString("hardwareCalibration");
@@ -243,6 +263,98 @@ public class YRangeFinder : YSensor
         await _setAttr("rangeFinderMode",rest_val);
         return YAPI.SUCCESS;
     }
+
+    /**
+     * <summary>
+     *   Returns the time frame used to measure the distance and estimate the measure
+     *   reliability.
+     * <para>
+     *   The time frame is expressed in milliseconds.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the time frame used to measure the distance and estimate the measure
+     *   reliability
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YRangeFinder.TIMEFRAME_INVALID</c>.
+     * </para>
+     */
+    public async Task<long> get_timeFrame()
+    {
+        long res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return TIMEFRAME_INVALID;
+            }
+        }
+        res = _timeFrame;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the time frame used to measure the distance and estimate the measure
+     *   reliability.
+     * <para>
+     *   The time frame is expressed in milliseconds. A larger timeframe
+     *   improves stability and reliability, at the cost of higher latency, but prevents
+     *   the detection of events shorter than the time frame.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   an integer corresponding to the time frame used to measure the distance and estimate the measure
+     *   reliability
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_timeFrame(long  newval)
+    {
+        string rest_val;
+        rest_val = (newval).ToString();
+        await _setAttr("timeFrame",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns a measure quality estimate, based on measured dispersion.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to a measure quality estimate, based on measured dispersion
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YRangeFinder.QUALITY_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_quality()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return QUALITY_INVALID;
+            }
+        }
+        res = _quality;
+        return res;
+    }
+
 
     /**
      * <summary>

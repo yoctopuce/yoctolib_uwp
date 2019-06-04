@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 33903 2018-12-28 08:49:26Z seb $
+ * $Id: YFunction.cs 35464 2019-05-16 14:39:59Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -163,6 +163,19 @@ public class YFunction
         {
             await func._yapi._UpdateTimedReportCallbackList(func, add);
         }
+
+
+        private async Task<bool> isReadOnly_internal()
+        {
+            try {
+                YDevice dev = await getYDevice();
+                return dev.Hub.isReadOnly();
+            } catch (YAPI_Exception) {
+                return true;
+            }
+        }
+
+
 
         //--- (generated code: YFunction implementation)
 #pragma warning disable 1998
@@ -505,6 +518,27 @@ public class YFunction
         url = "api/"+ await this.get_functionId()+"/"+attrName;
         attrVal = await this._download(url);
         return YAPI.DefaultEncoding.GetString(attrVal);
+    }
+
+    //cannot be generated for UWP:
+    //public virtual async Task<bool> isReadOnly_internal()
+    /**
+     * <summary>
+     *   Test if the function is readOnly.
+     * <para>
+     *   Return <c>true</c> if the function is write protected
+     *   or that the function is not available.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>true</c> if the function is readOnly or not online.
+     * </returns>
+     */
+    public virtual async Task<bool> isReadOnly()
+    {
+        return await isReadOnly_internal();
     }
 
     /**
