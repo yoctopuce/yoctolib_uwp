@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 35464 2019-05-16 14:39:59Z seb $
+ * $Id: YFunction.cs 35687 2019-06-05 10:39:51Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -743,6 +743,13 @@ public class YFunction
         }
 
         protected internal virtual async Task<int> _upload(string path, byte[] content)
+        {
+            YDevice dev = await getYDevice();
+            await dev.requestHTTPUpload(path, content);
+            return YAPI.SUCCESS;
+        }
+
+        protected internal virtual async Task<byte[]> _uploadEx(string path, byte[] content)
         {
             YDevice dev = await getYDevice();
             return await dev.requestHTTPUpload(path, content);

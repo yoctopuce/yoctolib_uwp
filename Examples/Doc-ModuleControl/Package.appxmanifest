@@ -105,7 +105,7 @@
       <Device Id="vidpid:24e0 0030">
         <Function Type="usage:ff00 0001" />
       </Device>
-      <!-- Yocto-MaxiCoupler -->
+      <!-- Yocto-MaxiCoupler-V2 -->
       <Device Id="vidpid:24e0 0031">
         <Function Type="usage:ff00 0001" />
       </Device>
@@ -273,7 +273,7 @@
       <Device Id="vidpid:24e0 008d">
         <Function Type="usage:ff00 0001" />
       </Device>
-      <!-- yocto-MaxiMicroVolt-Rx -->
+      <!-- Yocto-MaxiMicroVolt-Rx -->
       <Device Id="vidpid:24e0 0092">
         <Function Type="usage:ff00 0001" />
       </Device>

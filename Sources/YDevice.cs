@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDevice.cs 33915 2018-12-28 10:06:01Z seb $
+ * $Id: YDevice.cs 35687 2019-06-05 10:39:51Z seb $
  *
  * Internal YDevice class
  *
@@ -413,14 +413,12 @@ namespace com.yoctopuce.YoctoAPI
             return head_body;
         }
 
-        internal virtual async Task<int> requestHTTPUpload(string path, byte[] content)
+        internal virtual async Task<byte[]> requestHTTPUpload(string path, byte[] content)
         {
             string request = "POST /upload.html";
             byte[] head_body = YDevice.imm_formatHTTPUpload(path, content);
-            await requestHTTPSync(request, head_body);
-            return YAPI.SUCCESS;
+            return await requestHTTPSync(request, head_body);
         }
-
 
         public string get_debugMsg()
         {

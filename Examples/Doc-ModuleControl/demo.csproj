@@ -105,6 +105,9 @@
     <Compile Include="..\..\Sources\YAnButton.cs">
       <Link>yoctolib\YAnButton.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YArithmeticSensor.cs">
+      <Link>yoctolib\YArithmeticSensor.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YAudioIn.cs">
       <Link>yoctolib\YAudioIn.cs</Link>
     </Compile>
