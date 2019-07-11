@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 33853 2018-12-24 08:38:31Z seb $
+ * $Id: YSensor.cs 36048 2019-06-28 17:43:51Z mvuilleu $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -519,7 +519,8 @@ public class YSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the uncalibrated, unrounded raw value returned by the sensor, in the specified unit, as a floating point number.
+     *   Returns the uncalibrated, unrounded raw value returned by the
+     *   sensor, in the specified unit, as a floating point number.
      * <para>
      * </para>
      * <para>

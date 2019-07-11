@@ -273,8 +273,16 @@
       <Device Id="vidpid:24e0 008d">
         <Function Type="usage:ff00 0001" />
       </Device>
-      <!-- yocto-MaxiMicroVolt-Rx -->
+      <!-- Yocto-MaxiMicroVolt-Rx -->
       <Device Id="vidpid:24e0 0092">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-I2C -->
+      <Device Id="vidpid:24e0 0093">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-MaxiCoupler-V2 -->
+      <Device Id="vidpid:24e0 0095">
         <Function Type="usage:ff00 0001" />
       </Device>
 <!-- USABLE DEVICES STOP -->
