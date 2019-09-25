@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRefFrame.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YRefFrame.cs 37000 2019-09-03 06:40:17Z mvuilleu $
  *
  *  Implements FindRefFrame(), the high-level API for RefFrame functions
  *
@@ -314,8 +314,21 @@ public class YRefFrame : YFunction
 
     /**
      * <summary>
-     *   throws an exception on error
+     *   Returns the BNO055 fusion mode.
+     * <para>
+     *   Note this feature is only availabe on Yocto-3D-V2.
+     * </para>
+     * <para>
+     * </para>
      * </summary>
+     * <returns>
+     *   a value among <c>YRefFrame.FUSIONMODE_NDOF</c>, <c>YRefFrame.FUSIONMODE_NDOF_FMC_OFF</c>,
+     *   <c>YRefFrame.FUSIONMODE_M4G</c>, <c>YRefFrame.FUSIONMODE_COMPASS</c> and
+     *   <c>YRefFrame.FUSIONMODE_IMU</c> corresponding to the BNO055 fusion mode
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YRefFrame.FUSIONMODE_INVALID</c>.
+     * </para>
      */
     public async Task<int> get_fusionMode()
     {
@@ -330,6 +343,29 @@ public class YRefFrame : YFunction
     }
 
 
+    /**
+     * <summary>
+     *   Change the BNO055 fusion mode.
+     * <para>
+     *   Note: this feature is only availabe on Yocto-3D-V2.
+     *   Remember to call the matching module <c>saveToFlash()</c> method to save the setting permanently.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a value among <c>YRefFrame.FUSIONMODE_NDOF</c>, <c>YRefFrame.FUSIONMODE_NDOF_FMC_OFF</c>,
+     *   <c>YRefFrame.FUSIONMODE_M4G</c>, <c>YRefFrame.FUSIONMODE_COMPASS</c> and <c>YRefFrame.FUSIONMODE_IMU</c>
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
     public async Task<int> set_fusionMode(int  newval)
     {
         string rest_val;

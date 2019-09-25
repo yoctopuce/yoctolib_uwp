@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YProximity.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YProximity.cs 37149 2019-09-12 21:24:53Z mvuilleu $
  *
  *  Implements FindProximity(), the high-level API for Proximity functions
  *
@@ -282,6 +282,7 @@ public class YProximity : YSensor
      *   Changes the threshold used to determine the logical state of the proximity sensor, when considered
      *   as a binary input (on/off).
      * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -344,6 +345,7 @@ public class YProximity : YSensor
      *   Changes the hysteresis used to determine the logical state of the proximity sensor, when considered
      *   as a binary input (on/off).
      * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -406,6 +408,7 @@ public class YProximity : YSensor
      * <para>
      *   Any shorter detection is
      *   considered as noise or bounce (false positive) and filtered out.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -466,6 +469,7 @@ public class YProximity : YSensor
      * <para>
      *   Any shorter detection is
      *   considered as noise or bounce (false positive) and filtered out.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -684,6 +688,7 @@ public class YProximity : YSensor
      * <para>
      *   The edge count value is limited to the 6 lowest digits. For values greater than one million, use
      *   get_pulseCounter().
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>

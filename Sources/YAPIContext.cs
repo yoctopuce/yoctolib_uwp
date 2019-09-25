@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 33827 2018-12-21 15:09:19Z seb $
+ * $Id: YAPIContext.cs 37303 2019-09-25 06:47:31Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -61,6 +61,7 @@ public class YAPIContext
 {
 //--- (end of generated code: YAPIContext class start)
         internal ulong _deviceListValidityMs = 10000;
+        internal uint _networkTimeoutMs = YHTTPHub.YIO_DEFAULT_TCP_TIMEOUT;
 
         //--- (generated code: YAPIContext definitions)
     protected ulong _defaultCacheValidity = 5;
@@ -870,8 +871,17 @@ public class YAPIContext
         {
             return (int) (_deviceListValidityMs / 1000);
         }
-#pragma warning restore 1998
 
+        private async Task SetNetworkTimeout_internal(int networkMsTimeout)
+        {
+            _networkTimeoutMs = (uint) networkMsTimeout;
+        }
+
+        private async Task<int> GetNetworkTimeout_internal()
+        {
+            return (int) _networkTimeoutMs;
+        }
+#pragma warning restore 1998
 
         //PUBLIC METHOD:
 
@@ -882,20 +892,20 @@ public class YAPIContext
     //public virtual async Task SetDeviceListValidity_internal(int deviceListValidity)
     /**
      * <summary>
-     *   Change the time between each forced enumeration of the YoctoHub used.
+     *   Modifies the delay between each forced enumeration of the used YoctoHubs.
      * <para>
-     *   By default, the library performs a complete enumeration every 10 seconds.
-     *   To reduce network traffic it is possible to increase this delay.
-     *   This is particularly useful when a YoctoHub is connected to a GSM network
-     *   where the traffic is charged. This setting does not affect modules connected by USB,
-     *   nor the operation of arrival/removal callbacks.
-     *   Note: This function must be called after <c>yInitAPI</c>.
+     *   By default, the library performs a full enumeration every 10 seconds.
+     *   To reduce network traffic, you can increase this delay.
+     *   It's particularly useful when a YoctoHub is connected to the GSM network
+     *   where traffic is billed. This parameter doesn't impact modules connected by USB,
+     *   nor the working of module arrival/removal callbacks.
+     *   Note: you must call this function after <c>yInitAPI</c>.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="deviceListValidity">
-     *   number of seconds between each enumeration.
+     *   nubmer of seconds between each enumeration.
      * @noreturn
      * </param>
      */
@@ -908,9 +918,9 @@ public class YAPIContext
     //public virtual async Task<int> GetDeviceListValidity_internal()
     /**
      * <summary>
-     *   Returns the time between each forced enumeration of the YoctoHub used.
+     *   Returns the delay between each forced enumeration of the used YoctoHubs.
      * <para>
-     *   Note: This function must be called after <c>yInitAPI</c>.
+     *   Note: you must call this function after <c>yInitAPI</c>.
      * </para>
      * </summary>
      * <returns>
@@ -920,6 +930,53 @@ public class YAPIContext
     public virtual async Task<int> GetDeviceListValidity()
     {
         return await GetDeviceListValidity_internal();
+    }
+
+    //cannot be generated for UWP:
+    //public virtual async Task SetNetworkTimeout_internal(int networkMsTimeout)
+    /**
+     * <summary>
+     *   M
+     * <para>
+     *   odifies the network connection delay for <c>YAPI.RegisterHub()</c> and
+     *   <c>YAPI.UpdateDeviceList()</c>. This delay impacts only the YoctoHubs and VirtualHub
+     *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
+     *   but depending or you network you may want to change this delay.
+     *   For example if your network infrastructure uses a GSM connection.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="networkMsTimeout">
+     *   the network connection delay in milliseconds.
+     * @noreturn
+     * </param>
+     */
+    public virtual async Task SetNetworkTimeout(int networkMsTimeout)
+    {
+        await SetNetworkTimeout_internal(networkMsTimeout);
+    }
+
+    //cannot be generated for UWP:
+    //public virtual async Task<int> GetNetworkTimeout_internal()
+    /**
+     * <summary>
+     *   R
+     * <para>
+     *   eturns the network connection delay for <c>YAPI.RegisterHub()</c> and
+     *   <c>YAPI.UpdateDeviceList()</c>. This delay impacts only the YoctoHubs and VirtualHub
+     *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
+     *   but depending or you network you may want to change this delay.
+     *   For example if your network infrastructure uses a GSM connection.
+     * </para>
+     * </summary>
+     * <returns>
+     *   the network connection delay in milliseconds.
+     * </returns>
+     */
+    public virtual async Task<int> GetNetworkTimeout()
+    {
+        return await GetNetworkTimeout_internal();
     }
 
     /**

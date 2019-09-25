@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 35687 2019-06-05 10:39:51Z seb $
+ * $Id: YFunction.cs 37199 2019-09-16 14:20:38Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -960,10 +960,17 @@ public class YFunction
         /// </summary>
         /// <returns> a number corresponding to the code of the latest error that occurred while
         ///         using the function object </returns>
-        public virtual int get_errorType()
+        public virtual Task<int> get_errorType()
+        {
+            return Task.FromResult(_lastErrorType);
+        }
+
+        public virtual int imm_get_errorType()
         {
             return _lastErrorType;
         }
+
+        
 
         public virtual int ErrorType {
             get { return _lastErrorType; }

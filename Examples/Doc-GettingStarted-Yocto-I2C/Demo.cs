@@ -49,7 +49,7 @@ namespace Demo
         i2cPort = YI2cPort.FindI2cPort(Target + ".i2cPort");
         if (await i2cPort.isOnline()) {
           await i2cPort.set_i2cMode("400kbps");
-          await i2cPort.set_voltageLevel(YI2cPort.VOLTAGELEVEL_TTL3V);
+          await i2cPort.set_i2cVoltageLevel(YI2cPort.I2CVOLTAGELEVEL_3V3);
           await i2cPort.reset();
           // do not forget to configure the powerOutput and 
           // of the Yocto-I2C as well if used

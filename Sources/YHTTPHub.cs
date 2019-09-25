@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPHub.cs 35437 2019-05-14 15:09:33Z seb $
+ * $Id: YHTTPHub.cs 37238 2019-09-20 10:27:29Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -242,7 +242,7 @@ namespace com.yoctopuce.YoctoAPI
             string json_data;
             try {
                 byte[] data = await _notificationHandler.hubRequestSync("GET /api.json", null,
-                    YIO_DEFAULT_TCP_TIMEOUT);
+                    _yctx._networkTimeoutMs);
                 json_data = YAPI.DefaultEncoding.GetString(data);
             } catch (YAPI_Exception) {
                 if (_reportConnnectionLost) {
@@ -313,7 +313,7 @@ namespace com.yoctopuce.YoctoAPI
                 // check if subdevice support self flashing
                 try {
                     await _notificationHandler.hubRequestSync("GET /bySerial/" + serial + "/flash.json?a=state", null,
-                        YIO_DEFAULT_TCP_TIMEOUT);
+                        _yctx._networkTimeoutMs);
                     baseurl = "/bySerial/" + serial;
                     use_self_flash = true;
                 } catch (YAPI_Exception) { }
@@ -336,7 +336,7 @@ namespace com.yoctopuce.YoctoAPI
             }
             // ensure flash engine is not busy
             byte[] bytes = await _notificationHandler.hubRequestSync("GET" + baseurl + "/flash.json?a=state", null,
-                YIO_DEFAULT_TCP_TIMEOUT);
+                _yctx._networkTimeoutMs);
             string uploadstate = YAPI.DefaultEncoding.GetString(bytes);
             YJSONObject uploadres = new YJSONObject(uploadstate);
             uploadres.parse();
@@ -394,7 +394,7 @@ namespace com.yoctopuce.YoctoAPI
                     // reboot subdevice
                     await _notificationHandler.hubRequestSync(
                         "GET /bySerial/" + serial + "/api/module/rebootCountdown?rebootCountdown=-2", null,
-                        YIO_DEFAULT_TCP_TIMEOUT);
+                        _yctx._networkTimeoutMs);
                 }
                 // verify that the device is in bootloader
                 ulong timeout = YAPI.GetTickCount() + YPROG_BOOTLOADER_TIMEOUT;
@@ -486,7 +486,7 @@ namespace com.yoctopuce.YoctoAPI
         public override async Task<List<string>> getBootloaders()
         {
             List<string> res = new List<string>();
-            byte[] raw_data = await _notificationHandler.hubRequestSync("GET /flash.json?a=list", null, YIO_DEFAULT_TCP_TIMEOUT);
+            byte[] raw_data = await _notificationHandler.hubRequestSync("GET /flash.json?a=list", null, _yctx._networkTimeoutMs);
             string jsonstr = YAPI.DefaultEncoding.GetString(raw_data);
             YJSONObject flashres = new YJSONObject(jsonstr);
             flashres.parse();

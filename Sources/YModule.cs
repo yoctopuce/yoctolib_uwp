@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 35620 2019-06-04 08:29:58Z seb $
+ * $Id: YModule.cs 37199 2019-09-16 14:20:38Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -522,14 +522,15 @@ public class YModule : YFunction
 
     /**
      * <summary>
-     *   Returns the hardware release version of the module.
+     *   Returns the release number of the module hardware, preprogrammed at the factory.
      * <para>
+     *   The original hardware release returns value 1, revision B returns value 2, etc.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the hardware release version of the module
+     *   an integer corresponding to the release number of the module hardware, preprogrammed at the factory
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YModule.PRODUCTRELEASE_INVALID</c>.
@@ -538,7 +539,7 @@ public class YModule : YFunction
     public async Task<int> get_productRelease()
     {
         int res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+        if (_cacheExpiration == 0) {
             if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PRODUCTRELEASE_INVALID;
             }
@@ -1049,6 +1050,22 @@ public class YModule : YFunction
         return 0;
     }
 
+    public virtual async Task<string> get_productNameAndRevision()
+    {
+        string prodname;
+        int prodrel;
+        string fullname;
+
+        prodname = await this.get_productName();
+        prodrel = await this.get_productRelease();
+        if (prodrel > 1) {
+            fullname = ""+ prodname+" rev. "+((char)(64+prodrel)).ToString();
+        } else {
+            fullname = prodname;
+        }
+        return fullname;
+    }
+
     /**
      * <summary>
      *   Saves current settings in the nonvolatile memory of the module.
@@ -1537,8 +1554,7 @@ public class YModule : YFunction
             }
         }
         // Apply settings a second time for file-dependent settings and dynamic sensor nodes
-        await this.set_allSettings(YAPI.DefaultEncoding.GetBytes(json_api));
-        return YAPI.SUCCESS;
+        return await this.set_allSettings(YAPI.DefaultEncoding.GetBytes(json_api));
     }
 
     /**
@@ -1842,6 +1858,30 @@ public class YModule : YFunction
         return param;
     }
 
+    public virtual async Task<int> _tryExec(string url)
+    {
+        int res;
+        int done;
+        res = YAPI.SUCCESS;
+        done = 1;
+        try {
+            await this._download(url);
+        } catch (Exception) {
+            done = 0;
+        }
+        if (done == 0) {
+            // retry silently after a short wait
+            try {
+                await YAPI.Sleep(500);
+                await this._download(url);
+            } catch (Exception) {
+                // second failure, return error code
+                res = await this.get_errorType();
+            }
+        }
+        return res;
+    }
+
     /**
      * <summary>
      *   Restores all the settings of the device.
@@ -1881,6 +1921,8 @@ public class YModule : YFunction
         int leng;
         int i;
         int j;
+        int subres;
+        int res;
         string njpath;
         string jpath;
         string fun;
@@ -1897,6 +1939,7 @@ public class YModule : YFunction
         string each_str;
         bool do_update;
         bool found;
+        res = YAPI.SUCCESS;
         tmp = YAPI.DefaultEncoding.GetString(settings);
         tmp = this.imm_get_json_path(tmp, "api");
         if (!(tmp == "")) {
@@ -1923,7 +1966,13 @@ public class YModule : YFunction
             old_val_arr.Add(value);
         }
 
-        actualSettings = await this._download("api.json");
+        try {
+            actualSettings = await this._download("api.json");
+        } catch (Exception) {
+            // retry silently after a short wait
+            await YAPI.Sleep(500);
+            actualSettings = await this._download("api.json");
+        }
         actualSettings = this.imm_flattenJsonStruct(actualSettings);
         new_dslist = this.imm_json_get_array(actualSettings);
         for (int ii = 0; ii < new_dslist.Count; ii++) {
@@ -2012,6 +2061,9 @@ public class YModule : YFunction
             if ((do_update) && (attr == "message")) {
                 do_update = false;
             }
+            if ((do_update) && (attr == "signalValue")) {
+                do_update = false;
+            }
             if ((do_update) && (attr == "currentValue")) {
                 do_update = false;
             }
@@ -2064,6 +2116,12 @@ public class YModule : YFunction
                 do_update = false;
             }
             if ((do_update) && (attr == "msgCount")) {
+                do_update = false;
+            }
+            if ((do_update) && (attr == "rxMsgCount")) {
+                do_update = false;
+            }
+            if ((do_update) && (attr == "txMsgCount")) {
                 do_update = false;
             }
             if (do_update) {
@@ -2119,23 +2177,32 @@ public class YModule : YFunction
                     }
                     newval = await this.calibConvert(old_calib,  new_val_arr[i],  unit_name, sensorType);
                     url = "api/" + fun + ".json?" + attr + "=" + this.imm_escapeAttr(newval);
-                    await this._download(url);
+                    subres = await this._tryExec(url);
+                    if ((res == YAPI.SUCCESS) && (subres != YAPI.SUCCESS)) {
+                        res = subres;
+                    }
                 } else {
                     url = "api/" + fun + ".json?" + attr + "=" + this.imm_escapeAttr(oldval);
                     if (attr == "resolution") {
                         restoreLast.Add(url);
                     } else {
-                        await this._download(url);
+                        subres = await this._tryExec(url);
+                        if ((res == YAPI.SUCCESS) && (subres != YAPI.SUCCESS)) {
+                            res = subres;
+                        }
                     }
                 }
             }
             i = i + 1;
         }
         for (int ii = 0; ii < restoreLast.Count; ii++) {
-            await this._download(restoreLast[ii]);
+            subres = await this._tryExec(restoreLast[ii]);
+            if ((res == YAPI.SUCCESS) && (subres != YAPI.SUCCESS)) {
+                res = subres;
+            }
         }
         await this.clearCache();
-        return YAPI.SUCCESS;
+        return res;
     }
 
     /**

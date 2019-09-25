@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YDigitalIO.cs 33722 2018-12-14 15:04:43Z seb $
+ *  $Id: YDigitalIO.cs 37149 2019-09-12 21:24:53Z mvuilleu $
  *
  *  Implements FindDigitalIO(), the high-level API for DigitalIO functions
  *
@@ -501,7 +501,7 @@ public class YDigitalIO : YFunction
     public async Task<int> get_portSize()
     {
         int res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+        if (_cacheExpiration == 0) {
             if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return PORTSIZE_INVALID;
             }

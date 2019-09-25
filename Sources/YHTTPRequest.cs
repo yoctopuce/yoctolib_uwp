@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPRequest.cs 33617 2018-12-10 09:45:16Z seb $
+ * $Id: YHTTPRequest.cs 37238 2019-09-20 10:27:29Z seb $
  *
  * internal yHTTPRequest object
  *
@@ -406,7 +406,7 @@ namespace com.yoctopuce.YoctoAPI
         {
             //log("STA_Async:" + req_first_line.TrimEnd());
             await EnsureLastRequestDone();
-            _currentReq = doRequestTask(req_first_line, req_head_and_body, YHTTPHub.YIO_DEFAULT_TCP_TIMEOUT, context, callback, null);
+            _currentReq = doRequestTask(req_first_line, req_head_and_body, _hub._yctx._networkTimeoutMs, context, callback, null);
             //log("END_Aync:" + req_first_line.TrimEnd());
         }
 

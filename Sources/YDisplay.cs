@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 33718 2018-12-14 14:22:23Z seb $
+ * $Id: YDisplay.cs 37000 2019-09-03 06:40:17Z mvuilleu $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -476,7 +476,7 @@ public class YDisplay : YFunction
     public async Task<int> get_displayWidth()
     {
         int res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+        if (_cacheExpiration == 0) {
             if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return DISPLAYWIDTH_INVALID;
             }
@@ -504,7 +504,7 @@ public class YDisplay : YFunction
     public async Task<int> get_displayHeight()
     {
         int res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+        if (_cacheExpiration == 0) {
             if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return DISPLAYHEIGHT_INVALID;
             }

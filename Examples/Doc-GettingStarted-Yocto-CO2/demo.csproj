@@ -99,15 +99,6 @@
     <Compile Include="..\..\Sources\YCarbonDioxide.cs">
       <Link>yoctolib\YCarbonDioxide.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YHumidity.cs">
-      <Link>yoctolib\YHumidity.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YPressure.cs">
-      <Link>yoctolib\YPressure.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YTemperature.cs">
-      <Link>yoctolib\YTemperature.cs</Link>
-    </Compile>
 
 
     <Compile Include="..\..\Sources\TCPNotificationHandler.cs">

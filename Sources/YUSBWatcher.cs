@@ -93,6 +93,7 @@ namespace com.yoctopuce.YoctoAPI
                         _hub._yctx._Log(devinfo.Name + " is disabled (skip)\n");
                         continue;
                     }
+
                     bool found = false;
                     foreach (YUSBDevice yusbDevice in _usableDevices) {
                         if (yusbDevice.Info.Id == devinfo.Id && yusbDevice.imm_isWorking()) {
@@ -101,17 +102,18 @@ namespace com.yoctopuce.YoctoAPI
                             break;
                         }
                     }
+
                     if (found) {
                         continue;
                     }
 
                     // Open the target HID device at index 0.
-                    var device = await HidDevice.FromIdAsync(devinfo.Id,
-                        FileAccessMode.ReadWrite);
+                    var device = await HidDevice.FromIdAsync(devinfo.Id, FileAccessMode.ReadWrite);
                     if (device == null) {
                         // allready opened
                         continue;
                     }
+
                     if (device.VendorId == 0x24e0) {
                         YUSBDevice yusbDevice = new YUSBDevice(this, _hub, device, devinfo);
                         //Debug.WriteLine("setup yusbDevice=s " + yusbDevice.GetHashCode() + " device=" + device.GetHashCode());
@@ -124,6 +126,7 @@ namespace com.yoctopuce.YoctoAPI
                     }
                 }
             }
+
             _usableDevices.RemoveAll(item => item.MarkForUnplug);
             return _usableDevices.Count;
         }
@@ -134,7 +137,7 @@ namespace com.yoctopuce.YoctoAPI
             return _usableDevices;
         }
 
-       
+
         internal void imm_removeUsableDevice(YUSBDevice yusbDevice)
         {
             if (_usableDevices.Contains(yusbDevice)) {
@@ -150,21 +153,28 @@ namespace com.yoctopuce.YoctoAPI
                     return device;
                 }
             }
+
             return null;
         }
 
 
-        internal async Task<byte[]> DevRequestSync(string serial, byte[] request, YGenericHub.RequestProgress progress,
-            object context)
+        internal async Task<byte[]> DevRequestSync(string serial, byte[] request, YGenericHub.RequestProgress progress, object context)
         {
             YUSBDevice d = imm_devFromSerial(serial);
+            if (d == null) {
+                throw new YAPI_Exception(YAPI.DEVICE_NOT_FOUND, "Device has been uplugged");
+            }
+
             return await d.DevRequestSync(serial, request, progress, context);
         }
 
-        internal async Task DevRequestAsync(string serial, byte[] request, YGenericHub.RequestAsyncResult asyncResult,
-            object asyncContext)
+        internal async Task DevRequestAsync(string serial, byte[] request, YGenericHub.RequestAsyncResult asyncResult, object asyncContext)
         {
             YUSBDevice d = imm_devFromSerial(serial);
+            if (d == null) {
+                throw new YAPI_Exception(YAPI.DEVICE_NOT_FOUND, "Device has been uplugged");
+            }
+
             await d.DevRequestAsync(serial, request, asyncResult, asyncContext);
         }
 
@@ -173,6 +183,7 @@ namespace com.yoctopuce.YoctoAPI
             foreach (YUSBDevice yusbDevice in _allDevice) {
                 yusbDevice.imm_Stop();
             }
+
             _allDevice.Clear();
         }
 
@@ -184,6 +195,7 @@ namespace com.yoctopuce.YoctoAPI
                     res += yusbDevice.dumpDebug();
                 }
             }
+
             return res;
         }
     }

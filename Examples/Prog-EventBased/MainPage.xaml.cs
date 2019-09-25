@@ -49,12 +49,12 @@ namespace Prog_EventBased
 
         async Task sensorValueChangeCallBack(YSensor fct, string value)
         {
-            Output.Text += await fct.get_hardwareId() + ": " + value + " (new value)\n";
+            Output.Text += await fct.get_hardwareId() + ": " + value + " " + await fct.get_userData()+ " (new value)\n";
         }
 
         async Task sensorTimedReportCallBack(YSensor fct, YMeasure measure)
         {
-            Output.Text += await fct.get_hardwareId() + ": " + measure.get_averageValue() + " " + await fct.get_unit() + " (timed report)\n";
+            Output.Text += await fct.get_hardwareId() + ": " + measure.get_averageValue() + " " + await fct.get_userData() + " (timed report)\n";
         }
 
         async Task deviceLog(YModule module, string logline)
@@ -99,6 +99,8 @@ namespace Prog_EventBased
                 if (await module.get_serialNumber() == serial) {
                     string hardwareId = await sensor.get_hardwareId();
                     Output.Text += "- " + hardwareId + "\n";
+                    string unit = await sensor.get_unit();
+                    await sensor.set_userData(unit);
                     await sensor.registerValueCallback(sensorValueChangeCallBack);
                     await sensor.registerTimedReportCallback(sensorTimedReportCallBack);
                 }

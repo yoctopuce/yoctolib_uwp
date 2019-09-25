@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 36048 2019-06-28 17:43:51Z mvuilleu $
+ * $Id: YSensor.cs 37118 2019-09-12 07:10:01Z mvuilleu $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -587,6 +587,7 @@ public class YSensor : YFunction
      *   the value "OFF". Note that setting the  datalogger recording frequency
      *   to a greater value than the sensor native sampling frequency is useless,
      *   and even counterproductive: those two frequencies are not related.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -652,6 +653,7 @@ public class YSensor : YFunction
      *   notification frequency to a greater value than the sensor native
      *   sampling frequency is unless, and even counterproductive: those two
      *   frequencies are not related.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -710,6 +712,7 @@ public class YSensor : YFunction
      * <summary>
      *   Changes the measuring mode used for the advertised value pushed to the parent hub.
      * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -768,6 +771,7 @@ public class YSensor : YFunction
      * <para>
      *   The resolution corresponds to the numerical precision
      *   when displaying value. It does not change the precision of the measure itself.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -798,6 +802,7 @@ public class YSensor : YFunction
      * <para>
      *   The resolution corresponds to the numerical precision
      *   of the measures, which is not always the same as the actual precision of the sensor.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>

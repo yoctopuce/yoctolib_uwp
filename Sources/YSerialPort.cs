@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSerialPort.cs 36048 2019-06-28 17:43:51Z mvuilleu $
+ * $Id: YSerialPort.cs 37168 2019-09-13 17:25:10Z mvuilleu $
  *
  * Implements FindSerialPort(), the high-level API for SerialPort functions
  *
@@ -118,6 +118,12 @@ public class YSerialPort : YFunction
     public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
+     *   invalid protocol value
+     * </summary>
+     */
+    public const  string PROTOCOL_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
      *   invalid voltageLevel value
      * </summary>
      */
@@ -130,12 +136,6 @@ public class YSerialPort : YFunction
     public const int VOLTAGELEVEL_RS485 = 6;
     public const int VOLTAGELEVEL_TTL1V8 = 7;
     public const int VOLTAGELEVEL_INVALID = -1;
-    /**
-     * <summary>
-     *   invalid protocol value
-     * </summary>
-     */
-    public const  string PROTOCOL_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
      *   invalid serialMode value
@@ -151,8 +151,8 @@ public class YSerialPort : YFunction
     protected string _currentJob = CURRENTJOB_INVALID;
     protected string _startupJob = STARTUPJOB_INVALID;
     protected string _command = COMMAND_INVALID;
-    protected int _voltageLevel = VOLTAGELEVEL_INVALID;
     protected string _protocol = PROTOCOL_INVALID;
+    protected int _voltageLevel = VOLTAGELEVEL_INVALID;
     protected string _serialMode = SERIALMODE_INVALID;
     protected ValueCallback _valueCallbackSerialPort = null;
     protected int _rxptr = 0;
@@ -221,11 +221,11 @@ public class YSerialPort : YFunction
         if (json_val.has("command")) {
             _command = json_val.getString("command");
         }
-        if (json_val.has("voltageLevel")) {
-            _voltageLevel = json_val.getInt("voltageLevel");
-        }
         if (json_val.has("protocol")) {
             _protocol = json_val.getString("protocol");
+        }
+        if (json_val.has("voltageLevel")) {
+            _voltageLevel = json_val.getInt("voltageLevel");
         }
         if (json_val.has("serialMode")) {
             _serialMode = json_val.getString("serialMode");
@@ -431,16 +431,16 @@ public class YSerialPort : YFunction
 
     /**
      * <summary>
-     *   Changes the job to use when the device is powered on.
+     *   Selects a job file to run immediately.
      * <para>
-     *   Remember to call the <c>saveToFlash()</c> method of the module if the
-     *   modification must be kept.
+     *   If an empty string is
+     *   given as argument, stops running current job file.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   a string corresponding to the job to use when the device is powered on
+     *   a string
      * </param>
      * <para>
      * </para>
@@ -545,75 +545,6 @@ public class YSerialPort : YFunction
 
     /**
      * <summary>
-     *   Returns the voltage level used on the serial line.
-     * <para>
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <returns>
-     *   a value among <c>YSerialPort.VOLTAGELEVEL_OFF</c>, <c>YSerialPort.VOLTAGELEVEL_TTL3V</c>,
-     *   <c>YSerialPort.VOLTAGELEVEL_TTL3VR</c>, <c>YSerialPort.VOLTAGELEVEL_TTL5V</c>,
-     *   <c>YSerialPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSerialPort.VOLTAGELEVEL_RS232</c>,
-     *   <c>YSerialPort.VOLTAGELEVEL_RS485</c> and <c>YSerialPort.VOLTAGELEVEL_TTL1V8</c> corresponding to
-     *   the voltage level used on the serial line
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns <c>YSerialPort.VOLTAGELEVEL_INVALID</c>.
-     * </para>
-     */
-    public async Task<int> get_voltageLevel()
-    {
-        int res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return VOLTAGELEVEL_INVALID;
-            }
-        }
-        res = _voltageLevel;
-        return res;
-    }
-
-
-    /**
-     * <summary>
-     *   Changes the voltage type used on the serial line.
-     * <para>
-     *   Valid
-     *   values  will depend on the Yoctopuce device model featuring
-     *   the serial port feature.  Check your device documentation
-     *   to find out which values are valid for that specific model.
-     *   Trying to set an invalid value will have no effect.
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <param name="newval">
-     *   a value among <c>YSerialPort.VOLTAGELEVEL_OFF</c>, <c>YSerialPort.VOLTAGELEVEL_TTL3V</c>,
-     *   <c>YSerialPort.VOLTAGELEVEL_TTL3VR</c>, <c>YSerialPort.VOLTAGELEVEL_TTL5V</c>,
-     *   <c>YSerialPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSerialPort.VOLTAGELEVEL_RS232</c>,
-     *   <c>YSerialPort.VOLTAGELEVEL_RS485</c> and <c>YSerialPort.VOLTAGELEVEL_TTL1V8</c> corresponding to
-     *   the voltage type used on the serial line
-     * </param>
-     * <para>
-     * </para>
-     * <returns>
-     *   <c>YAPI.SUCCESS</c> if the call succeeds.
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns a negative error code.
-     * </para>
-     */
-    public async Task<int> set_voltageLevel(int  newval)
-    {
-        string rest_val;
-        rest_val = (newval).ToString();
-        await _setAttr("voltageLevel",rest_val);
-        return YAPI.SUCCESS;
-    }
-
-    /**
-     * <summary>
      *   Returns the type of protocol used over the serial line, as a string.
      * <para>
      *   Possible values are "Line" for ASCII messages separated by CR and/or LF,
@@ -662,6 +593,8 @@ public class YSerialPort : YFunction
      *   "Byte" for a continuous binary stream.
      *   The suffix "/[wait]ms" can be added to reduce the transmit rate so that there
      *   is always at lest the specified number of milliseconds between each bytes sent.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the
+     *   modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -683,6 +616,77 @@ public class YSerialPort : YFunction
         string rest_val;
         rest_val = newval;
         await _setAttr("protocol",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the voltage level used on the serial line.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a value among <c>YSerialPort.VOLTAGELEVEL_OFF</c>, <c>YSerialPort.VOLTAGELEVEL_TTL3V</c>,
+     *   <c>YSerialPort.VOLTAGELEVEL_TTL3VR</c>, <c>YSerialPort.VOLTAGELEVEL_TTL5V</c>,
+     *   <c>YSerialPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSerialPort.VOLTAGELEVEL_RS232</c>,
+     *   <c>YSerialPort.VOLTAGELEVEL_RS485</c> and <c>YSerialPort.VOLTAGELEVEL_TTL1V8</c> corresponding to
+     *   the voltage level used on the serial line
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YSerialPort.VOLTAGELEVEL_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_voltageLevel()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return VOLTAGELEVEL_INVALID;
+            }
+        }
+        res = _voltageLevel;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the voltage type used on the serial line.
+     * <para>
+     *   Valid
+     *   values  will depend on the Yoctopuce device model featuring
+     *   the serial port feature.  Check your device documentation
+     *   to find out which values are valid for that specific model.
+     *   Trying to set an invalid value will have no effect.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the
+     *   modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a value among <c>YSerialPort.VOLTAGELEVEL_OFF</c>, <c>YSerialPort.VOLTAGELEVEL_TTL3V</c>,
+     *   <c>YSerialPort.VOLTAGELEVEL_TTL3VR</c>, <c>YSerialPort.VOLTAGELEVEL_TTL5V</c>,
+     *   <c>YSerialPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSerialPort.VOLTAGELEVEL_RS232</c>,
+     *   <c>YSerialPort.VOLTAGELEVEL_RS485</c> and <c>YSerialPort.VOLTAGELEVEL_TTL1V8</c> corresponding to
+     *   the voltage type used on the serial line
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_voltageLevel(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval).ToString();
+        await _setAttr("voltageLevel",rest_val);
         return YAPI.SUCCESS;
     }
 
@@ -731,6 +735,8 @@ public class YSerialPort : YFunction
      *   to enable flow control: "CtsRts" for hardware handshake, "XOnXOff"
      *   for logical flow control and "Simplex" for acquiring a shared bus using
      *   the RTS line (as used by some RS485 adapters for instance).
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the
+     *   modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -1866,7 +1872,7 @@ public class YSerialPort : YFunction
         url = "rxmsg.json?cmd=:"+ cmd+"&pat=:"+pat;
         msgs = await this._download(url);
         reps = this.imm_json_get_array(msgs);
-        if (!(reps.Count > 1)) { this._throw( YAPI.IO_ERROR, "no reply from slave"); return res; }
+        if (!(reps.Count > 1)) { this._throw( YAPI.IO_ERROR, "no reply from MODBUS slave"); return res; }
         if (reps.Count > 1) {
             rep = this.imm_json_get_string(YAPI.DefaultEncoding.GetBytes(reps[0]));
             replen = (((rep).Length - 3) >> (1));

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmInput.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YPwmInput.cs 37149 2019-09-12 21:24:53Z mvuilleu $
  *
  *  Implements FindPwmInput(), the high-level API for PwmInput functions
  *
@@ -201,6 +201,7 @@ public class YPwmInput : YSensor
      *   is just a string which is automatically initialized each time
      *   the measurement mode is changed. But is can be set to an
      *   arbitrary value.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -445,6 +446,7 @@ public class YPwmInput : YSensor
      * <para>
      *   The edge count value is limited to the 6 lowest digits. For values greater than one million, use
      *   get_pulseCounter().
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -509,6 +511,7 @@ public class YPwmInput : YSensor
      *   Changes the shortest expected pulse duration, in ms.
      * <para>
      *   Any shorter pulse will be automatically ignored (debounce).
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
