@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YDaisyChain.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YDaisyChain.cs 37619 2019-10-11 11:52:42Z mvuilleu $
  *
  *  Implements FindDaisyChain(), the high-level API for DaisyChain functions
  *
@@ -227,7 +227,8 @@ public class YDaisyChain : YFunction
      * <para>
      *   If the value is zero, no check is performed. If it is non-zero, the number
      *   child nodes is checked on startup and the status will change to error if
-     *   the count does not match.
+     *   the count does not match. Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>

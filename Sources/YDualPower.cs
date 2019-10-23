@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YDualPower.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YDualPower.cs 37609 2019-10-09 16:59:35Z mvuilleu $
  *
  *  Implements FindDualPower(), the high-level API for DualPower functions
  *
@@ -203,6 +203,7 @@ public class YDualPower : YFunction
      * <summary>
      *   Changes the selected power source for module functions that require lots of current.
      * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>

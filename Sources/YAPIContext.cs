@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 37303 2019-09-25 06:47:31Z seb $
+ * $Id: YAPIContext.cs 37692 2019-10-14 14:58:03Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -936,10 +936,9 @@ public class YAPIContext
     //public virtual async Task SetNetworkTimeout_internal(int networkMsTimeout)
     /**
      * <summary>
-     *   M
+     *   Modifies the network connection delay for <c>yRegisterHub()</c> and <c>yUpdateDeviceList()</c>.
      * <para>
-     *   odifies the network connection delay for <c>YAPI.RegisterHub()</c> and
-     *   <c>YAPI.UpdateDeviceList()</c>. This delay impacts only the YoctoHubs and VirtualHub
+     *   This delay impacts only the YoctoHubs and VirtualHub
      *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
      *   but depending or you network you may want to change this delay.
      *   For example if your network infrastructure uses a GSM connection.
@@ -961,10 +960,9 @@ public class YAPIContext
     //public virtual async Task<int> GetNetworkTimeout_internal()
     /**
      * <summary>
-     *   R
+     *   Returns the network connection delay for <c>yRegisterHub()</c> and <c>yUpdateDeviceList()</c>.
      * <para>
-     *   eturns the network connection delay for <c>YAPI.RegisterHub()</c> and
-     *   <c>YAPI.UpdateDeviceList()</c>. This delay impacts only the YoctoHubs and VirtualHub
+     *   This delay impacts only the YoctoHubs and VirtualHub
      *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
      *   but depending or you network you may want to change this delay.
      *   For example if your network infrastructure uses a GSM connection.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPowerSupply.cs 34118 2019-01-23 15:25:11Z seb $
+ *  $Id: YPowerSupply.cs 37653 2019-10-11 17:37:17Z mvuilleu $
  *
  *  Implements FindPowerSupply(), the high-level API for PowerSupply functions
  *
@@ -948,7 +948,7 @@ public class YPowerSupply : YFunction
      *   total duration of the transition, in milliseconds
      * </param>
      * <returns>
-     *   <c>YAPI_SUCCESS</c> when the call succeeds.
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
      * </returns>
      */
     public virtual async Task<int> voltageMove(double V_target,int ms_duration)

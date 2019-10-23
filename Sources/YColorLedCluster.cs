@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YColorLedCluster.cs 37000 2019-09-03 06:40:17Z mvuilleu $
+ *  $Id: YColorLedCluster.cs 37619 2019-10-11 11:52:42Z mvuilleu $
  *
  *  Implements FindColorLedCluster(), the high-level API for ColorLedCluster functions
  *
@@ -595,9 +595,8 @@ public class YColorLedCluster : YFunction
      * <summary>
      *   Changes the  color at device startup of consecutive LEDs in the cluster, using a RGB color.
      * <para>
-     *   Encoding is done as follows: 0xRRGGBB.
-     *   Don't forget to call <c>saveLedsConfigAtPowerOn()</c> to make sure the modification is saved in the
-     *   device flash memory.
+     *   Encoding is done as follows: 0xRRGGBB. Don't forget to call <c>saveLedsConfigAtPowerOn()</c>
+     *   to make sure the modification is saved in the device flash memory.
      * </para>
      * </summary>
      * <param name="ledIndex">
@@ -625,9 +624,8 @@ public class YColorLedCluster : YFunction
      * <summary>
      *   Changes the  color at device startup of consecutive LEDs in the cluster, using a HSL color.
      * <para>
-     *   Encoding is done as follows: 0xHHSSLL.
-     *   Don't forget to call <c>saveLedsConfigAtPowerOn()</c> to make sure the modification is saved in the
-     *   device flash memory.
+     *   Encoding is done as follows: 0xHHSSLL. Don't forget to call <c>saveLedsConfigAtPowerOn()</c>
+     *   to make sure the modification is saved in the device flash memory.
      * </para>
      * </summary>
      * <param name="ledIndex">

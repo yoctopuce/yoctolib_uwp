@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 37238 2019-09-20 10:27:29Z seb $
+ * $Id: YAPI.cs 37692 2019-10-14 14:58:03Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "37304";
+        public const string YOCTO_API_BUILD_STR = "37780";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -186,10 +186,9 @@ public class YAPI
     }
     /**
      * <summary>
-     *   M
+     *   Modifies the network connection delay for <c>yRegisterHub()</c> and <c>yUpdateDeviceList()</c>.
      * <para>
-     *   odifies the network connection delay for <c>YAPI.RegisterHub()</c> and
-     *   <c>YAPI.UpdateDeviceList()</c>. This delay impacts only the YoctoHubs and VirtualHub
+     *   This delay impacts only the YoctoHubs and VirtualHub
      *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
      *   but depending or you network you may want to change this delay.
      *   For example if your network infrastructure uses a GSM connection.
@@ -208,10 +207,9 @@ public class YAPI
     }
     /**
      * <summary>
-     *   R
+     *   Returns the network connection delay for <c>yRegisterHub()</c> and <c>yUpdateDeviceList()</c>.
      * <para>
-     *   eturns the network connection delay for <c>YAPI.RegisterHub()</c> and
-     *   <c>YAPI.UpdateDeviceList()</c>. This delay impacts only the YoctoHubs and VirtualHub
+     *   This delay impacts only the YoctoHubs and VirtualHub
      *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
      *   but depending or you network you may want to change this delay.
      *   For example if your network infrastructure uses a GSM connection.
@@ -298,7 +296,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".37304" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".37780" + YUSBHub.imm_getAPIVersion();
         }
 
         /**

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAudioIn.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YAudioIn.cs 37619 2019-10-11 11:52:42Z mvuilleu $
  *
  *  Implements FindAudioIn(), the high-level API for AudioIn functions
  *
@@ -182,6 +182,8 @@ public class YAudioIn : YFunction
      * <summary>
      *   Changes audio input gain, in per cents.
      * <para>
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>

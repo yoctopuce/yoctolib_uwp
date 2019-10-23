@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWatchdog.cs 34976 2019-04-05 06:47:49Z seb $
+ *  $Id: YWatchdog.cs 37619 2019-10-11 11:52:42Z mvuilleu $
  *
  *  Implements FindWatchdog(), the high-level API for Watchdog functions
  *
@@ -342,7 +342,7 @@ public class YWatchdog : YFunction
 
     /**
      * <summary>
-     *   Preset the state of the watchdog at device startup (A for the idle position,
+     *   Changes the state of the watchdog at device startup (A for the idle position,
      *   B for the active position, UNCHANGED for no modification).
      * <para>
      *   Remember to call the matching module <c>saveToFlash()</c>
@@ -353,7 +353,9 @@ public class YWatchdog : YFunction
      * </summary>
      * <param name="newval">
      *   a value among <c>YWatchdog.STATEATPOWERON_UNCHANGED</c>, <c>YWatchdog.STATEATPOWERON_A</c> and
-     *   <c>YWatchdog.STATEATPOWERON_B</c>
+     *   <c>YWatchdog.STATEATPOWERON_B</c> corresponding to the state of the watchdog at device startup (A
+     *   for the idle position,
+     *   B for the active position, UNCHANGED for no modification)
      * </param>
      * <para>
      * </para>
@@ -374,15 +376,17 @@ public class YWatchdog : YFunction
 
     /**
      * <summary>
-     *   Retourne the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state A before automatically switching back in to B state.
+     *   Returns the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state
+     *   A before automatically switching back in to B state.
      * <para>
-     *   Zero means no maximum time.
+     *   Zero means no time limit.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer
+     *   an integer corresponding to the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state
+     *   A before automatically switching back in to B state
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YWatchdog.MAXTIMEONSTATEA_INVALID</c>.
@@ -403,15 +407,19 @@ public class YWatchdog : YFunction
 
     /**
      * <summary>
-     *   Sets the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state A before automatically switching back in to B state.
+     *   Changes the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state A
+     *   before automatically switching back in to B state.
      * <para>
-     *   Use zero for no maximum time.
+     *   Use zero for no time limit.
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer
+     *   an integer corresponding to the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state A
+     *   before automatically switching back in to B state
      * </param>
      * <para>
      * </para>
@@ -432,9 +440,10 @@ public class YWatchdog : YFunction
 
     /**
      * <summary>
-     *   Retourne the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state B before automatically switching back in to A state.
+     *   Retourne the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state B
+     *   before automatically switching back in to A state.
      * <para>
-     *   Zero means no maximum time.
+     *   Zero means no time limit.
      * </para>
      * <para>
      * </para>
@@ -461,15 +470,19 @@ public class YWatchdog : YFunction
 
     /**
      * <summary>
-     *   Sets the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state B before automatically switching back in to A state.
+     *   Changes the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state B before
+     *   automatically switching back in to A state.
      * <para>
-     *   Use zero for no maximum time.
+     *   Use zero for no time limit.
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer
+     *   an integer corresponding to the maximum time (ms) allowed for $THEFUNCTIONS$ to stay in state B before
+     *   automatically switching back in to A state
      * </param>
      * <para>
      * </para>
@@ -876,14 +889,18 @@ public class YWatchdog : YFunction
 
     /**
      * <summary>
-     *   Changes the waiting delay before a reset is triggered by the watchdog, in milliseconds.
+     *   Changes the waiting delay before a reset is triggered by the watchdog,
+     *   in milliseconds.
      * <para>
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the waiting delay before a reset is triggered by the watchdog, in milliseconds
+     *   an integer corresponding to the waiting delay before a reset is triggered by the watchdog,
+     *   in milliseconds
      * </param>
      * <para>
      * </para>
@@ -934,6 +951,8 @@ public class YWatchdog : YFunction
      * <summary>
      *   Changes the duration of resets caused by the watchdog, in milliseconds.
      * <para>
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>

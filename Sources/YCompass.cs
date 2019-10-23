@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCompass.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YCompass.cs 37619 2019-10-11 11:52:42Z mvuilleu $
  *
  *  Implements FindCompass(), the high-level API for Compass functions
  *
@@ -174,6 +174,8 @@ public class YCompass : YSensor
      * <para>
      *   When the
      *   frequency is lower, the device performs averaging.
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>

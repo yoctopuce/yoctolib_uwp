@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YQuadratureDecoder.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YQuadratureDecoder.cs 37619 2019-10-11 11:52:42Z mvuilleu $
  *
  *  Implements FindQuadratureDecoder(), the high-level API for QuadratureDecoder functions
  *
@@ -213,6 +213,8 @@ public class YQuadratureDecoder : YSensor
      * <summary>
      *   Changes the activation state of the quadrature decoder.
      * <para>
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
