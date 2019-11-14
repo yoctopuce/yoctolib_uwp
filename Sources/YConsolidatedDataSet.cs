@@ -81,30 +81,18 @@ public class YConsolidatedDataSet
      *   functionid
      * </param>
      */
-    protected YConsolidatedDataSet(YAPIContext ctx, string func)
-        : base(ctx, func, "ConsolidatedDataSet")
+    public YConsolidatedDataSet(double startTime, double endTime, List<YSensor> sensorList)
     {
-        //--- (generated code: YConsolidatedDataSet attributes initialization)
+            //--- (generated code: YConsolidatedDataSet attributes initialization)
         //--- (end of generated code: YConsolidatedDataSet attributes initialization)
-        this._init(startTime, endTime, sensorList);
-    }
+            this.imm_init(startTime, endTime, sensorList);
+        }
 
-    /**
-     * <summary>
-     * </summary>
-     * <param name="func">
-     *   functionid
-     * </param>
-     */
-    protected YConsolidatedDataSet(string func)
-        : this(YAPI.imm_GetYCtx(), func)
-    {
-    }
 
     //--- (generated code: YConsolidatedDataSet implementation)
 #pragma warning disable 1998
 
-    public virtual async Task<int> _init(double startt,double endt,List<YSensor> sensorList)
+    public virtual int imm_init(double startt,double endt,List<YSensor> sensorList)
     {
         _start = startt;
         _end = endt;
@@ -177,18 +165,18 @@ public class YConsolidatedDataSet
             currnexttim = _nexttim[s];
             if (currnexttim == 0) {
                 idx = _nextidx[s];
-                measures = _datasets[s]->get_measures();
+                measures = await _datasets[s].get_measures();
                 currprogress = _progresss[s];
                 while ((idx >= measures.Count) && (currprogress < 100)) {
-                    currprogress = _datasets[s]->loadMore();
+                    currprogress = await _datasets[s].loadMore();
                     if (currprogress < 0) {
                         currprogress = 100;
                     }
                     _progresss[s] = currprogress;
-                    measures = _datasets[s]->get_measures();
+                    measures = await _datasets[s].get_measures();
                 }
                 if (idx < measures.Count) {
-                    currnexttim = measures[idx]->get_endTimeUTC();
+                    currnexttim =  measures[idx].get_endTimeUTC();
                     _nexttim[s] = currnexttim;
                 }
             }
@@ -212,8 +200,8 @@ public class YConsolidatedDataSet
         while (s < _nsensors) {
             if (_nexttim[s] == nexttime) {
                 idx = _nextidx[s];
-                measures = _datasets[s]->get_measures();
-                newvalue = measures[idx]->get_averageValue();
+                measures = await _datasets[s].get_measures();
+                newvalue =  measures[idx].get_averageValue();
                 datarec.Add(newvalue);
                 _nexttim[s] = 0.0;
                 _nextidx[s] = idx+1;
