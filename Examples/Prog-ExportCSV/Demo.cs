@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 38154 2019-11-14 15:24:55Z seb $
+ *  $Id: Demo.cs 38156 2019-11-15 09:56:42Z seb $
  *
  *  Doc-Inventory example
  *
@@ -25,7 +25,6 @@ namespace Demo
 
         public override async Task<int> Run()
         {
-            YModule m;
             DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             try {
                 await YAPI.RegisterHub(HubURL);
