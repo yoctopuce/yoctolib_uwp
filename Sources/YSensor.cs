@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 37118 2019-09-12 07:10:01Z mvuilleu $
+ * $Id: YSensor.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -48,7 +48,7 @@ namespace com.yoctopuce.YoctoAPI {
  * <summary>
  *   YSensor Class: Sensor function interface
  * <para>
- *   The YSensor class is the parent class for all Yoctopuce sensors. It can be
+ *   The YSensor class is the parent class for all Yoctopuce sensor types. It can be
  *   used to read the current value and unit of any sensor, read the min/max
  *   value, configure autonomous recording frequency and access recorded data.
  *   It also provide a function to register a callback invoked each time the
@@ -900,7 +900,8 @@ public class YSensor : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the sensor
+     *   a string that uniquely characterizes the sensor, for instance
+     *   <c>MyDevice.</c>.
      * </param>
      * <returns>
      *   a <c>YSensor</c> object allowing you to drive the sensor.
@@ -956,7 +957,8 @@ public class YSensor : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the sensor
+     *   a string that uniquely characterizes the sensor, for instance
+     *   <c>MyDevice.</c>.
      * </param>
      * <returns>
      *   a <c>YSensor</c> object allowing you to drive the sensor.

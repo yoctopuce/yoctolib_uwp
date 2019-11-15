@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YVoltageOutput.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YVoltageOutput.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindVoltageOutput(), the high-level API for VoltageOutput functions
  *
@@ -50,7 +50,7 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YVoltageOutput Class: VoltageOutput function interface
  * <para>
- *   The Yoctopuce application programming interface allows you to change the value of the voltage output.
+ *   The YVoltageOutput class allows you to drive a voltage output, for instance using a Yocto-0-10V-Tx.
  * </para>
  * </summary>
  */
@@ -312,7 +312,8 @@ public class YVoltageOutput : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the voltage output
+     *   a string that uniquely characterizes the voltage output, for instance
+     *   <c>TX010V01.voltageOutput1</c>.
      * </param>
      * <returns>
      *   a <c>YVoltageOutput</c> object allowing you to drive the voltage output.
@@ -368,7 +369,8 @@ public class YVoltageOutput : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the voltage output
+     *   a string that uniquely characterizes the voltage output, for instance
+     *   <c>TX010V01.voltageOutput1</c>.
      * </param>
      * <returns>
      *   a <c>YVoltageOutput</c> object allowing you to drive the voltage output.

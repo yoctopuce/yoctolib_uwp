@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLatitude.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YLatitude.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindLatitude(), the high-level API for Latitude functions
  *
@@ -50,8 +50,8 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YLatitude Class: Latitude function interface
  * <para>
- *   The Yoctopuce class YLatitude allows you to read the latitude from Yoctopuce
- *   geolocation sensors. It inherits from the YSensor class the core functions to
+ *   The YLatitude class allows you to read the latitude from Yoctopuce
+ *   geolocation sensors, for instance using a Yocto-GPS. It inherits from the YSensor class the core functions to
  *   read measurements, to register callback functions, to access the autonomous
  *   datalogger.
  * </para>
@@ -145,7 +145,8 @@ public class YLatitude : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the latitude sensor
+     *   a string that uniquely characterizes the latitude sensor, for instance
+     *   <c>YGNSSMK1.latitude</c>.
      * </param>
      * <returns>
      *   a <c>YLatitude</c> object allowing you to drive the latitude sensor.
@@ -201,7 +202,8 @@ public class YLatitude : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the latitude sensor
+     *   a string that uniquely characterizes the latitude sensor, for instance
+     *   <c>YGNSSMK1.latitude</c>.
      * </param>
      * <returns>
      *   a <c>YLatitude</c> object allowing you to drive the latitude sensor.

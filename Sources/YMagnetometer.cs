@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMagnetometer.cs 37619 2019-10-11 11:52:42Z mvuilleu $
+ *  $Id: YMagnetometer.cs 38030 2019-11-04 17:56:01Z mvuilleu $
  *
  *  Implements FindMagnetometer(), the high-level API for Magnetometer functions
  *
@@ -50,7 +50,7 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YMagnetometer Class: Magnetometer function interface
  * <para>
- *   The YSensor class is the parent class for all Yoctopuce sensors. It can be
+ *   The YSensor class is the parent class for all Yoctopuce sensor types. It can be
  *   used to read the current value and unit of any sensor, read the min/max
  *   value, configure autonomous recording frequency and access recorded data.
  *   It also provide a function to register a callback invoked each time the
@@ -71,7 +71,7 @@ public class YMagnetometer : YSensor
      *   invalid bandwidth value
      * </summary>
      */
-    public const  int BANDWIDTH_INVALID = YAPI.INVALID_INT;
+    public const  int BANDWIDTH_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid xValue value
@@ -334,7 +334,8 @@ public class YMagnetometer : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the magnetometer
+     *   a string that uniquely characterizes the magnetometer, for instance
+     *   <c>Y3DMK002.magnetometer</c>.
      * </param>
      * <returns>
      *   a <c>YMagnetometer</c> object allowing you to drive the magnetometer.
@@ -390,7 +391,8 @@ public class YMagnetometer : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the magnetometer
+     *   a string that uniquely characterizes the magnetometer, for instance
+     *   <c>Y3DMK002.magnetometer</c>.
      * </param>
      * <returns>
      *   a <c>YMagnetometer</c> object allowing you to drive the magnetometer.

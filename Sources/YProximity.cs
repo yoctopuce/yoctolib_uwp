@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YProximity.cs 37149 2019-09-12 21:24:53Z mvuilleu $
+ *  $Id: YProximity.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindProximity(), the high-level API for Proximity functions
  *
@@ -50,8 +50,9 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YProximity Class: Proximity function interface
  * <para>
- *   The Yoctopuce class YProximity allows you to use and configure Yoctopuce proximity
- *   sensors. It inherits from the YSensor class the core functions to read measurements,
+ *   The YProximity class allows you to use and configure Yoctopuce proximity
+ *   sensors, for instance using a Yocto-Proximity. It inherits from the YSensor class the core
+ *   functions to read measurements,
  *   to register callback functions, to access the autonomous datalogger.
  *   This class adds the ability to easily perform a one-point linear calibration
  *   to compensate the effect of a glass or filter placed in front of the sensor.
@@ -759,7 +760,8 @@ public class YProximity : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the proximity sensor
+     *   a string that uniquely characterizes the proximity sensor, for instance
+     *   <c>YPROXIM1.proximity1</c>.
      * </param>
      * <returns>
      *   a <c>YProximity</c> object allowing you to drive the proximity sensor.
@@ -815,7 +817,8 @@ public class YProximity : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the proximity sensor
+     *   a string that uniquely characterizes the proximity sensor, for instance
+     *   <c>YPROXIM1.proximity1</c>.
      * </param>
      * <returns>
      *   a <c>YProximity</c> object allowing you to drive the proximity sensor.

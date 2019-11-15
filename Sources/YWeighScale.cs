@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWeighScale.cs 37165 2019-09-13 16:57:27Z mvuilleu $
+ *  $Id: YWeighScale.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindWeighScale(), the high-level API for WeighScale functions
  *
@@ -50,8 +50,9 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YWeighScale Class: WeighScale function interface
  * <para>
- *   The YWeighScale class provides a weight measurement from a ratiometric load cell
- *   sensor. It can be used to control the bridge excitation parameters, in order to avoid
+ *   The YWeighScale class provides a weight measurement from a ratiometric sensor, for instance using a
+ *   Yocto-Bridge or a Yocto-MaxiBridge.
+ *   It can be used to control the bridge excitation parameters, in order to avoid
  *   measure shifts caused by temperature variation in the electronics, and can also
  *   automatically apply an additional correction factor based on temperature to
  *   compensate for offsets in the load cell itself.
@@ -623,7 +624,8 @@ public class YWeighScale : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the weighing scale sensor
+     *   a string that uniquely characterizes the weighing scale sensor, for instance
+     *   <c>YWBRIDG1.weighScale1</c>.
      * </param>
      * <returns>
      *   a <c>YWeighScale</c> object allowing you to drive the weighing scale sensor.
@@ -679,7 +681,8 @@ public class YWeighScale : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the weighing scale sensor
+     *   a string that uniquely characterizes the weighing scale sensor, for instance
+     *   <c>YWBRIDG1.weighScale1</c>.
      * </param>
      * <returns>
      *   a <c>YWeighScale</c> object allowing you to drive the weighing scale sensor.

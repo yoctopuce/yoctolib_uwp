@@ -113,6 +113,9 @@
     <Compile Include="..\..\Sources\WPEntry.cs">
       <Link>yoctolib\WPEntry.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YConsolidatedDataSet.cs">
+      <Link>yoctolib\YConsolidatedDataSet.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\WSNotificationHandler.cs">
       <Link>yoctolib\WSNotificationHandler.cs</Link>
     </Compile>

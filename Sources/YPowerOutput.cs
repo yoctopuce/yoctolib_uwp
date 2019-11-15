@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPowerOutput.cs 35464 2019-05-16 14:39:59Z seb $
+ *  $Id: YPowerOutput.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindPowerOutput(), the high-level API for PowerOutput functions
  *
@@ -221,7 +221,8 @@ public class YPowerOutput : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the power output control
+     *   a string that uniquely characterizes the power output control, for instance
+     *   <c>YSPIMK01.powerOutput</c>.
      * </param>
      * <returns>
      *   a <c>YPowerOutput</c> object allowing you to drive the power output control.
@@ -277,7 +278,8 @@ public class YPowerOutput : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the power output control
+     *   a string that uniquely characterizes the power output control, for instance
+     *   <c>YSPIMK01.powerOutput</c>.
      * </param>
      * <returns>
      *   a <c>YPowerOutput</c> object allowing you to drive the power output control.

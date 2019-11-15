@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 37199 2019-09-16 14:20:38Z seb $
+ * $Id: YModule.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  * YModule Class: Module control interface
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YModule Class: Module control interface
  * <para>
- *   This interface is identical for all Yoctopuce USB modules.
+ *   The YModule class can be used with all Yoctopuce USB devices.
  *   It can be used to control the module global parameters, and
  *   to enumerate the functions provided by each module.
  * </para>
@@ -979,7 +979,8 @@ public class YModule : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the module
+     *   a string that uniquely characterizes the module, for instance
+     *   <c>MyDevice.module</c>.
      * </param>
      * <returns>
      *   a <c>YModule</c> object allowing you to drive the module.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YQt.cs 32911 2018-11-02 10:21:06Z seb $
+ * $Id: YQt.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  * Implements FindQt(), the high-level API for Qt functions
  *
@@ -49,8 +49,11 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YQt Class: Quaternion interface
  * <para>
- *   The Yoctopuce API YQt class provides direct access to the Yocto3D attitude estimation
- *   using a quaternion. It is usually not needed to use the YQt class directly, as the
+ *   The YQt class provides direct access to the 3D attitude estimation provided by Yoctopuce
+ *   inertial sensors, for instance using a Yocto-3D-V2. The four instances of YQt provide direct access
+ *   to the individual
+ *   quaternion components representing the orientation.
+ *   It is usually not needed to use the YQt class directly, as the
  *   YGyro class provides a more convenient higher-level interface.
  * </para>
  * </summary>
@@ -144,7 +147,8 @@ public class YQt : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the quaternion component
+     *   a string that uniquely characterizes the quaternion component, for instance
+     *   <c>Y3DMK002.qt1</c>.
      * </param>
      * <returns>
      *   a <c>YQt</c> object allowing you to drive the quaternion component.
@@ -200,7 +204,8 @@ public class YQt : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the quaternion component
+     *   a string that uniquely characterizes the quaternion component, for instance
+     *   <c>Y3DMK002.qt1</c>.
      * </param>
      * <returns>
      *   a <c>YQt</c> object allowing you to drive the quaternion component.

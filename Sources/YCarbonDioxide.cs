@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCarbonDioxide.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YCarbonDioxide.cs 38030 2019-11-04 17:56:01Z mvuilleu $
  *
  *  Implements FindCarbonDioxide(), the high-level API for CarbonDioxide functions
  *
@@ -50,8 +50,9 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YCarbonDioxide Class: CarbonDioxide function interface
  * <para>
- *   The Yoctopuce class YCarbonDioxide allows you to read and configure Yoctopuce CO2
- *   sensors. It inherits from YSensor class the core functions to read measurements,
+ *   The YCarbonDioxide class allows you to read and configure Yoctopuce CO2
+ *   sensors, for instance using a Yocto-CO2-V2. It inherits from YSensor class the core functions to
+ *   read measurements,
  *   to register callback functions,  to access the autonomous datalogger.
  *   This class adds the ability to perform manual calibration if required.
  * </para>
@@ -66,7 +67,7 @@ public class YCarbonDioxide : YSensor
      *   invalid abcPeriod value
      * </summary>
      */
-    public const  int ABCPERIOD_INVALID = YAPI.INVALID_INT;
+    public const  int ABCPERIOD_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid command value
@@ -254,7 +255,8 @@ public class YCarbonDioxide : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the CO2 sensor
+     *   a string that uniquely characterizes the CO2 sensor, for instance
+     *   <c>YCO2MK02.carbonDioxide</c>.
      * </param>
      * <returns>
      *   a <c>YCarbonDioxide</c> object allowing you to drive the CO2 sensor.
@@ -310,7 +312,8 @@ public class YCarbonDioxide : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the CO2 sensor
+     *   a string that uniquely characterizes the CO2 sensor, for instance
+     *   <c>YCO2MK02.carbonDioxide</c>.
      * </param>
      * <returns>
      *   a <c>YCarbonDioxide</c> object allowing you to drive the CO2 sensor.

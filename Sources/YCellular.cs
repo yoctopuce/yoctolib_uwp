@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellular.cs 37619 2019-10-11 11:52:42Z mvuilleu $
+ * $Id: YCellular.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  * Implements FindCellular(), the high-level API for Cellular functions
  *
@@ -51,8 +51,9 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YCellular Class: Cellular function interface
  * <para>
- *   YCellular functions provides control over cellular network parameters
- *   and status for devices that are GSM-enabled.
+ *   The YCellular class provides control over cellular network parameters
+ *   and status for devices that are GSM-enabled, for instance using a YoctoHub-GSM-3G-NA, a
+ *   YoctoHub-GSM-3G-EU or a YoctoHub-GSM-2G.
  * </para>
  * </summary>
  */
@@ -1046,7 +1047,8 @@ public class YCellular : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the cellular interface
+     *   a string that uniquely characterizes the cellular interface, for instance
+     *   <c>YHUBGSM4.cellular</c>.
      * </param>
      * <returns>
      *   a <c>YCellular</c> object allowing you to drive the cellular interface.
@@ -1102,7 +1104,8 @@ public class YCellular : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the cellular interface
+     *   a string that uniquely characterizes the cellular interface, for instance
+     *   <c>YHUBGSM4.cellular</c>.
      * </param>
      * <returns>
      *   a <c>YCellular</c> object allowing you to drive the cellular interface.

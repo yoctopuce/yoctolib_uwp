@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YOsControl.cs 32911 2018-11-02 10:21:06Z seb $
+ *  $Id: YOsControl.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindOsControl(), the high-level API for OsControl functions
  *
@@ -50,8 +50,8 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YOsControl Class: OS control
  * <para>
- *   The OScontrol object allows some control over the operating system running a VirtualHub.
- *   OsControl is available on the VirtualHub software only. This feature must be activated at the VirtualHub
+ *   The YOScontrol class provides some control over the operating system running a VirtualHub.
+ *   YOsControl is available on VirtualHub software only. This feature must be activated at the VirtualHub
  *   start up with -o option.
  * </para>
  * </summary>
@@ -191,7 +191,8 @@ public class YOsControl : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the OS control
+     *   a string that uniquely characterizes the OS control, for instance
+     *   <c>MyDevice.osControl</c>.
      * </param>
      * <returns>
      *   a <c>YOsControl</c> object allowing you to drive the OS control.
@@ -247,7 +248,8 @@ public class YOsControl : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the OS control
+     *   a string that uniquely characterizes the OS control, for instance
+     *   <c>MyDevice.osControl</c>.
      * </param>
      * <returns>
      *   a <c>YOsControl</c> object allowing you to drive the OS control.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YBluetoothLink.cs 37619 2019-10-11 11:52:42Z mvuilleu $
+ *  $Id: YBluetoothLink.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindBluetoothLink(), the high-level API for BluetoothLink functions
  *
@@ -687,7 +687,8 @@ public class YBluetoothLink : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the cellular interface
+     *   a string that uniquely characterizes the cellular interface, for instance
+     *   <c>MyDevice.bluetoothLink1</c>.
      * </param>
      * <returns>
      *   a <c>YBluetoothLink</c> object allowing you to drive the cellular interface.
@@ -743,7 +744,8 @@ public class YBluetoothLink : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the cellular interface
+     *   a string that uniquely characterizes the cellular interface, for instance
+     *   <c>MyDevice.bluetoothLink1</c>.
      * </param>
      * <returns>
      *   a <c>YBluetoothLink</c> object allowing you to drive the cellular interface.

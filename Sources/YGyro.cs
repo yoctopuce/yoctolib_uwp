@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YGyro.cs 37619 2019-10-11 11:52:42Z mvuilleu $
+ * $Id: YGyro.cs 38030 2019-11-04 17:56:01Z mvuilleu $
  *
  * Implements FindGyro(), the high-level API for Gyro functions
  *
@@ -50,15 +50,10 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YGyro Class: Gyroscope function interface
  * <para>
- *   The YSensor class is the parent class for all Yoctopuce sensors. It can be
- *   used to read the current value and unit of any sensor, read the min/max
- *   value, configure autonomous recording frequency and access recorded data.
- *   It also provide a function to register a callback invoked each time the
- *   observed value changes, or at a predefined interval. Using this class rather
- *   than a specific subclass makes it possible to create generic applications
- *   that work with any Yoctopuce sensor, even those that do not yet exist.
- *   Note: The YAnButton class is the only analog input which does not inherit
- *   from YSensor.
+ *   The YGyro class allows you to read and configure Yoctopuce angular velocity
+ *   sensors, for instance using a Yocto-3D-V2. It inherits from YSensor class the core functions to
+ *   read measurements,
+ *   to register callback functions, to access the autonomous datalogger.
  * </para>
  * </summary>
  */
@@ -84,7 +79,7 @@ public class YGyro : YSensor
      *   invalid bandwidth value
      * </summary>
      */
-    public const  int BANDWIDTH_INVALID = YAPI.INVALID_INT;
+    public const  int BANDWIDTH_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid xValue value
@@ -366,7 +361,8 @@ public class YGyro : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the gyroscope
+     *   a string that uniquely characterizes the gyroscope, for instance
+     *   <c>Y3DMK002.gyro</c>.
      * </param>
      * <returns>
      *   a <c>YGyro</c> object allowing you to drive the gyroscope.
@@ -422,7 +418,8 @@ public class YGyro : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the gyroscope
+     *   a string that uniquely characterizes the gyroscope, for instance
+     *   <c>Y3DMK002.gyro</c>.
      * </param>
      * <returns>
      *   a <c>YGyro</c> object allowing you to drive the gyroscope.

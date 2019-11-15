@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGenericSensor.cs 37619 2019-10-11 11:52:42Z mvuilleu $
+ *  $Id: YGenericSensor.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindGenericSensor(), the high-level API for GenericSensor functions
  *
@@ -51,7 +51,8 @@ namespace com.yoctopuce.YoctoAPI
  *   YGenericSensor Class: GenericSensor function interface
  * <para>
  *   The YGenericSensor class allows you to read and configure Yoctopuce signal
- *   transducers. It inherits from YSensor class the core functions to read measurements,
+ *   transducers, for instance using a Yocto-4-20mA-Rx, a Yocto-0-10V-Rx, a Yocto-milliVolt-Rx or a
+ *   Yocto-RS232. It inherits from YSensor class the core functions to read measurements,
  *   to register callback functions, to access the autonomous datalogger.
  *   This class adds the ability to configure the automatic conversion between the
  *   measured signal and the corresponding engineering unit.
@@ -643,7 +644,8 @@ public class YGenericSensor : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the generic sensor
+     *   a string that uniquely characterizes the generic sensor, for instance
+     *   <c>RX420MA1.genericSensor1</c>.
      * </param>
      * <returns>
      *   a <c>YGenericSensor</c> object allowing you to drive the generic sensor.
@@ -699,7 +701,8 @@ public class YGenericSensor : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the generic sensor
+     *   a string that uniquely characterizes the generic sensor, for instance
+     *   <c>RX420MA1.genericSensor1</c>.
      * </param>
      * <returns>
      *   a <c>YGenericSensor</c> object allowing you to drive the generic sensor.

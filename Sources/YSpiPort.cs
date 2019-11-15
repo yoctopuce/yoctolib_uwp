@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YSpiPort.cs 37141 2019-09-12 12:37:10Z mvuilleu $
+ *  $Id: YSpiPort.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindSpiPort(), the high-level API for SpiPort functions
  *
@@ -50,8 +50,8 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YSpiPort Class: SPI Port function interface
  * <para>
- *   The SpiPort function interface allows you to fully drive a Yoctopuce
- *   SPI port, to send and receive data, and to configure communication
+ *   The YSpiPort class allows you to fully drive a Yoctopuce SPI port, for instance using a Yocto-SPI.
+ *   It can be used to send and receive data, and to configure communication
  *   parameters (baud rate, bit count, parity, flow control and protocol).
  *   Note that Yoctopuce SPI ports are not exposed as virtual COM ports.
  *   They are meant to be used in the same way as all Yoctopuce devices.
@@ -938,7 +938,8 @@ public class YSpiPort : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the SPI port
+     *   a string that uniquely characterizes the SPI port, for instance
+     *   <c>YSPIMK01.spiPort</c>.
      * </param>
      * <returns>
      *   a <c>YSpiPort</c> object allowing you to drive the SPI port.
@@ -994,7 +995,8 @@ public class YSpiPort : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the SPI port
+     *   a string that uniquely characterizes the SPI port, for instance
+     *   <c>YSPIMK01.spiPort</c>.
      * </param>
      * <returns>
      *   a <c>YSpiPort</c> object allowing you to drive the SPI port.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMotor.cs 37619 2019-10-11 11:52:42Z mvuilleu $
+ *  $Id: YMotor.cs 38030 2019-11-04 17:56:01Z mvuilleu $
  *
  *  Implements FindMotor(), the high-level API for Motor functions
  *
@@ -50,7 +50,8 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YMotor Class: Motor function interface
  * <para>
- *   Yoctopuce application programming interface allows you to drive the
+ *   The YMotor class allows you to drive a DC motor, for instance using a Yocto-Motor-DC. It can be
+ *   used to configure the
  *   power sent to the motor to make it turn both ways, but also to drive accelerations
  *   and decelerations. The motor will then accelerate automatically: you will not
  *   have to monitor it. The API also allows to slow down the motor by shortening
@@ -99,7 +100,7 @@ public class YMotor : YFunction
      *   invalid overCurrentLimit value
      * </summary>
      */
-    public const  int OVERCURRENTLIMIT_INVALID = YAPI.INVALID_INT;
+    public const  int OVERCURRENTLIMIT_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid frequency value
@@ -111,7 +112,7 @@ public class YMotor : YFunction
      *   invalid starterTime value
      * </summary>
      */
-    public const  int STARTERTIME_INVALID = YAPI.INVALID_INT;
+    public const  int STARTERTIME_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid failSafeTimeout value
@@ -444,8 +445,21 @@ public class YMotor : YFunction
 
     /**
      * <summary>
-     *   throws an exception on error
+     *   Returns the current threshold (in mA) above which the controller automatically
+     *   switches to error state.
+     * <para>
+     *   A zero value means that there is no limit.
+     * </para>
+     * <para>
+     * </para>
      * </summary>
+     * <returns>
+     *   an integer corresponding to the current threshold (in mA) above which the controller automatically
+     *   switches to error state
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YMotor.OVERCURRENTLIMIT_INVALID</c>.
+     * </para>
      */
     public async Task<int> get_overCurrentLimit()
     {
@@ -754,7 +768,8 @@ public class YMotor : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the motor
+     *   a string that uniquely characterizes the motor, for instance
+     *   <c>MOTORCTL.motor</c>.
      * </param>
      * <returns>
      *   a <c>YMotor</c> object allowing you to drive the motor.
@@ -810,7 +825,8 @@ public class YMotor : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the motor
+     *   a string that uniquely characterizes the motor, for instance
+     *   <c>MOTORCTL.motor</c>.
      * </param>
      * <returns>
      *   a <c>YMotor</c> object allowing you to drive the motor.

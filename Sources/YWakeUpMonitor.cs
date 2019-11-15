@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpMonitor.cs 37000 2019-09-03 06:40:17Z mvuilleu $
+ *  $Id: YWakeUpMonitor.cs 38030 2019-11-04 17:56:01Z mvuilleu $
  *
  *  Implements FindWakeUpMonitor(), the high-level API for WakeUpMonitor functions
  *
@@ -50,8 +50,9 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YWakeUpMonitor Class: WakeUpMonitor function interface
  * <para>
- *   The WakeUpMonitor function handles globally all wake-up sources, as well
- *   as automated sleep mode.
+ *   The YWakeUpMonitor class handles globally all wake-up sources, as well
+ *   as automated sleep mode, for instance using a YoctoHub-Wireless-g, a YoctoHub-GSM-3G-NA, a
+ *   YoctoHub-GSM-3G-EU or a YoctoHub-Wireless-SR.
  * </para>
  * </summary>
  */
@@ -64,13 +65,13 @@ public class YWakeUpMonitor : YFunction
      *   invalid powerDuration value
      * </summary>
      */
-    public const  int POWERDURATION_INVALID = YAPI.INVALID_INT;
+    public const  int POWERDURATION_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid sleepCountdown value
      * </summary>
      */
-    public const  int SLEEPCOUNTDOWN_INVALID = YAPI.INVALID_INT;
+    public const  int SLEEPCOUNTDOWN_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid nextWakeUp value
@@ -467,7 +468,8 @@ public class YWakeUpMonitor : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the monitor
+     *   a string that uniquely characterizes the monitor, for instance
+     *   <c>YHUBWLN3.wakeUpMonitor</c>.
      * </param>
      * <returns>
      *   a <c>YWakeUpMonitor</c> object allowing you to drive the monitor.
@@ -523,7 +525,8 @@ public class YWakeUpMonitor : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the monitor
+     *   a string that uniquely characterizes the monitor, for instance
+     *   <c>YHUBWLN3.wakeUpMonitor</c>.
      * </param>
      * <returns>
      *   a <c>YWakeUpMonitor</c> object allowing you to drive the monitor.

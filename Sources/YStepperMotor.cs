@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YStepperMotor.cs 33718 2018-12-14 14:22:23Z seb $
+ *  $Id: YStepperMotor.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindStepperMotor(), the high-level API for StepperMotor functions
  *
@@ -50,7 +50,7 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YStepperMotor Class: StepperMotor function interface
  * <para>
- *   The Yoctopuce application programming interface allows you to drive a stepper motor.
+ *   The YStepperMotor class allows you to drive a stepper motor.
  * </para>
  * </summary>
  */
@@ -985,7 +985,8 @@ public class YStepperMotor : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the stepper motor
+     *   a string that uniquely characterizes the stepper motor, for instance
+     *   <c>MyDevice.stepperMotor1</c>.
      * </param>
      * <returns>
      *   a <c>YStepperMotor</c> object allowing you to drive the stepper motor.
@@ -1041,7 +1042,8 @@ public class YStepperMotor : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the stepper motor
+     *   a string that uniquely characterizes the stepper motor, for instance
+     *   <c>MyDevice.stepperMotor1</c>.
      * </param>
      * <returns>
      *   a <c>YStepperMotor</c> object allowing you to drive the stepper motor.

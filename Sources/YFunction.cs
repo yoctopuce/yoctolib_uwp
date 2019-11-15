@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 37199 2019-09-16 14:20:38Z seb $
+ * $Id: YFunction.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -330,7 +330,8 @@ public class YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the function
+     *   a string that uniquely characterizes the function, for instance
+     *   <c>MyDevice.</c>.
      * </param>
      * <returns>
      *   a <c>YFunction</c> object allowing you to drive the function.
@@ -386,7 +387,8 @@ public class YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the function
+     *   a string that uniquely characterizes the function, for instance
+     *   <c>MyDevice.</c>.
      * </param>
      * <returns>
      *   a <c>YFunction</c> object allowing you to drive the function.

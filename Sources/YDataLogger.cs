@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataLogger.cs 33795 2018-12-20 15:52:19Z seb $
+ * $Id: YDataLogger.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  * Implements yFindDataLogger(), the high-level API for DataLogger functions
  *
@@ -48,9 +48,11 @@ namespace com.yoctopuce.YoctoAPI {
  * <summary>
  *   YDataLogger Class: DataLogger function interface
  * <para>
- *   Yoctopuce sensors include a non-volatile memory capable of storing ongoing measured
- *   data automatically, without requiring a permanent connection to a computer.
- *   The DataLogger function controls the global parameters of the internal data
+ *   A non-volatile memory for storing ongoing measured data is available on most Yoctopuce
+ *   sensors, for instance using a Yocto-Light-V3, a Yocto-Meteo-V2, a Yocto-Watt or a Yocto-3D-V2.
+ *   Recording can happen automatically, without requiring a permanent
+ *   connection to a computer.
+ *   The YDataLogger class controls the global parameters of the internal data
  *   logger. Recording control (start/stop) as well as data retreival is done at
  *   sensor objects level.
  * </para>
@@ -601,7 +603,8 @@ public class YDataLogger : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the data logger
+     *   a string that uniquely characterizes the data logger, for instance
+     *   <c>LIGHTMK3.dataLogger</c>.
      * </param>
      * <returns>
      *   a <c>YDataLogger</c> object allowing you to drive the data logger.
@@ -657,7 +660,8 @@ public class YDataLogger : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the data logger
+     *   a string that uniquely characterizes the data logger, for instance
+     *   <c>LIGHTMK3.dataLogger</c>.
      * </param>
      * <returns>
      *   a <c>YDataLogger</c> object allowing you to drive the data logger.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 37000 2019-09-03 06:40:17Z mvuilleu $
+ * $Id: YDisplay.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -51,6 +51,8 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YDisplay Class: Display function interface
  * <para>
+ *   The YDisplay class allows to drive Yoctopuce displays, for instance using a Yocto-MaxiDisplay, a
+ *   Yocto-MiniDisplay, a Yocto-MaxiDisplay-G or a Yocto-Display.
  *   Yoctopuce display interface has been designed to easily
  *   show information and images. The device provides built-in
  *   multi-layer rendering. Layers can be drawn offline, individually,
@@ -696,7 +698,8 @@ public class YDisplay : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the display
+     *   a string that uniquely characterizes the display, for instance
+     *   <c>YD128X64.display</c>.
      * </param>
      * <returns>
      *   a <c>YDisplay</c> object allowing you to drive the display.
@@ -752,7 +755,8 @@ public class YDisplay : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the display
+     *   a string that uniquely characterizes the display, for instance
+     *   <c>YD128X64.display</c>.
      * </param>
      * <returns>
      *   a <c>YDisplay</c> object allowing you to drive the display.

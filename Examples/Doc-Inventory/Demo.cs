@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 32629 2018-10-10 13:38:20Z seb $
+ *  $Id: Demo.cs 38155 2019-11-14 16:03:09Z seb $
  *
  *  Doc-Inventory example
  *
@@ -11,6 +11,7 @@
  *********************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
@@ -18,28 +19,47 @@ using com.yoctopuce.YoctoAPI;
 
 namespace Demo
 {
-  public class Demo : DemoBase
-  {
-    public string HubURL { get; set; }
-
-    public override async Task<int> Run()
+    public class Demo : DemoBase
     {
-      YModule m;
-      try {
-        await YAPI.RegisterHub(HubURL);
+        public string HubURL { get; set; }
 
-        WriteLine("Device list");
-        m = YModule.FirstModule();
-        while (m != null) {
-          WriteLine(await m.get_serialNumber()
-                    + " (" + await m.get_productName() + ")");
-          m = m.nextModule();
+        public override async Task<int> Run()
+        {
+            YModule m;
+            DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            try {
+                await YAPI.RegisterHub(HubURL);
+
+                // Enumerate all connected sensors
+                YSensor sensor;
+                List<YSensor> sensorList = new List<YSensor>();
+                sensor = YSensor.FirstSensor();
+                while (sensor != null) {
+                    sensorList.Add(sensor);
+                    sensor = sensor.nextSensor();
+                }
+
+                if (sensorList.Count == 0) {
+                    WriteLine("No Yoctopuce sensor connected (check USB cable)");
+                } else {
+                    // Generate consolidated CSV output for all sensors
+                    YConsolidatedDataSet data = new YConsolidatedDataSet(0, 0, sensorList);
+                    List<Double> record = new List<Double>();
+                    while (await data.nextRecord(record) < 100) {
+                        string line = _epoch.AddSeconds(record[0]).ToString("yyyy-MM-ddTHH:mm:ss.fff");
+                        for (int i = 1; i < record.Count; i++) {
+                            line += String.Format(";{0:0.000}", record[i]);
+                        }
+                        WriteLine(line);
+                    }
+                }
+            } catch (YAPI_Exception ex) {
+                WriteLine("Error:" + ex.Message);
+            }
+
+
+            YAPI.FreeAPI();
+            return 0;
         }
-      } catch (YAPI_Exception ex) {
-        WriteLine("Error:" + ex.Message);
-      }
-      YAPI.FreeAPI();
-      return 0;
     }
-  }
 }

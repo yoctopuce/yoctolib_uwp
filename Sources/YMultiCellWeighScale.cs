@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiCellWeighScale.cs 37165 2019-09-13 16:57:27Z mvuilleu $
+ *  $Id: YMultiCellWeighScale.cs 37827 2019-10-25 13:07:48Z mvuilleu $
  *
  *  Implements FindMultiCellWeighScale(), the high-level API for MultiCellWeighScale functions
  *
@@ -50,8 +50,9 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YMultiCellWeighScale Class: MultiCellWeighScale function interface
  * <para>
- *   The YMultiCellWeighScale class provides a weight measurement from a set of ratiometric load cells
- *   sensor. It can be used to control the bridge excitation parameters, in order to avoid
+ *   The YMultiCellWeighScale class provides a weight measurement from a set of ratiometric
+ *   sensors, for instance using a Yocto-MaxiBridge. It can be used to control the bridge excitation
+ *   parameters, in order to avoid
  *   measure shifts caused by temperature variation in the electronics, and can also
  *   automatically apply an additional correction factor based on temperature to
  *   compensate for offsets in the load cells themselves.
@@ -691,7 +692,8 @@ public class YMultiCellWeighScale : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the multi-cell weighing scale sensor
+     *   a string that uniquely characterizes the multi-cell weighing scale sensor, for instance
+     *   <c>YWMBRDG1.multiCellWeighScale</c>.
      * </param>
      * <returns>
      *   a <c>YMultiCellWeighScale</c> object allowing you to drive the multi-cell weighing scale sensor.
@@ -747,7 +749,8 @@ public class YMultiCellWeighScale : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the multi-cell weighing scale sensor
+     *   a string that uniquely characterizes the multi-cell weighing scale sensor, for instance
+     *   <c>YWMBRDG1.multiCellWeighScale</c>.
      * </param>
      * <returns>
      *   a <c>YMultiCellWeighScale</c> object allowing you to drive the multi-cell weighing scale sensor.

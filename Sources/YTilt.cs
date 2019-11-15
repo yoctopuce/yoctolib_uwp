@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTilt.cs 37619 2019-10-11 11:52:42Z mvuilleu $
+ *  $Id: YTilt.cs 38030 2019-11-04 17:56:01Z mvuilleu $
  *
  *  Implements FindTilt(), the high-level API for Tilt functions
  *
@@ -50,7 +50,7 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YTilt Class: Tilt function interface
  * <para>
- *   The YSensor class is the parent class for all Yoctopuce sensors. It can be
+ *   The YSensor class is the parent class for all Yoctopuce sensor types. It can be
  *   used to read the current value and unit of any sensor, read the min/max
  *   value, configure autonomous recording frequency and access recorded data.
  *   It also provide a function to register a callback invoked each time the
@@ -71,7 +71,7 @@ public class YTilt : YSensor
      *   invalid bandwidth value
      * </summary>
      */
-    public const  int BANDWIDTH_INVALID = YAPI.INVALID_INT;
+    public const  int BANDWIDTH_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid axis value
@@ -251,7 +251,8 @@ public class YTilt : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the tilt sensor
+     *   a string that uniquely characterizes the tilt sensor, for instance
+     *   <c>Y3DMK002.tilt1</c>.
      * </param>
      * <returns>
      *   a <c>YTilt</c> object allowing you to drive the tilt sensor.
@@ -307,7 +308,8 @@ public class YTilt : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the tilt sensor
+     *   a string that uniquely characterizes the tilt sensor, for instance
+     *   <c>Y3DMK002.tilt1</c>.
      * </param>
      * <returns>
      *   a <c>YTilt</c> object allowing you to drive the tilt sensor.
