@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCompass.cs 38030 2019-11-04 17:56:01Z mvuilleu $
+ *  $Id: YCompass.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindCompass(), the high-level API for Compass functions
  *
@@ -48,12 +48,11 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YCompass class start)
 /**
  * <summary>
- *   YCompass Class: Compass function interface
+ *   YCompass Class: compass function control interface, available for instance in the Yocto-3D-V2
  * <para>
- *   The YCompass class allows you to read and configure Yoctopuce compass
- *   sensors, for instance using a Yocto-3D-V2. It inherits from YSensor class the core functions to
- *   read measurements,
- *   to register callback functions, to access the autonomous datalogger.
+ *   The <c>YCompass</c> class allows you to read and configure Yoctopuce compass functions.
+ *   It inherits from <c>YSensor</c> class the core functions to read measurements,
+ *   to register callback functions, and to access the autonomous datalogger.
  * </para>
  * </summary>
  */
@@ -243,7 +242,7 @@ public class YCompass : YSensor
 
     /**
      * <summary>
-     *   Retrieves a compass for a given identifier.
+     *   Retrieves a compass function for a given identifier.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -267,11 +266,11 @@ public class YCompass : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the compass is online at the time
+     *   This function does not require that the compass function is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YCompass.isOnline()</c> to test if the compass is
+     *   Use the method <c>YCompass.isOnline()</c> to test if the compass function is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a compass by logical name, no error is notified: the first instance
+     *   a compass function by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -284,11 +283,11 @@ public class YCompass : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the compass, for instance
+     *   a string that uniquely characterizes the compass function, for instance
      *   <c>Y3DMK002.compass</c>.
      * </param>
      * <returns>
-     *   a <c>YCompass</c> object allowing you to drive the compass.
+     *   a <c>YCompass</c> object allowing you to drive the compass function.
      * </returns>
      */
     public static YCompass FindCompass(string func)
@@ -304,7 +303,7 @@ public class YCompass : YSensor
 
     /**
      * <summary>
-     *   Retrieves a compass for a given identifier in a YAPI context.
+     *   Retrieves a compass function for a given identifier in a YAPI context.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -328,11 +327,11 @@ public class YCompass : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the compass is online at the time
+     *   This function does not require that the compass function is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YCompass.isOnline()</c> to test if the compass is
+     *   Use the method <c>YCompass.isOnline()</c> to test if the compass function is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a compass by logical name, no error is notified: the first instance
+     *   a compass function by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -341,11 +340,11 @@ public class YCompass : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the compass, for instance
+     *   a string that uniquely characterizes the compass function, for instance
      *   <c>Y3DMK002.compass</c>.
      * </param>
      * <returns>
-     *   a <c>YCompass</c> object allowing you to drive the compass.
+     *   a <c>YCompass</c> object allowing you to drive the compass function.
      * </returns>
      */
     public static YCompass FindCompassInContext(YAPIContext yctx,string func)
@@ -419,7 +418,7 @@ public class YCompass : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>
@@ -449,17 +448,17 @@ public class YCompass : YSensor
 
     /**
      * <summary>
-     *   Continues the enumeration of compasses started using <c>yFirstCompass()</c>.
+     *   Continues the enumeration of compass functions started using <c>yFirstCompass()</c>.
      * <para>
-     *   Caution: You can't make any assumption about the returned compasses order.
-     *   If you want to find a specific a compass, use <c>Compass.findCompass()</c>
+     *   Caution: You can't make any assumption about the returned compass functions order.
+     *   If you want to find a specific a compass function, use <c>Compass.findCompass()</c>
      *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>
      *   a pointer to a <c>YCompass</c> object, corresponding to
-     *   a compass currently online, or a <c>null</c> pointer
-     *   if there are no more compasses to enumerate.
+     *   a compass function currently online, or a <c>null</c> pointer
+     *   if there are no more compass functions to enumerate.
      * </returns>
      */
     public YCompass nextCompass()
@@ -477,15 +476,15 @@ public class YCompass : YSensor
 
     /**
      * <summary>
-     *   Starts the enumeration of compasses currently accessible.
+     *   Starts the enumeration of compass functions currently accessible.
      * <para>
      *   Use the method <c>YCompass.nextCompass()</c> to iterate on
-     *   next compasses.
+     *   next compass functions.
      * </para>
      * </summary>
      * <returns>
      *   a pointer to a <c>YCompass</c> object, corresponding to
-     *   the first compass currently online, or a <c>null</c> pointer
+     *   the first compass function currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
@@ -499,10 +498,10 @@ public class YCompass : YSensor
 
     /**
      * <summary>
-     *   Starts the enumeration of compasses currently accessible.
+     *   Starts the enumeration of compass functions currently accessible.
      * <para>
      *   Use the method <c>YCompass.nextCompass()</c> to iterate on
-     *   next compasses.
+     *   next compass functions.
      * </para>
      * </summary>
      * <param name="yctx">
@@ -510,7 +509,7 @@ public class YCompass : YSensor
      * </param>
      * <returns>
      *   a pointer to a <c>YCompass</c> object, corresponding to
-     *   the first compass currently online, or a <c>null</c> pointer
+     *   the first compass function currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */

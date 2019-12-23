@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataSet.cs 33718 2018-12-14 14:22:23Z seb $
+ * $Id: YDataSet.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements yFindDataSet(), the high-level API for DataSet functions
  *
@@ -49,12 +49,15 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YDataSet class start)
 /**
  * <summary>
- *   YDataSet Class: Recorded data sequence
+ *   Y
  * <para>
- *   YDataSet objects make it possible to retrieve a set of recorded measures
+ *   DataSet Class: Recorded data sequence, as returned by <c>sensor.get_recordedData()</c>
+ * </para>
+ * <para>
+ *   <c>YDataSet</c> objects make it possible to retrieve a set of recorded measures
  *   for a given sensor and a specified time interval. They can be used
- *   to load data points with a progress report. When the YDataSet object is
- *   instantiated by the <c>get_recordedData()</c>  function, no data is
+ *   to load data points with a progress report. When the <c>YDataSet</c> object is
+ *   instantiated by the <c>sensor.get_recordedData()</c>  function, no data is
  *   yet loaded from the module. It is only when the <c>loadMore()</c>
  *   method is called over and over than data will be effectively loaded
  *   from the dataLogger.
@@ -66,8 +69,8 @@ namespace com.yoctopuce.YoctoAPI
  *   when loaded by subsequent calls to <c>loadMore()</c>.
  * </para>
  * <para>
- *   This class can only be used on devices that use a recent firmware,
- *   as YDataSet objects are not supported by firmwares older than version 13000.
+ *   This class can only be used on devices that use a relatively recent firmware,
+ *   as <c>YDataSet</c> objects are not supported by firmwares older than version 13000.
  * </para>
  * </summary>
  */
@@ -482,7 +485,7 @@ public class YDataSet
      * <summary>
      *   Returns the start time of the dataset, relative to the Jan 1, 1970.
      * <para>
-     *   When the YDataSet is created, the start time is the value passed
+     *   When the <c>YDataSet</c> object is created, the start time is the value passed
      *   in parameter to the <c>get_dataSet()</c> function. After the
      *   very first call to <c>loadMore()</c>, the start time is updated
      *   to reflect the timestamp of the first measure actually found in the
@@ -490,7 +493,7 @@ public class YDataSet
      * </para>
      * <para>
      *   <b>DEPRECATED</b>: This method has been replaced by <c>get_summary()</c>
-     *   which contain more precise informations on the YDataSet.
+     *   which contain more precise informations.
      * </para>
      * <para>
      * </para>
@@ -515,7 +518,7 @@ public class YDataSet
      * <summary>
      *   Returns the end time of the dataset, relative to the Jan 1, 1970.
      * <para>
-     *   When the YDataSet is created, the end time is the value passed
+     *   When the <c>YDataSet</c> object is created, the end time is the value passed
      *   in parameter to the <c>get_dataSet()</c> function. After the
      *   very first call to <c>loadMore()</c>, the end time is updated
      *   to reflect the timestamp of the last measure actually found in the
@@ -523,9 +526,7 @@ public class YDataSet
      * </para>
      * <para>
      *   <b>DEPRECATED</b>: This method has been replaced by <c>get_summary()</c>
-     *   which contain more precise informations on the YDataSet.
-     * </para>
-     * <para>
+     *   which contain more precise informations.
      * </para>
      * <para>
      * </para>
@@ -620,8 +621,8 @@ public class YDataSet
 
     /**
      * <summary>
-     *   Returns an YMeasure object which summarizes the whole
-     *   DataSet.
+     *   Returns an <c>YMeasure</c> object which summarizes the whole
+     *   <c>YDataSet</c>.
      * <para>
      *   In includes the following information:
      *   - the start of a time interval
@@ -638,7 +639,7 @@ public class YDataSet
      * </para>
      * </summary>
      * <returns>
-     *   an YMeasure object
+     *   an <c>YMeasure</c> object
      * </returns>
      */
     public virtual async Task<YMeasure> get_summary()
@@ -649,7 +650,7 @@ public class YDataSet
     /**
      * <summary>
      *   Returns a condensed version of the measures that can
-     *   retrieved in this YDataSet, as a list of YMeasure
+     *   retrieved in this <c>YDataSet</c>, as a list of <c>YMeasure</c>
      *   objects.
      * <para>
      *   Each item includes:
@@ -684,7 +685,7 @@ public class YDataSet
      *   Returns the detailed set of measures for the time interval corresponding
      *   to a given condensed measures previously returned by <c>get_preview()</c>.
      * <para>
-     *   The result is provided as a list of YMeasure objects.
+     *   The result is provided as a list of <c>YMeasure</c> objects.
      * </para>
      * <para>
      * </para>
@@ -760,7 +761,7 @@ public class YDataSet
     /**
      * <summary>
      *   Returns all measured values currently available for this DataSet,
-     *   as a list of YMeasure objects.
+     *   as a list of <c>YMeasure</c> objects.
      * <para>
      *   Each item includes:
      *   - the start of the measure time interval

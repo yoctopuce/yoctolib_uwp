@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 /// <summary>
 ///*******************************************************************
 /// 
-/// $Id: YDataStream.cs 36629 2019-07-31 13:03:53Z seb $
+/// $Id: YDataStream.cs 38899 2019-12-20 17:21:03Z mvuilleu $
 /// 
 /// YDataStream Class: Sequence of measured data, stored by the data logger
 /// 
@@ -50,13 +50,13 @@ namespace com.yoctopuce.YoctoAPI {
  * <summary>
  *   YDataStream Class: Unformatted data sequence
  * <para>
- *   YDataStream objects represent bare recorded measure sequences,
+ *   <c>DataStream</c> objects represent bare recorded measure sequences,
  *   exactly as found within the data logger present on Yoctopuce
  *   sensors.
  * </para>
  * <para>
- *   In most cases, it is not necessary to use YDataStream objects
- *   directly, as the YDataSet objects (returned by the
+ *   In most cases, it is not necessary to use <c>DataStream</c> objects
+ *   directly, as the <c>DataSet</c> objects (returned by the
  *   <c>get_recordedData()</c> method from sensors and the
  *   <c>get_dataSets()</c> method from the data logger) provide
  *   a more convenient interface.

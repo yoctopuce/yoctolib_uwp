@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YWlanRecord.cs 34651 2019-03-15 17:21:54Z seb $
+ * $Id: YWlanRecord.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindWlanRecord(), the high-level API for WlanRecord functions
  *
@@ -48,11 +48,14 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YWlanRecord class start)
 /**
  * <summary>
- *   YWlanRecord Class: Description of a wireless network
+ *   Y
  * <para>
- *   YWlanRecord objects are used to describe a wireless network.
+ *   WlanRecord Class: Wireless network description, returned by <c>wireless.get_detectedWlans</c> method
+ * </para>
+ * <para>
+ *   <c>YWlanRecord</c> objects are used to describe a wireless network.
  *   These objects are  used in particular in conjunction with the
- *   YWireless class.
+ *   <c>YWireless</c> class.
  * </para>
  * </summary>
  */
@@ -90,22 +93,50 @@ public class YWlanRecord
      *   a string with the name of the wireless network (SSID).
      * </returns>
      */
-    public virtual string get_ssid()
+    public virtual async Task<string> get_ssid()
+    {
+        return imm_get_ssid();
+    }
+    /**
+     * <summary>
+     *   Returns the name of the wireless network (SSID).
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the name of the wireless network (SSID).
+     * </returns>
+     */
+    public virtual string imm_get_ssid()
     {
         return _ssid;
     }
 
     /**
      * <summary>
-     *   Returns the 802.11 channel.
+     *   Returns the 802.11 b/g/n channel number used by this network.
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   the 802.11 channel.
+     *   an integer corresponding to the channel.
      * </returns>
      */
-    public virtual int get_channel()
+    public virtual async Task<int> get_channel()
+    {
+        return imm_get_channel();
+    }
+    /**
+     * <summary>
+     *   Returns the 802.11 b/g/n channel number used by this network.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the channel.
+     * </returns>
+     */
+    public virtual int imm_get_channel()
     {
         return _channel;
     }
@@ -114,13 +145,29 @@ public class YWlanRecord
      * <summary>
      *   Returns the security algorithm used by the wireless network.
      * <para>
+     *   If the network implements to security, the value is <c>"OPEN"</c>.
      * </para>
      * </summary>
      * <returns>
      *   a string with the security algorithm.
      * </returns>
      */
-    public virtual string get_security()
+    public virtual async Task<string> get_security()
+    {
+        return imm_get_security();
+    }
+    /**
+     * <summary>
+     *   Returns the security algorithm used by the wireless network.
+     * <para>
+     *   If the network implements to security, the value is <c>"OPEN"</c>.
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the security algorithm.
+     * </returns>
+     */
+    public virtual string imm_get_security()
     {
         return _sec;
     }
@@ -132,10 +179,24 @@ public class YWlanRecord
      * </para>
      * </summary>
      * <returns>
-     *   the quality of the wireless network link, in per cents.
+     *   an integer between 0 and 100 corresponding to the signal quality.
      * </returns>
      */
-    public virtual int get_linkQuality()
+    public virtual async Task<int> get_linkQuality()
+    {
+        return imm_get_linkQuality();
+    }
+    /**
+     * <summary>
+     *   Returns the quality of the wireless network link, in per cents.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer between 0 and 100 corresponding to the signal quality.
+     * </returns>
+     */
+    public virtual int imm_get_linkQuality()
     {
         return _rssi;
     }

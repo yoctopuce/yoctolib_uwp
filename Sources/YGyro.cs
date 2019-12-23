@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YGyro.cs 38030 2019-11-04 17:56:01Z mvuilleu $
+ * $Id: YGyro.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindGyro(), the high-level API for Gyro functions
  *
@@ -48,12 +48,14 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YGyro class start)
 /**
  * <summary>
- *   YGyro Class: Gyroscope function interface
+ *   YGyro Class: gyroscope control interface, available for instance in the Yocto-3D-V2
  * <para>
- *   The YGyro class allows you to read and configure Yoctopuce angular velocity
- *   sensors, for instance using a Yocto-3D-V2. It inherits from YSensor class the core functions to
- *   read measurements,
- *   to register callback functions, to access the autonomous datalogger.
+ *   The <c>YGyro</c> class allows you to read and configure Yoctopuce gyroscopes.
+ *   It inherits from <c>YSensor</c> class the core functions to read measurements,
+ *   to register callback functions, and to access the autonomous datalogger.
+ *   This class adds the possibility to access x, y and z components of the rotation
+ *   vector separately, as well as the possibility to deal with quaternion-based
+ *   orientation estimates.
  * </para>
  * </summary>
  */
@@ -496,7 +498,7 @@ public class YGyro : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

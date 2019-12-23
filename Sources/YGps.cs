@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGps.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YGps.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindGps(), the high-level API for Gps functions
  *
@@ -48,14 +48,17 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YGps class start)
 /**
  * <summary>
- *   YGps Class: GPS function interface
+ *   YGps Class: Geolocalization control interface (GPS, GNSS, ..
  * <para>
- *   The YGps class allows you to retrieve positioning
- *   data from a GPS sensor, for instance using a Yocto-GPS. This class can provides
+ *   .), available for instance in the Yocto-GPS
+ * </para>
+ * <para>
+ *   The <c>YGps</c> class allows you to retrieve positioning
+ *   data from a GPS/GNSS sensor. This class can provides
  *   complete positioning information. However, if you
  *   wish to define callbacks on position changes or record
  *   the position in the datalogger, you
- *   should use the YLatitude et YLongitude classes.
+ *   should use the <c>YLatitude</c> et <c>YLongitude</c> classes.
  * </para>
  * </summary>
  */
@@ -79,6 +82,18 @@ public class YGps : YFunction
     public const  long SATCOUNT_INVALID = YAPI.INVALID_LONG;
     /**
      * <summary>
+     *   invalid satPerConst value
+     * </summary>
+     */
+    public const  long SATPERCONST_INVALID = YAPI.INVALID_LONG;
+    /**
+     * <summary>
+     *   invalid gpsRefreshRate value
+     * </summary>
+     */
+    public const  double GPSREFRESHRATE_INVALID = YAPI.INVALID_DOUBLE;
+    /**
+     * <summary>
      *   invalid coordSystem value
      * </summary>
      */
@@ -91,13 +106,13 @@ public class YGps : YFunction
      *   invalid constellation value
      * </summary>
      */
-    public const int CONSTELLATION_GPS = 0;
-    public const int CONSTELLATION_GLONASS = 1;
-    public const int CONSTELLATION_GALLILEO = 2;
-    public const int CONSTELLATION_GNSS = 3;
+    public const int CONSTELLATION_GNSS = 0;
+    public const int CONSTELLATION_GPS = 1;
+    public const int CONSTELLATION_GLONASS = 2;
+    public const int CONSTELLATION_GALILEO = 3;
     public const int CONSTELLATION_GPS_GLONASS = 4;
-    public const int CONSTELLATION_GPS_GALLILEO = 5;
-    public const int CONSTELLATION_GLONASS_GALLELIO = 6;
+    public const int CONSTELLATION_GPS_GALILEO = 5;
+    public const int CONSTELLATION_GLONASS_GALILEO = 6;
     public const int CONSTELLATION_INVALID = -1;
     /**
      * <summary>
@@ -161,6 +176,8 @@ public class YGps : YFunction
     public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
     protected int _isFixed = ISFIXED_INVALID;
     protected long _satCount = SATCOUNT_INVALID;
+    protected long _satPerConst = SATPERCONST_INVALID;
+    protected double _gpsRefreshRate = GPSREFRESHRATE_INVALID;
     protected int _coordSystem = COORDSYSTEM_INVALID;
     protected int _constellation = CONSTELLATION_INVALID;
     protected string _latitude = LATITUDE_INVALID;
@@ -215,6 +232,12 @@ public class YGps : YFunction
         }
         if (json_val.has("satCount")) {
             _satCount = json_val.getLong("satCount");
+        }
+        if (json_val.has("satPerConst")) {
+            _satPerConst = json_val.getLong("satPerConst");
+        }
+        if (json_val.has("gpsRefreshRate")) {
+            _gpsRefreshRate = Math.Round(json_val.getDouble("gpsRefreshRate") * 1000.0 / 65536.0) / 1000.0;
         }
         if (json_val.has("coordSystem")) {
             _coordSystem = json_val.getInt("coordSystem");
@@ -286,14 +309,14 @@ public class YGps : YFunction
 
     /**
      * <summary>
-     *   Returns the count of visible satellites.
+     *   Returns the total count of satellites used to compute GPS position.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the count of visible satellites
+     *   an integer corresponding to the total count of satellites used to compute GPS position
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YGps.SATCOUNT_INVALID</c>.
@@ -308,6 +331,67 @@ public class YGps : YFunction
             }
         }
         res = _satCount;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the count of visible satellites per constellation encoded
+     *   on a 32 bit integer: bits 0..
+     * <para>
+     *   5: GPS satellites count,  bits 6..11 : Glonass, bits 12..17 : Galileo.
+     *   this value is refreshed every 5 seconds only.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the count of visible satellites per constellation encoded
+     *   on a 32 bit integer: bits 0.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YGps.SATPERCONST_INVALID</c>.
+     * </para>
+     */
+    public async Task<long> get_satPerConst()
+    {
+        long res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return SATPERCONST_INVALID;
+            }
+        }
+        res = _satPerConst;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns effective GPS data refresh frequency.
+     * <para>
+     *   this value is refreshed every 5 seconds only.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating point number corresponding to effective GPS data refresh frequency
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YGps.GPSREFRESHRATE_INVALID</c>.
+     * </para>
+     */
+    public async Task<double> get_gpsRefreshRate()
+    {
+        double res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return GPSREFRESHRATE_INVALID;
+            }
+        }
+        res = _gpsRefreshRate;
         return res;
     }
 
@@ -382,10 +466,10 @@ public class YGps : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   a value among <c>YGps.CONSTELLATION_GPS</c>, <c>YGps.CONSTELLATION_GLONASS</c>,
-     *   <c>YGps.CONSTELLATION_GALLILEO</c>, <c>YGps.CONSTELLATION_GNSS</c>,
-     *   <c>YGps.CONSTELLATION_GPS_GLONASS</c>, <c>YGps.CONSTELLATION_GPS_GALLILEO</c> and
-     *   <c>YGps.CONSTELLATION_GLONASS_GALLELIO</c> corresponding to the the satellites constellation used to compute
+     *   a value among <c>YGps.CONSTELLATION_GNSS</c>, <c>YGps.CONSTELLATION_GPS</c>,
+     *   <c>YGps.CONSTELLATION_GLONASS</c>, <c>YGps.CONSTELLATION_GALILEO</c>,
+     *   <c>YGps.CONSTELLATION_GPS_GLONASS</c>, <c>YGps.CONSTELLATION_GPS_GALILEO</c> and
+     *   <c>YGps.CONSTELLATION_GLONASS_GALILEO</c> corresponding to the the satellites constellation used to compute
      *   positioning data
      * </returns>
      * <para>
@@ -410,17 +494,17 @@ public class YGps : YFunction
      *   Changes the satellites constellation used to compute
      *   positioning data.
      * <para>
-     *   Possible  constellations are GPS, Glonass, Galileo ,
-     *   GNSS ( = GPS + Glonass + Galileo) and the 3 possible pairs. This seeting has effect on Yocto-GPS rev A.
+     *   Possible  constellations are GNSS ( = all supported constellations),
+     *   GPS, Glonass, Galileo , and the 3 possible pairs. This setting has  no effect on Yocto-GPS (V1).
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   a value among <c>YGps.CONSTELLATION_GPS</c>, <c>YGps.CONSTELLATION_GLONASS</c>,
-     *   <c>YGps.CONSTELLATION_GALLILEO</c>, <c>YGps.CONSTELLATION_GNSS</c>,
-     *   <c>YGps.CONSTELLATION_GPS_GLONASS</c>, <c>YGps.CONSTELLATION_GPS_GALLILEO</c> and
-     *   <c>YGps.CONSTELLATION_GLONASS_GALLELIO</c> corresponding to the satellites constellation used to compute
+     *   a value among <c>YGps.CONSTELLATION_GNSS</c>, <c>YGps.CONSTELLATION_GPS</c>,
+     *   <c>YGps.CONSTELLATION_GLONASS</c>, <c>YGps.CONSTELLATION_GALILEO</c>,
+     *   <c>YGps.CONSTELLATION_GPS_GLONASS</c>, <c>YGps.CONSTELLATION_GPS_GALILEO</c> and
+     *   <c>YGps.CONSTELLATION_GLONASS_GALILEO</c> corresponding to the satellites constellation used to compute
      *   positioning data
      * </param>
      * <para>
@@ -760,7 +844,7 @@ public class YGps : YFunction
 
     /**
      * <summary>
-     *   Retrieves a GPS for a given identifier.
+     *   Retrieves a geolocalization module for a given identifier.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -784,11 +868,11 @@ public class YGps : YFunction
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the GPS is online at the time
+     *   This function does not require that the geolocalization module is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YGps.isOnline()</c> to test if the GPS is
+     *   Use the method <c>YGps.isOnline()</c> to test if the geolocalization module is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a GPS by logical name, no error is notified: the first instance
+     *   a geolocalization module by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -801,11 +885,11 @@ public class YGps : YFunction
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the GPS, for instance
+     *   a string that uniquely characterizes the geolocalization module, for instance
      *   <c>YGNSSMK1.gps</c>.
      * </param>
      * <returns>
-     *   a <c>YGps</c> object allowing you to drive the GPS.
+     *   a <c>YGps</c> object allowing you to drive the geolocalization module.
      * </returns>
      */
     public static YGps FindGps(string func)
@@ -821,7 +905,7 @@ public class YGps : YFunction
 
     /**
      * <summary>
-     *   Retrieves a GPS for a given identifier in a YAPI context.
+     *   Retrieves a geolocalization module for a given identifier in a YAPI context.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -845,11 +929,11 @@ public class YGps : YFunction
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the GPS is online at the time
+     *   This function does not require that the geolocalization module is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YGps.isOnline()</c> to test if the GPS is
+     *   Use the method <c>YGps.isOnline()</c> to test if the geolocalization module is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a GPS by logical name, no error is notified: the first instance
+     *   a geolocalization module by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -858,11 +942,11 @@ public class YGps : YFunction
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the GPS, for instance
+     *   a string that uniquely characterizes the geolocalization module, for instance
      *   <c>YGNSSMK1.gps</c>.
      * </param>
      * <returns>
-     *   a <c>YGps</c> object allowing you to drive the GPS.
+     *   a <c>YGps</c> object allowing you to drive the geolocalization module.
      * </returns>
      */
     public static YGps FindGpsInContext(YAPIContext yctx,string func)
@@ -925,17 +1009,17 @@ public class YGps : YFunction
 
     /**
      * <summary>
-     *   Continues the enumeration of GPS started using <c>yFirstGps()</c>.
+     *   Continues the enumeration of geolocalization modules started using <c>yFirstGps()</c>.
      * <para>
-     *   Caution: You can't make any assumption about the returned GPS order.
-     *   If you want to find a specific a GPS, use <c>Gps.findGps()</c>
+     *   Caution: You can't make any assumption about the returned geolocalization modules order.
+     *   If you want to find a specific a geolocalization module, use <c>Gps.findGps()</c>
      *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>
      *   a pointer to a <c>YGps</c> object, corresponding to
-     *   a GPS currently online, or a <c>null</c> pointer
-     *   if there are no more GPS to enumerate.
+     *   a geolocalization module currently online, or a <c>null</c> pointer
+     *   if there are no more geolocalization modules to enumerate.
      * </returns>
      */
     public YGps nextGps()
@@ -953,15 +1037,15 @@ public class YGps : YFunction
 
     /**
      * <summary>
-     *   Starts the enumeration of GPS currently accessible.
+     *   Starts the enumeration of geolocalization modules currently accessible.
      * <para>
      *   Use the method <c>YGps.nextGps()</c> to iterate on
-     *   next GPS.
+     *   next geolocalization modules.
      * </para>
      * </summary>
      * <returns>
      *   a pointer to a <c>YGps</c> object, corresponding to
-     *   the first GPS currently online, or a <c>null</c> pointer
+     *   the first geolocalization module currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
@@ -975,10 +1059,10 @@ public class YGps : YFunction
 
     /**
      * <summary>
-     *   Starts the enumeration of GPS currently accessible.
+     *   Starts the enumeration of geolocalization modules currently accessible.
      * <para>
      *   Use the method <c>YGps.nextGps()</c> to iterate on
-     *   next GPS.
+     *   next geolocalization modules.
      * </para>
      * </summary>
      * <param name="yctx">
@@ -986,7 +1070,7 @@ public class YGps : YFunction
      * </param>
      * <returns>
      *   a pointer to a <c>YGps</c> object, corresponding to
-     *   the first GPS currently online, or a <c>null</c> pointer
+     *   the first geolocalization module currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */

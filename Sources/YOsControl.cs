@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YOsControl.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YOsControl.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindOsControl(), the high-level API for OsControl functions
  *
@@ -48,9 +48,9 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YOsControl class start)
 /**
  * <summary>
- *   YOsControl Class: OS control
+ *   YOsControl Class: Operating system control interface via the VirtualHub application
  * <para>
- *   The YOScontrol class provides some control over the operating system running a VirtualHub.
+ *   The <c>YOScontrol</c> class provides some control over the operating system running a VirtualHub.
  *   YOsControl is available on VirtualHub software only. This feature must be activated at the VirtualHub
  *   start up with -o option.
  * </para>

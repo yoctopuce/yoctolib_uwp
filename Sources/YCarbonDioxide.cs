@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCarbonDioxide.cs 38030 2019-11-04 17:56:01Z mvuilleu $
+ *  $Id: YCarbonDioxide.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindCarbonDioxide(), the high-level API for CarbonDioxide functions
  *
@@ -48,12 +48,11 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YCarbonDioxide class start)
 /**
  * <summary>
- *   YCarbonDioxide Class: CarbonDioxide function interface
+ *   YCarbonDioxide Class: CO2 sensor control interface, available for instance in the Yocto-CO2-V2
  * <para>
- *   The YCarbonDioxide class allows you to read and configure Yoctopuce CO2
- *   sensors, for instance using a Yocto-CO2-V2. It inherits from YSensor class the core functions to
- *   read measurements,
- *   to register callback functions,  to access the autonomous datalogger.
+ *   The <c>YCarbonDioxide</c> class allows you to read and configure Yoctopuce CO2 sensors.
+ *   It inherits from <c>YSensor</c> class the core functions to read measurements,
+ *   to register callback functions, and to access the autonomous datalogger.
  *   This class adds the ability to perform manual calibration if required.
  * </para>
  * </summary>
@@ -390,7 +389,7 @@ public class YCarbonDioxide : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YBuzzer.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YBuzzer.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindBuzzer(), the high-level API for Buzzer functions
  *
@@ -48,9 +48,9 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YBuzzer class start)
 /**
  * <summary>
- *   YBuzzer Class: Buzzer function interface
+ *   YBuzzer Class: buzzer control interface, available for instance in the Yocto-Buzzer
  * <para>
- *   The YBuzzer class allows you to drive a buzzer, for instance using a Yocto-Buzzer. You can
+ *   The <c>YBuzzer</c> class allows you to drive a buzzer. You can
  *   choose the frequency and the volume at which the buzzer must sound.
  *   You can also pre-program a play sequence.
  * </para>

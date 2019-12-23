@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGenericSensor.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YGenericSensor.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindGenericSensor(), the high-level API for GenericSensor functions
  *
@@ -48,11 +48,11 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YGenericSensor class start)
 /**
  * <summary>
- *   YGenericSensor Class: GenericSensor function interface
+ *   YGenericSensor Class: GenericSensor control interface, available for instance in the
+ *   Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-RS232 or the Yocto-milliVolt-Rx
  * <para>
- *   The YGenericSensor class allows you to read and configure Yoctopuce signal
- *   transducers, for instance using a Yocto-4-20mA-Rx, a Yocto-0-10V-Rx, a Yocto-milliVolt-Rx or a
- *   Yocto-RS232. It inherits from YSensor class the core functions to read measurements,
+ *   The <c>YGenericSensor</c> class allows you to read and configure Yoctopuce signal
+ *   transducers. It inherits from <c>YSensor</c> class the core functions to read measurements,
  *   to register callback functions, to access the autonomous datalogger.
  *   This class adds the ability to configure the automatic conversion between the
  *   measured signal and the corresponding engineering unit.
@@ -645,7 +645,7 @@ public class YGenericSensor : YSensor
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the generic sensor, for instance
-     *   <c>RX420MA1.genericSensor1</c>.
+     *   <c>RX010V01.genericSensor1</c>.
      * </param>
      * <returns>
      *   a <c>YGenericSensor</c> object allowing you to drive the generic sensor.
@@ -702,7 +702,7 @@ public class YGenericSensor : YSensor
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the generic sensor, for instance
-     *   <c>RX420MA1.genericSensor1</c>.
+     *   <c>RX010V01.genericSensor1</c>.
      * </param>
      * <returns>
      *   a <c>YGenericSensor</c> object allowing you to drive the generic sensor.
@@ -779,7 +779,7 @@ public class YGenericSensor : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

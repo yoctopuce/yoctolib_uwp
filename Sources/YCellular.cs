@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellular.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ * $Id: YCellular.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindCellular(), the high-level API for Cellular functions
  *
@@ -49,11 +49,12 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YCellular class start)
 /**
  * <summary>
- *   YCellular Class: Cellular function interface
+ *   YCellular Class: cellular interface control interface, available for instance in the
+ *   YoctoHub-GSM-2G, the YoctoHub-GSM-3G-EU or the YoctoHub-GSM-3G-NA
  * <para>
- *   The YCellular class provides control over cellular network parameters
- *   and status for devices that are GSM-enabled, for instance using a YoctoHub-GSM-3G-NA, a
- *   YoctoHub-GSM-3G-EU or a YoctoHub-GSM-2G.
+ *   The <c>YCellular</c> class provides control over cellular network parameters
+ *   and status for devices that are GSM-enabled.
+ *   Note that TCP/IP parameters are configured separately, using class <c>YNetwork</c>.
  * </para>
  * </summary>
  */
@@ -1048,7 +1049,7 @@ public class YCellular : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the cellular interface, for instance
-     *   <c>YHUBGSM4.cellular</c>.
+     *   <c>YHUBGSM1.cellular</c>.
      * </param>
      * <returns>
      *   a <c>YCellular</c> object allowing you to drive the cellular interface.
@@ -1105,7 +1106,7 @@ public class YCellular : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the cellular interface, for instance
-     *   <c>YHUBGSM4.cellular</c>.
+     *   <c>YHUBGSM1.cellular</c>.
      * </param>
      * <returns>
      *   a <c>YCellular</c> object allowing you to drive the cellular interface.
@@ -1391,7 +1392,7 @@ public class YCellular : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   a list of YCellRecords.
+     *   a list of <c>YCellRecords</c>.
      * </returns>
      */
     public virtual async Task<List<YCellRecord>> quickCellSurvey()

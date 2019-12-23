@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YQt.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ * $Id: YQt.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindQt(), the high-level API for Qt functions
  *
@@ -47,14 +47,14 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YQt class start)
 /**
  * <summary>
- *   YQt Class: Quaternion interface
+ *   YQt Class: Base interface to access quaternion components, available for instance in the Yocto-3D-V2
  * <para>
- *   The YQt class provides direct access to the 3D attitude estimation provided by Yoctopuce
- *   inertial sensors, for instance using a Yocto-3D-V2. The four instances of YQt provide direct access
- *   to the individual
- *   quaternion components representing the orientation.
- *   It is usually not needed to use the YQt class directly, as the
- *   YGyro class provides a more convenient higher-level interface.
+ *   The <c>YQt</c> class provides direct access to the 3D attitude estimation
+ *   provided by Yoctopuce inertial sensors. The four instances of <c>YQt</c>
+ *   provide direct access to the individual quaternion components representing the
+ *   orientation. It is usually not needed to use the <c>YQt</c> class
+ *   directly, as the <c>YGyro</c> class provides a more convenient higher-level
+ *   interface.
  * </para>
  * </summary>
  */
@@ -282,7 +282,7 @@ public class YQt : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

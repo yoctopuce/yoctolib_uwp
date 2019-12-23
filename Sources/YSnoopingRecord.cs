@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSnoopingRecord.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YSnoopingRecord.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindSnoopingRecord(), the high-level API for SnoopingRecord functions
  *
@@ -48,7 +48,10 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YSnoopingRecord class start)
 /**
  * <summary>
- *   YSnoopingRecord Class: Description of a message intercepted
+ *   Y
+ * <para>
+ *   SnoopingRecord Class: Intercepted message description, returned by <c>serialPort.snoopMessages</c> method
+ * </para>
  * <para>
  * </para>
  * <para>
@@ -78,17 +81,89 @@ public class YSnoopingRecord
     //--- (generated code: YSnoopingRecord implementation)
 #pragma warning disable 1998
 
+    /**
+     * <summary>
+     *   Returns the elapsed time, in ms, since the beginning of the preceding message.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the elapsed time, in ms, since the beginning of the preceding message.
+     * </returns>
+     */
     public virtual async Task<int> get_time()
+    {
+        return imm_get_time();
+    }
+    /**
+     * <summary>
+     *   Returns the elapsed time, in ms, since the beginning of the preceding message.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the elapsed time, in ms, since the beginning of the preceding message.
+     * </returns>
+     */
+    public virtual int imm_get_time()
     {
         return _tim;
     }
 
+    /**
+     * <summary>
+     *   Returns the message direction (RX=0 , TX=1) .
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the message direction (RX=0 , TX=1) .
+     * </returns>
+     */
     public virtual async Task<int> get_direction()
+    {
+        return imm_get_direction();
+    }
+    /**
+     * <summary>
+     *   Returns the message direction (RX=0 , TX=1) .
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the message direction (RX=0 , TX=1) .
+     * </returns>
+     */
+    public virtual int imm_get_direction()
     {
         return _dir;
     }
 
+    /**
+     * <summary>
+     *   Returns the message content.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the message content.
+     * </returns>
+     */
     public virtual async Task<string> get_message()
+    {
+        return imm_get_message();
+    }
+    /**
+     * <summary>
+     *   Returns the message content.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the message content.
+     * </returns>
+     */
+    public virtual string imm_get_message()
     {
         return _msg;
     }

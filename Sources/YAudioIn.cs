@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAudioIn.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YAudioIn.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindAudioIn(), the high-level API for AudioIn functions
  *
@@ -48,9 +48,9 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YAudioIn class start)
 /**
  * <summary>
- *   YAudioIn Class: AudioIn function interface
+ *   YAudioIn Class: audio input control interface
  * <para>
- *   The YAudioIn class allows you to configure the volume of an audio input.
+ *   The <c>YAudioIn</c> class allows you to configure the volume of an audio input.
  * </para>
  * </summary>
  */

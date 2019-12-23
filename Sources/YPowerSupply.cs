@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPowerSupply.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YPowerSupply.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindPowerSupply(), the high-level API for PowerSupply functions
  *
@@ -48,9 +48,9 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YPowerSupply class start)
 /**
  * <summary>
- *   YPowerSupply Class: PowerSupply function interface
+ *   YPowerSupply Class: regulated power supply control interface
  * <para>
- *   The YPowerSupply class allows you to drive a Yoctopuce power supply$DEV_ENà.
+ *   The <c>YPowerSupply</c> class allows you to drive a Yoctopuce power supply.
  *   It can be use to change the voltage set point,
  *   the current limit and the enable/disable the output.
  * </para>

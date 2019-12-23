@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSms.cs 34661 2019-03-18 11:02:50Z seb $
+ * $Id: YSms.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindSms(), the high-level API for Sms functions
  *
@@ -49,10 +49,13 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YSms class start)
 /**
  * <summary>
- *   YSms Class: SMS message sent or received
+ *   YSms Class: SMS message sent or received, returned by <c>messageBox.get_messages</c> or <c>messageBox.
  * <para>
- *   YSms objects are used to describe a SMS.
- *   These objects are used in particular in conjunction with the YMessageBox class.
+ *   newMessage</c>
+ * </para>
+ * <para>
+ *   <c>YSms</c> objects are used to describe an SMS message, received or to be sent.
+ *   These objects are used in particular in conjunction with the <c>YMessageBox</c> class.
  * </para>
  * </summary>
  */

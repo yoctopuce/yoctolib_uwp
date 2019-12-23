@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpSchedule.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YWakeUpSchedule.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindWakeUpSchedule(), the high-level API for WakeUpSchedule functions
  *
@@ -48,10 +48,10 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YWakeUpSchedule class start)
 /**
  * <summary>
- *   YWakeUpSchedule Class: WakeUpSchedule function interface
+ *   YWakeUpSchedule Class: wake up schedule control interface, available for instance in the
+ *   YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-Wireless-SR or the YoctoHub-Wireless-g
  * <para>
- *   The YWakeUpSchedule class implements a wake up condition, for instance using a YoctoHub-Wireless-g,
- *   a YoctoHub-GSM-3G-NA, a YoctoHub-GSM-3G-EU or a YoctoHub-Wireless-SR. The wake up time is
+ *   The <c>YWakeUpSchedule</c> class implements a wake up condition. The wake up time is
  *   specified as a set of months and/or days and/or hours and/or minutes when the
  *   wake up should happen.
  * </para>
@@ -591,7 +591,7 @@ public class YWakeUpSchedule : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the wake up schedule, for instance
-     *   <c>YHUBWLN3.wakeUpSchedule1</c>.
+     *   <c>YHUBGSM3.wakeUpSchedule1</c>.
      * </param>
      * <returns>
      *   a <c>YWakeUpSchedule</c> object allowing you to drive the wake up schedule.
@@ -648,7 +648,7 @@ public class YWakeUpSchedule : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the wake up schedule, for instance
-     *   <c>YHUBWLN3.wakeUpSchedule1</c>.
+     *   <c>YHUBGSM3.wakeUpSchedule1</c>.
      * </param>
      * <returns>
      *   a <c>YWakeUpSchedule</c> object allowing you to drive the wake up schedule.

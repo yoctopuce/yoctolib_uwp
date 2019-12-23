@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplayLayer.cs 33877 2018-12-26 12:19:48Z seb $
+ * $Id: YDisplayLayer.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindDisplayLayer(), the high-level API for DisplayLayer functions
  *
@@ -50,10 +50,12 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YDisplayLayer class start)
 /**
  * <summary>
- *   YDisplayLayer Class: DisplayLayer object interface
+ *   YDisplayLayer Class: Interface for drawing into display layers, obtained by calling <c>display.get_displayLayer</c>.
  * <para>
- *   A DisplayLayer is an image layer containing objects to display
- *   (bitmaps, text, etc.). The content is displayed only when
+ * </para>
+ * <para>
+ *   Each <c>DisplayLayer</c> represents an image layer containing objects
+ *   to display (bitmaps, text, etc.). The content is displayed only when
  *   the layer is active on the screen (and not masked by other
  *   overlapping layers).
  * </para>

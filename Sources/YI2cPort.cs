@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YI2cPort.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YI2cPort.cs 38913 2019-12-20 18:59:49Z mvuilleu $
  *
  *  Implements FindI2cPort(), the high-level API for I2cPort functions
  *
@@ -48,9 +48,9 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YI2cPort class start)
 /**
  * <summary>
- *   YI2cPort Class: I2C Port function interface
+ *   YI2cPort Class: I2C port control interface, available for instance in the Yocto-I2C
  * <para>
- *   The YI2cPort classe allows you to fully drive a Yoctopuce I2C port, for instance using a Yocto-I2C.
+ *   The <c>YI2cPort</c> classe allows you to fully drive a Yoctopuce I2C port.
  *   It can be used to send and receive data, and to configure communication
  *   parameters (baud rate, etc).
  *   Note that Yoctopuce I2C ports are not exposed as virtual COM ports.
@@ -112,6 +112,18 @@ public class YI2cPort : YFunction
     public const  string STARTUPJOB_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
+     *   invalid jobMaxTask value
+     * </summary>
+     */
+    public const  int JOBMAXTASK_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
+     *   invalid jobMaxSize value
+     * </summary>
+     */
+    public const  int JOBMAXSIZE_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
      *   invalid command value
      * </summary>
      */
@@ -145,6 +157,8 @@ public class YI2cPort : YFunction
     protected string _lastMsg = LASTMSG_INVALID;
     protected string _currentJob = CURRENTJOB_INVALID;
     protected string _startupJob = STARTUPJOB_INVALID;
+    protected int _jobMaxTask = JOBMAXTASK_INVALID;
+    protected int _jobMaxSize = JOBMAXSIZE_INVALID;
     protected string _command = COMMAND_INVALID;
     protected string _protocol = PROTOCOL_INVALID;
     protected int _i2cVoltageLevel = I2CVOLTAGELEVEL_INVALID;
@@ -212,6 +226,12 @@ public class YI2cPort : YFunction
         }
         if (json_val.has("startupJob")) {
             _startupJob = json_val.getString("startupJob");
+        }
+        if (json_val.has("jobMaxTask")) {
+            _jobMaxTask = json_val.getInt("jobMaxTask");
+        }
+        if (json_val.has("jobMaxSize")) {
+            _jobMaxSize = json_val.getInt("jobMaxSize");
         }
         if (json_val.has("command")) {
             _command = json_val.getString("command");
@@ -511,6 +531,62 @@ public class YI2cPort : YFunction
         await _setAttr("startupJob",rest_val);
         return YAPI.SUCCESS;
     }
+
+    /**
+     * <summary>
+     *   Returns the maximum number of tasks in a job that the device can handle.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the maximum number of tasks in a job that the device can handle
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YI2cPort.JOBMAXTASK_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_jobMaxTask()
+    {
+        int res;
+        if (_cacheExpiration == 0) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return JOBMAXTASK_INVALID;
+            }
+        }
+        res = _jobMaxTask;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns maximum size allowed for job files.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to maximum size allowed for job files
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YI2cPort.JOBMAXSIZE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_jobMaxSize()
+    {
+        int res;
+        if (_cacheExpiration == 0) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return JOBMAXSIZE_INVALID;
+            }
+        }
+        res = _jobMaxSize;
+        return res;
+    }
+
 
     /**
      * <summary>
@@ -1131,7 +1207,7 @@ public class YI2cPort : YFunction
      *   a string containing a JSON definition of the job
      * </param>
      * <returns>
-     *   <c>YAPI_SUCCESS</c> if the call succeeds.
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
      * </returns>
      * <para>
      *   On failure, throws an exception or returns a negative error code.
@@ -1158,7 +1234,7 @@ public class YI2cPort : YFunction
      *   name of the job file (on the device filesystem)
      * </param>
      * <returns>
-     *   <c>YAPI_SUCCESS</c> if the call succeeds.
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
      * </returns>
      * <para>
      *   On failure, throws an exception or returns a negative error code.

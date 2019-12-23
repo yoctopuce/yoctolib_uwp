@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 37692 2019-10-14 14:58:03Z seb $
+ * $Id: YAPIContext.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -50,7 +50,9 @@ namespace com.yoctopuce.YoctoAPI
 //--- (generated code: YAPIContext class start)
 /**
  * <summary>
- *   YAPIContext Class: Control interface for the firmware update process
+ *   YAPIContext Class: Yoctopuce I/O context configuration.
+ * <para>
+ * </para>
  * <para>
  * </para>
  * <para>
@@ -940,8 +942,8 @@ public class YAPIContext
      * <para>
      *   This delay impacts only the YoctoHubs and VirtualHub
      *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
-     *   but depending or you network you may want to change this delay.
-     *   For example if your network infrastructure uses a GSM connection.
+     *   but depending or you network you may want to change this delay,
+     *   gor example if your network infrastructure is based on a GSM connection.
      * </para>
      * <para>
      * </para>
@@ -964,8 +966,8 @@ public class YAPIContext
      * <para>
      *   This delay impacts only the YoctoHubs and VirtualHub
      *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
-     *   but depending or you network you may want to change this delay.
-     *   For example if your network infrastructure uses a GSM connection.
+     *   but depending or you network you may want to change this delay,
+     *   for example if your network infrastructure is based on a GSM connection.
      * </para>
      * </summary>
      * <returns>
@@ -988,8 +990,6 @@ public class YAPIContext
      *   does not affect value change callbacks
      *   Note: This function must be called after <c>yInitAPI</c>.
      * </para>
-     * <para>
-     * </para>
      * </summary>
      * <param name="cacheValidityMs">
      *   an integer corresponding to the validity attributed to the
@@ -1009,8 +1009,6 @@ public class YAPIContext
      *   This method returns the cache validity of all attributes
      *   module functions.
      *   Note: This function must be called after <c>yInitAPI </c>.
-     * </para>
-     * <para>
      * </para>
      * </summary>
      * <returns>
@@ -1240,10 +1238,10 @@ public class YAPIContext
 
         /**
          * <summary>
-         *   Fault-tolerant alternative to <c>RegisterHub()</c>.
+         *   Fault-tolerant alternative to <c>yRegisterHub()</c>.
          * <para>
          *   This function has the same
-         *   purpose and same arguments as <c>RegisterHub()</c>, but does not trigger
+         *   purpose and same arguments as <c>yRegisterHub()</c>, but does not trigger
          *   an error when the selected hub is not available at the time of the function call.
          *   This makes it possible to register a network hub independently of the current
          *   connectivity, and to try to contact it only when a device is actively needed.
@@ -1324,7 +1322,7 @@ public class YAPIContext
          *   Test if the hub is reachable.
          * <para>
          *   This method do not register the hub, it only test if the
-         *   hub is usable. The url parameter follow the same convention as the <c>RegisterHub</c>
+         *   hub is usable. The url parameter follow the same convention as the <c>yRegisterHub</c>
          *   method. This method is useful to verify the authentication parameters for a hub. It
          *   is possible to force this method to return after mstimeout milliseconds.
          * </para>

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 37692 2019-10-14 14:58:03Z seb $
+ * $Id: YAPI.cs 38810 2019-12-17 22:00:46Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "38168";
+        public const string YOCTO_API_BUILD_STR = "38914";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -190,8 +190,8 @@ public class YAPI
      * <para>
      *   This delay impacts only the YoctoHubs and VirtualHub
      *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
-     *   but depending or you network you may want to change this delay.
-     *   For example if your network infrastructure uses a GSM connection.
+     *   but depending or you network you may want to change this delay,
+     *   gor example if your network infrastructure is based on a GSM connection.
      * </para>
      * <para>
      * </para>
@@ -211,8 +211,8 @@ public class YAPI
      * <para>
      *   This delay impacts only the YoctoHubs and VirtualHub
      *   which are accessible through the network. By default, this delay is of 20000 milliseconds,
-     *   but depending or you network you may want to change this delay.
-     *   For example if your network infrastructure uses a GSM connection.
+     *   but depending or you network you may want to change this delay,
+     *   for example if your network infrastructure is based on a GSM connection.
      * </para>
      * </summary>
      * <returns>
@@ -234,8 +234,6 @@ public class YAPI
      *   does not affect value change callbacks
      *   Note: This function must be called after <c>yInitAPI</c>.
      * </para>
-     * <para>
-     * </para>
      * </summary>
      * <param name="cacheValidityMs">
      *   an integer corresponding to the validity attributed to the
@@ -254,8 +252,6 @@ public class YAPI
      *   This method returns the cache validity of all attributes
      *   module functions.
      *   Note: This function must be called after <c>yInitAPI </c>.
-     * </para>
-     * <para>
      * </para>
      * </summary>
      * <returns>
@@ -296,7 +292,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".38168" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".38914" + YUSBHub.imm_getAPIVersion();
         }
 
         /**
@@ -547,10 +543,10 @@ public class YAPI
 
         /**
          * <summary>
-         *   Fault-tolerant alternative to <c>RegisterHub()</c>.
+         *   Fault-tolerant alternative to <c>yRegisterHub()</c>.
          * <para>
          *   This function has the same
-         *   purpose and same arguments as <c>RegisterHub()</c>, but does not trigger
+         *   purpose and same arguments as <c>yRegisterHub()</c>, but does not trigger
          *   an error when the selected hub is not available at the time of the function call.
          *   This makes it possible to register a network hub independently of the current
          *   connectivity, and to try to contact it only when a device is actively needed.
@@ -585,10 +581,10 @@ public class YAPI
 
         /**
          * <summary>
-         *   Fault-tolerant alternative to <c>RegisterHub()</c>.
+         *   Fault-tolerant alternative to <c>yRegisterHub()</c>.
          * <para>
          *   This function has the same
-         *   purpose and same arguments as <c>RegisterHub()</c>, but does not trigger
+         *   purpose and same arguments as <c>yRegisterHub()</c>, but does not trigger
          *   an error when the selected hub is not available at the time of the function call.
          *   This makes it possible to register a network hub independently of the current
          *   connectivity, and to try to contact it only when a device is actively needed.
@@ -639,7 +635,7 @@ public class YAPI
          *   Test if the hub is reachable.
          * <para>
          *   This method do not register the hub, it only test if the
-         *   hub is usable. The url parameter follow the same convention as the <c>RegisterHub</c>
+         *   hub is usable. The url parameter follow the same convention as the <c>yRegisterHub</c>
          *   method. This method is useful to verify the authentication parameters for a hub. It
          *   is possible to force this method to return after mstimeout milliseconds.
          * </para>
@@ -680,7 +676,7 @@ public class YAPI
          *   Test if the hub is reachable.
          * <para>
          *   This method do not register the hub, it only test if the
-         *   hub is usable. The url parameter follow the same convention as the <c>RegisterHub</c>
+         *   hub is usable. The url parameter follow the same convention as the <c>yRegisterHub</c>
          *   method. This method is useful to verify the authentication parameters for a hub. It
          *   is possible to force this method to return after mstimeout milliseconds.
          * </para>

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWeighScale.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YWeighScale.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindWeighScale(), the high-level API for WeighScale functions
  *
@@ -48,10 +48,10 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YWeighScale class start)
 /**
  * <summary>
- *   YWeighScale Class: WeighScale function interface
+ *   YWeighScale Class: weighing scale sensor control interface, available for instance in the
+ *   Yocto-Bridge or the Yocto-MaxiBridge
  * <para>
- *   The YWeighScale class provides a weight measurement from a ratiometric sensor, for instance using a
- *   Yocto-Bridge or a Yocto-MaxiBridge.
+ *   The <c>YWeighScale</c> class provides a weight measurement from a ratiometric sensor.
  *   It can be used to control the bridge excitation parameters, in order to avoid
  *   measure shifts caused by temperature variation in the electronics, and can also
  *   automatically apply an additional correction factor based on temperature to
@@ -759,7 +759,7 @@ public class YWeighScale : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

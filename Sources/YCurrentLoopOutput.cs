@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCurrentLoopOutput.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YCurrentLoopOutput.cs 38913 2019-12-20 18:59:49Z mvuilleu $
  *
  *  Implements FindCurrentLoopOutput(), the high-level API for CurrentLoopOutput functions
  *
@@ -48,9 +48,10 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YCurrentLoopOutput class start)
 /**
  * <summary>
- *   YCurrentLoopOutput Class: CurrentLoopOutput function interface
+ *   YCurrentLoopOutput Class: 4-20mA output control interface, available for instance in the Yocto-4-20mA-Tx
  * <para>
- *   The YCurrentLoopOutput class allows you to drive a 4-20mA output, for instance using a Yocto-4-20mA-Tx.
+ *   The <c>YCurrentLoopOutput</c> class allows you to drive a 4-20mA output
+ *   by regulating the current flowing through the current loop.
  *   It can also provide information about the power state of the current loop.
  * </para>
  * </summary>

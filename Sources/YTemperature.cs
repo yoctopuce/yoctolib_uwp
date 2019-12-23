@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTemperature.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YTemperature.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindTemperature(), the high-level API for Temperature functions
  *
@@ -48,14 +48,14 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YTemperature class start)
 /**
  * <summary>
- *   YTemperature Class: Temperature function interface
+ *   YTemperature Class: temperature sensor control interface, available for instance in the
+ *   Yocto-Meteo-V2, the Yocto-PT100, the Yocto-Temperature or the Yocto-Thermocouple
  * <para>
- *   The YTemperature class allows you to read and configure Yoctopuce temperature
- *   sensors, for instance using a Yocto-Meteo-V2, a Yocto-Thermocouple, a Yocto-PT100 or a
- *   Yocto-Temperature. It inherits from YSensor class the core functions to read measurements, to
- *   register callback functions, to access the autonomous datalogger.
- *   This class adds the ability to configure some specific parameters for some
- *   sensors (connection type, temperature mapping table).
+ *   The <c>YTemperature</c> class allows you to read and configure Yoctopuce temperature sensors.
+ *   It inherits from <c>YSensor</c> class the core functions to read measurements,
+ *   to register callback functions, and to access the autonomous datalogger.
+ *   This class adds the ability to configure some specific parameters
+ *   for some sensors (connection type, temperature mapping table).
  * </para>
  * </summary>
  */
@@ -535,7 +535,7 @@ public class YTemperature : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

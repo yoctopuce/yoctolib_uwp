@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLatitude.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YLatitude.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindLatitude(), the high-level API for Latitude functions
  *
@@ -48,12 +48,11 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YLatitude class start)
 /**
  * <summary>
- *   YLatitude Class: Latitude function interface
+ *   YLatitude Class: latitude sensor control interface, available for instance in the Yocto-GPS
  * <para>
- *   The YLatitude class allows you to read the latitude from Yoctopuce
- *   geolocation sensors, for instance using a Yocto-GPS. It inherits from the YSensor class the core functions to
- *   read measurements, to register callback functions, to access the autonomous
- *   datalogger.
+ *   The <c>YLatitude</c> class allows you to read and configure Yoctopuce latitude sensors.
+ *   It inherits from <c>YSensor</c> class the core functions to read measurements,
+ *   to register callback functions, and to access the autonomous datalogger.
  * </para>
  * </summary>
  */
@@ -280,7 +279,7 @@ public class YLatitude : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

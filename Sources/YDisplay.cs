@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ * $Id: YDisplay.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -49,15 +49,21 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YDisplay class start)
 /**
  * <summary>
- *   YDisplay Class: Display function interface
+ *   YDisplay Class: display control interface, available for instance in the Yocto-Display, the
+ *   Yocto-MaxiDisplay, the Yocto-MaxiDisplay-G or the Yocto-MiniDisplay
  * <para>
- *   The YDisplay class allows to drive Yoctopuce displays, for instance using a Yocto-MaxiDisplay, a
- *   Yocto-MiniDisplay, a Yocto-MaxiDisplay-G or a Yocto-Display.
+ *   The <c>YDisplay</c> class allows to drive Yoctopuce displays.
  *   Yoctopuce display interface has been designed to easily
  *   show information and images. The device provides built-in
  *   multi-layer rendering. Layers can be drawn offline, individually,
  *   and freely moved on the display. It can also replay recorded
  *   sequences (animations).
+ * </para>
+ * <para>
+ *   In order to draw on the screen, you should use the
+ *   <c>display.get_displayLayer</c> method to retrieve the layer(s) on
+ *   which you want to draw, and then use methods defined in
+ *   <c>YDisplayLayer</c> to draw on the layers.
  * </para>
  * </summary>
  */
@@ -699,7 +705,7 @@ public class YDisplay : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the display, for instance
-     *   <c>YD128X64.display</c>.
+     *   <c>YD128X32.display</c>.
      * </param>
      * <returns>
      *   a <c>YDisplay</c> object allowing you to drive the display.
@@ -756,7 +762,7 @@ public class YDisplay : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the display, for instance
-     *   <c>YD128X64.display</c>.
+     *   <c>YD128X32.display</c>.
      * </param>
      * <returns>
      *   a <c>YDisplay</c> object allowing you to drive the display.

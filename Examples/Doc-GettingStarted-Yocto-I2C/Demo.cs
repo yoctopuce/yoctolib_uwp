@@ -51,7 +51,7 @@ namespace Demo
           await i2cPort.set_i2cMode("400kbps");
           await i2cPort.set_i2cVoltageLevel(YI2cPort.I2CVOLTAGELEVEL_3V3);
           await i2cPort.reset();
-          // do not forget to configure the powerOutput and 
+          // do not forget to configure the powerOutput and
           // of the Yocto-I2C as well if used
           WriteLine("****************************");
           WriteLine("* make sure voltage levels *");
@@ -61,12 +61,9 @@ namespace Demo
           List<int> toSend = new List<int>(new int[] { 0x05 });
           List<int> received = await i2cPort.i2cSendAndReceiveArray(0x1f, toSend, 2);
           int tempReg = (received[0] << 8) + received[1];
-          if ((tempReg & 0x1000) != 0)
-          {
+          if ((tempReg & 0x1000) != 0) {
             tempReg -= 0x2000;    // perform sign extension
-          }
-          else
-          {
+          } else {
             tempReg &= 0x0fff;    // clear status bits
           }
           WriteLine("Ambiant temperature: " + String.Format("{0:0.000}", (tempReg / 16.0)));

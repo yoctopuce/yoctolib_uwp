@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSerialPort.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ * $Id: YSerialPort.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindSerialPort(), the high-level API for SerialPort functions
  *
@@ -48,10 +48,10 @@ namespace com.yoctopuce.YoctoAPI
 //--- (generated code: YSerialPort class start)
 /**
  * <summary>
- *   YSerialPort Class: SerialPort function interface
+ *   YSerialPort Class: serial port control interface, available for instance in the Yocto-RS232, the
+ *   Yocto-RS485-V2 or the Yocto-Serial
  * <para>
- *   The YSerialPort class allows you to fully drive a Yoctopuce serial port, for instance using a
- *   Yocto-RS232, a Yocto-RS485 or a Yocto-Serial.
+ *   The <c>YSerialPort</c> class allows you to fully drive a Yoctopuce serial port.
  *   It can be used to send and receive data, and to configure communication
  *   parameters (baud rate, bit count, parity, flow control and protocol).
  *   Note that Yoctopuce serial ports are not exposed as virtual COM ports.
@@ -113,6 +113,18 @@ public class YSerialPort : YFunction
     public const  string STARTUPJOB_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
+     *   invalid jobMaxTask value
+     * </summary>
+     */
+    public const  int JOBMAXTASK_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
+     *   invalid jobMaxSize value
+     * </summary>
+     */
+    public const  int JOBMAXSIZE_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
      *   invalid command value
      * </summary>
      */
@@ -151,6 +163,8 @@ public class YSerialPort : YFunction
     protected string _lastMsg = LASTMSG_INVALID;
     protected string _currentJob = CURRENTJOB_INVALID;
     protected string _startupJob = STARTUPJOB_INVALID;
+    protected int _jobMaxTask = JOBMAXTASK_INVALID;
+    protected int _jobMaxSize = JOBMAXSIZE_INVALID;
     protected string _command = COMMAND_INVALID;
     protected string _protocol = PROTOCOL_INVALID;
     protected int _voltageLevel = VOLTAGELEVEL_INVALID;
@@ -218,6 +232,12 @@ public class YSerialPort : YFunction
         }
         if (json_val.has("startupJob")) {
             _startupJob = json_val.getString("startupJob");
+        }
+        if (json_val.has("jobMaxTask")) {
+            _jobMaxTask = json_val.getInt("jobMaxTask");
+        }
+        if (json_val.has("jobMaxSize")) {
+            _jobMaxSize = json_val.getInt("jobMaxSize");
         }
         if (json_val.has("command")) {
             _command = json_val.getString("command");
@@ -517,6 +537,62 @@ public class YSerialPort : YFunction
         await _setAttr("startupJob",rest_val);
         return YAPI.SUCCESS;
     }
+
+    /**
+     * <summary>
+     *   Returns the maximum number of tasks in a job that the device can handle.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the maximum number of tasks in a job that the device can handle
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YSerialPort.JOBMAXTASK_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_jobMaxTask()
+    {
+        int res;
+        if (_cacheExpiration == 0) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return JOBMAXTASK_INVALID;
+            }
+        }
+        res = _jobMaxTask;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns maximum size allowed for job files.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to maximum size allowed for job files
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YSerialPort.JOBMAXSIZE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_jobMaxSize()
+    {
+        int res;
+        if (_cacheExpiration == 0) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return JOBMAXSIZE_INVALID;
+            }
+        }
+        res = _jobMaxSize;
+        return res;
+    }
+
 
     /**
      * <summary>
@@ -1769,7 +1845,7 @@ public class YSerialPort : YFunction
      *   in the receive buffer.
      * </param>
      * <returns>
-     *   an array of YSnoopingRecord objects containing the messages found, if any.
+     *   an array of <c>YSnoopingRecord</c> objects containing the messages found, if any.
      *   Binary messages are converted to hexadecimal representation.
      * </returns>
      * <para>

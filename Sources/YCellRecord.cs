@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellRecord.cs 25163 2016-08-11 09:42:13Z seb $
+ * $Id: YCellRecord.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindCellRecord(), the high-level API for CellRecord functions
  *
@@ -48,10 +48,14 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YCellRecord class start)
 /**
  * <summary>
- *   YCellRecord Class: Description of a cellular antenna
+ *   Y
  * <para>
+ *   CellRecord Class: Cellular antenna description, returned by <c>cellular.quickCellSurvey</c> method
  * </para>
  * <para>
+ *   <c>YCellRecord</c> objects are used to describe a wireless network.
+ *   These objects are used in particular in conjunction with the
+ *   <c>YCellular</c> class.
  * </para>
  * </summary>
  */
@@ -93,37 +97,225 @@ public class YCellRecord
         //--- (generated code: YCellRecord implementation)
 #pragma warning disable 1998
 
-    public virtual string get_cellOperator()
+    /**
+     * <summary>
+     *   Returns the name of the the cell operator, as received from the network.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the name of the the cell operator.
+     * </returns>
+     */
+    public virtual async Task<string> get_cellOperator()
+    {
+        return imm_get_cellOperator();
+    }
+    /**
+     * <summary>
+     *   Returns the name of the the cell operator, as received from the network.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the name of the the cell operator.
+     * </returns>
+     */
+    public virtual string imm_get_cellOperator()
     {
         return _oper;
     }
 
-    public virtual int get_mobileCountryCode()
+    /**
+     * <summary>
+     *   Returns the Mobile Country Code (MCC).
+     * <para>
+     *   The MCC is a unique identifier for each country.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Mobile Country Code (MCC).
+     * </returns>
+     */
+    public virtual async Task<int> get_mobileCountryCode()
+    {
+        return imm_get_mobileCountryCode();
+    }
+    /**
+     * <summary>
+     *   Returns the Mobile Country Code (MCC).
+     * <para>
+     *   The MCC is a unique identifier for each country.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Mobile Country Code (MCC).
+     * </returns>
+     */
+    public virtual int imm_get_mobileCountryCode()
     {
         return _mcc;
     }
 
-    public virtual int get_mobileNetworkCode()
+    /**
+     * <summary>
+     *   Returns the Mobile Network Code (MNC).
+     * <para>
+     *   The MNC is a unique identifier for each phone
+     *   operator within a country.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Mobile Network Code (MNC).
+     * </returns>
+     */
+    public virtual async Task<int> get_mobileNetworkCode()
+    {
+        return imm_get_mobileNetworkCode();
+    }
+    /**
+     * <summary>
+     *   Returns the Mobile Network Code (MNC).
+     * <para>
+     *   The MNC is a unique identifier for each phone
+     *   operator within a country.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Mobile Network Code (MNC).
+     * </returns>
+     */
+    public virtual int imm_get_mobileNetworkCode()
     {
         return _mnc;
     }
 
-    public virtual int get_locationAreaCode()
+    /**
+     * <summary>
+     *   Returns the Location Area Code (LAC).
+     * <para>
+     *   The LAC is a unique identifier for each
+     *   place within a country.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Location Area Code (LAC).
+     * </returns>
+     */
+    public virtual async Task<int> get_locationAreaCode()
+    {
+        return imm_get_locationAreaCode();
+    }
+    /**
+     * <summary>
+     *   Returns the Location Area Code (LAC).
+     * <para>
+     *   The LAC is a unique identifier for each
+     *   place within a country.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Location Area Code (LAC).
+     * </returns>
+     */
+    public virtual int imm_get_locationAreaCode()
     {
         return _lac;
     }
 
-    public virtual int get_cellId()
+    /**
+     * <summary>
+     *   Returns the Cell ID.
+     * <para>
+     *   The Cell ID is a unique identifier for each
+     *   base transmission station within a LAC.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Cell Id.
+     * </returns>
+     */
+    public virtual async Task<int> get_cellId()
+    {
+        return imm_get_cellId();
+    }
+    /**
+     * <summary>
+     *   Returns the Cell ID.
+     * <para>
+     *   The Cell ID is a unique identifier for each
+     *   base transmission station within a LAC.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Cell Id.
+     * </returns>
+     */
+    public virtual int imm_get_cellId()
     {
         return _cid;
     }
 
-    public virtual int get_signalStrength()
+    /**
+     * <summary>
+     *   Returns the signal strength, measured in dBm.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the signal strength.
+     * </returns>
+     */
+    public virtual async Task<int> get_signalStrength()
+    {
+        return imm_get_signalStrength();
+    }
+    /**
+     * <summary>
+     *   Returns the signal strength, measured in dBm.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the signal strength.
+     * </returns>
+     */
+    public virtual int imm_get_signalStrength()
     {
         return _dbm;
     }
 
-    public virtual int get_timingAdvance()
+    /**
+     * <summary>
+     *   Returns the Timing Advance (TA).
+     * <para>
+     *   The TA corresponds to the time necessary
+     *   for the signal to reach the base station from the device.
+     *   Each increment corresponds about to 550m of distance.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Timing Advance (TA).
+     * </returns>
+     */
+    public virtual async Task<int> get_timingAdvance()
+    {
+        return imm_get_timingAdvance();
+    }
+    /**
+     * <summary>
+     *   Returns the Timing Advance (TA).
+     * <para>
+     *   The TA corresponds to the time necessary
+     *   for the signal to reach the base station from the device.
+     *   Each increment corresponds about to 550m of distance.
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the Timing Advance (TA).
+     * </returns>
+     */
+    public virtual int imm_get_timingAdvance()
     {
         return _tad;
     }

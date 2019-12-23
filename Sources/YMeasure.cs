@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YMeasure.cs 25163 2016-08-11 09:42:13Z seb $
+ * $Id: YMeasure.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements yFindMeasure(), the high-level API for Measure functions
  *
@@ -46,11 +46,15 @@ namespace com.yoctopuce.YoctoAPI {
     //--- (generated code: YMeasure class start)
 /**
  * <summary>
- *   YMeasure Class: Measured value
+ *   YMeasure Class: Measured value, returned in particular by the methods of the <c>YDataSet</c> class.
  * <para>
- *   YMeasure objects are used within the API to represent
+ * </para>
+ * <para>
+ *   <c>YMeasure</c> objects are used within the API to represent
  *   a value measured at a specified time. These objects are
- *   used in particular in conjunction with the YDataSet class.
+ *   used in particular in conjunction with the <c>YDataSet</c> class,
+ *   but also for sensors periodic timed reports
+ *   (see <c>sensor.registerTimedReportCallback</c>).
  * </para>
  * </summary>
  */
@@ -101,7 +105,7 @@ public class YMeasure
      * </para>
      * </summary>
      * <returns>
-     *   an floating point number corresponding to the number of seconds
+     *   a floating point number corresponding to the number of seconds
      *   between the Jan 1, 1970 UTC and the beginning of this measure.
      * </returns>
      */
@@ -122,7 +126,7 @@ public class YMeasure
      * </para>
      * </summary>
      * <returns>
-     *   an floating point number corresponding to the number of seconds
+     *   a floating point number corresponding to the number of seconds
      *   between the Jan 1, 1970 UTC and the end of this measure.
      * </returns>
      */

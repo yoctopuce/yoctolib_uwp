@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YProximity.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YProximity.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindProximity(), the high-level API for Proximity functions
  *
@@ -48,14 +48,13 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YProximity class start)
 /**
  * <summary>
- *   YProximity Class: Proximity function interface
+ *   YProximity Class: proximity sensor control interface, available for instance in the Yocto-Proximity
  * <para>
- *   The YProximity class allows you to use and configure Yoctopuce proximity
- *   sensors, for instance using a Yocto-Proximity. It inherits from the YSensor class the core
- *   functions to read measurements,
- *   to register callback functions, to access the autonomous datalogger.
- *   This class adds the ability to easily perform a one-point linear calibration
- *   to compensate the effect of a glass or filter placed in front of the sensor.
+ *   The <c>YProximity</c> class allows you to read and configure Yoctopuce proximity sensors.
+ *   It inherits from <c>YSensor</c> class the core functions to read measurements,
+ *   to register callback functions, and to access the autonomous datalogger.
+ *   This class adds the ability to setup a detection threshold and to count the
+ *   number of detected state changes.
  * </para>
  * </summary>
  */
@@ -895,7 +894,7 @@ public class YProximity : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

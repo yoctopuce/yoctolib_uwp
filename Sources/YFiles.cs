@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFiles.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ * $Id: YFiles.cs 38913 2019-12-20 18:59:49Z mvuilleu $
  *
  * Implements FindFiles(), the high-level API for Files functions
  *
@@ -48,11 +48,11 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YFiles class start)
 /**
  * <summary>
- *   YFiles Class: Files function interface
+ *   YFiles Class: filesystem control interface, available for instance in the Yocto-Color-V2, the
+ *   Yocto-RS232, the YoctoHub-Ethernet or the YoctoHub-Wireless-g
  * <para>
  *   The YFiles class is used to access the filesystem embedded on
- *   some Yoctopuce devices, for instance using a YoctoHub-Ethernet, a Yocto-Color-V2, a
- *   YoctoHub-Wireless-g or a Yocto-RS232. This filesystem makes it
+ *   some Yoctopuce devices. This filesystem makes it
  *   possible for instance to design a custom web UI
  *   (for networked devices) or to add fonts (on display devices).
  * </para>
@@ -220,7 +220,7 @@ public class YFiles : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the filesystem, for instance
-     *   <c>YHUBETH1.files</c>.
+     *   <c>YRGBLED2.files</c>.
      * </param>
      * <returns>
      *   a <c>YFiles</c> object allowing you to drive the filesystem.
@@ -277,7 +277,7 @@ public class YFiles : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the filesystem, for instance
-     *   <c>YHUBETH1.files</c>.
+     *   <c>YRGBLED2.files</c>.
      * </param>
      * <returns>
      *   a <c>YFiles</c> object allowing you to drive the filesystem.

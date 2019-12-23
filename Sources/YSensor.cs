@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ * $Id: YSensor.cs 38913 2019-12-20 18:59:49Z mvuilleu $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -46,17 +46,19 @@ namespace com.yoctopuce.YoctoAPI {
     //--- (generated code: YSensor class start)
 /**
  * <summary>
- *   YSensor Class: Sensor function interface
+ *   YSensor Class: Sensor function interface.
  * <para>
- *   The YSensor class is the parent class for all Yoctopuce sensor types. It can be
+ * </para>
+ * <para>
+ *   The <c>YSensor</c> class is the parent class for all Yoctopuce sensor types. It can be
  *   used to read the current value and unit of any sensor, read the min/max
  *   value, configure autonomous recording frequency and access recorded data.
  *   It also provide a function to register a callback invoked each time the
  *   observed value changes, or at a predefined interval. Using this class rather
  *   than a specific subclass makes it possible to create generic applications
  *   that work with any Yoctopuce sensor, even those that do not yet exist.
- *   Note: The YAnButton class is the only analog input which does not inherit
- *   from YSensor.
+ *   Note: The <c>YAnButton</c> class is the only analog input which does not inherit
+ *   from <c>YSensor</c>.
  * </para>
  * </summary>
  */
@@ -1170,17 +1172,17 @@ public class YSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the YDatalogger object of the device hosting the sensor.
+     *   Returns the <c>YDatalogger</c> object of the device hosting the sensor.
      * <para>
-     *   This method returns an object of
-     *   class YDatalogger that can control global parameters of the data logger. The returned object
+     *   This method returns an object
+     *   that can control global parameters of the data logger. The returned object
      *   should not be freed.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an YDataLogger object or null on error.
+     *   an <c>YDatalogger</c> object, or null on error.
      * </returns>
      */
     public virtual async Task<YDataLogger> get_dataLogger()
@@ -1243,19 +1245,19 @@ public class YSensor : YFunction
 
     /**
      * <summary>
-     *   Retrieves a DataSet object holding historical data for this
+     *   Retrieves a <c>YDataSet</c> object holding historical data for this
      *   sensor, for a specified time interval.
      * <para>
      *   The measures will be
      *   retrieved from the data logger, which must have been turned
-     *   on at the desired time. See the documentation of the DataSet
+     *   on at the desired time. See the documentation of the <c>YDataSet</c>
      *   class for information on how to get an overview of the
      *   recorded data, and how to load progressively a large set
      *   of measures from the data logger.
      * </para>
      * <para>
      *   This function only works if the device uses a recent firmware,
-     *   as DataSet objects are not supported by firmwares older than
+     *   as <c>YDataSet</c> objects are not supported by firmwares older than
      *   version 13000.
      * </para>
      * <para>
@@ -1274,9 +1276,9 @@ public class YSensor : YFunction
      *   to include any measure, without ending limit.
      * </param>
      * <returns>
-     *   an instance of YDataSet, providing access to historical
+     *   an instance of <c>YDataSet</c>, providing access to historical
      *   data. Past measures can be loaded progressively
-     *   using methods from the YDataSet object.
+     *   using methods from the <c>YDataSet</c> object.
      * </returns>
      */
     public virtual async Task<YDataSet> get_recordedData(double startTime,double endTime)
@@ -1302,7 +1304,7 @@ public class YSensor : YFunction
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

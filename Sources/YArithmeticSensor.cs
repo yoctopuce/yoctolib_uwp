@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YArithmeticSensor.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YArithmeticSensor.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindArithmeticSensor(), the high-level API for ArithmeticSensor functions
  *
@@ -48,12 +48,13 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YArithmeticSensor class start)
 /**
  * <summary>
- *   YArithmeticSensor Class: ArithmeticSensor function interface
+ *   YArithmeticSensor Class: arithmetic sensor control interface, available for instance in the
+ *   Yocto-MaxiMicroVolt-Rx
  * <para>
- *   The YArithmeticSensor class allows some Yoctopuce devices to compute in real-time
+ *   The <c>YArithmeticSensor</c> class allows some Yoctopuce devices to compute in real-time
  *   values based on an arithmetic formula involving one or more measured signals as
- *   well as the temperature. This functionality is only available on specific
- *   Yoctopuce devices, for instance using a Yocto-MaxiMicroVolt-Rx.
+ *   well as the temperature. As for any physical sensor, the computed values can be
+ *   read by callback and stored in the built-in datalogger.
  * </para>
  * </summary>
  */
@@ -384,7 +385,7 @@ public class YArithmeticSensor : YSensor
      * </summary>
      * <param name="callback">
      *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the function object of which the value has changed, and an YMeasure object describing
+     *   arguments: the function object of which the value has changed, and an <c>YMeasure</c> object describing
      *   the new advertised value.
      * @noreturn
      * </param>

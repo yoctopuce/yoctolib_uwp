@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiAxisController.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YMultiAxisController.cs 38913 2019-12-20 18:59:49Z mvuilleu $
  *
  *  Implements FindMultiAxisController(), the high-level API for MultiAxisController functions
  *
@@ -50,7 +50,7 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YMultiAxisController Class: MultiAxisController function interface
  * <para>
- *   The YMultiAxisController class allows you to drive multiple stepper motors
+ *   The <c>YMultiAxisController</c> class allows you to drive multiple stepper motors
  *   synchronously.
  * </para>
  * </summary>

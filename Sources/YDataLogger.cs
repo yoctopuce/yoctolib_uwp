@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataLogger.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ * $Id: YDataLogger.cs 38913 2019-12-20 18:59:49Z mvuilleu $
  *
  * Implements yFindDataLogger(), the high-level API for DataLogger functions
  *
@@ -46,13 +46,14 @@ namespace com.yoctopuce.YoctoAPI {
     //--- (generated code: YDataLogger class start)
 /**
  * <summary>
- *   YDataLogger Class: DataLogger function interface
+ *   YDataLogger Class: DataLogger control interface, available on most Yoctopuce sensors.
+ * <para>
+ * </para>
  * <para>
  *   A non-volatile memory for storing ongoing measured data is available on most Yoctopuce
- *   sensors, for instance using a Yocto-Light-V3, a Yocto-Meteo-V2, a Yocto-Watt or a Yocto-3D-V2.
- *   Recording can happen automatically, without requiring a permanent
+ *   sensors. Recording can happen automatically, without requiring a permanent
  *   connection to a computer.
- *   The YDataLogger class controls the global parameters of the internal data
+ *   The <c>YDataLogger</c> class controls the global parameters of the internal data
  *   logger. Recording control (start/stop) as well as data retreival is done at
  *   sensor objects level.
  * </para>
@@ -604,7 +605,7 @@ public class YDataLogger : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the data logger, for instance
-     *   <c>LIGHTMK3.dataLogger</c>.
+     *   <c>Y3DMK002.dataLogger</c>.
      * </param>
      * <returns>
      *   a <c>YDataLogger</c> object allowing you to drive the data logger.
@@ -661,7 +662,7 @@ public class YDataLogger : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the data logger, for instance
-     *   <c>LIGHTMK3.dataLogger</c>.
+     *   <c>Y3DMK002.dataLogger</c>.
      * </param>
      * <returns>
      *   a <c>YDataLogger</c> object allowing you to drive the data logger.
@@ -746,20 +747,20 @@ public class YDataLogger : YFunction
 
     /**
      * <summary>
-     *   Returns a list of YDataSet objects that can be used to retrieve
+     *   Returns a list of <c>YDataSet</c> objects that can be used to retrieve
      *   all measures stored by the data logger.
      * <para>
      * </para>
      * <para>
      *   This function only works if the device uses a recent firmware,
-     *   as YDataSet objects are not supported by firmwares older than
+     *   as <c>YDataSet</c> objects are not supported by firmwares older than
      *   version 13000.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a list of YDataSet object.
+     *   a list of <c>YDataSet</c> object.
      * </returns>
      * <para>
      *   On failure, throws an exception or returns an empty list.

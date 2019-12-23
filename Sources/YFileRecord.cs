@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFileRecord.cs 34651 2019-03-15 17:21:54Z seb $
+ * $Id: YFileRecord.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * Implements FindFileRecord(), the high-level API for FileRecord functions
  *
@@ -48,10 +48,13 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YFileRecord class start)
 /**
  * <summary>
- *   YFileRecord Class: Description of a file on the device filesystem
+ *   Y
  * <para>
- *   YFileRecord objects are used to describe a file that is stored on a Yoctopuce device.
- *   These objects are used in particular in conjunction with the YFiles class.
+ *   FileRecord Class: Description of a file on the device filesystem, returned by <c>files.get_list</c>
+ * </para>
+ * <para>
+ *   <c>YFileRecord</c> objects are used to describe a file that is stored on a Yoctopuce device.
+ *   These objects are used in particular in conjunction with the <c>YFiles</c> class.
  * </para>
  * </summary>
  */
@@ -90,6 +93,20 @@ public class YFileRecord
      */
     public virtual async Task<string> get_name()
     {
+        return imm_get_name();
+    }
+    /**
+     * <summary>
+     *   Returns the name of the file.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the name of the file.
+     * </returns>
+     */
+    public virtual string imm_get_name()
+    {
         return _name;
     }
 
@@ -105,6 +122,20 @@ public class YFileRecord
      */
     public virtual async Task<int> get_size()
     {
+        return imm_get_size();
+    }
+    /**
+     * <summary>
+     *   Returns the size of the file in bytes.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the size of the file.
+     * </returns>
+     */
+    public virtual int imm_get_size()
+    {
         return _size;
     }
 
@@ -119,6 +150,20 @@ public class YFileRecord
      * </returns>
      */
     public virtual async Task<int> get_crc()
+    {
+        return imm_get_crc();
+    }
+    /**
+     * <summary>
+     *   Returns the 32-bit CRC of the file content.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the 32-bit CRC of the file content.
+     * </returns>
+     */
+    public virtual int imm_get_crc()
     {
         return _crc;
     }

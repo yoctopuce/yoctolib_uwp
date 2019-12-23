@@ -49,9 +49,11 @@ namespace com.yoctopuce.YoctoAPI
 //--- (generated code: YConsolidatedDataSet class start)
 /**
  * <summary>
- *   YConsolidatedDataSet Class: Cross-sensor consolidated data sequence
+ *   YConsolidatedDataSet Class: Cross-sensor consolidated data sequence.
  * <para>
- *   YConsolidatedDataSet objects make it possible to retrieve a set of
+ * </para>
+ * <para>
+ *   <c>YConsolidatedDataSet</c> objects make it possible to retrieve a set of
  *   recorded measures from multiple sensors, for a specified time interval.
  *   They can be used to load data points progressively, and to receive
  *   data records by timestamp, one by one..
@@ -103,7 +105,63 @@ public class YConsolidatedDataSet
 
     /**
      * <summary>
-     *   Extracts the next data record from the dataLogger of all sensors linked to this
+     *   Returns an object holding historical data for multiple
+     *   sensors, for a specified time interval.
+     * <para>
+     *   The measures will be retrieved from the data logger, which must have been turned
+     *   on at the desired time. The resulting object makes it possible to load progressively
+     *   a large set of measures from multiple sensors, consolidating data on the fly
+     *   to align records based on measurement timestamps.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="sensorNames">
+     *   array of logical names or hardware identifiers of the sensors
+     *   for which data must be loaded from their data logger.
+     * </param>
+     * <param name="startTime">
+     *   the start of the desired measure time interval,
+     *   as a Unix timestamp, i.e. the number of seconds since
+     *   January 1, 1970 UTC. The special value 0 can be used
+     *   to include any measure, without initial limit.
+     * </param>
+     * <param name="endTime">
+     *   the end of the desired measure time interval,
+     *   as a Unix timestamp, i.e. the number of seconds since
+     *   January 1, 1970 UTC. The special value 0 can be used
+     *   to include any measure, without ending limit.
+     * </param>
+     * <returns>
+     *   an instance of <c>YConsolidatedDataSet</c>, providing access to
+     *   consolidated historical data. Records can be loaded progressively
+     *   using the <c>YConsolidatedDataSet.nextRecord()</c> method.
+     * </returns>
+     */
+    public static YConsolidatedDataSet Init(List<string> sensorNames,double startTime,double endTime)
+    {
+        int nSensors;
+        List<YSensor> sensorList = new List<YSensor>();
+        int idx;
+        string sensorName;
+        YSensor s;
+        YConsolidatedDataSet obj;
+        nSensors = sensorNames.Count;
+        sensorList.Clear();
+        idx = 0;
+        while (idx < nSensors) {
+            sensorName = sensorNames[idx];
+            s = YSensor.FindSensor(sensorName);
+            sensorList.Add(s);
+            idx = idx + 1;
+        }
+        obj = new YConsolidatedDataSet(startTime, endTime, sensorList);
+        return obj;
+    }
+
+    /**
+     * <summary>
+     *   Extracts the next data record from the data logger of all sensors linked to this
      *   object.
      * <para>
      * </para>

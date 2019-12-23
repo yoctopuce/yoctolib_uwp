@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAudioOut.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ *  $Id: YAudioOut.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  *  Implements FindAudioOut(), the high-level API for AudioOut functions
  *
@@ -48,9 +48,9 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YAudioOut class start)
 /**
  * <summary>
- *   YAudioOut Class: AudioOut function interface
+ *   YAudioOut Class: audio output control interface
  * <para>
- *   The YAudioOut class allows you to configure the volume of an audio outout.
+ *   The <c>YAudioOut</c> class allows you to configure the volume of an audio output.
  * </para>
  * </summary>
  */

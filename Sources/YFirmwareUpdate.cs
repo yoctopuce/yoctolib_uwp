@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFirmwareUpdate.cs 34554 2019-03-06 10:21:57Z seb $
+ * $Id: YFirmwareUpdate.cs 38913 2019-12-20 18:59:49Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -56,11 +56,13 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YFirmwareUpdate class start)
 /**
  * <summary>
- *   YFirmwareUpdate Class: Control interface for the firmware update process
+ *   YFirmwareUpdate Class: Firmware update process control interface, returned by <c>module.updateFirmware</c> method.
  * <para>
- *   The YFirmwareUpdate class let you control the firmware update of a Yoctopuce
- *   module. This class should not be instantiate directly, instead the method
- *   <c>updateFirmware</c> should be called to get an instance of YFirmwareUpdate.
+ * </para>
+ * <para>
+ *   The <c>YFirmwareUpdate</c> class let you control the firmware update of a Yoctopuce
+ *   module. This class should not be instantiate directly, but instances should be retrieved
+ *   using the <c>YModule</c> method <c>module.updateFirmware</c>.
  * </para>
  * </summary>
  */
