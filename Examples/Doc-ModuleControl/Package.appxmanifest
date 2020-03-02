@@ -293,10 +293,6 @@
       <Device Id="vidpid:24e0 0095">
         <Function Type="usage:ff00 0001" />
       </Device>
-      <!-- yocto-MaxiBuzzer -->
-      <Device Id="vidpid:24e0 0098">
-        <Function Type="usage:ff00 0001" />
-      </Device>
 <!-- USABLE DEVICES STOP -->
     </DeviceCapability>
   </Capabilities>

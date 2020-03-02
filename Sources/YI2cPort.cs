@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YI2cPort.cs 38913 2019-12-20 18:59:49Z mvuilleu $
+ *  $Id: YI2cPort.cs 39333 2020-01-30 10:05:40Z mvuilleu $
  *
  *  Implements FindI2cPort(), the high-level API for I2cPort functions
  *
@@ -742,7 +742,7 @@ public class YI2cPort : YFunction
 
     /**
      * <summary>
-     *   Returns the SPI port communication parameters, as a string such as
+     *   Returns the I2C port communication parameters, as a string such as
      *   "400kbps,2000ms,NoRestart".
      * <para>
      *   The string includes the baud rate, the
@@ -754,7 +754,7 @@ public class YI2cPort : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   a string corresponding to the SPI port communication parameters, as a string such as
+     *   a string corresponding to the I2C port communication parameters, as a string such as
      *   "400kbps,2000ms,NoRestart"
      * </returns>
      * <para>
@@ -776,7 +776,7 @@ public class YI2cPort : YFunction
 
     /**
      * <summary>
-     *   Changes the SPI port communication parameters, with a string such as
+     *   Changes the I2C port communication parameters, with a string such as
      *   "400kbps,2000ms".
      * <para>
      *   The string includes the baud rate, the
@@ -790,7 +790,7 @@ public class YI2cPort : YFunction
      * </para>
      * </summary>
      * <param name="newval">
-     *   a string corresponding to the SPI port communication parameters, with a string such as
+     *   a string corresponding to the I2C port communication parameters, with a string such as
      *   "400kbps,2000ms"
      * </param>
      * <para>
@@ -1177,6 +1177,53 @@ public class YI2cPort : YFunction
         string res;
 
         url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=!"+this.imm_escapeAttr(query);
+        msgbin = await this._download(url);
+        msgarr = this.imm_json_get_array(msgbin);
+        msglen = msgarr.Count;
+        if (msglen == 0) {
+            return "";
+        }
+        // last element of array is the new position
+        msglen = msglen - 1;
+        _rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        if (msglen == 0) {
+            return "";
+        }
+        res = this.imm_json_get_string(YAPI.DefaultEncoding.GetBytes(msgarr[0]));
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Sends a binary message to the serial port, and reads the reply, if any.
+     * <para>
+     *   This function is intended to be used when the serial port is configured for
+     *   Frame-based protocol.
+     * </para>
+     * </summary>
+     * <param name="hexString">
+     *   the message to send, coded in hexadecimal
+     * </param>
+     * <param name="maxWait">
+     *   the maximum number of milliseconds to wait for a reply.
+     * </param>
+     * <returns>
+     *   the next frame received after sending the message, as a hex string.
+     *   Additional frames can be obtained by calling readHex or readMessages.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns an empty string.
+     * </para>
+     */
+    public virtual async Task<string> queryHex(string hexString,int maxWait)
+    {
+        string url;
+        byte[] msgbin;
+        List<string> msgarr = new List<string>();
+        int msglen;
+        string res;
+
+        url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=$"+hexString;
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.Count;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSerialPort.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YSerialPort.cs 39333 2020-01-30 10:05:40Z mvuilleu $
  *
  * Implements FindSerialPort(), the high-level API for SerialPort functions
  *
@@ -1206,6 +1206,53 @@ public class YSerialPort : YFunction
         string res;
 
         url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=!"+this.imm_escapeAttr(query);
+        msgbin = await this._download(url);
+        msgarr = this.imm_json_get_array(msgbin);
+        msglen = msgarr.Count;
+        if (msglen == 0) {
+            return "";
+        }
+        // last element of array is the new position
+        msglen = msglen - 1;
+        _rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        if (msglen == 0) {
+            return "";
+        }
+        res = this.imm_json_get_string(YAPI.DefaultEncoding.GetBytes(msgarr[0]));
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Sends a binary message to the serial port, and reads the reply, if any.
+     * <para>
+     *   This function is intended to be used when the serial port is configured for
+     *   Frame-based protocol.
+     * </para>
+     * </summary>
+     * <param name="hexString">
+     *   the message to send, coded in hexadecimal
+     * </param>
+     * <param name="maxWait">
+     *   the maximum number of milliseconds to wait for a reply.
+     * </param>
+     * <returns>
+     *   the next frame received after sending the message, as a hex string.
+     *   Additional frames can be obtained by calling readHex or readMessages.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns an empty string.
+     * </para>
+     */
+    public virtual async Task<string> queryHex(string hexString,int maxWait)
+    {
+        string url;
+        byte[] msgbin;
+        List<string> msgarr = new List<string>();
+        int msglen;
+        string res;
+
+        url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=$"+hexString;
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.Count;
