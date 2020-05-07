@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGroundSpeed.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YGroundSpeed.cs 39658 2020-03-12 15:36:29Z seb $
  *
  *  Implements FindGroundSpeed(), the high-level API for GroundSpeed functions
  *
@@ -48,7 +48,7 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YGroundSpeed class start)
 /**
  * <summary>
- *   YGroundSpeed Class: ground speed sensor control interface, available for instance in the Yocto-GPS
+ *   YGroundSpeed Class: ground speed sensor control interface, available for instance in the Yocto-GPS-V2
  * <para>
  *   The <c>YGroundSpeed</c> class allows you to read and configure Yoctopuce ground speed sensors.
  *   It inherits from <c>YSensor</c> class the core functions to read measurements,
@@ -145,7 +145,7 @@ public class YGroundSpeed : YSensor
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the ground speed sensor, for instance
-     *   <c>YGNSSMK1.groundSpeed</c>.
+     *   <c>YGNSSMK2.groundSpeed</c>.
      * </param>
      * <returns>
      *   a <c>YGroundSpeed</c> object allowing you to drive the ground speed sensor.
@@ -202,7 +202,7 @@ public class YGroundSpeed : YSensor
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the ground speed sensor, for instance
-     *   <c>YGNSSMK1.groundSpeed</c>.
+     *   <c>YGNSSMK2.groundSpeed</c>.
      * </param>
      * <returns>
      *   a <c>YGroundSpeed</c> object allowing you to drive the ground speed sensor.

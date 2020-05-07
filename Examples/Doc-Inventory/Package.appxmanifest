@@ -293,6 +293,18 @@
       <Device Id="vidpid:24e0 0095">
         <Function Type="usage:ff00 0001" />
       </Device>
+      <!-- Yocto-GPS-V2 -->
+      <Device Id="vidpid:24e0 0096">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-MaxiBuzzer -->
+      <Device Id="vidpid:24e0 0098">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-UPS-18650 -->
+      <Device Id="vidpid:24e0 009a">
+        <Function Type="usage:ff00 0001" />
+      </Device>
 <!-- USABLE DEVICES STOP -->
     </DeviceCapability>
   </Capabilities>

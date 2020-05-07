@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGps.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YGps.cs 39658 2020-03-12 15:36:29Z seb $
  *
  *  Implements FindGps(), the high-level API for Gps functions
  *
@@ -50,7 +50,7 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YGps Class: Geolocalization control interface (GPS, GNSS, ..
  * <para>
- *   .), available for instance in the Yocto-GPS
+ *   .), available for instance in the Yocto-GPS-V2
  * </para>
  * <para>
  *   The <c>YGps</c> class allows you to retrieve positioning
@@ -886,7 +886,7 @@ public class YGps : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the geolocalization module, for instance
-     *   <c>YGNSSMK1.gps</c>.
+     *   <c>YGNSSMK2.gps</c>.
      * </param>
      * <returns>
      *   a <c>YGps</c> object allowing you to drive the geolocalization module.
@@ -943,7 +943,7 @@ public class YGps : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the geolocalization module, for instance
-     *   <c>YGNSSMK1.gps</c>.
+     *   <c>YGNSSMK2.gps</c>.
      * </param>
      * <returns>
      *   a <c>YGps</c> object allowing you to drive the geolocalization module.

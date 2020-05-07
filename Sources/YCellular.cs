@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellular.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YCellular.cs 40298 2020-05-05 08:37:49Z seb $
  *
  * Implements FindCellular(), the high-level API for Cellular functions
  *
@@ -91,6 +91,9 @@ public class YCellular : YFunction
     public const int CELLTYPE_HSDPA = 3;
     public const int CELLTYPE_NONE = 4;
     public const int CELLTYPE_CDMA = 5;
+    public const int CELLTYPE_LTE_M = 6;
+    public const int CELLTYPE_NB_IOT = 7;
+    public const int CELLTYPE_EC_GSM_IOT = 8;
     public const int CELLTYPE_INVALID = -1;
     /**
      * <summary>
@@ -110,6 +113,12 @@ public class YCellular : YFunction
      * </summary>
      */
     public const  string PIN_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
+     *   invalid radioConfig value
+     * </summary>
+     */
+    public const  string RADIOCONFIG_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
      *   invalid lockedOperator value
@@ -177,6 +186,7 @@ public class YCellular : YFunction
     protected string _imsi = IMSI_INVALID;
     protected string _message = MESSAGE_INVALID;
     protected string _pin = PIN_INVALID;
+    protected string _radioConfig = RADIOCONFIG_INVALID;
     protected string _lockedOperator = LOCKEDOPERATOR_INVALID;
     protected int _airplaneMode = AIRPLANEMODE_INVALID;
     protected int _enableData = ENABLEDATA_INVALID;
@@ -242,6 +252,9 @@ public class YCellular : YFunction
         }
         if (json_val.has("pin")) {
             _pin = json_val.getString("pin");
+        }
+        if (json_val.has("radioConfig")) {
+            _radioConfig = json_val.getString("radioConfig");
         }
         if (json_val.has("lockedOperator")) {
             _lockedOperator = json_val.getString("lockedOperator");
@@ -367,8 +380,9 @@ public class YCellular : YFunction
      * </summary>
      * <returns>
      *   a value among <c>YCellular.CELLTYPE_GPRS</c>, <c>YCellular.CELLTYPE_EGPRS</c>,
-     *   <c>YCellular.CELLTYPE_WCDMA</c>, <c>YCellular.CELLTYPE_HSDPA</c>, <c>YCellular.CELLTYPE_NONE</c>
-     *   and <c>YCellular.CELLTYPE_CDMA</c>
+     *   <c>YCellular.CELLTYPE_WCDMA</c>, <c>YCellular.CELLTYPE_HSDPA</c>, <c>YCellular.CELLTYPE_NONE</c>,
+     *   <c>YCellular.CELLTYPE_CDMA</c>, <c>YCellular.CELLTYPE_LTE_M</c>, <c>YCellular.CELLTYPE_NB_IOT</c>
+     *   and <c>YCellular.CELLTYPE_EC_GSM_IOT</c>
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YCellular.CELLTYPE_INVALID</c>.
@@ -389,18 +403,19 @@ public class YCellular : YFunction
 
     /**
      * <summary>
-     *   Returns an opaque string if a PIN code has been configured in the device to access
-     *   the SIM card, or an empty string if none has been configured or if the code provided
-     *   was rejected by the SIM card.
+     *   Returns the International Mobile Subscriber Identity (MSI) that uniquely identifies
+     *   the SIM card.
      * <para>
+     *   The first 3 digits represent the mobile country code (MCC), which
+     *   is followed by the mobile network code (MNC), either 2-digit (European standard)
+     *   or 3-digit (North American standard)
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a string corresponding to an opaque string if a PIN code has been configured in the device to access
-     *   the SIM card, or an empty string if none has been configured or if the code provided
-     *   was rejected by the SIM card
+     *   a string corresponding to the International Mobile Subscriber Identity (MSI) that uniquely identifies
+     *   the SIM card
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YCellular.IMSI_INVALID</c>.
@@ -515,6 +530,74 @@ public class YCellular : YFunction
         string rest_val;
         rest_val = newval;
         await _setAttr("pin",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the type of protocol used over the serial line, as a string.
+     * <para>
+     *   Possible values are "Line" for ASCII messages separated by CR and/or LF,
+     *   "Frame:[timeout]ms" for binary messages separated by a delay time,
+     *   "Char" for a continuous ASCII stream or
+     *   "Byte" for a continuous binary stream.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string corresponding to the type of protocol used over the serial line, as a string
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YCellular.RADIOCONFIG_INVALID</c>.
+     * </para>
+     */
+    public async Task<string> get_radioConfig()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return RADIOCONFIG_INVALID;
+            }
+        }
+        res = _radioConfig;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the type of protocol used over the serial line.
+     * <para>
+     *   Possible values are "Line" for ASCII messages separated by CR and/or LF,
+     *   "Frame:[timeout]ms" for binary messages separated by a delay time,
+     *   "Char" for a continuous ASCII stream or
+     *   "Byte" for a continuous binary stream.
+     *   The suffix "/[wait]ms" can be added to reduce the transmit rate so that there
+     *   is always at lest the specified number of milliseconds between each bytes sent.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the
+     *   modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a string corresponding to the type of protocol used over the serial line
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_radioConfig(string  newval)
+    {
+        string rest_val;
+        rest_val = newval;
+        await _setAttr("radioConfig",rest_val);
         return YAPI.SUCCESS;
     }
 
