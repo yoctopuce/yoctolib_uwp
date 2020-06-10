@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 38913 2019-12-20 18:59:49Z mvuilleu $
+ * $Id: YModule.cs 40893 2020-06-09 16:34:42Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -1525,6 +1525,9 @@ public class YModule : YFunction
         string json_api;
         string json_files;
         string json_extra;
+        int fuperror;
+        int globalres;
+        fuperror = 0;
         json = YAPI.DefaultEncoding.GetString(settings);
         json_api = this.imm_get_json_path(json, "api");
         if (json_api == "") {
@@ -1551,11 +1554,17 @@ public class YModule : YFunction
                 name = this.imm_decode_json_string(name);
                 data = this.imm_get_json_path( files[ii], "data");
                 data = this.imm_decode_json_string(data);
-                await this._upload(name, YAPIContext.imm_hexStrToBin(data));
+                if (name == "") {
+                    fuperror = fuperror + 1;
+                } else {
+                    await this._upload(name, YAPIContext.imm_hexStrToBin(data));
+                }
             }
         }
         // Apply settings a second time for file-dependent settings and dynamic sensor nodes
-        return await this.set_allSettings(YAPI.DefaultEncoding.GetBytes(json_api));
+        globalres = await this.set_allSettings(YAPI.DefaultEncoding.GetBytes(json_api));
+        if (!(fuperror == 0)) { this._throw( YAPI.IO_ERROR, "Error during file upload"); return YAPI.IO_ERROR; }
+        return globalres;
     }
 
     /**

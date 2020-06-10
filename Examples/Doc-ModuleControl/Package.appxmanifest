@@ -305,6 +305,10 @@
       <Device Id="vidpid:24e0 009a">
         <Function Type="usage:ff00 0001" />
       </Device>
+      <!-- Yocto-Pressure-Diff -->
+      <Device Id="vidpid:24e0 009c">
+        <Function Type="usage:ff00 0001" />
+      </Device>
 <!-- USABLE DEVICES STOP -->
     </DeviceCapability>
   </Capabilities>

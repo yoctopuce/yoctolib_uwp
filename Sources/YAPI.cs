@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 38810 2019-12-17 22:00:46Z mvuilleu $
+ * $Id: YAPI.cs 40549 2020-05-14 15:54:55Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "40411";
+        public const string YOCTO_API_BUILD_STR = "40924";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -292,7 +292,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".40411" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".40924" + YUSBHub.imm_getAPIVersion();
         }
 
         /**
@@ -376,11 +376,27 @@ public class YAPI
 
         /**
          * <summary>
-         *   Frees dynamically allocated memory blocks used by the Yoctopuce library.
+         *   Waits for all pending communications with Yoctopuce devices to be
+         *   completed then frees dynamically allocated resources used by
+         *   the Yoctopuce library.
          * <para>
-         *   It is generally not required to call this function, unless you
-         *   want to free all dynamically allocated memory blocks in order to
-         *   track a memory leak for instance.
+         * </para>
+         * <para>
+         *   From an operating system standpoint, it is generally not required to call
+         *   this function since the OS will automatically free allocated resources
+         *   once your program is completed. However there are two situations when
+         *   you may really want to use that function:
+         * </para>
+         * <para>
+         *   - Free all dynamically allocated memory blocks in order to
+         *   track a memory leak.
+         * </para>
+         * <para>
+         *   - Send commands to devices right before the end
+         *   of the program. Since commands are sent in an asynchronous way
+         *   the program could exit before all commands are effectively sent.
+         * </para>
+         * <para>
          *   You should not call any other library function after calling
          *   <c>yFreeAPI()</c>, or your program will crash.
          * </para>

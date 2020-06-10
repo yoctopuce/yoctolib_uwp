@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 37827 2019-10-25 13:07:48Z mvuilleu $
+ * $Id: YFunction.cs 40893 2020-06-09 16:34:42Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -861,6 +861,9 @@ public class YFunction
 
         internal virtual string imm_decode_json_string(string json)
         {
+            if (json.Length == 0) {
+                return "";
+            }
             YJSONString ystr = new YJSONString(json, 0, json.Length);
             ystr.parse();
             return ystr.getString();
