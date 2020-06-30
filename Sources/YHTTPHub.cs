@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPHub.cs 37238 2019-09-20 10:27:29Z seb $
+ * $Id: YHTTPHub.cs 41070 2020-06-26 08:33:56Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -455,10 +455,11 @@ namespace com.yoctopuce.YoctoAPI
             }
             // Setup timeout counter
             uint tcpTimeout = YIO_DEFAULT_TCP_TIMEOUT;
-            if (req_first_line.Contains("/testcb.txt") || req_first_line.Contains("/rxmsg.json") ||
-                req_first_line.Contains("/files.json") || req_first_line.Contains("/upload.html")) {
+            if (req_first_line.Contains("/testcb.txt") || req_first_line.Contains("/logger.json")
+                || req_first_line.Contains("/rxmsg.json") || req_first_line.Contains("/rxdata.bin")
+                || req_first_line.Contains("/at.txt") || req_first_line.Contains("/files.json")) {
                 tcpTimeout = YIO_1_MINUTE_TCP_TIMEOUT;
-            } else if (req_first_line.Contains("/flash.json")) {
+            } else if (req_first_line.Contains("/flash.json") || req_first_line.Contains("/upload.html")) {
                 tcpTimeout = YIO_10_MINUTES_TCP_TIMEOUT;
             }
             return await _notificationHandler.devRequestSync(device, req_first_line, req_head_and_body, tcpTimeout,

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRelay.cs 39434 2020-02-25 08:53:55Z seb $
+ *  $Id: YRelay.cs 41109 2020-06-29 12:40:42Z seb $
  *
  *  Implements FindRelay(), the high-level API for Relay functions
  *
@@ -48,7 +48,7 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YRelay class start)
 /**
  * <summary>
- *   YRelay Class: relay control interface, available for instance in the Yocto-MaxiCoupler-V2, the
+ *   YRelay Class: relay control interface, available for instance in the Yocto-LatchedRelay, the
  *   Yocto-MaxiPowerRelay, the Yocto-PowerRelay-V3 or the Yocto-Relay
  * <para>
  *   The <c>YRelay</c> class allows you to drive a Yoctopuce relay or optocoupled output.
@@ -717,7 +717,7 @@ public class YRelay : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the relay, for instance
-     *   <c>MXCOUPL2.relay1</c>.
+     *   <c>YLTCHRL1.relay1</c>.
      * </param>
      * <returns>
      *   a <c>YRelay</c> object allowing you to drive the relay.
@@ -774,7 +774,7 @@ public class YRelay : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the relay, for instance
-     *   <c>MXCOUPL2.relay1</c>.
+     *   <c>YLTCHRL1.relay1</c>.
      * </param>
      * <returns>
      *   a <c>YRelay</c> object allowing you to drive the relay.
