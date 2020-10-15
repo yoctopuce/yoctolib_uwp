@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSnoopingRecord.cs 41171 2020-07-02 17:49:00Z mvuilleu $
+ * $Id: YSpiSnoopingRecord.cs 38899 2019-12-20 17:21:03Z mvuilleu $
  *
  * - - - - - - - - - License information: - - - - - - - - -
  *
@@ -40,14 +40,14 @@ using System.Threading.Tasks;
 
 namespace com.yoctopuce.YoctoAPI
 {
-    //--- (generated code: YSnoopingRecord return codes)
-//--- (end of generated code: YSnoopingRecord return codes)
-    //--- (generated code: YSnoopingRecord class start)
+    //--- (generated code: YSpiSnoopingRecord return codes)
+//--- (end of generated code: YSpiSnoopingRecord return codes)
+    //--- (generated code: YSpiSnoopingRecord class start)
 /**
  * <summary>
  *   Y
  * <para>
- *   SnoopingRecord Class: Intercepted serial message description, returned by <c>serialPort.snoopMessages</c> method
+ *   SpiSnoopingRecord Class: Intercepted SPI message description, returned by <c>spiPort.snoopMessages</c> method
  * </para>
  * <para>
  * </para>
@@ -55,17 +55,17 @@ namespace com.yoctopuce.YoctoAPI
  * </para>
  * </summary>
  */
-public class YSnoopingRecord
+public class YSpiSnoopingRecord
 {
-//--- (end of generated code: YSnoopingRecord class start)
-//--- (generated code: YSnoopingRecord definitions)
+//--- (end of generated code: YSpiSnoopingRecord class start)
+//--- (generated code: YSpiSnoopingRecord definitions)
     protected int _tim = 0;
     protected int _dir = 0;
     protected string _msg;
 
-    //--- (end of generated code: YSnoopingRecord definitions)
+    //--- (end of generated code: YSpiSnoopingRecord definitions)
 
-    internal YSnoopingRecord(string json_str)
+    internal YSpiSnoopingRecord(string json_str)
     {
         YJSONObject json = new YJSONObject(json_str);
         json.parse();
@@ -75,7 +75,7 @@ public class YSnoopingRecord
         _msg = m.Substring(1);
     }
 
-    //--- (generated code: YSnoopingRecord implementation)
+    //--- (generated code: YSpiSnoopingRecord implementation)
 #pragma warning disable 1998
 
     /**
@@ -166,7 +166,7 @@ public class YSnoopingRecord
     }
 
 #pragma warning restore 1998
-    //--- (end of generated code: YSnoopingRecord implementation)
+    //--- (end of generated code: YSpiSnoopingRecord implementation)
     }
 
 }

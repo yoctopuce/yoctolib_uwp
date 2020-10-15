@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YSpiPort.cs 40298 2020-05-05 08:37:49Z seb $
+ *  $Id: YSpiPort.cs 41171 2020-07-02 17:49:00Z mvuilleu $
  *
  *  Implements FindSpiPort(), the high-level API for SpiPort functions
  *
@@ -43,9 +43,9 @@ using System.Threading.Tasks;
 namespace com.yoctopuce.YoctoAPI
 {
 
-//--- (YSpiPort return codes)
-//--- (end of YSpiPort return codes)
-//--- (YSpiPort class start)
+//--- (generated code: YSpiPort return codes)
+//--- (end of generated code: YSpiPort return codes)
+//--- (generated code: YSpiPort class start)
 /**
  * <summary>
  *   YSpiPort Class: SPI port control interface, available for instance in the Yocto-SPI
@@ -60,8 +60,8 @@ namespace com.yoctopuce.YoctoAPI
  */
 public class YSpiPort : YFunction
 {
-//--- (end of YSpiPort class start)
-//--- (YSpiPort definitions)
+//--- (end of generated code: YSpiPort class start)
+//--- (generated code: YSpiPort definitions)
     /**
      * <summary>
      *   invalid rxCount value
@@ -193,7 +193,7 @@ public class YSpiPort : YFunction
 
     public new delegate Task ValueCallback(YSpiPort func, string value);
     public new delegate Task TimedReportCallback(YSpiPort func, YMeasure measure);
-    //--- (end of YSpiPort definitions)
+    //--- (end of generated code: YSpiPort definitions)
 
 
     /**
@@ -206,8 +206,8 @@ public class YSpiPort : YFunction
     protected YSpiPort(YAPIContext ctx, string func)
         : base(ctx, func, "SpiPort")
     {
-        //--- (YSpiPort attributes initialization)
-        //--- (end of YSpiPort attributes initialization)
+        //--- (generated code: YSpiPort attributes initialization)
+        //--- (end of generated code: YSpiPort attributes initialization)
     }
 
     /**
@@ -222,7 +222,7 @@ public class YSpiPort : YFunction
     {
     }
 
-    //--- (YSpiPort implementation)
+    //--- (generated code: YSpiPort implementation)
 #pragma warning disable 1998
     internal override void imm_parseAttr(YJSONObject json_val)
     {
@@ -1979,6 +1979,54 @@ public class YSpiPort : YFunction
 
     /**
      * <summary>
+     *   Retrieves messages (both direction) in the SPI port buffer, starting at current position.
+     * <para>
+     * </para>
+     * <para>
+     *   If no message is found, the search waits for one up to the specified maximum timeout
+     *   (in milliseconds).
+     * </para>
+     * </summary>
+     * <param name="maxWait">
+     *   the maximum number of milliseconds to wait for a message if none is found
+     *   in the receive buffer.
+     * </param>
+     * <returns>
+     *   an array of <c>YSpiSnoopingRecord</c> objects containing the messages found, if any.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns an empty array.
+     * </para>
+     */
+    public virtual async Task<List<YSpiSnoopingRecord>> snoopMessages(int maxWait)
+    {
+        string url;
+        byte[] msgbin;
+        List<string> msgarr = new List<string>();
+        int msglen;
+        List<YSpiSnoopingRecord> res = new List<YSpiSnoopingRecord>();
+        int idx;
+
+        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString(maxWait)+"&t=0";
+        msgbin = await this._download(url);
+        msgarr = this.imm_json_get_array(msgbin);
+        msglen = msgarr.Count;
+        if (msglen == 0) {
+            return res;
+        }
+        // last element of array is the new position
+        msglen = msglen - 1;
+        _rxptr = YAPIContext.imm_atoi(msgarr[msglen]);
+        idx = 0;
+        while (idx < msglen) {
+            res.Add(new YSpiSnoopingRecord(msgarr[idx]));
+            idx = idx + 1;
+        }
+        return res;
+    }
+
+    /**
+     * <summary>
      *   Continues the enumeration of SPI ports started using <c>yFirstSpiPort()</c>.
      * <para>
      *   Caution: You can't make any assumption about the returned SPI ports order.
@@ -2052,7 +2100,7 @@ public class YSpiPort : YFunction
     }
 
 #pragma warning restore 1998
-    //--- (end of YSpiPort implementation)
+    //--- (end of generated code: YSpiPort implementation)
 }
 }
 

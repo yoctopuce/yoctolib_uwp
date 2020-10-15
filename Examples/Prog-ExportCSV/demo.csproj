@@ -95,6 +95,7 @@
     <Compile Include="..\..\Sources\NotificationHandler.cs">
       <Link>yoctolib\NotificationHandler.cs</Link>
     </Compile>
+    
     <Compile Include="..\..\Sources\YAccelerometer.cs">
       <Link>yoctolib\YAccelerometer.cs</Link>
     </Compile>
@@ -136,9 +137,6 @@
     </Compile>
     <Compile Include="..\..\Sources\YCompass.cs">
       <Link>yoctolib\YCompass.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YConsolidatedDataSet.cs">
-      <Link>yoctolib\YConsolidatedDataSet.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YCurrent.cs">
       <Link>yoctolib\YCurrent.cs</Link>
@@ -184,6 +182,9 @@
     </Compile>
     <Compile Include="..\..\Sources\YHumidity.cs">
       <Link>yoctolib\YHumidity.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YI2cSnoopingRecord.cs">
+      <Link>yoctolib\YI2cSnoopingRecord.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YI2cPort.cs">
       <Link>yoctolib\YI2cPort.cs</Link>
@@ -281,6 +282,9 @@
     <Compile Include="..\..\Sources\YServo.cs">
       <Link>yoctolib\YServo.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YSpiSnoopingRecord.cs">
+      <Link>yoctolib\YSpiSnoopingRecord.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YSpiPort.cs">
       <Link>yoctolib\YSpiPort.cs</Link>
     </Compile>
@@ -323,11 +327,16 @@
     <Compile Include="..\..\Sources\YWireless.cs">
       <Link>yoctolib\YWireless.cs</Link>
     </Compile>
+
+
     <Compile Include="..\..\Sources\TCPNotificationHandler.cs">
       <Link>yoctolib\TCPNotificationHandler.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\WPEntry.cs">
       <Link>yoctolib\WPEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YConsolidatedDataSet.cs">
+      <Link>yoctolib\YConsolidatedDataSet.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\WSNotificationHandler.cs">
       <Link>yoctolib\WSNotificationHandler.cs</Link>

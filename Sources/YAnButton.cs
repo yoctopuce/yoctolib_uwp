@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAnButton.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YAnButton.cs 42060 2020-10-14 10:02:12Z seb $
  *
  *  Implements FindAnButton(), the high-level API for AnButton functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YAnButton Class: analog input control interface, available for instance in the Yocto-Buzzer, the
- *   Yocto-Display, the Yocto-Knob or the Yocto-MaxiDisplay
+ *   Yocto-Knob, the Yocto-MaxiBuzzer or the Yocto-MaxiDisplay
  * <para>
  *   The <c>YAnButton</c> class provide access to basic resistive inputs.
  *   Such inputs can be used to measure the state
@@ -135,6 +135,14 @@ public class YAnButton : YFunction
      * </summary>
      */
     public const  long PULSETIMER_INVALID = YAPI.INVALID_LONG;
+    /**
+     * <summary>
+     *   invalid inputType value
+     * </summary>
+     */
+    public const int INPUTTYPE_ANALOG = 0;
+    public const int INPUTTYPE_DIGITAL4 = 1;
+    public const int INPUTTYPE_INVALID = -1;
     protected int _calibratedValue = CALIBRATEDVALUE_INVALID;
     protected int _rawValue = RAWVALUE_INVALID;
     protected int _analogCalibration = ANALOGCALIBRATION_INVALID;
@@ -146,6 +154,7 @@ public class YAnButton : YFunction
     protected long _lastTimeReleased = LASTTIMERELEASED_INVALID;
     protected long _pulseCounter = PULSECOUNTER_INVALID;
     protected long _pulseTimer = PULSETIMER_INVALID;
+    protected int _inputType = INPUTTYPE_INVALID;
     protected ValueCallback _valueCallbackAnButton = null;
 
     public new delegate Task ValueCallback(YAnButton func, string value);
@@ -215,6 +224,9 @@ public class YAnButton : YFunction
         }
         if (json_val.has("pulseTimer")) {
             _pulseTimer = json_val.getLong("pulseTimer");
+        }
+        if (json_val.has("inputType")) {
+            _inputType = json_val.getInt("inputType");
         }
         base.imm_parseAttr(json_val);
     }
@@ -671,6 +683,65 @@ public class YAnButton : YFunction
         return res;
     }
 
+
+    /**
+     * <summary>
+     *   Returns the decoding method applied to the input (analog or multiplexed binary switches).
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YAnButton.INPUTTYPE_ANALOG</c> or <c>YAnButton.INPUTTYPE_DIGITAL4</c>, according to the
+     *   decoding method applied to the input (analog or multiplexed binary switches)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YAnButton.INPUTTYPE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_inputType()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return INPUTTYPE_INVALID;
+            }
+        }
+        res = _inputType;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the decoding method applied to the input (analog or multiplexed binary switches).
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YAnButton.INPUTTYPE_ANALOG</c> or <c>YAnButton.INPUTTYPE_DIGITAL4</c>, according to the
+     *   decoding method applied to the input (analog or multiplexed binary switches)
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_inputType(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval).ToString();
+        await _setAttr("inputType",rest_val);
+        return YAPI.SUCCESS;
+    }
 
     /**
      * <summary>

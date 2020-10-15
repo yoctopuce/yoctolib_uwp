@@ -95,15 +95,7 @@
     <Compile Include="..\..\Sources\NotificationHandler.cs">
       <Link>yoctolib\NotificationHandler.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\TCPNotificationHandler.cs">
-      <Link>yoctolib\TCPNotificationHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\WPEntry.cs">
-      <Link>yoctolib\WPEntry.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\WSNotificationHandler.cs">
-      <Link>yoctolib\WSNotificationHandler.cs</Link>
-    </Compile>
+    
     <Compile Include="..\..\Sources\YAccelerometer.cs">
       <Link>yoctolib\YAccelerometer.cs</Link>
     </Compile>
@@ -113,14 +105,8 @@
     <Compile Include="..\..\Sources\YAnButton.cs">
       <Link>yoctolib\YAnButton.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YAPI.cs">
-      <Link>yoctolib\YAPI.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YAPIContext.cs">
-      <Link>yoctolib\YAPIContext.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YAPI_Exception.cs">
-      <Link>yoctolib\YAPI_Exception.cs</Link>
+    <Compile Include="..\..\Sources\YArithmeticSensor.cs">
+      <Link>yoctolib\YArithmeticSensor.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YAudioIn.cs">
       <Link>yoctolib\YAudioIn.cs</Link>
@@ -161,26 +147,14 @@
     <Compile Include="..\..\Sources\YDaisyChain.cs">
       <Link>yoctolib\YDaisyChain.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YDataLogger.cs">
-      <Link>yoctolib\YDataLogger.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YDataSet.cs">
-      <Link>yoctolib\YDataSet.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YDataStream.cs">
-      <Link>yoctolib\YDataStream.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YDevice.cs">
-      <Link>yoctolib\YDevice.cs</Link>
-    </Compile>
     <Compile Include="..\..\Sources\YDigitalIO.cs">
       <Link>yoctolib\YDigitalIO.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YDisplay.cs">
-      <Link>yoctolib\YDisplay.cs</Link>
-    </Compile>
     <Compile Include="..\..\Sources\YDisplayLayer.cs">
       <Link>yoctolib\YDisplayLayer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YDisplay.cs">
+      <Link>yoctolib\YDisplay.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YDualPower.cs">
       <Link>yoctolib\YDualPower.cs</Link>
@@ -190,21 +164,6 @@
     </Compile>
     <Compile Include="..\..\Sources\YFiles.cs">
       <Link>yoctolib\YFiles.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YFirmwareFile.cs">
-      <Link>yoctolib\YFirmwareFile.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YFirmwareUpdate.cs">
-      <Link>yoctolib\YFirmwareUpdate.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YFunction.cs">
-      <Link>yoctolib\YFunction.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YFunctionType.cs">
-      <Link>yoctolib\YFunctionType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YGenericHub.cs">
-      <Link>yoctolib\YGenericHub.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YGenericSensor.cs">
       <Link>yoctolib\YGenericSensor.cs</Link>
@@ -218,23 +177,17 @@
     <Compile Include="..\..\Sources\YGyro.cs">
       <Link>yoctolib\YGyro.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YHash.cs">
-      <Link>yoctolib\YHash.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YHTTPHub.cs">
-      <Link>yoctolib\YHTTPHub.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YHTTPRequest.cs">
-      <Link>yoctolib\YHTTPRequest.cs</Link>
-    </Compile>
     <Compile Include="..\..\Sources\YHubPort.cs">
       <Link>yoctolib\YHubPort.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YHumidity.cs">
       <Link>yoctolib\YHumidity.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YJSONParser.cs">
-      <Link>yoctolib\YJSONParser.cs</Link>
+    <Compile Include="..\..\Sources\YI2cSnoopingRecord.cs">
+      <Link>yoctolib\YI2cSnoopingRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YI2cPort.cs">
+      <Link>yoctolib\YI2cPort.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YLatitude.cs">
       <Link>yoctolib\YLatitude.cs</Link>
@@ -251,14 +204,11 @@
     <Compile Include="..\..\Sources\YMagnetometer.cs">
       <Link>yoctolib\YMagnetometer.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YMeasure.cs">
-      <Link>yoctolib\YMeasure.cs</Link>
+    <Compile Include="..\..\Sources\YSms.cs">
+      <Link>yoctolib\YSms.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YMessageBox.cs">
       <Link>yoctolib\YMessageBox.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YModule.cs">
-      <Link>yoctolib\YModule.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YMotor.cs">
       <Link>yoctolib\YMotor.cs</Link>
@@ -266,14 +216,17 @@
     <Compile Include="..\..\Sources\YMultiAxisController.cs">
       <Link>yoctolib\YMultiAxisController.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YMultiCellWeighScale.cs">
+      <Link>yoctolib\YMultiCellWeighScale.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YMultiSensController.cs">
+      <Link>yoctolib\YMultiSensController.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YNetwork.cs">
       <Link>yoctolib\YNetwork.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YOsControl.cs">
       <Link>yoctolib\YOsControl.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YPEntry.cs">
-      <Link>yoctolib\YPEntry.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YPower.cs">
       <Link>yoctolib\YPower.cs</Link>
@@ -320,8 +273,8 @@
     <Compile Include="..\..\Sources\YSegmentedDisplay.cs">
       <Link>yoctolib\YSegmentedDisplay.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YSensor.cs">
-      <Link>yoctolib\YSensor.cs</Link>
+    <Compile Include="..\..\Sources\YSnoopingRecord.cs">
+      <Link>yoctolib\YSnoopingRecord.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YSerialPort.cs">
       <Link>yoctolib\YSerialPort.cs</Link>
@@ -329,20 +282,11 @@
     <Compile Include="..\..\Sources\YServo.cs">
       <Link>yoctolib\YServo.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YSms.cs">
-      <Link>yoctolib\YSms.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YSnoopingRecord.cs">
-      <Link>yoctolib\YSnoopingRecord.cs</Link>
+    <Compile Include="..\..\Sources\YSpiSnoopingRecord.cs">
+      <Link>yoctolib\YSpiSnoopingRecord.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YSpiPort.cs">
       <Link>yoctolib\YSpiPort.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YSSDP.cs">
-      <Link>yoctolib\YSSDP.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YSSDPCacheEntry.cs">
-      <Link>yoctolib\YSSDPCacheEntry.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YStepperMotor.cs">
       <Link>yoctolib\YStepperMotor.cs</Link>
@@ -353,17 +297,8 @@
     <Compile Include="..\..\Sources\YTilt.cs">
       <Link>yoctolib\YTilt.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YUSBDevice.cs">
-      <Link>yoctolib\YUSBDevice.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YUSBHub.cs">
-      <Link>yoctolib\YUSBHub.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YUSBPkt.cs">
-      <Link>yoctolib\YUSBPkt.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YUSBWatcher.cs">
-      <Link>yoctolib\YUSBWatcher.cs</Link>
+    <Compile Include="..\..\Sources\YTvoc.cs">
+      <Link>yoctolib\YTvoc.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YVoc.cs">
       <Link>yoctolib\YVoc.cs</Link>
@@ -386,11 +321,103 @@
     <Compile Include="..\..\Sources\YWeighScale.cs">
       <Link>yoctolib\YWeighScale.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YWlanRecord.cs">
+      <Link>yoctolib\YWlanRecord.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YWireless.cs">
       <Link>yoctolib\YWireless.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YWlanRecord.cs">
-      <Link>yoctolib\YWlanRecord.cs</Link>
+
+
+    <Compile Include="..\..\Sources\TCPNotificationHandler.cs">
+      <Link>yoctolib\TCPNotificationHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\WPEntry.cs">
+      <Link>yoctolib\WPEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YConsolidatedDataSet.cs">
+      <Link>yoctolib\YConsolidatedDataSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\WSNotificationHandler.cs">
+      <Link>yoctolib\WSNotificationHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YAPI.cs">
+      <Link>yoctolib\YAPI.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YAPIContext.cs">
+      <Link>yoctolib\YAPIContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YAPI_Exception.cs">
+      <Link>yoctolib\YAPI_Exception.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YDataLogger.cs">
+      <Link>yoctolib\YDataLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YDataSet.cs">
+      <Link>yoctolib\YDataSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YDataStream.cs">
+      <Link>yoctolib\YDataStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YDevice.cs">
+      <Link>yoctolib\YDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YFirmwareFile.cs">
+      <Link>yoctolib\YFirmwareFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YFirmwareUpdate.cs">
+      <Link>yoctolib\YFirmwareUpdate.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YFunction.cs">
+      <Link>yoctolib\YFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YFunctionType.cs">
+      <Link>yoctolib\YFunctionType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YGenericHub.cs">
+      <Link>yoctolib\YGenericHub.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YHash.cs">
+      <Link>yoctolib\YHash.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YHTTPHub.cs">
+      <Link>yoctolib\YHTTPHub.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YHTTPRequest.cs">
+      <Link>yoctolib\YHTTPRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YJSONParser.cs">
+      <Link>yoctolib\YJSONParser.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YMeasure.cs">
+      <Link>yoctolib\YMeasure.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YModule.cs">
+      <Link>yoctolib\YModule.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YPEntry.cs">
+      <Link>yoctolib\YPEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSensor.cs">
+      <Link>yoctolib\YSensor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSSDP.cs">
+      <Link>yoctolib\YSSDP.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSSDPCacheEntry.cs">
+      <Link>yoctolib\YSSDPCacheEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YUSBDevice.cs">
+      <Link>yoctolib\YUSBDevice.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YUSBHub.cs">
+      <Link>yoctolib\YUSBHub.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YUSBPkt.cs">
+      <Link>yoctolib\YUSBPkt.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YUSBWatcher.cs">
+      <Link>yoctolib\YUSBWatcher.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

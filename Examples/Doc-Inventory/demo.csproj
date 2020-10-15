@@ -183,6 +183,9 @@
     <Compile Include="..\..\Sources\YHumidity.cs">
       <Link>yoctolib\YHumidity.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YI2cSnoopingRecord.cs">
+      <Link>yoctolib\YI2cSnoopingRecord.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YI2cPort.cs">
       <Link>yoctolib\YI2cPort.cs</Link>
     </Compile>
@@ -278,6 +281,9 @@
     </Compile>
     <Compile Include="..\..\Sources\YServo.cs">
       <Link>yoctolib\YServo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSpiSnoopingRecord.cs">
+      <Link>yoctolib\YSpiSnoopingRecord.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YSpiPort.cs">
       <Link>yoctolib\YSpiPort.cs</Link>

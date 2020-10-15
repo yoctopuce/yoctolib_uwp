@@ -108,6 +108,9 @@
     <Compile Include="..\..\Sources\YPowerOutput.cs">
       <Link>yoctolib\YPowerOutput.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YSpiSnoopingRecord.cs">
+      <Link>yoctolib\YSpiSnoopingRecord.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YSpiPort.cs">
       <Link>yoctolib\YSpiPort.cs</Link>
     </Compile>

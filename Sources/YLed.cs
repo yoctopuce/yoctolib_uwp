@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLed.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YLed.cs 42060 2020-10-14 10:02:12Z seb $
  *
  *  Implements FindLed(), the high-level API for Led functions
  *
@@ -48,7 +48,8 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YLed class start)
 /**
  * <summary>
- *   YLed Class: monochrome LED control interface, available for instance in the Yocto-Buzzer
+ *   YLed Class: monochrome LED control interface, available for instance in the Yocto-Buzzer, the
+ *   YoctoBox-Short-Thin-Black-Prox, the YoctoBox-Short-Thin-Transp or the YoctoBox-Short-Thin-Transp-Prox
  * <para>
  *   The <c>YLed</c> class allows you to drive a monocolor LED.
  *   You can not only to drive the intensity of the LED, but also to
