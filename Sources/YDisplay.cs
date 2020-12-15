@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YDisplay.cs 42114 2020-10-22 08:25:08Z seb $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -38,6 +38,7 @@
  *********************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace com.yoctopuce.YoctoAPI
@@ -158,6 +159,7 @@ public class YDisplay : YFunction
     protected int _layerCount = LAYERCOUNT_INVALID;
     protected string _command = COMMAND_INVALID;
     protected ValueCallback _valueCallbackDisplay = null;
+    protected List<YDisplayLayer> _allDisplayLayers = new List<YDisplayLayer>();
 
     public new delegate Task ValueCallback(YDisplay func, string value);
     public new delegate Task TimedReportCallback(YDisplay func, YMeasure measure);
@@ -1089,6 +1091,41 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
+     *   Returns a YDisplayLayer object that can be used to draw on the specified
+     *   layer.
+     * <para>
+     *   The content is displayed only when the layer is active on the
+     *   screen (and not masked by other overlapping layers).
+     * </para>
+     * </summary>
+     * <param name="layerId">
+     *   the identifier of the layer (a number in range 0..layerCount-1)
+     * </param>
+     * <returns>
+     *   an <c>YDisplayLayer</c> object
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>null</c>.
+     * </para>
+     */
+    public virtual async Task<YDisplayLayer> get_displayLayer(int layerId)
+    {
+        int layercount;
+        int idx;
+        layercount = await this.get_layerCount();
+        if (!((layerId >= 0) && (layerId < layercount))) { this._throw( YAPI.INVALID_ARGUMENT, "invalid DisplayLayer index"); return null; }
+        if (_allDisplayLayers.Count == 0) {
+            idx = 0;
+            while (idx < layercount) {
+                _allDisplayLayers.Add(new YDisplayLayer(this, idx));
+                idx = idx + 1;
+            }
+        }
+        return _allDisplayLayers[layerId];
+    }
+
+    /**
+     * <summary>
      *   Continues the enumeration of displays started using <c>yFirstDisplay()</c>.
      * <para>
      *   Caution: You can't make any assumption about the returned displays order.
@@ -1163,40 +1200,13 @@ public class YDisplay : YFunction
 
 #pragma warning restore 1998
     //--- (end of generated code: YDisplay implementation)
-        private YDisplayLayer[] _allDisplayLayers = null;
         private bool _recording = false;
         private string _sequence;
 
-        /// <summary>
-        /// Returns a YDisplayLayer object that can be used to draw on the specified
-        /// layer. The content is displayed only when the layer is active on the
-        /// screen (and not masked by other overlapping layers).
-        /// </summary>
-        /// <param name="layerId"> : the identifier of the layer (a number in range 0..layerCount-1)
-        /// </param>
-        /// <returns> an YDisplayLayer object
-        /// </returns>
-        /// <exception cref="YAPI_Exception"> on error </exception>
-        public virtual async Task<YDisplayLayer> get_displayLayer(int layerId)
-        {
-            if (_allDisplayLayers == null) {
-                int nb_display_layer = await this.get_layerCount();
-                _allDisplayLayers = new YDisplayLayer[nb_display_layer];
-                for (int i = 0; i < nb_display_layer; i++) {
-                    _allDisplayLayers[i] = new YDisplayLayer(this, i);
-                }
-            }
-            if (layerId < 0 || layerId >= _allDisplayLayers.Length) {
-                throw new YAPI_Exception(YAPI.INVALID_ARGUMENT, "Invalid layerId");
-            }
-            return _allDisplayLayers[layerId];
-
-        }
-
         public virtual async Task<int> flushLayers()
         {
-            if (_allDisplayLayers != null) {
-                for (int i = 0; i < _allDisplayLayers.Length; i++) {
+            if (_allDisplayLayers.Count > 0) {
+                for (int i = 0; i < _allDisplayLayers.Count; i++) {
                     await _allDisplayLayers[i].flush_now();
                 }
             }
@@ -1206,8 +1216,8 @@ public class YDisplay : YFunction
 
         public virtual async Task resetHiddenLayerFlags()
         {
-            if (_allDisplayLayers != null) {
-                for (int i = 0; i < _allDisplayLayers.Length; i++) {
+            if (_allDisplayLayers.Count > 0) {
+                for (int i = 0; i < _allDisplayLayers.Count; i++) {
                     await _allDisplayLayers[i].resetHiddenFlag();
                 }
             }
@@ -1215,8 +1225,8 @@ public class YDisplay : YFunction
 
         internal virtual void imm_resetHiddenLayerFlags()
         {
-            if (_allDisplayLayers != null) {
-                for (int i = 0; i < _allDisplayLayers.Length; i++) {
+            if (_allDisplayLayers.Count > 0) {
+                for (int i = 0; i < _allDisplayLayers.Count; i++) {
                     _allDisplayLayers[i].imm_resetHiddenFlag();
                 }
             }

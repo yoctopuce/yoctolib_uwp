@@ -309,6 +309,10 @@
       <Device Id="vidpid:24e0 009c">
         <Function Type="usage:ff00 0001" />
       </Device>
+      <!-- Yocto-Inclinometer -->
+      <Device Id="vidpid:24e0 009f">
+        <Function Type="usage:ff00 0001" />
+      </Device>
 <!-- USABLE DEVICES STOP -->
     </DeviceCapability>
   </Capabilities>

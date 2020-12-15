@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRefFrame.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YRefFrame.cs 42951 2020-12-14 09:43:29Z seb $
  *
  *  Implements FindRefFrame(), the high-level API for RefFrame functions
  *
@@ -52,8 +52,8 @@ namespace com.yoctopuce.YoctoAPI
  * <para>
  *   The <c>YRefFrame</c> class is used to setup the base orientation of the Yoctopuce inertial
  *   sensors. Thanks to this, orientation functions relative to the earth surface plane
- *   can use the proper reference frame. The class also implements a tridimensional
- *   sensor calibration process, which can compensate for local variations
+ *   can use the proper reference frame. For some devices, the class also implements a
+ *   tridimensional sensor calibration process, which can compensate for local variations
  *   of standard gravity and improve the precision of the tilt sensors.
  * </para>
  * </summary>
@@ -90,6 +90,9 @@ public class YRefFrame : YFunction
     public const int FUSIONMODE_M4G = 2;
     public const int FUSIONMODE_COMPASS = 3;
     public const int FUSIONMODE_IMU = 4;
+    public const int FUSIONMODE_INCLIN_90DEG_1G8 = 5;
+    public const int FUSIONMODE_INCLIN_90DEG_3G6 = 6;
+    public const int FUSIONMODE_INCLIN_10DEG = 7;
     public const int FUSIONMODE_INVALID = -1;
     public enum MOUNTPOSITION {
         BOTTOM = 0,
@@ -314,17 +317,19 @@ public class YRefFrame : YFunction
 
     /**
      * <summary>
-     *   Returns the BNO055 fusion mode.
+     *   Returns the sensor fusion mode.
      * <para>
-     *   Note this feature is only availabe on Yocto-3D-V2.
+     *   Note that available sensor fusion modes depend on the sensor type.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
      *   a value among <c>YRefFrame.FUSIONMODE_NDOF</c>, <c>YRefFrame.FUSIONMODE_NDOF_FMC_OFF</c>,
-     *   <c>YRefFrame.FUSIONMODE_M4G</c>, <c>YRefFrame.FUSIONMODE_COMPASS</c> and
-     *   <c>YRefFrame.FUSIONMODE_IMU</c> corresponding to the BNO055 fusion mode
+     *   <c>YRefFrame.FUSIONMODE_M4G</c>, <c>YRefFrame.FUSIONMODE_COMPASS</c>,
+     *   <c>YRefFrame.FUSIONMODE_IMU</c>, <c>YRefFrame.FUSIONMODE_INCLIN_90DEG_1G8</c>,
+     *   <c>YRefFrame.FUSIONMODE_INCLIN_90DEG_3G6</c> and <c>YRefFrame.FUSIONMODE_INCLIN_10DEG</c>
+     *   corresponding to the sensor fusion mode
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YRefFrame.FUSIONMODE_INVALID</c>.
@@ -345,9 +350,9 @@ public class YRefFrame : YFunction
 
     /**
      * <summary>
-     *   Change the BNO055 fusion mode.
+     *   Change the sensor fusion mode.
      * <para>
-     *   Note: this feature is only availabe on Yocto-3D-V2.
+     *   Note that available sensor fusion modes depend on the sensor type.
      *   Remember to call the matching module <c>saveToFlash()</c> method to save the setting permanently.
      * </para>
      * <para>
@@ -355,7 +360,9 @@ public class YRefFrame : YFunction
      * </summary>
      * <param name="newval">
      *   a value among <c>YRefFrame.FUSIONMODE_NDOF</c>, <c>YRefFrame.FUSIONMODE_NDOF_FMC_OFF</c>,
-     *   <c>YRefFrame.FUSIONMODE_M4G</c>, <c>YRefFrame.FUSIONMODE_COMPASS</c> and <c>YRefFrame.FUSIONMODE_IMU</c>
+     *   <c>YRefFrame.FUSIONMODE_M4G</c>, <c>YRefFrame.FUSIONMODE_COMPASS</c>,
+     *   <c>YRefFrame.FUSIONMODE_IMU</c>, <c>YRefFrame.FUSIONMODE_INCLIN_90DEG_1G8</c>,
+     *   <c>YRefFrame.FUSIONMODE_INCLIN_90DEG_3G6</c> and <c>YRefFrame.FUSIONMODE_INCLIN_10DEG</c>
      * </param>
      * <para>
      * </para>
