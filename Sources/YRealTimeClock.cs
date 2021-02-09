@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRealTimeClock.cs 39434 2020-02-25 08:53:55Z seb $
+ *  $Id: YRealTimeClock.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindRealTimeClock(), the high-level API for RealTimeClock functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YRealTimeClock Class: real-time clock control interface, available for instance in the
- *   YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ *   YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  * <para>
  *   The <c>YRealTimeClock</c> class provide access to the embedded real-time clock available on some Yoctopuce
  *   devices. It can provide current date and time, even after a power outage

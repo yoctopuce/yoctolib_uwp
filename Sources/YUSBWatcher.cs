@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: yocto_api.cs 22010 2015-11-16 15:55:26Z seb $
+ * $Id: YUSBWatcher.cs 43337 2021-01-18 10:36:22Z web $
  *
  * High-level programming interface, common to all modules
  *

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiCellWeighScale.cs 41108 2020-06-29 12:29:07Z seb $
+ *  $Id: YMultiCellWeighScale.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindMultiCellWeighScale(), the high-level API for MultiCellWeighScale functions
  *
@@ -71,6 +71,14 @@ public class YMultiCellWeighScale : YSensor
     public const  int CELLCOUNT_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
+     *   invalid externalSense value
+     * </summary>
+     */
+    public const int EXTERNALSENSE_FALSE = 0;
+    public const int EXTERNALSENSE_TRUE = 1;
+    public const int EXTERNALSENSE_INVALID = -1;
+    /**
+     * <summary>
      *   invalid excitation value
      * </summary>
      */
@@ -121,6 +129,7 @@ public class YMultiCellWeighScale : YSensor
      */
     public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
     protected int _cellCount = CELLCOUNT_INVALID;
+    protected int _externalSense = EXTERNALSENSE_INVALID;
     protected int _excitation = EXCITATION_INVALID;
     protected double _tempAvgAdaptRatio = TEMPAVGADAPTRATIO_INVALID;
     protected double _tempChgAdaptRatio = TEMPCHGADAPTRATIO_INVALID;
@@ -169,6 +178,9 @@ public class YMultiCellWeighScale : YSensor
     {
         if (json_val.has("cellCount")) {
             _cellCount = json_val.getInt("cellCount");
+        }
+        if (json_val.has("externalSense")) {
+            _externalSense = json_val.getInt("externalSense") > 0 ? 1 : 0;
         }
         if (json_val.has("excitation")) {
             _excitation = json_val.getInt("excitation");
@@ -282,6 +294,68 @@ public class YMultiCellWeighScale : YSensor
         string rest_val;
         rest_val = (newval).ToString();
         await _setAttr("cellCount",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns true if entry 4 is used as external sense for 6-wires load cells.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YMultiCellWeighScale.EXTERNALSENSE_FALSE</c> or <c>YMultiCellWeighScale.EXTERNALSENSE_TRUE</c>,
+     *   according to true if entry 4 is used as external sense for 6-wires load cells
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YMultiCellWeighScale.EXTERNALSENSE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_externalSense()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return EXTERNALSENSE_INVALID;
+            }
+        }
+        res = _externalSense;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the configuration to tell if entry 4 is used as external sense for
+     *   6-wires load cells.
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the
+     *   module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YMultiCellWeighScale.EXTERNALSENSE_FALSE</c> or <c>YMultiCellWeighScale.EXTERNALSENSE_TRUE</c>,
+     *   according to the configuration to tell if entry 4 is used as external sense for
+     *   6-wires load cells
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_externalSense(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval > 0 ? "1" : "0");
+        await _setAttr("externalSense",rest_val);
         return YAPI.SUCCESS;
     }
 

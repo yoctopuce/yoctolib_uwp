@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTilt.cs 42951 2020-12-14 09:43:29Z seb $
+ *  $Id: YTilt.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindTilt(), the high-level API for Tilt functions
  *
@@ -48,7 +48,7 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YTilt class start)
 /**
  * <summary>
- *   YTilt Class: tilt sensor control interface, available for instance in the Yocto-3D-V2
+ *   YTilt Class: tilt sensor control interface, available for instance in the Yocto-3D-V2 or the Yocto-Inclinometer
  * <para>
  *   The <c>YSensor</c> class is the parent class for all Yoctopuce sensor types. It can be
  *   used to read the current value and unit of any sensor, read the min/max

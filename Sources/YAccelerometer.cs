@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAccelerometer.cs 42951 2020-12-14 09:43:29Z seb $
+ *  $Id: YAccelerometer.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindAccelerometer(), the high-level API for Accelerometer functions
  *
@@ -48,7 +48,8 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YAccelerometer class start)
 /**
  * <summary>
- *   YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2
+ *   YAccelerometer Class: accelerometer control interface, available for instance in the Yocto-3D-V2 or
+ *   the Yocto-Inclinometer
  * <para>
  *   The <c>YAccelerometer</c> class allows you to read and configure Yoctopuce accelerometers.
  *   It inherits from <c>YSensor</c> class the core functions to read measurements,

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YStepperMotor.cs 38913 2019-12-20 18:59:49Z mvuilleu $
+ *  $Id: YStepperMotor.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindStepperMotor(), the high-level API for StepperMotor functions
  *
@@ -1119,7 +1119,7 @@ public class YStepperMotor : YFunction
         //may throw an exception
         retBin = await this._download(url);
         res = retBin[0];
-        if (res == 49) {
+        if (res < 58) {
             if (!(res == 48)) { this._throw( YAPI.DEVICE_BUSY, "Motor command pipeline is full, try again later"); return YAPI.DEVICE_BUSY; }
         } else {
             if (!(res == 48)) { this._throw( YAPI.IO_ERROR, "Motor command failed permanently"); return YAPI.IO_ERROR; }

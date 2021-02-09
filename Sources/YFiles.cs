@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFiles.cs 42060 2020-10-14 10:02:12Z seb $
+ * $Id: YFiles.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  * Implements FindFiles(), the high-level API for Files functions
  *
@@ -48,8 +48,8 @@ namespace com.yoctopuce.YoctoAPI
     //--- (generated code: YFiles class start)
 /**
  * <summary>
- *   YFiles Class: filesystem control interface, available for instance in the Yocto-Buzzer, the
- *   Yocto-Color-V2, the YoctoHub-Ethernet or the YoctoHub-Wireless-n
+ *   YFiles Class: filesystem control interface, available for instance in the Yocto-Color-V2, the
+ *   Yocto-Serial, the YoctoHub-Ethernet or the YoctoHub-Wireless-n
  * <para>
  *   The YFiles class is used to access the filesystem embedded on
  *   some Yoctopuce devices. This filesystem makes it
@@ -220,7 +220,7 @@ public class YFiles : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the filesystem, for instance
-     *   <c>YBUZZER2.files</c>.
+     *   <c>YRGBLED2.files</c>.
      * </param>
      * <returns>
      *   a <c>YFiles</c> object allowing you to drive the filesystem.
@@ -277,7 +277,7 @@ public class YFiles : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the filesystem, for instance
-     *   <c>YBUZZER2.files</c>.
+     *   <c>YRGBLED2.files</c>.
      * </param>
      * <returns>
      *   a <c>YFiles</c> object allowing you to drive the filesystem.

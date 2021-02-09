@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataLogger.cs 41171 2020-07-02 17:49:00Z mvuilleu $
+ * $Id: YDataLogger.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  * Implements yFindDataLogger(), the high-level API for DataLogger functions
  *
@@ -605,7 +605,7 @@ public class YDataLogger : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the data logger, for instance
-     *   <c>LIGHTMK3.dataLogger</c>.
+     *   <c>RX420MA1.dataLogger</c>.
      * </param>
      * <returns>
      *   a <c>YDataLogger</c> object allowing you to drive the data logger.
@@ -662,7 +662,7 @@ public class YDataLogger : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the data logger, for instance
-     *   <c>LIGHTMK3.dataLogger</c>.
+     *   <c>RX420MA1.dataLogger</c>.
      * </param>
      * <returns>
      *   a <c>YDataLogger</c> object allowing you to drive the data logger.

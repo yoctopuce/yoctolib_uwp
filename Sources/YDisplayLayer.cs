@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplayLayer.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YDisplayLayer.cs 43619 2021-01-29 09:14:45Z mvuilleu $
  *
  * Implements FindDisplayLayer(), the high-level API for DisplayLayer functions
  *
@@ -481,13 +481,13 @@ public class YDisplayLayer
      * </param>
      * <param name="anchor">
      *   the text anchor point, chosen among the <c>YDisplayLayer.ALIGN</c> enumeration:
-     *   <c>YDisplayLayer.ALIGN.TOP_LEFT</c>,    <c>YDisplayLayer.ALIGN.CENTER_LEFT</c>,   
+     *   <c>YDisplayLayer.ALIGN.TOP_LEFT</c>,         <c>YDisplayLayer.ALIGN.CENTER_LEFT</c>,
      *   <c>YDisplayLayer.ALIGN.BASELINE_LEFT</c>,    <c>YDisplayLayer.ALIGN.BOTTOM_LEFT</c>,
-     *   <c>YDisplayLayer.ALIGN.TOP_CENTER</c>,  <c>YDisplayLayer.ALIGN.CENTER</c>,        
+     *   <c>YDisplayLayer.ALIGN.TOP_CENTER</c>,       <c>YDisplayLayer.ALIGN.CENTER</c>,
      *   <c>YDisplayLayer.ALIGN.BASELINE_CENTER</c>,  <c>YDisplayLayer.ALIGN.BOTTOM_CENTER</c>,
-     *   <c>YDisplayLayer.ALIGN.TOP_DECIMAL</c>, <c>YDisplayLayer.ALIGN.CENTER_DECIMAL</c>,
+     *   <c>YDisplayLayer.ALIGN.TOP_DECIMAL</c>,      <c>YDisplayLayer.ALIGN.CENTER_DECIMAL</c>,
      *   <c>YDisplayLayer.ALIGN.BASELINE_DECIMAL</c>, <c>YDisplayLayer.ALIGN.BOTTOM_DECIMAL</c>,
-     *   <c>YDisplayLayer.ALIGN.TOP_RIGHT</c>,   <c>YDisplayLayer.ALIGN.CENTER_RIGHT</c>,  
+     *   <c>YDisplayLayer.ALIGN.TOP_RIGHT</c>,        <c>YDisplayLayer.ALIGN.CENTER_RIGHT</c>,
      *   <c>YDisplayLayer.ALIGN.BASELINE_RIGHT</c>,   <c>YDisplayLayer.ALIGN.BOTTOM_RIGHT</c>.
      * </param>
      * <param name="text">

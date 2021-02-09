@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAnButton.cs 42060 2020-10-14 10:02:12Z seb $
+ *  $Id: YAnButton.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindAnButton(), the high-level API for AnButton functions
  *
@@ -140,8 +140,9 @@ public class YAnButton : YFunction
      *   invalid inputType value
      * </summary>
      */
-    public const int INPUTTYPE_ANALOG = 0;
+    public const int INPUTTYPE_ANALOG_FAST = 0;
     public const int INPUTTYPE_DIGITAL4 = 1;
+    public const int INPUTTYPE_ANALOG_SMOOTH = 2;
     public const int INPUTTYPE_INVALID = -1;
     protected int _calibratedValue = CALIBRATEDVALUE_INVALID;
     protected int _rawValue = RAWVALUE_INVALID;
@@ -693,8 +694,9 @@ public class YAnButton : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   either <c>YAnButton.INPUTTYPE_ANALOG</c> or <c>YAnButton.INPUTTYPE_DIGITAL4</c>, according to the
-     *   decoding method applied to the input (analog or multiplexed binary switches)
+     *   a value among <c>YAnButton.INPUTTYPE_ANALOG_FAST</c>, <c>YAnButton.INPUTTYPE_DIGITAL4</c> and
+     *   <c>YAnButton.INPUTTYPE_ANALOG_SMOOTH</c> corresponding to the decoding method applied to the input
+     *   (analog or multiplexed binary switches)
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YAnButton.INPUTTYPE_INVALID</c>.
@@ -723,8 +725,9 @@ public class YAnButton : YFunction
      * </para>
      * </summary>
      * <param name="newval">
-     *   either <c>YAnButton.INPUTTYPE_ANALOG</c> or <c>YAnButton.INPUTTYPE_DIGITAL4</c>, according to the
-     *   decoding method applied to the input (analog or multiplexed binary switches)
+     *   a value among <c>YAnButton.INPUTTYPE_ANALOG_FAST</c>, <c>YAnButton.INPUTTYPE_DIGITAL4</c> and
+     *   <c>YAnButton.INPUTTYPE_ANALOG_SMOOTH</c> corresponding to the decoding method applied to the input
+     *   (analog or multiplexed binary switches)
      * </param>
      * <para>
      * </para>

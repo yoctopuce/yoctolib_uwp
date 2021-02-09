@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YHubPort.cs 42060 2020-10-14 10:02:12Z seb $
+ *  $Id: YHubPort.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindHubPort(), the high-level API for HubPort functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YHubPort Class: YoctoHub slave port control interface, available for instance in the
- *   YoctoHub-Ethernet, the YoctoHub-GSM-3G-EU, the YoctoHub-Shield or the YoctoHub-Wireless-n
+ *   YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Shield or the YoctoHub-Wireless-n
  * <para>
  *   The <c>YHubPort</c> class provides control over the power supply for slave ports
  *   on a YoctoHub. It provide information about the device connected to it.

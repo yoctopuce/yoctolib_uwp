@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpSchedule.cs 39434 2020-02-25 08:53:55Z seb $
+ *  $Id: YWakeUpSchedule.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindWakeUpSchedule(), the high-level API for WakeUpSchedule functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YWakeUpSchedule Class: wake up schedule control interface, available for instance in the
- *   YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ *   YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  * <para>
  *   The <c>YWakeUpSchedule</c> class implements a wake up condition. The wake up time is
  *   specified as a set of months and/or days and/or hours and/or minutes when the

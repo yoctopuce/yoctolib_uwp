@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 40893 2020-06-09 16:34:42Z seb $
+ * $Id: YFunction.cs 43619 2021-01-29 09:14:45Z mvuilleu $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -553,7 +553,7 @@ public class YFunction
      *   a string corresponding to the serial number of the module, as set by the factory.
      * </returns>
      * <para>
-     *   On failure, throws an exception or returns YModule.SERIALNUMBER_INVALID.
+     *   On failure, throws an exception or returns YFunction.SERIALNUMBER_INVALID.
      * </para>
      */
     public virtual async Task<string> get_serialNumber()

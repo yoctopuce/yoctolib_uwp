@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YNetwork.cs 42060 2020-10-14 10:02:12Z seb $
+ *  $Id: YNetwork.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindNetwork(), the high-level API for Network functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YNetwork Class: network interface control interface, available for instance in the
- *   YoctoHub-Ethernet, the YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA or the YoctoHub-Wireless-n
+ *   YoctoHub-Ethernet, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  * <para>
  *   <c>YNetwork</c> objects provide access to TCP/IP parameters of Yoctopuce
  *   devices that include a built-in network interface.

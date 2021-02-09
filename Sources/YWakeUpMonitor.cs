@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpMonitor.cs 39434 2020-02-25 08:53:55Z seb $
+ *  $Id: YWakeUpMonitor.cs 43478 2021-01-21 13:49:12Z mvuilleu $
  *
  *  Implements FindWakeUpMonitor(), the high-level API for WakeUpMonitor functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YWakeUpMonitor Class: wake-up monitor control interface, available for instance in the
- *   YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ *   YoctoHub-GSM-3G-EU, the YoctoHub-GSM-3G-NA, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
  * <para>
  *   The <c>YWakeUpMonitor</c> class handles globally all wake-up sources, as well
  *   as automated sleep mode.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRefFrame.cs 42951 2020-12-14 09:43:29Z seb $
+ *  $Id: YRefFrame.cs 43619 2021-01-29 09:14:45Z mvuilleu $
  *
  *  Implements FindRefFrame(), the high-level API for RefFrame functions
  *
@@ -48,7 +48,8 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YRefFrame class start)
 /**
  * <summary>
- *   YRefFrame Class: 3D reference frame configuration interface, available for instance in the Yocto-3D-V2
+ *   YRefFrame Class: 3D reference frame configuration interface, available for instance in the
+ *   Yocto-3D-V2 or the Yocto-Inclinometer
  * <para>
  *   The <c>YRefFrame</c> class is used to setup the base orientation of the Yoctopuce inertial
  *   sensors. Thanks to this, orientation functions relative to the earth surface plane
@@ -558,13 +559,13 @@ public class YRefFrame : YFunction
      * </summary>
      * <returns>
      *   a value among the <c>YRefFrame.MOUNTPOSITION</c> enumeration
-     *   (<c>YRefFrame.MOUNTPOSITION.BOTTOM</c>,   <c>YRefFrame.MOUNTPOSITION.TOP</c>,
+     *   (<c>YRefFrame.MOUNTPOSITION.BOTTOM</c>,  <c>YRefFrame.MOUNTPOSITION.TOP</c>,
      *   <c>YRefFrame.MOUNTPOSITION.FRONT</c>,    <c>YRefFrame.MOUNTPOSITION.RIGHT</c>,
      *   <c>YRefFrame.MOUNTPOSITION.REAR</c>,     <c>YRefFrame.MOUNTPOSITION.LEFT</c>),
      *   corresponding to the installation in a box, on one of the six faces.
      * </returns>
      * <para>
-     *   On failure, throws an exception or returns YRefFrame.MOUNTPOSITION.INVALID.
+     *   On failure, throws an exception or returns YRefFrame.MOUNTPOSITION_INVALID.
      * </para>
      */
     public virtual async Task<MOUNTPOSITION> get_mountPosition()
@@ -597,7 +598,7 @@ public class YRefFrame : YFunction
      *   on the top face, the 12H orientation points to the rear.
      * </returns>
      * <para>
-     *   On failure, throws an exception or returns YRefFrame.MOUNTORIENTATION.INVALID.
+     *   On failure, throws an exception or returns YRefFrame.MOUNTORIENTATION_INVALID.
      * </para>
      */
     public virtual async Task<MOUNTORIENTATION> get_mountOrientation()
@@ -625,7 +626,7 @@ public class YRefFrame : YFunction
      * </summary>
      * <param name="position">
      *   a value among the <c>YRefFrame.MOUNTPOSITION</c> enumeration
-     *   (<c>YRefFrame.MOUNTPOSITION.BOTTOM</c>,   <c>YRefFrame.MOUNTPOSITION.TOP</c>,
+     *   (<c>YRefFrame.MOUNTPOSITION.BOTTOM</c>,  <c>YRefFrame.MOUNTPOSITION.TOP</c>,
      *   <c>YRefFrame.MOUNTPOSITION.FRONT</c>,    <c>YRefFrame.MOUNTPOSITION.RIGHT</c>,
      *   <c>YRefFrame.MOUNTPOSITION.REAR</c>,     <c>YRefFrame.MOUNTPOSITION.LEFT</c>),
      *   corresponding to the installation in a box, on one of the six faces.
