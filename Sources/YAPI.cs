@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 40549 2020-05-14 15:54:55Z mvuilleu $
+ * $Id: YAPI.cs 44025 2021-02-25 09:38:14Z web $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "43781";
+        public const string YOCTO_API_BUILD_STR = "44029";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -186,6 +186,29 @@ public class YAPI
     }
     /**
      * <summary>
+     *   Adds a UDEV rule which authorizes all users to access Yoctopuce modules
+     *   connected to the USB ports.
+     * <para>
+     *   This function works only under Linux. The process that
+     *   calls this method must have root privileges because this method changes the Linux configuration.
+     * </para>
+     * </summary>
+     * <param name="force">
+     *   if true, overwrites any existing rule.
+     * </param>
+     * <returns>
+     *   an empty string if the rule has been added.
+     * </returns>
+     * <para>
+     *   On failure, returns a string that starts with "error:".
+     * </para>
+     */
+    public static async Task<string> AddUdevRule(bool force)
+    {
+        return await imm_GetYCtx().AddUdevRule(force);
+    }
+    /**
+     * <summary>
      *   Modifies the network connection delay for <c>yRegisterHub()</c> and <c>yUpdateDeviceList()</c>.
      * <para>
      *   This delay impacts only the YoctoHubs and VirtualHub
@@ -292,7 +315,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".43781" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".44029" + YUSBHub.imm_getAPIVersion();
         }
 
         /**

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 40549 2020-05-14 15:54:55Z mvuilleu $
+ * $Id: YAPIContext.cs 44026 2021-02-25 09:48:41Z web $
  *
  * High-level programming interface, common to all modules
  *
@@ -883,6 +883,12 @@ public class YAPIContext
         {
             return (int) _networkTimeoutMs;
         }
+
+        private async Task<string> AddUdevRule_internal(bool force)
+        {
+            return "error: Not supported in UWP";
+        }
+
 #pragma warning restore 1998
 
         //PUBLIC METHOD:
@@ -932,6 +938,32 @@ public class YAPIContext
     public virtual async Task<int> GetDeviceListValidity()
     {
         return await GetDeviceListValidity_internal();
+    }
+
+    //cannot be generated for UWP:
+    //public virtual async Task<string> AddUdevRule_internal(bool force)
+    /**
+     * <summary>
+     *   Adds a UDEV rule which authorizes all users to access Yoctopuce modules
+     *   connected to the USB ports.
+     * <para>
+     *   This function works only under Linux. The process that
+     *   calls this method must have root privileges because this method changes the Linux configuration.
+     * </para>
+     * </summary>
+     * <param name="force">
+     *   if true, overwrites any existing rule.
+     * </param>
+     * <returns>
+     *   an empty string if the rule has been added.
+     * </returns>
+     * <para>
+     *   On failure, returns a string that starts with "error:".
+     * </para>
+     */
+    public virtual async Task<string> AddUdevRule(bool force)
+    {
+        return await AddUdevRule_internal(force);
     }
 
     //cannot be generated for UWP:
