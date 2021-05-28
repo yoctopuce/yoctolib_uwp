@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWatchdog.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YWatchdog.cs 44548 2021-04-13 09:56:42Z mvuilleu $
  *
  *  Implements FindWatchdog(), the high-level API for Watchdog functions
  *
@@ -150,6 +150,12 @@ public class YWatchdog : YFunction
      * </summary>
      */
     public const  long TRIGGERDURATION_INVALID = YAPI.INVALID_LONG;
+    /**
+     * <summary>
+     *   invalid lastTrigger value
+     * </summary>
+     */
+    public const  int LASTTRIGGER_INVALID = YAPI.INVALID_UINT;
     public static readonly YDelayedPulse DELAYEDPULSETIMER_INVALID = null;
     protected int _state = STATE_INVALID;
     protected int _stateAtPowerOn = STATEATPOWERON_INVALID;
@@ -163,6 +169,7 @@ public class YWatchdog : YFunction
     protected int _running = RUNNING_INVALID;
     protected long _triggerDelay = TRIGGERDELAY_INVALID;
     protected long _triggerDuration = TRIGGERDURATION_INVALID;
+    protected int _lastTrigger = LASTTRIGGER_INVALID;
     protected ValueCallback _valueCallbackWatchdog = null;
     protected int _firm = 0;
 
@@ -245,6 +252,9 @@ public class YWatchdog : YFunction
         }
         if (json_val.has("triggerDuration")) {
             _triggerDuration = json_val.getLong("triggerDuration");
+        }
+        if (json_val.has("lastTrigger")) {
+            _lastTrigger = json_val.getInt("lastTrigger");
         }
         base.imm_parseAttr(json_val);
     }
@@ -980,6 +990,34 @@ public class YWatchdog : YFunction
         await _setAttr("triggerDuration",rest_val);
         return YAPI.SUCCESS;
     }
+
+    /**
+     * <summary>
+     *   Returns the number of seconds spent since the last output power-up event.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the number of seconds spent since the last output power-up event
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YWatchdog.LASTTRIGGER_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_lastTrigger()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return LASTTRIGGER_INVALID;
+            }
+        }
+        res = _lastTrigger;
+        return res;
+    }
+
 
     /**
      * <summary>

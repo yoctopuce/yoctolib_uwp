@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YColorLedCluster.cs 41109 2020-06-29 12:40:42Z seb $
+ *  $Id: YColorLedCluster.cs 44921 2021-05-06 08:03:05Z mvuilleu $
  *
  *  Implements FindColorLedCluster(), the high-level API for ColorLedCluster functions
  *
@@ -79,6 +79,7 @@ public class YColorLedCluster : YFunction
      */
     public const int LEDTYPE_RGB = 0;
     public const int LEDTYPE_RGBW = 1;
+    public const int LEDTYPE_WS2811 = 2;
     public const int LEDTYPE_INVALID = -1;
     /**
      * <summary>
@@ -235,8 +236,8 @@ public class YColorLedCluster : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   either <c>YColorLedCluster.LEDTYPE_RGB</c> or <c>YColorLedCluster.LEDTYPE_RGBW</c>, according to
-     *   the RGB LED type currently handled by the device
+     *   a value among <c>YColorLedCluster.LEDTYPE_RGB</c>, <c>YColorLedCluster.LEDTYPE_RGBW</c> and
+     *   <c>YColorLedCluster.LEDTYPE_WS2811</c> corresponding to the RGB LED type currently handled by the device
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorLedCluster.LEDTYPE_INVALID</c>.
@@ -266,8 +267,8 @@ public class YColorLedCluster : YFunction
      * </para>
      * </summary>
      * <param name="newval">
-     *   either <c>YColorLedCluster.LEDTYPE_RGB</c> or <c>YColorLedCluster.LEDTYPE_RGBW</c>, according to
-     *   the RGB LED type currently handled by the device
+     *   a value among <c>YColorLedCluster.LEDTYPE_RGB</c>, <c>YColorLedCluster.LEDTYPE_RGBW</c> and
+     *   <c>YColorLedCluster.LEDTYPE_WS2811</c> corresponding to the RGB LED type currently handled by the device
      * </param>
      * <para>
      * </para>

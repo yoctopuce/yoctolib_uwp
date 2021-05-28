@@ -309,8 +309,16 @@
       <Device Id="vidpid:24e0 009c">
         <Function Type="usage:ff00 0001" />
       </Device>
+      <!-- Yocto-MaxiKnob -->
+      <Device Id="vidpid:24e0 009e">
+        <Function Type="usage:ff00 0001" />
+      </Device>
       <!-- Yocto-Inclinometer -->
       <Device Id="vidpid:24e0 009f">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-Light-V4 -->
+      <Device Id="vidpid:24e0 00a2">
         <Function Type="usage:ff00 0001" />
       </Device>
 <!-- USABLE DEVICES STOP -->

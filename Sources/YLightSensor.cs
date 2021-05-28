@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLightSensor.cs 42951 2020-12-14 09:43:29Z seb $
+ *  $Id: YLightSensor.cs 45292 2021-05-25 23:27:54Z mvuilleu $
  *
  *  Implements FindLightSensor(), the high-level API for LightSensor functions
  *
@@ -48,7 +48,7 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YLightSensor class start)
 /**
  * <summary>
- *   YLightSensor Class: light sensor control interface, available for instance in the Yocto-Light-V3,
+ *   YLightSensor Class: light sensor control interface, available for instance in the Yocto-Light-V4,
  *   the Yocto-Proximity or the Yocto-RangeFinder
  * <para>
  *   The <c>YLightSensor</c> class allows you to read and configure Yoctopuce light sensors.
@@ -274,7 +274,7 @@ public class YLightSensor : YSensor
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the light sensor, for instance
-     *   <c>LIGHTMK3.lightSensor</c>.
+     *   <c>LIGHTMK4.lightSensor</c>.
      * </param>
      * <returns>
      *   a <c>YLightSensor</c> object allowing you to drive the light sensor.
@@ -331,7 +331,7 @@ public class YLightSensor : YSensor
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the light sensor, for instance
-     *   <c>LIGHTMK3.lightSensor</c>.
+     *   <c>LIGHTMK4.lightSensor</c>.
      * </param>
      * <returns>
      *   a <c>YLightSensor</c> object allowing you to drive the light sensor.

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFiles.cs 43478 2021-01-21 13:49:12Z mvuilleu $
+ * $Id: YFiles.cs 45292 2021-05-25 23:27:54Z mvuilleu $
  *
  * Implements FindFiles(), the high-level API for Files functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YFiles Class: filesystem control interface, available for instance in the Yocto-Color-V2, the
- *   Yocto-Serial, the YoctoHub-Ethernet or the YoctoHub-Wireless-n
+ *   Yocto-Serial, the YoctoHub-Ethernet or the YoctoHub-GSM-4G
  * <para>
  *   The YFiles class is used to access the filesystem embedded on
  *   some Yoctopuce devices. This filesystem makes it

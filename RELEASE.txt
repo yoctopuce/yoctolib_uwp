@@ -1,4 +1,7 @@
-UWP v1.10.44175
+UWP v1.10.45343
 
-- Add Yocto-CO2-V2 forced calibration method
-- Improve error reporting during firmware update
+- Add edgePerCycle attribute to the QuadratureDecoder
+- Add Example for Yocto-MaxiKnob
+- Fix missing documentation for isReadOnly() method.
+- Update demo project to support Yocto-Light-V4
+- Add Example for Yocto-MaxiKnob
