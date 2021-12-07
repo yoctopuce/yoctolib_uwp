@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataSet.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YDataSet.cs 45866 2021-08-05 09:30:44Z web $
  *
  * Implements yFindDataSet(), the high-level API for DataSet functions
  *
@@ -349,6 +349,7 @@ public class YDataSet
         double tim;
         double itv;
         double fitv;
+        double avgv;
         double end_;
         int nCols;
         int minCol;
@@ -399,8 +400,9 @@ public class YDataSet
             } else {
                 end_ = tim + itv;
             }
-            if ((end_ > _startTimeMs) && ((_endTimeMs == 0) || (tim < _endTimeMs))) {
-                _measures.Add(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], dataRows[ii][avgCol], dataRows[ii][maxCol]));
+            avgv = dataRows[ii][avgCol];
+            if ((end_ > _startTimeMs) && ((_endTimeMs == 0) || (tim < _endTimeMs)) && !(Double.IsNaN(avgv))) {
+                _measures.Add(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], avgv, dataRows[ii][maxCol]));
             }
             tim = end_;
         }

@@ -1,7 +1,5 @@
-UWP v1.10.45343
+UWP v1.10.47582
 
-- Add edgePerCycle attribute to the QuadratureDecoder
-- Add Example for Yocto-MaxiKnob
-- Fix missing documentation for isReadOnly() method.
-- Update demo project to support Yocto-Light-V4
-- Add Example for Yocto-MaxiKnob
+- Add support for missing measures in DataStream (returned as NaN) and skipping them in DataSet
+- Add support for YInputChain class
+- Improve documentation of YAPI.RegisterHub

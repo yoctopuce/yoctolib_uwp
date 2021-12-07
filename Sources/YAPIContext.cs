@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 44026 2021-02-25 09:48:41Z web $
+ * $Id: YAPIContext.cs 46595 2021-09-24 16:42:28Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -1216,7 +1216,8 @@ public class YAPIContext
          * <summary>
          *   Setup the Yoctopuce library to use modules connected on a given machine.
          * <para>
-         *   The
+         *   Idealy this
+         *   call will be made once at the begining of your application.  The
          *   parameter will determine how the API will work. Use the following values:
          * </para>
          * <para>
@@ -1256,7 +1257,9 @@ public class YAPIContext
          *   <c>http://username:password@address:port</c>
          * </para>
          * <para>
-         *   You can call <i>RegisterHub</i> several times to connect to several machines.
+         *   You can call <i>RegisterHub</i> several times to connect to several machines. On
+         *   the other hand, it is useless and even counterproductive to call <i>RegisterHub</i>
+         *   with to same address multiple times during the life of the application.
          * </para>
          * <para>
          * </para>

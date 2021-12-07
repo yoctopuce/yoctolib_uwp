@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 44025 2021-02-25 09:38:14Z web $
+ * $Id: YAPI.cs 46595 2021-09-24 16:42:28Z mvuilleu $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "45343";
+        public const string YOCTO_API_BUILD_STR = "47582";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -90,6 +90,7 @@ public class YAPI
         public const int UNAUTHORIZED = -12;            // unauthorized access to password-protected device
         public const int RTC_NOT_READY = -13;           // real-time clock has not been initialized (or time was lost)
         public const int FILE_NOT_FOUND = -14;          // the file is not found
+        public const int SSL_ERROR = -15;               // Error reported by mbedSSL
 
 //--- (end of generated code: YFunction return codes)
         internal static Encoding DefaultEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
@@ -315,7 +316,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".45343" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".47582" + YUSBHub.imm_getAPIVersion();
         }
 
         /**
@@ -440,7 +441,8 @@ public class YAPI
          * <summary>
          *   Setup the Yoctopuce library to use modules connected on a given machine.
          * <para>
-         *   The
+         *   Idealy this
+         *   call will be made once at the begining of your application.  The
          *   parameter will determine how the API will work. Use the following values:
          * </para>
          * <para>
@@ -480,7 +482,9 @@ public class YAPI
          *   <c>http://username:password@address:port</c>
          * </para>
          * <para>
-         *   You can call <i>RegisterHub</i> several times to connect to several machines.
+         *   You can call <i>RegisterHub</i> several times to connect to several machines. On
+         *   the other hand, it is useless and even counterproductive to call <i>RegisterHub</i>
+         *   with to same address multiple times during the life of the application.
          * </para>
          * <para>
          * </para>
@@ -516,7 +520,8 @@ public class YAPI
          * <summary>
          *   Setup the Yoctopuce library to use modules connected on a given machine.
          * <para>
-         *   The
+         *   Idealy this
+         *   call will be made once at the begining of your application.  The
          *   parameter will determine how the API will work. Use the following values:
          * </para>
          * <para>
@@ -556,7 +561,9 @@ public class YAPI
          *   <c>http://username:password@address:port</c>
          * </para>
          * <para>
-         *   You can call <i>RegisterHub</i> several times to connect to several machines.
+         *   You can call <i>RegisterHub</i> several times to connect to several machines. On
+         *   the other hand, it is useless and even counterproductive to call <i>RegisterHub</i>
+         *   with to same address multiple times during the life of the application.
          * </para>
          * <para>
          * </para>

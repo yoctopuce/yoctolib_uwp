@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 /// <summary>
 ///*******************************************************************
 /// 
-/// $Id: YDataStream.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+/// $Id: YDataStream.cs 45893 2021-08-09 13:53:21Z web $
 /// 
 /// YDataStream Class: Sequence of measured data, stored by the data logger
 /// 
@@ -220,16 +220,26 @@ public class YDataStream
         if (_isAvg) {
             while (idx + 3 < udat.Count) {
                 dat.Clear();
-                dat.Add(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
-                dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
-                dat.Add(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
+                if ((udat[idx] == 65535) && (udat[idx + 1] == 65535)) {
+                    dat.Add(Double.NaN);
+                    dat.Add(Double.NaN);
+                    dat.Add(Double.NaN);
+                } else {
+                    dat.Add(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
+                    dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                    dat.Add(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
+                }
                 idx = idx + 6;
                 _values.Add(new List<double>(dat));
             }
         } else {
             while (idx + 1 < udat.Count) {
                 dat.Clear();
-                dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                if ((udat[idx] == 65535) && (udat[idx + 1] == 65535)) {
+                    dat.Add(Double.NaN);
+                } else {
+                    dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                }
                 _values.Add(new List<double>(dat));
                 idx = idx + 2;
             }

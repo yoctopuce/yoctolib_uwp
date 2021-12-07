@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YQuadratureDecoder.cs 45292 2021-05-25 23:27:54Z mvuilleu $
+ *  $Id: YQuadratureDecoder.cs 45843 2021-08-04 07:51:59Z mvuilleu $
  *
  *  Implements FindQuadratureDecoder(), the high-level API for QuadratureDecoder functions
  *
@@ -48,7 +48,8 @@ namespace com.yoctopuce.YoctoAPI
 //--- (YQuadratureDecoder class start)
 /**
  * <summary>
- *   YQuadratureDecoder Class: quadrature decoder control interface, available for instance in the Yocto-PWM-Rx
+ *   YQuadratureDecoder Class: quadrature decoder control interface, available for instance in the
+ *   Yocto-MaxiKnob or the Yocto-PWM-Rx
  * <para>
  *   The <c>YQuadratureDecoder</c> class allows you to read and configure Yoctopuce quadrature decoders.
  *   It inherits from <c>YSensor</c> class the core functions to read measurements,
@@ -352,7 +353,7 @@ public class YQuadratureDecoder : YSensor
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the quadrature decoder, for instance
-     *   <c>YPWMRX01.quadratureDecoder</c>.
+     *   <c>YMXBTN01.quadratureDecoder1</c>.
      * </param>
      * <returns>
      *   a <c>YQuadratureDecoder</c> object allowing you to drive the quadrature decoder.
@@ -409,7 +410,7 @@ public class YQuadratureDecoder : YSensor
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the quadrature decoder, for instance
-     *   <c>YPWMRX01.quadratureDecoder</c>.
+     *   <c>YMXBTN01.quadratureDecoder1</c>.
      * </param>
      * <returns>
      *   a <c>YQuadratureDecoder</c> object allowing you to drive the quadrature decoder.
