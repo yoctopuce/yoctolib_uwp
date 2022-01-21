@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 38913 2019-12-20 18:59:49Z mvuilleu $
+ * $Id: YSensor.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -1217,7 +1217,7 @@ public class YSensor : YFunction
      */
     public virtual async Task<int> startDataLogger()
     {
-        byte[] res;
+        byte[] res = new byte[0];
 
         res = await this._download("api/dataLogger/recording?recording=1");
         if (!((res).Length>0)) { this._throw( YAPI.IO_ERROR, "unable to start datalogger"); return YAPI.IO_ERROR; }
@@ -1236,7 +1236,7 @@ public class YSensor : YFunction
      */
     public virtual async Task<int> stopDataLogger()
     {
-        byte[] res;
+        byte[] res = new byte[0];
 
         res = await this._download("api/dataLogger/recording?recording=0");
         if (!((res).Length>0)) { this._throw( YAPI.IO_ERROR, "unable to stop datalogger"); return YAPI.IO_ERROR; }

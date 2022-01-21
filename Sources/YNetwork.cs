@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YNetwork.cs 45843 2021-08-04 07:51:59Z mvuilleu $
+ *  $Id: YNetwork.cs 48183 2022-01-20 10:26:11Z mvuilleu $
  *
  *  Implements FindNetwork(), the high-level API for Network functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YNetwork Class: network interface control interface, available for instance in the
- *   YoctoHub-Ethernet, the YoctoHub-GSM-3G-EU, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
+ *   YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
  * <para>
  *   <c>YNetwork</c> objects provide access to TCP/IP parameters of Yoctopuce
  *   devices that include a built-in network interface.
@@ -1914,7 +1914,7 @@ public class YNetwork : YFunction
      */
     public virtual async Task<string> ping(string host)
     {
-        byte[] content;
+        byte[] content = new byte[0];
 
         content = await this._download("ping.txt?host="+host);
         return YAPI.DefaultEncoding.GetString(content);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellular.cs 42060 2020-10-14 10:02:12Z seb $
+ * $Id: YCellular.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * Implements FindCellular(), the high-level API for Cellular functions
  *
@@ -1368,7 +1368,7 @@ public class YCellular : YFunction
         int cmdLen;
         int waitMore;
         string res;
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         string buffstr;
         int buffstrlen;

@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 40893 2020-06-09 16:34:42Z seb $
+ * $Id: YModule.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -1338,7 +1338,7 @@ public class YModule : YFunction
     public virtual async Task<YFirmwareUpdate> updateFirmwareEx(string path,bool force)
     {
         string serial;
-        byte[] settings;
+        byte[] settings = new byte[0];
 
         serial = await this.get_serialNumber();
         settings = await this.get_allSettings();
@@ -1390,9 +1390,9 @@ public class YModule : YFunction
      */
     public virtual async Task<byte[]> get_allSettings()
     {
-        byte[] settings;
-        byte[] json;
-        byte[] res;
+        byte[] settings = new byte[0];
+        byte[] json = new byte[0];
+        byte[] res = new byte[0];
         string sep;
         string name;
         string item;
@@ -1400,8 +1400,8 @@ public class YModule : YFunction
         string id;
         string url;
         string file_data;
-        byte[] file_data_bin;
-        byte[] temp_data_bin;
+        byte[] file_data_bin = new byte[0];
+        byte[] temp_data_bin = new byte[0];
         string ext_settings;
         List<string> filelist = new List<string>();
         List<string> templist = new List<string>();
@@ -1520,7 +1520,7 @@ public class YModule : YFunction
      */
     public virtual async Task<int> set_allSettingsAndFiles(byte[] settings)
     {
-        byte[] down;
+        byte[] down = new byte[0];
         string json;
         string json_api;
         string json_files;
@@ -1916,12 +1916,12 @@ public class YModule : YFunction
     public virtual async Task<int> set_allSettings(byte[] settings)
     {
         List<string> restoreLast = new List<string>();
-        byte[] old_json_flat;
+        byte[] old_json_flat = new byte[0];
         List<string> old_dslist = new List<string>();
         List<string> old_jpath = new List<string>();
         List<int> old_jpath_len = new List<int>();
         List<string> old_val_arr = new List<string>();
-        byte[] actualSettings;
+        byte[] actualSettings = new byte[0];
         List<string> new_dslist = new List<string>();
         List<string> new_jpath = new List<string>();
         List<int> new_jpath_len = new List<int>();
@@ -2295,7 +2295,7 @@ public class YModule : YFunction
      */
     public virtual async Task<string> get_lastLogs()
     {
-        byte[] content;
+        byte[] content = new byte[0];
 
         content = await this._download("logs.txt");
         return YAPI.DefaultEncoding.GetString(content);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTemperature.cs 42054 2020-10-14 09:46:38Z seb $
+ *  $Id: YTemperature.cs 48028 2022-01-12 09:20:48Z seb $
  *
  *  Implements FindTemperature(), the high-level API for Temperature functions
  *
@@ -711,7 +711,7 @@ public class YTemperature : YSensor
     public virtual async Task<int> loadThermistorResponseTable(List<double> tempValues,List<double> resValues)
     {
         string id;
-        byte[] bin_json;
+        byte[] bin_json = new byte[0];
         List<string> paramlist = new List<string>();
         List<double> templist = new List<double>();
         int siz;

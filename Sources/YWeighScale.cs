@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWeighScale.cs 41112 2020-06-29 13:21:58Z seb $
+ *  $Id: YWeighScale.cs 48028 2022-01-12 09:20:48Z seb $
  *
  *  Implements FindWeighScale(), the high-level API for WeighScale functions
  *
@@ -882,7 +882,7 @@ public class YWeighScale : YSensor
     public virtual async Task<int> loadCompensationTable(int tableIndex,List<double> tempValues,List<double> compValues)
     {
         string id;
-        byte[] bin_json;
+        byte[] bin_json = new byte[0];
         List<string> paramlist = new List<string>();
         int siz;
         int idx;

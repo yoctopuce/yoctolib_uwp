@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YWireless.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YWireless.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * Implements FindWireless(), the high-level API for Wireless functions
  *
@@ -708,7 +708,7 @@ public class YWireless : YFunction
      */
     public virtual async Task<List<YWlanRecord>> get_detectedWlans()
     {
-        byte[] json;
+        byte[] json = new byte[0];
         List<string> wlanlist = new List<string>();
         List<YWlanRecord> res = new List<YWlanRecord>();
 

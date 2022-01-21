@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSerialPort.cs 41171 2020-07-02 17:49:00Z mvuilleu $
+ * $Id: YSerialPort.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * Implements FindSerialPort(), the high-level API for SerialPort functions
  *
@@ -171,7 +171,7 @@ public class YSerialPort : YFunction
     protected string _serialMode = SERIALMODE_INVALID;
     protected ValueCallback _valueCallbackSerialPort = null;
     protected int _rxptr = 0;
-    protected byte[] _rxbuff;
+    protected byte[] _rxbuff = new byte[0];
     protected int _rxbuffptr = 0;
 
     public new delegate Task ValueCallback(YSerialPort func, string value);
@@ -1034,7 +1034,7 @@ public class YSerialPort : YFunction
     public virtual async Task<string> readLine()
     {
         string url;
-        byte[] msgbin;
+        byte[] msgbin = new byte[0];
         List<string> msgarr = new List<string>();
         int msglen;
         string res;
@@ -1091,7 +1091,7 @@ public class YSerialPort : YFunction
     public virtual async Task<List<string>> readMessages(string pattern,int maxWait)
     {
         string url;
-        byte[] msgbin;
+        byte[] msgbin = new byte[0];
         List<string> msgarr = new List<string>();
         int msglen;
         List<string> res = new List<string>();
@@ -1165,7 +1165,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<int> read_avail()
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int res;
 
@@ -1202,7 +1202,7 @@ public class YSerialPort : YFunction
     public virtual async Task<string> queryLine(string query,int maxWait)
     {
         string url;
-        byte[] msgbin;
+        byte[] msgbin = new byte[0];
         List<string> msgarr = new List<string>();
         int msglen;
         string res;
@@ -1249,7 +1249,7 @@ public class YSerialPort : YFunction
     public virtual async Task<string> queryHex(string hexString,int maxWait)
     {
         string url;
-        byte[] msgbin;
+        byte[] msgbin = new byte[0];
         List<string> msgarr = new List<string>();
         int msglen;
         string res;
@@ -1386,7 +1386,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<int> writeStr(string text)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int idx;
         int ch;
@@ -1451,7 +1451,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<int> writeArray(List<int> byteList)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int idx;
         int hexb;
@@ -1487,7 +1487,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<int> writeHex(string hexString)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int idx;
         int hexb;
@@ -1527,7 +1527,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<int> writeLine(string text)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int idx;
         int ch;
@@ -1572,7 +1572,7 @@ public class YSerialPort : YFunction
     {
         int currpos;
         int reqlen;
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int mult;
         int endpos;
@@ -1648,7 +1648,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<string> readStr(int nChars)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int mult;
         int endpos;
@@ -1691,12 +1691,12 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<byte[]> readBin(int nChars)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int mult;
         int endpos;
         int idx;
-        byte[] res;
+        byte[] res = new byte[0];
         if (nChars > 65535) {
             nChars = 65535;
         }
@@ -1740,7 +1740,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<List<int>> readArray(int nChars)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int mult;
         int endpos;
@@ -1791,7 +1791,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<string> readHex(int nBytes)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int bufflen;
         int mult;
         int endpos;
@@ -1868,7 +1868,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<int> get_CTS()
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         int res;
 
         buff = await this._download("cts.txt");
@@ -1904,7 +1904,7 @@ public class YSerialPort : YFunction
     public virtual async Task<List<YSnoopingRecord>> snoopMessages(int maxWait)
     {
         string url;
-        byte[] msgbin;
+        byte[] msgbin = new byte[0];
         List<string> msgarr = new List<string>();
         int msglen;
         List<YSnoopingRecord> res = new List<YSnoopingRecord>();
@@ -1947,7 +1947,7 @@ public class YSerialPort : YFunction
      */
     public virtual async Task<int> writeStxEtx(string text)
     {
-        byte[] buff;
+        byte[] buff = new byte[0];
         buff = YAPI.DefaultEncoding.GetBytes(""+((char)( 2)).ToString()+""+ text+""+((char)(3)).ToString());
         // send string using file upload
         return await this._upload("txdata", buff);
@@ -2006,7 +2006,7 @@ public class YSerialPort : YFunction
         string cmd;
         string url;
         string pat;
-        byte[] msgs;
+        byte[] msgs = new byte[0];
         List<string> reps = new List<string>();
         string rep;
         List<int> res = new List<int>();

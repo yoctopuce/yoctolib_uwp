@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YArithmeticSensor.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YArithmeticSensor.cs 48028 2022-01-12 09:20:48Z seb $
  *
  *  Implements FindArithmeticSensor(), the high-level API for ArithmeticSensor functions
  *
@@ -440,7 +440,7 @@ public class YArithmeticSensor : YSensor
         string id;
         string fname;
         string content;
-        byte[] data;
+        byte[] data = new byte[0];
         string diags;
         double resval;
         id = await this.get_functionId();
@@ -568,7 +568,7 @@ public class YArithmeticSensor : YSensor
     public virtual async Task<int> loadAuxiliaryFunction(string name,List<double> inputValues,List<double> outputValues)
     {
         string fname;
-        byte[] defbin;
+        byte[] defbin = new byte[0];
         int siz;
 
         fname = "userMap"+name+".txt";

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiAxisController.cs 43478 2021-01-21 13:49:12Z mvuilleu $
+ *  $Id: YMultiAxisController.cs 48028 2022-01-12 09:20:48Z seb $
  *
  *  Implements FindMultiAxisController(), the high-level API for MultiAxisController functions
  *
@@ -416,7 +416,7 @@ public class YMultiAxisController : YFunction
     public virtual async Task<int> sendCommand(string command)
     {
         string url;
-        byte[] retBin;
+        byte[] retBin = new byte[0];
         int res;
         url = "cmd.txt?X="+command;
         //may throw an exception

@@ -902,7 +902,7 @@ public class YInputChain : YFunction
      */
     public virtual async Task<string> get_lastEvents()
     {
-        byte[] content;
+        byte[] content = new byte[0];
 
         content = await this._download("events.txt");
         return YAPI.DefaultEncoding.GetString(content);
@@ -941,7 +941,7 @@ public class YInputChain : YFunction
     {
         int newPos;
         string url;
-        byte[] content;
+        byte[] content = new byte[0];
         string contentStr;
         List<string> eventArr = new List<string>();
         int arrLen;

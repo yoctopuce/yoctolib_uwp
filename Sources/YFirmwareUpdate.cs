@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFirmwareUpdate.cs 38913 2019-12-20 18:59:49Z mvuilleu $
+ * $Id: YFirmwareUpdate.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -71,7 +71,7 @@ public class YFirmwareUpdate
 //--- (end of generated code: YFirmwareUpdate class start)
         //--- (generated code: YFirmwareUpdate definitions)
     protected string _serial;
-    protected byte[] _settings;
+    protected byte[] _settings = new byte[0];
     protected string _firmwarepath;
     protected string _progress_msg;
     protected int _progress_c = 0;

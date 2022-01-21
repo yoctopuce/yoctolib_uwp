@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMessageBox.cs 42060 2020-10-14 10:02:12Z seb $
+ * $Id: YMessageBox.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * Implements FindMessageBox(), the high-level API for MessageBox functions
  *
@@ -109,7 +109,7 @@ public class YMessageBox : YFunction
     protected List<YSms> _messages = new List<YSms>();
     protected bool _gsm2unicodeReady;
     protected List<int> _gsm2unicode = new List<int>();
-    protected byte[] _iso2gsm;
+    protected byte[] _iso2gsm = new byte[0];
 
     public new delegate Task ValueCallback(YMessageBox func, string value);
     public new delegate Task TimedReportCallback(YMessageBox func, YMeasure measure);
@@ -559,7 +559,7 @@ public class YMessageBox : YFunction
 
     public virtual async Task<YSms> fetchPdu(int slot)
     {
-        byte[] binPdu;
+        byte[] binPdu = new byte[0];
         List<string> arrPdu = new List<string>();
         string hexPdu;
         YSms sms;
@@ -746,7 +746,7 @@ public class YMessageBox : YFunction
         int i;
         int gsmlen;
         int reslen;
-        byte[] resbin;
+        byte[] resbin = new byte[0];
         string resstr;
         int uni;
         if (!(_gsm2unicodeReady)) {
@@ -834,13 +834,13 @@ public class YMessageBox : YFunction
 
     public virtual async Task<byte[]> str2gsm(string msg)
     {
-        byte[] asc;
+        byte[] asc = new byte[0];
         int asclen;
         int i;
         int ch;
         int gsm7;
         int extra;
-        byte[] res;
+        byte[] res = new byte[0];
         int wpos;
         if (!(_gsm2unicodeReady)) {
             await this.initGsm2Unicode();
@@ -911,8 +911,8 @@ public class YMessageBox : YFunction
     public virtual async Task<int> checkNewMessages()
     {
         string bitmapStr;
-        byte[] prevBitmap;
-        byte[] newBitmap;
+        byte[] prevBitmap = new byte[0];
+        byte[] newBitmap = new byte[0];
         int slot;
         int nslots;
         int pduIdx;

@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "47582";
+        public const string YOCTO_API_BUILD_STR = "48220";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -316,7 +316,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".47582" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".48220" + YUSBHub.imm_getAPIVersion();
         }
 
         /**

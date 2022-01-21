@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFiles.cs 45292 2021-05-25 23:27:54Z mvuilleu $
+ * $Id: YFiles.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * Implements FindFiles(), the high-level API for Files functions
  *
@@ -365,7 +365,7 @@ public class YFiles : YFunction
      */
     public virtual async Task<int> format_fs()
     {
-        byte[] json;
+        byte[] json = new byte[0];
         string res;
         json = await this.sendCommand("format");
         res = this.imm_json_get_key(json, "res");
@@ -395,7 +395,7 @@ public class YFiles : YFunction
      */
     public virtual async Task<List<YFileRecord>> get_list(string pattern)
     {
-        byte[] json;
+        byte[] json = new byte[0];
         List<string> filelist = new List<string>();
         List<YFileRecord> res = new List<YFileRecord>();
         json = await this.sendCommand("dir&f="+pattern);
@@ -425,7 +425,7 @@ public class YFiles : YFunction
      */
     public virtual async Task<bool> fileExist(string filename)
     {
-        byte[] json;
+        byte[] json = new byte[0];
         List<string> filelist = new List<string>();
         if ((filename).Length == 0) {
             return false;
@@ -507,7 +507,7 @@ public class YFiles : YFunction
      */
     public virtual async Task<int> remove(string pathname)
     {
-        byte[] json;
+        byte[] json = new byte[0];
         string res;
         json = await this.sendCommand("del&f="+pathname);
         res  = this.imm_json_get_key(json, "res");

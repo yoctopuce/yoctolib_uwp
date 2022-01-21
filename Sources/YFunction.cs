@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 43619 2021-01-29 09:14:45Z mvuilleu $
+ * $Id: YFunction.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -516,7 +516,7 @@ public class YFunction
     public virtual async Task<string> loadAttribute(string attrName)
     {
         string url;
-        byte[] attrVal;
+        byte[] attrVal = new byte[0];
         url = "api/"+ await this.get_functionId()+"/"+attrName;
         attrVal = await this._download(url);
         return YAPI.DefaultEncoding.GetString(attrVal);

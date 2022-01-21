@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRefFrame.cs 43619 2021-01-29 09:14:45Z mvuilleu $
+ *  $Id: YRefFrame.cs 48028 2022-01-12 09:20:48Z seb $
  *
  *  Implements FindRefFrame(), the high-level API for RefFrame functions
  *
@@ -845,7 +845,7 @@ public class YRefFrame : YFunction
     public virtual async Task<int> more3DCalibrationV1()
     {
         int currTick;
-        byte[] jsonData;
+        byte[] jsonData = new byte[0];
         double xVal;
         double yVal;
         double zVal;
@@ -1046,7 +1046,7 @@ public class YRefFrame : YFunction
     public virtual async Task<int> more3DCalibrationV2()
     {
         int currTick;
-        byte[] calibParam;
+        byte[] calibParam = new byte[0];
         List<int> iCalib = new List<int>();
         int cal3;
         int calAcc;

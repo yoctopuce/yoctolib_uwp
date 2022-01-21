@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSms.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YSms.cs 48028 2022-01-12 09:20:48Z seb $
  *
  * Implements FindSms(), the high-level API for Sms functions
  *
@@ -74,10 +74,10 @@ public class YSms
     protected int _alphab = 0;
     protected int _mclass = 0;
     protected string _stamp;
-    protected byte[] _udh;
-    protected byte[] _udata;
+    protected byte[] _udh = new byte[0];
+    protected byte[] _udata = new byte[0];
     protected int _npdu = 0;
-    protected byte[] _pdu;
+    protected byte[] _pdu = new byte[0];
     protected List<YSms> _parts = new List<YSms>();
     protected string _aggSig;
     protected int _aggIdx = 0;
@@ -179,7 +179,7 @@ public class YSms
      */
     public virtual async Task<string> get_textData()
     {
-        byte[] isolatin;
+        byte[] isolatin = new byte[0];
         int isosize;
         int i;
         if (_alphab == 0) {
@@ -425,9 +425,9 @@ public class YSms
      */
     public virtual async Task<int> addText(string val)
     {
-        byte[] udata;
+        byte[] udata = new byte[0];
         int udatalen;
-        byte[] newdata;
+        byte[] newdata = new byte[0];
         int newdatalen;
         int i;
         if ((val).Length == 0) {
@@ -503,7 +503,7 @@ public class YSms
         int newdatalen;
         int i;
         int uni;
-        byte[] udata;
+        byte[] udata = new byte[0];
         int udatalen;
         int surrogate;
         if (_alphab != 2) {
@@ -563,8 +563,8 @@ public class YSms
         int retcode;
         int totsize;
         YSms subsms;
-        byte[] subdata;
-        byte[] res;
+        byte[] subdata = new byte[0];
+        byte[] res = new byte[0];
         _npdu = parts.Count;
         if (_npdu == 0) {
             return YAPI.INVALID_ARGUMENT;
@@ -623,13 +623,13 @@ public class YSms
 
     public virtual async Task<byte[]> encodeAddress(string addr)
     {
-        byte[] bytes;
+        byte[] bytes = new byte[0];
         int srclen;
         int numlen;
         int i;
         int val;
         int digit;
-        byte[] res;
+        byte[] res = new byte[0];
         bytes = YAPI.DefaultEncoding.GetBytes(addr);
         srclen = (bytes).Length;
         numlen = 0;
@@ -678,7 +678,7 @@ public class YSms
     public virtual async Task<string> decodeAddress(byte[] addr,int ofs,int siz)
     {
         int addrType;
-        byte[] gsm7;
+        byte[] gsm7 = new byte[0];
         string res;
         int i;
         int rpos;
@@ -737,9 +737,9 @@ public class YSms
     {
         int explen;
         int i;
-        byte[] res;
+        byte[] res = new byte[0];
         int n;
-        byte[] expasc;
+        byte[] expasc = new byte[0];
         int v1;
         int v2;
         explen = (exp).Length;
@@ -808,7 +808,7 @@ public class YSms
                     n = n - 1;
                     v2 = 4 * res[n] + v1;
                     if (expasc[i-3] == 45) {
-                        v2 += 128;
+                        v2 = v2 + 128;
                     }
                     res[n] = (byte)(v2 & 0xff);
                 }
@@ -910,7 +910,7 @@ public class YSms
         int udlen;
         int udhsize;
         int udhlen;
-        byte[] res;
+        byte[] res = new byte[0];
         int i;
         int wpos;
         int carry;
@@ -987,8 +987,8 @@ public class YSms
         int mss;
         int partno;
         int partlen;
-        byte[] newud;
-        byte[] newudh;
+        byte[] newud = new byte[0];
+        byte[] newudh = new byte[0];
         YSms newpdu;
         int i;
         int wpos;
@@ -1045,11 +1045,11 @@ public class YSms
 
     public virtual async Task<int> generatePdu()
     {
-        byte[] sca;
-        byte[] hdr;
-        byte[] addr;
-        byte[] stamp;
-        byte[] udata;
+        byte[] sca = new byte[0];
+        byte[] hdr = new byte[0];
+        byte[] addr = new byte[0];
+        byte[] stamp = new byte[0];
+        byte[] udata = new byte[0];
         int pdutyp;
         int pdulen;
         int i;

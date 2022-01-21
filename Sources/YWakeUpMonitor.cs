@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpMonitor.cs 45843 2021-08-04 07:51:59Z mvuilleu $
+ *  $Id: YWakeUpMonitor.cs 48183 2022-01-20 10:26:11Z mvuilleu $
  *
  *  Implements FindWakeUpMonitor(), the high-level API for WakeUpMonitor functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YWakeUpMonitor Class: wake-up monitor control interface, available for instance in the
- *   YoctoHub-GSM-2G, the YoctoHub-GSM-3G-EU, the YoctoHub-GSM-4G or the YoctoHub-Wireless-n
+ *   YoctoHub-GSM-4G, the YoctoHub-Wireless-SR, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
  * <para>
  *   The <c>YWakeUpMonitor</c> class handles globally all wake-up sources, as well
  *   as automated sleep mode.
@@ -469,7 +469,7 @@ public class YWakeUpMonitor : YFunction
      * </summary>
      * <param name="func">
      *   a string that uniquely characterizes the wake-up monitor, for instance
-     *   <c>YHUBGSM1.wakeUpMonitor</c>.
+     *   <c>YHUBGSM5.wakeUpMonitor</c>.
      * </param>
      * <returns>
      *   a <c>YWakeUpMonitor</c> object allowing you to drive the wake-up monitor.
@@ -526,7 +526,7 @@ public class YWakeUpMonitor : YFunction
      * </param>
      * <param name="func">
      *   a string that uniquely characterizes the wake-up monitor, for instance
-     *   <c>YHUBGSM1.wakeUpMonitor</c>.
+     *   <c>YHUBGSM5.wakeUpMonitor</c>.
      * </param>
      * <returns>
      *   a <c>YWakeUpMonitor</c> object allowing you to drive the wake-up monitor.
