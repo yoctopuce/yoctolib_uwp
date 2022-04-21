@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiSensController.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YMultiSensController.cs 49501 2022-04-21 07:09:25Z mvuilleu $
  *
  *  Implements FindMultiSensController(), the high-level API for MultiSensController functions
  *
@@ -82,6 +82,12 @@ public class YMultiSensController : YFunction
     public const int MAINTENANCEMODE_INVALID = -1;
     /**
      * <summary>
+     *   invalid lastAddressDetected value
+     * </summary>
+     */
+    public const  int LASTADDRESSDETECTED_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
      *   invalid command value
      * </summary>
      */
@@ -89,6 +95,7 @@ public class YMultiSensController : YFunction
     protected int _nSensors = NSENSORS_INVALID;
     protected int _maxSensors = MAXSENSORS_INVALID;
     protected int _maintenanceMode = MAINTENANCEMODE_INVALID;
+    protected int _lastAddressDetected = LASTADDRESSDETECTED_INVALID;
     protected string _command = COMMAND_INVALID;
     protected ValueCallback _valueCallbackMultiSensController = null;
 
@@ -136,6 +143,9 @@ public class YMultiSensController : YFunction
         if (json_val.has("maintenanceMode")) {
             _maintenanceMode = json_val.getInt("maintenanceMode") > 0 ? 1 : 0;
         }
+        if (json_val.has("lastAddressDetected")) {
+            _lastAddressDetected = json_val.getInt("lastAddressDetected");
+        }
         if (json_val.has("command")) {
             _command = json_val.getString("command");
         }
@@ -178,7 +188,7 @@ public class YMultiSensController : YFunction
      *   <c>saveToFlash()</c> method of the module if the
      *   modification must be kept. It is recommended to restart the
      *   device with  <c>module->reboot()</c> after modifying
-     *   (and saving) this settings
+     *   (and saving) this settings.
      * </para>
      * <para>
      * </para>
@@ -290,6 +300,38 @@ public class YMultiSensController : YFunction
         await _setAttr("maintenanceMode",rest_val);
         return YAPI.SUCCESS;
     }
+
+    /**
+     * <summary>
+     *   Returns the I2C address of the most recently detected sensor.
+     * <para>
+     *   This method can
+     *   be used to in case of I2C communication error to determine what is the
+     *   last sensor that can be reached, or after a call to <c>setupAddress</c>
+     *   to make sure that the address change was properly processed.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the I2C address of the most recently detected sensor
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YMultiSensController.LASTADDRESSDETECTED_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_lastAddressDetected()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return LASTADDRESSDETECTED_INVALID;
+            }
+        }
+        res = _lastAddressDetected;
+        return res;
+    }
+
 
     /**
      * <summary>
@@ -488,9 +530,11 @@ public class YMultiSensController : YFunction
      * <para>
      *   It is recommended to put the the device in maintenance mode before
      *   changing sensor addresses.  This method is only intended to work with a single
-     *   sensor connected to the device, if several sensors are connected, the result
+     *   sensor connected to the device. If several sensors are connected, the result
      *   is unpredictable.
-     *   Note that the device is probably expecting to find a string of sensors with specific
+     * </para>
+     * <para>
+     *   Note that the device is expecting to find a sensor or a string of sensors with specific
      *   addresses. Check the device documentation to find out which addresses should be used.
      * </para>
      * </summary>
@@ -505,8 +549,40 @@ public class YMultiSensController : YFunction
     public virtual async Task<int> setupAddress(int addr)
     {
         string cmd;
+        int res;
         cmd = "A"+Convert.ToString(addr);
-        return await this.set_command(cmd);
+        res = await this.set_command(cmd);
+        if (!(res == YAPI.SUCCESS)) { this._throw( YAPI.IO_ERROR, "unable to trigger address change"); return YAPI.IO_ERROR; }
+        await YAPI.Sleep(1500);
+        res = await this.get_lastAddressDetected();
+        if (!(res > 0)) { this._throw( YAPI.IO_ERROR, "IR sensor not found"); return YAPI.IO_ERROR; }
+        if (!(res == addr)) { this._throw( YAPI.IO_ERROR, "address change failed"); return YAPI.IO_ERROR; }
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Triggers the I2C address detection procedure for the only sensor connected to the device.
+     * <para>
+     *   This method is only intended to work with a single sensor connected to the device.
+     *   If several sensors are connected, the result is unpredictable.
+     * </para>
+     * </summary>
+     * <returns>
+     *   the I2C address of the detected sensor, or 0 if none is found
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> get_sensorAddress()
+    {
+        int res;
+        res = await this.set_command("a");
+        if (!(res == YAPI.SUCCESS)) { this._throw( YAPI.IO_ERROR, "unable to trigger address detection"); return res; }
+        await YAPI.Sleep(1000);
+        res = await this.get_lastAddressDetected();
+        return res;
     }
 
     /**

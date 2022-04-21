@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YNetwork.cs 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: YNetwork.cs 49385 2022-04-06 00:49:27Z mvuilleu $
  *
  *  Implements FindNetwork(), the high-level API for Network functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YNetwork Class: network interface control interface, available for instance in the
- *   YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-g or the YoctoHub-Wireless-n
+ *   YoctoHub-Ethernet, the YoctoHub-GSM-4G, the YoctoHub-Wireless-SR or the YoctoHub-Wireless-n
  * <para>
  *   <c>YNetwork</c> objects provide access to TCP/IP parameters of Yoctopuce
  *   devices that include a built-in network interface.
@@ -95,6 +95,12 @@ public class YNetwork : YFunction
      * </summary>
      */
     public const  string ROUTER_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
+     *   invalid currentDNS value
+     * </summary>
+     */
+    public const  string CURRENTDNS_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
      *   invalid ipConfig value
@@ -232,6 +238,7 @@ public class YNetwork : YFunction
     protected string _ipAddress = IPADDRESS_INVALID;
     protected string _subnetMask = SUBNETMASK_INVALID;
     protected string _router = ROUTER_INVALID;
+    protected string _currentDNS = CURRENTDNS_INVALID;
     protected string _ipConfig = IPCONFIG_INVALID;
     protected string _primaryDNS = PRIMARYDNS_INVALID;
     protected string _secondaryDNS = SECONDARYDNS_INVALID;
@@ -302,6 +309,9 @@ public class YNetwork : YFunction
         }
         if (json_val.has("router")) {
             _router = json_val.getString("router");
+        }
+        if (json_val.has("currentDNS")) {
+            _currentDNS = json_val.getString("currentDNS");
         }
         if (json_val.has("ipConfig")) {
             _ipConfig = json_val.getString("ipConfig");
@@ -518,6 +528,34 @@ public class YNetwork : YFunction
             }
         }
         res = _router;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the IP address of the DNS server currently used by the device.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string corresponding to the IP address of the DNS server currently used by the device
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YNetwork.CURRENTDNS_INVALID</c>.
+     * </para>
+     */
+    public async Task<string> get_currentDNS()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return CURRENTDNS_INVALID;
+            }
+        }
+        res = _currentDNS;
         return res;
     }
 

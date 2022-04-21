@@ -73,6 +73,14 @@ public class YInputChain : YFunction
     public const  int DETECTEDNODES_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
+     *   invalid loopbackTest value
+     * </summary>
+     */
+    public const int LOOPBACKTEST_OFF = 0;
+    public const int LOOPBACKTEST_ON = 1;
+    public const int LOOPBACKTEST_INVALID = -1;
+    /**
+     * <summary>
      *   invalid refreshRate value
      * </summary>
      */
@@ -133,6 +141,7 @@ public class YInputChain : YFunction
     public const  int CHAINDIAGS_INVALID = YAPI.INVALID_UINT;
     protected int _expectedNodes = EXPECTEDNODES_INVALID;
     protected int _detectedNodes = DETECTEDNODES_INVALID;
+    protected int _loopbackTest = LOOPBACKTEST_INVALID;
     protected int _refreshRate = REFRESHRATE_INVALID;
     protected string _bitChain1 = BITCHAIN1_INVALID;
     protected string _bitChain2 = BITCHAIN2_INVALID;
@@ -197,6 +206,9 @@ public class YInputChain : YFunction
         }
         if (json_val.has("detectedNodes")) {
             _detectedNodes = json_val.getInt("detectedNodes");
+        }
+        if (json_val.has("loopbackTest")) {
+            _loopbackTest = json_val.getInt("loopbackTest") > 0 ? 1 : 0;
         }
         if (json_val.has("refreshRate")) {
             _refreshRate = json_val.getInt("refreshRate");
@@ -316,6 +328,68 @@ public class YInputChain : YFunction
         return res;
     }
 
+
+    /**
+     * <summary>
+     *   Returns the activation state of the exhaustive chain connectivity test.
+     * <para>
+     *   The connectivity test requires a cable connecting the end of the chain
+     *   to the loopback test connector.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YInputChain.LOOPBACKTEST_OFF</c> or <c>YInputChain.LOOPBACKTEST_ON</c>, according to the
+     *   activation state of the exhaustive chain connectivity test
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YInputChain.LOOPBACKTEST_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_loopbackTest()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return LOOPBACKTEST_INVALID;
+            }
+        }
+        res = _loopbackTest;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the activation state of the exhaustive chain connectivity test.
+     * <para>
+     *   The connectivity test requires a cable connecting the end of the chain
+     *   to the loopback test connector.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YInputChain.LOOPBACKTEST_OFF</c> or <c>YInputChain.LOOPBACKTEST_ON</c>, according to the
+     *   activation state of the exhaustive chain connectivity test
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_loopbackTest(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval > 0 ? "1" : "0");
+        await _setAttr("loopbackTest",rest_val);
+        return YAPI.SUCCESS;
+    }
 
     /**
      * <summary>
