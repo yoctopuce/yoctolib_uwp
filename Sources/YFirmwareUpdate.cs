@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFirmwareUpdate.cs 48028 2022-01-12 09:20:48Z seb $
+ * $Id: YFirmwareUpdate.cs 49750 2022-05-13 07:10:42Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -355,9 +355,6 @@ public class YFirmwareUpdate
      * <summary>
      *   Returns a list of all the modules in "firmware update" mode.
      * <para>
-     *   Only devices
-     *   connected over USB are listed. For devices connected to a YoctoHub, you
-     *   must connect yourself to the YoctoHub web interface.
      * </para>
      * <para>
      * </para>
@@ -377,9 +374,6 @@ public class YFirmwareUpdate
      * <summary>
      *   Returns a list of all the modules in "firmware update" mode.
      * <para>
-     *   Only devices
-     *   connected over USB are listed. For devices connected to a YoctoHub, you
-     *   must connect to the YoctoHub web interface.
      * </para>
      * </summary>
      * <param name="yctx">

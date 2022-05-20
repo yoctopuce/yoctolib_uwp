@@ -161,11 +161,11 @@ public class YInputChain : YFunction
 
     public new delegate Task ValueCallback(YInputChain func, string value);
     public new delegate Task TimedReportCallback(YInputChain func, YMeasure measure);
-    public delegate Task YEventCallback(YInputChain inputChain, int timestampr, string eventType, string eventData, string eventChange);
+    public delegate Task YEventCallback(YInputChain obj, int timestamp, string eventType, string eventData, string eventChange);
 
-    protected static async Task yInternalEventCallback(YInputChain inputChain, String value)
+    protected static async Task yInternalEventCallback(YInputChain obj, String value)
     {
-        await inputChain._internalEventHandler(value);
+        await obj._internalEventHandler(value);
     }
 
     //--- (end of YInputChain definitions)
