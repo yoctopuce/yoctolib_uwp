@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSms.cs 48028 2022-01-12 09:20:48Z seb $
+ * $Id: YSms.cs 50140 2022-06-16 10:26:30Z seb $
  *
  * Implements FindSms(), the high-level API for Sms functions
  *
@@ -66,20 +66,20 @@ public class YSms
     protected YMessageBox _mbox;
     protected int _slot = 0;
     protected bool _deliv;
-    protected string _smsc;
+    protected string _smsc = "";
     protected int _mref = 0;
-    protected string _orig;
-    protected string _dest;
+    protected string _orig = "";
+    protected string _dest = "";
     protected int _pid = 0;
     protected int _alphab = 0;
     protected int _mclass = 0;
-    protected string _stamp;
+    protected string _stamp = "";
     protected byte[] _udh = new byte[0];
     protected byte[] _udata = new byte[0];
     protected int _npdu = 0;
     protected byte[] _pdu = new byte[0];
     protected List<YSms> _parts = new List<YSms>();
-    protected string _aggSig;
+    protected string _aggSig = "";
     protected int _aggIdx = 0;
     protected int _aggCnt = 0;
 
@@ -587,13 +587,13 @@ public class YSms
             }
         }
         _parts = sorted;
-        _npdu = sorted.Count;
         // inherit header fields from first part
         subsms = _parts[0];
         retcode = await this.parsePdu(await subsms.get_pdu());
         if (retcode != YAPI.SUCCESS) {
             return retcode;
         }
+        _npdu = sorted.Count;
         // concatenate user data from all parts
         totsize = 0;
         partno = 0;
@@ -1331,7 +1331,7 @@ public class YSms
         int retcode;
         YSms pdu;
 
-        if (_slot > 0) {
+        if (_npdu < 2) {
             return await _mbox.clearSIMSlot(_slot);
         }
         retcode = YAPI.SUCCESS;

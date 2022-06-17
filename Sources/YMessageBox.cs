@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMessageBox.cs 48028 2022-01-12 09:20:48Z seb $
+ * $Id: YMessageBox.cs 50144 2022-06-17 06:59:52Z seb $
  *
  * Implements FindMessageBox(), the high-level API for MessageBox functions
  *
@@ -104,7 +104,7 @@ public class YMessageBox : YFunction
     protected string _command = COMMAND_INVALID;
     protected ValueCallback _valueCallbackMessageBox = null;
     protected int _nextMsgRef = 0;
-    protected string _prevBitmapStr;
+    protected string _prevBitmapStr = "";
     protected List<YSms> _pdus = new List<YSms>();
     protected List<YSms> _messages = new List<YSms>();
     protected bool _gsm2unicodeReady;
@@ -553,8 +553,99 @@ public class YMessageBox : YFunction
 
     public virtual async Task<int> clearSIMSlot(int slot)
     {
-        _prevBitmapStr = "";
-        return await this.set_command("DS"+Convert.ToString(slot));
+        int retry;
+        int idx;
+        string res;
+        string bitmapStr;
+        int int_res;
+        byte[] newBitmap = new byte[0];
+        int bitVal;
+
+        retry = 5;
+        while (retry > 0) {
+            await this.clearCache();
+            bitmapStr = await this.get_slotsBitmap();
+            newBitmap = YAPIContext.imm_hexStrToBin(bitmapStr);
+            idx = ((slot) >> (3));
+            if (idx < (newBitmap).Length) {
+                bitVal = ((1) << ((((slot) & (7)))));
+                if ((((newBitmap[idx]) & (bitVal))) != 0) {
+                    _prevBitmapStr = "";
+                    int_res = await this.set_command("DS"+Convert.ToString(slot));
+                    if (int_res < 0) {
+                        return int_res;
+                    }
+                } else {
+                    return YAPI.SUCCESS;
+                }
+            } else {
+                return YAPI.INVALID_ARGUMENT;
+            }
+            res = await this._AT("");
+            retry = retry - 1;
+        }
+        return YAPI.IO_ERROR;
+    }
+
+    public virtual async Task<string> _AT(string cmd)
+    {
+        int chrPos;
+        int cmdLen;
+        int waitMore;
+        string res;
+        byte[] buff = new byte[0];
+        int bufflen;
+        string buffstr;
+        int buffstrlen;
+        int idx;
+        int suffixlen;
+        // copied form the YCellular class
+        // quote dangerous characters used in AT commands
+        cmdLen = (cmd).Length;
+        chrPos = (cmd).IndexOf("#");
+        while (chrPos >= 0) {
+            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"23"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmdLen = cmdLen + 2;
+            chrPos = (cmd).IndexOf("#");
+        }
+        chrPos = (cmd).IndexOf("+");
+        while (chrPos >= 0) {
+            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"2B"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmdLen = cmdLen + 2;
+            chrPos = (cmd).IndexOf("+");
+        }
+        chrPos = (cmd).IndexOf("=");
+        while (chrPos >= 0) {
+            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"3D"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmdLen = cmdLen + 2;
+            chrPos = (cmd).IndexOf("=");
+        }
+        cmd = "at.txt?cmd="+cmd;
+        res = "";
+        // max 2 minutes (each iteration may take up to 5 seconds if waiting)
+        waitMore = 24;
+        while (waitMore > 0) {
+            buff = await this._download(cmd);
+            bufflen = (buff).Length;
+            buffstr = YAPI.DefaultEncoding.GetString(buff);
+            buffstrlen = (buffstr).Length;
+            idx = bufflen - 1;
+            while ((idx > 0) && (buff[idx] != 64) && (buff[idx] != 10) && (buff[idx] != 13)) {
+                idx = idx - 1;
+            }
+            if (buff[idx] == 64) {
+                // continuation detected
+                suffixlen = bufflen - idx;
+                cmd = "at.txt?cmd="+(buffstr).Substring( buffstrlen - suffixlen, suffixlen);
+                buffstr = (buffstr).Substring( 0, buffstrlen - suffixlen);
+                waitMore = waitMore - 1;
+            } else {
+                // request complete
+                waitMore = 0;
+            }
+            res = ""+ res+""+buffstr;
+        }
+        return res;
     }
 
     public virtual async Task<YSms> fetchPdu(int slot)

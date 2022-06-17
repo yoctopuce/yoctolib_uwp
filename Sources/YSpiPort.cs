@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YSpiPort.cs 49744 2022-05-11 15:13:45Z mvuilleu $
+ *  $Id: YSpiPort.cs 49904 2022-05-25 14:18:55Z mvuilleu $
  *
  *  Implements FindSpiPort(), the high-level API for SpiPort functions
  *
@@ -191,6 +191,7 @@ public class YSpiPort : YFunction
     protected int _rxptr = 0;
     protected byte[] _rxbuff = new byte[0];
     protected int _rxbuffptr = 0;
+    protected int _eventPos = 0;
 
     public new delegate Task ValueCallback(YSpiPort func, string value);
     public new delegate Task TimedReportCallback(YSpiPort func, YMeasure measure);
@@ -1471,6 +1472,7 @@ public class YSpiPort : YFunction
      */
     public virtual async Task<int> reset()
     {
+        _eventPos = 0;
         _rxptr = 0;
         _rxbuffptr = 0;
         _rxbuff = new byte[0];
