@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmOutput.cs 38913 2019-12-20 18:59:49Z mvuilleu $
+ *  $Id: YPwmOutput.cs 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements FindPwmOutput(), the high-level API for PwmOutput functions
  *
@@ -161,16 +161,16 @@ public class YPwmOutput : YFunction
             _enabled = json_val.getInt("enabled") > 0 ? 1 : 0;
         }
         if (json_val.has("frequency")) {
-            _frequency = Math.Round(json_val.getDouble("frequency") * 1000.0 / 65536.0) / 1000.0;
+            _frequency = Math.Round(json_val.getDouble("frequency") / 65.536) / 1000.0;
         }
         if (json_val.has("period")) {
-            _period = Math.Round(json_val.getDouble("period") * 1000.0 / 65536.0) / 1000.0;
+            _period = Math.Round(json_val.getDouble("period") / 65.536) / 1000.0;
         }
         if (json_val.has("dutyCycle")) {
-            _dutyCycle = Math.Round(json_val.getDouble("dutyCycle") * 1000.0 / 65536.0) / 1000.0;
+            _dutyCycle = Math.Round(json_val.getDouble("dutyCycle") / 65.536) / 1000.0;
         }
         if (json_val.has("pulseDuration")) {
-            _pulseDuration = Math.Round(json_val.getDouble("pulseDuration") * 1000.0 / 65536.0) / 1000.0;
+            _pulseDuration = Math.Round(json_val.getDouble("pulseDuration") / 65.536) / 1000.0;
         }
         if (json_val.has("pwmTransition")) {
             _pwmTransition = json_val.getString("pwmTransition");
@@ -179,7 +179,7 @@ public class YPwmOutput : YFunction
             _enabledAtPowerOn = json_val.getInt("enabledAtPowerOn") > 0 ? 1 : 0;
         }
         if (json_val.has("dutyCycleAtPowerOn")) {
-            _dutyCycleAtPowerOn = Math.Round(json_val.getDouble("dutyCycleAtPowerOn") * 1000.0 / 65536.0) / 1000.0;
+            _dutyCycleAtPowerOn = Math.Round(json_val.getDouble("dutyCycleAtPowerOn") / 65.536) / 1000.0;
         }
         base.imm_parseAttr(json_val);
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMagnetometer.cs 42951 2020-12-14 09:43:29Z seb $
+ *  $Id: YMagnetometer.cs 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements FindMagnetometer(), the high-level API for Magnetometer functions
  *
@@ -136,13 +136,13 @@ public class YMagnetometer : YSensor
             _bandwidth = json_val.getInt("bandwidth");
         }
         if (json_val.has("xValue")) {
-            _xValue = Math.Round(json_val.getDouble("xValue") * 1000.0 / 65536.0) / 1000.0;
+            _xValue = Math.Round(json_val.getDouble("xValue") / 65.536) / 1000.0;
         }
         if (json_val.has("yValue")) {
-            _yValue = Math.Round(json_val.getDouble("yValue") * 1000.0 / 65536.0) / 1000.0;
+            _yValue = Math.Round(json_val.getDouble("yValue") / 65.536) / 1000.0;
         }
         if (json_val.has("zValue")) {
-            _zValue = Math.Round(json_val.getDouble("zValue") * 1000.0 / 65536.0) / 1000.0;
+            _zValue = Math.Round(json_val.getDouble("zValue") / 65.536) / 1000.0;
         }
         base.imm_parseAttr(json_val);
     }

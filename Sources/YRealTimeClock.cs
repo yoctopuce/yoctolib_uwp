@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRealTimeClock.cs 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: YRealTimeClock.cs 50595 2022-07-28 07:54:15Z mvuilleu $
  *
  *  Implements FindRealTimeClock(), the high-level API for RealTimeClock functions
  *
@@ -89,10 +89,19 @@ public class YRealTimeClock : YFunction
     public const int TIMESET_FALSE = 0;
     public const int TIMESET_TRUE = 1;
     public const int TIMESET_INVALID = -1;
+    /**
+     * <summary>
+     *   invalid disableHostSync value
+     * </summary>
+     */
+    public const int DISABLEHOSTSYNC_FALSE = 0;
+    public const int DISABLEHOSTSYNC_TRUE = 1;
+    public const int DISABLEHOSTSYNC_INVALID = -1;
     protected long _unixTime = UNIXTIME_INVALID;
     protected string _dateTime = DATETIME_INVALID;
     protected int _utcOffset = UTCOFFSET_INVALID;
     protected int _timeSet = TIMESET_INVALID;
+    protected int _disableHostSync = DISABLEHOSTSYNC_INVALID;
     protected ValueCallback _valueCallbackRealTimeClock = null;
 
     public new delegate Task ValueCallback(YRealTimeClock func, string value);
@@ -141,6 +150,9 @@ public class YRealTimeClock : YFunction
         }
         if (json_val.has("timeSet")) {
             _timeSet = json_val.getInt("timeSet") > 0 ? 1 : 0;
+        }
+        if (json_val.has("disableHostSync")) {
+            _disableHostSync = json_val.getInt("disableHostSync") > 0 ? 1 : 0;
         }
         base.imm_parseAttr(json_val);
     }
@@ -317,6 +329,68 @@ public class YRealTimeClock : YFunction
         return res;
     }
 
+
+    /**
+     * <summary>
+     *   Returns true if the automatic clock synchronization with host has been disabled,
+     *   and false otherwise.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YRealTimeClock.DISABLEHOSTSYNC_FALSE</c> or <c>YRealTimeClock.DISABLEHOSTSYNC_TRUE</c>,
+     *   according to true if the automatic clock synchronization with host has been disabled,
+     *   and false otherwise
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YRealTimeClock.DISABLEHOSTSYNC_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_disableHostSync()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return DISABLEHOSTSYNC_INVALID;
+            }
+        }
+        res = _disableHostSync;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the automatic clock synchronization with host working state.
+     * <para>
+     *   To disable automatic synchronization, set the value to true.
+     *   To enable automatic synchronization (default), set the value to false.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YRealTimeClock.DISABLEHOSTSYNC_FALSE</c> or <c>YRealTimeClock.DISABLEHOSTSYNC_TRUE</c>,
+     *   according to the automatic clock synchronization with host working state
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_disableHostSync(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval > 0 ? "1" : "0");
+        await _setAttr("disableHostSync",rest_val);
+        return YAPI.SUCCESS;
+    }
 
     /**
      * <summary>

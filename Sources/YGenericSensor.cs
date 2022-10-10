@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGenericSensor.cs 49904 2022-05-25 14:18:55Z mvuilleu $
+ *  $Id: YGenericSensor.cs 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements FindGenericSensor(), the high-level API for GenericSensor functions
  *
@@ -159,7 +159,7 @@ public class YGenericSensor : YSensor
     internal override void imm_parseAttr(YJSONObject json_val)
     {
         if (json_val.has("signalValue")) {
-            _signalValue = Math.Round(json_val.getDouble("signalValue") * 1000.0 / 65536.0) / 1000.0;
+            _signalValue = Math.Round(json_val.getDouble("signalValue") / 65.536) / 1000.0;
         }
         if (json_val.has("signalUnit")) {
             _signalUnit = json_val.getString("signalUnit");
@@ -171,7 +171,7 @@ public class YGenericSensor : YSensor
             _valueRange = json_val.getString("valueRange");
         }
         if (json_val.has("signalBias")) {
-            _signalBias = Math.Round(json_val.getDouble("signalBias") * 1000.0 / 65536.0) / 1000.0;
+            _signalBias = Math.Round(json_val.getDouble("signalBias") / 65.536) / 1000.0;
         }
         if (json_val.has("signalSampling")) {
             _signalSampling = json_val.getInt("signalSampling");

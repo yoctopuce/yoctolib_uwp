@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 48028 2022-01-12 09:20:48Z seb $
+ * $Id: YModule.cs 51266 2022-10-10 09:18:25Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -2213,6 +2213,34 @@ public class YModule : YFunction
         }
         await this.clearCache();
         return res;
+    }
+
+    /**
+     * <summary>
+     *   Adds a file to the uploaded data at the next HTTP callback.
+     * <para>
+     *   This function only affects the next HTTP callback and only works in
+     *   HTTP callback mode.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="filename">
+     *   the name of the file to upload at the next HTTP callback
+     * </param>
+     * <returns>
+     *   nothing.
+     * </returns>
+     */
+    public virtual async Task<int> addFileToHTTPCallback(string filename)
+    {
+        byte[] content = new byte[0];
+
+        content = await this._download("@YCB+" + filename);
+        if ((content).Length == 0) {
+            return YAPI.NOT_SUPPORTED;
+        }
+        return YAPI.SUCCESS;
     }
 
     /**

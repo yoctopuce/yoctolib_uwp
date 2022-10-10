@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YStepperMotor.cs 48028 2022-01-12 09:20:48Z seb $
+ *  $Id: YStepperMotor.cs 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements FindStepperMotor(), the high-level API for StepperMotor functions
  *
@@ -221,16 +221,16 @@ public class YStepperMotor : YFunction
             _stepPos = json_val.getDouble("stepPos") / 16.0;
         }
         if (json_val.has("speed")) {
-            _speed = Math.Round(json_val.getDouble("speed") * 1000.0 / 65536.0) / 1000.0;
+            _speed = Math.Round(json_val.getDouble("speed") / 65.536) / 1000.0;
         }
         if (json_val.has("pullinSpeed")) {
-            _pullinSpeed = Math.Round(json_val.getDouble("pullinSpeed") * 1000.0 / 65536.0) / 1000.0;
+            _pullinSpeed = Math.Round(json_val.getDouble("pullinSpeed") / 65.536) / 1000.0;
         }
         if (json_val.has("maxAccel")) {
-            _maxAccel = Math.Round(json_val.getDouble("maxAccel") * 1000.0 / 65536.0) / 1000.0;
+            _maxAccel = Math.Round(json_val.getDouble("maxAccel") / 65.536) / 1000.0;
         }
         if (json_val.has("maxSpeed")) {
-            _maxSpeed = Math.Round(json_val.getDouble("maxSpeed") * 1000.0 / 65536.0) / 1000.0;
+            _maxSpeed = Math.Round(json_val.getDouble("maxSpeed") / 65.536) / 1000.0;
         }
         if (json_val.has("stepping")) {
             _stepping = json_val.getInt("stepping");

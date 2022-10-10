@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTemperature.cs 48028 2022-01-12 09:20:48Z seb $
+ *  $Id: YTemperature.cs 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements FindTemperature(), the high-level API for Temperature functions
  *
@@ -151,7 +151,7 @@ public class YTemperature : YSensor
             _sensorType = json_val.getInt("sensorType");
         }
         if (json_val.has("signalValue")) {
-            _signalValue = Math.Round(json_val.getDouble("signalValue") * 1000.0 / 65536.0) / 1000.0;
+            _signalValue = Math.Round(json_val.getDouble("signalValue") / 65.536) / 1000.0;
         }
         if (json_val.has("signalUnit")) {
             _signalUnit = json_val.getString("signalUnit");

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YVoltageOutput.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YVoltageOutput.cs 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements FindVoltageOutput(), the high-level API for VoltageOutput functions
  *
@@ -117,13 +117,13 @@ public class YVoltageOutput : YFunction
     internal override void imm_parseAttr(YJSONObject json_val)
     {
         if (json_val.has("currentVoltage")) {
-            _currentVoltage = Math.Round(json_val.getDouble("currentVoltage") * 1000.0 / 65536.0) / 1000.0;
+            _currentVoltage = Math.Round(json_val.getDouble("currentVoltage") / 65.536) / 1000.0;
         }
         if (json_val.has("voltageTransition")) {
             _voltageTransition = json_val.getString("voltageTransition");
         }
         if (json_val.has("voltageAtStartUp")) {
-            _voltageAtStartUp = Math.Round(json_val.getDouble("voltageAtStartUp") * 1000.0 / 65536.0) / 1000.0;
+            _voltageAtStartUp = Math.Round(json_val.getDouble("voltageAtStartUp") / 65.536) / 1000.0;
         }
         base.imm_parseAttr(json_val);
     }

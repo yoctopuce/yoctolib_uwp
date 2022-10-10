@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCompass.cs 42951 2020-12-14 09:43:29Z seb $
+ *  $Id: YCompass.cs 50689 2022-08-17 14:37:15Z mvuilleu $
  *
  *  Implements FindCompass(), the high-level API for Compass functions
  *
@@ -129,7 +129,7 @@ public class YCompass : YSensor
             _axis = json_val.getInt("axis");
         }
         if (json_val.has("magneticHeading")) {
-            _magneticHeading = Math.Round(json_val.getDouble("magneticHeading") * 1000.0 / 65536.0) / 1000.0;
+            _magneticHeading = Math.Round(json_val.getDouble("magneticHeading") / 65.536) / 1000.0;
         }
         base.imm_parseAttr(json_val);
     }
