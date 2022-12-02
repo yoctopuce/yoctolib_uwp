@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 /// <summary>
 ///*******************************************************************
 /// 
-/// $Id: YDataStream.cs 45893 2021-08-09 13:53:21Z web $
+/// $Id: YDataStream.cs 51748 2022-11-24 08:49:14Z mvuilleu $
 /// 
 /// YDataStream Class: Sequence of measured data, stored by the data logger
 /// 
@@ -90,6 +90,7 @@ public class YDataStream
     protected List<double> _calraw = new List<double>();
     protected List<double> _calref = new List<double>();
     protected List<List<double>> _values = new List<List<double>>();
+    protected bool _isLoaded;
 
     //--- (end of generated code: YDataStream definitions)
         protected internal YAPI.CalibrationHandler imm_calhdl = null;
@@ -209,6 +210,9 @@ public class YDataStream
         int idx;
         List<int> udat = new List<int>();
         List<double> dat = new List<double>();
+        if (_isLoaded && !(_isClosed)) {
+            return YAPI.SUCCESS;
+        }
         if ((sdata).Length == 0) {
             _nRows = 0;
             return YAPI.SUCCESS;
@@ -246,7 +250,13 @@ public class YDataStream
         }
 
         _nRows = _values.Count;
+        _isLoaded = true;
         return YAPI.SUCCESS;
+    }
+
+    public virtual bool imm_wasLoaded()
+    {
+        return _isLoaded;
     }
 
     public virtual string imm_get_url()
@@ -254,6 +264,21 @@ public class YDataStream
         string url;
         url = "logger.json?id="+
         _functionId+"&run="+Convert.ToString(_runNo)+"&utc="+Convert.ToString(_utcStamp);
+        return url;
+    }
+
+    public virtual string imm_get_baseurl()
+    {
+        string url;
+        url = "logger.json?id="+
+        _functionId+"&run="+Convert.ToString(_runNo)+"&utc=";
+        return url;
+    }
+
+    public virtual string imm_get_urlsuffix()
+    {
+        string url;
+        url = ""+Convert.ToString(_utcStamp);
         return url;
     }
 

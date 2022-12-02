@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGenericSensor.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YGenericSensor.cs 51903 2022-11-29 17:25:59Z mvuilleu $
  *
  *  Implements FindGenericSensor(), the high-level API for GenericSensor functions
  *
@@ -49,7 +49,7 @@ namespace com.yoctopuce.YoctoAPI
 /**
  * <summary>
  *   YGenericSensor Class: GenericSensor control interface, available for instance in the
- *   Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-SPI or the Yocto-milliVolt-Rx
+ *   Yocto-0-10V-Rx, the Yocto-4-20mA-Rx, the Yocto-Bridge or the Yocto-milliVolt-Rx
  * <para>
  *   The <c>YGenericSensor</c> class allows you to read and configure Yoctopuce signal
  *   transducers. It inherits from <c>YSensor</c> class the core functions to read measurements,
