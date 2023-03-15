@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YNetwork.cs 49385 2022-04-06 00:49:27Z mvuilleu $
+ *  $Id: YNetwork.cs 53420 2023-03-06 10:38:51Z mvuilleu $
  *
  *  Implements FindNetwork(), the high-level API for Network functions
  *
@@ -199,6 +199,14 @@ public class YNetwork : YFunction
     public const int CALLBACKENCODING_INVALID = -1;
     /**
      * <summary>
+     *   invalid callbackTemplate value
+     * </summary>
+     */
+    public const int CALLBACKTEMPLATE_OFF = 0;
+    public const int CALLBACKTEMPLATE_ON = 1;
+    public const int CALLBACKTEMPLATE_INVALID = -1;
+    /**
+     * <summary>
      *   invalid callbackCredentials value
      * </summary>
      */
@@ -252,6 +260,7 @@ public class YNetwork : YFunction
     protected string _callbackUrl = CALLBACKURL_INVALID;
     protected int _callbackMethod = CALLBACKMETHOD_INVALID;
     protected int _callbackEncoding = CALLBACKENCODING_INVALID;
+    protected int _callbackTemplate = CALLBACKTEMPLATE_INVALID;
     protected string _callbackCredentials = CALLBACKCREDENTIALS_INVALID;
     protected int _callbackInitialDelay = CALLBACKINITIALDELAY_INVALID;
     protected string _callbackSchedule = CALLBACKSCHEDULE_INVALID;
@@ -351,6 +360,9 @@ public class YNetwork : YFunction
         }
         if (json_val.has("callbackEncoding")) {
             _callbackEncoding = json_val.getInt("callbackEncoding");
+        }
+        if (json_val.has("callbackTemplate")) {
+            _callbackTemplate = json_val.getInt("callbackTemplate") > 0 ? 1 : 0;
         }
         if (json_val.has("callbackCredentials")) {
             _callbackCredentials = json_val.getString("callbackCredentials");
@@ -1356,6 +1368,71 @@ public class YNetwork : YFunction
         string rest_val;
         rest_val = (newval).ToString();
         await _setAttr("callbackEncoding",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the activation state of the custom template file to customize callback
+     *   format.
+     * <para>
+     *   If the custom callback template is disabled, it will be ignored even
+     *   if present on the YoctoHub.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YNetwork.CALLBACKTEMPLATE_OFF</c> or <c>YNetwork.CALLBACKTEMPLATE_ON</c>, according to
+     *   the activation state of the custom template file to customize callback
+     *   format
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YNetwork.CALLBACKTEMPLATE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_callbackTemplate()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return CALLBACKTEMPLATE_INVALID;
+            }
+        }
+        res = _callbackTemplate;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Enable the use of a template file to customize callbacks format.
+     * <para>
+     *   When the custom callback template file is enabled, the template file
+     *   will be loaded for each callback in order to build the data to post to the
+     *   server. If template file does not exist on the YoctoHub, the callback will
+     *   fail with an error message indicating the name of the expected template file.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YNetwork.CALLBACKTEMPLATE_OFF</c> or <c>YNetwork.CALLBACKTEMPLATE_ON</c>
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_callbackTemplate(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval > 0 ? "1" : "0");
+        await _setAttr("callbackTemplate",rest_val);
         return YAPI.SUCCESS;
     }
 

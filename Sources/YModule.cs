@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 51266 2022-10-10 09:18:25Z seb $
+ * $Id: YModule.cs 53392 2023-03-06 07:29:04Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -346,7 +346,7 @@ public class YModule : YFunction
             YDevice dev = imm_getDev();
             YGenericHub hub = dev.Hub;
             string hubSerial = hub.SerialNumber;
-            if (hubSerial.Equals(_serialNumber)) {
+            if (hubSerial.Equals(dev._wpRec.SerialNumber)) {
                 return "";
             }
 
@@ -363,7 +363,7 @@ public class YModule : YFunction
         {
             YDevice dev = imm_getDev();
             YGenericHub hub = dev.Hub;
-            return hub.imm_get_urlOf(_serialNumber);
+            return hub.imm_get_urlOf(dev._wpRec.SerialNumber);
         }
 
         private async Task _startStopDevLog_internal(string serial, bool start)

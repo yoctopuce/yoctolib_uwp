@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 35437 2019-05-14 15:09:33Z seb $
+ * $Id: YGenericHub.cs 53392 2023-03-06 07:29:04Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -285,11 +285,11 @@ namespace com.yoctopuce.YoctoAPI
             foreach (YDevice dev in _devices.Values) {
                 string devSerialNumber = dev.imm_getSerialNumber();
                 if (devSerialNumber.Equals(serialNumber)) {
-                    return _http_params.imm_getUrl(true, false) + dev._wpRec.NetworkUrl;
+                    return _http_params.imm_getUrl(true, false) + dev._wpRec.NetworkUrl + "/";
                 }
             }
 
-            return _http_params.imm_getUrl(true, false);
+            return _http_params.imm_getUrl(true, false)+"/";
         }
 
         public virtual List<string> imm_get_subDeviceOf(string serialNumber)

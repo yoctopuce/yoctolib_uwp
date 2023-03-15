@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 46595 2021-09-24 16:42:28Z mvuilleu $
+ * $Id: YAPI.cs 53258 2023-02-16 11:16:45Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "52094";
+        public const string YOCTO_API_BUILD_STR = "53532";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -316,7 +316,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".52094" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".53532" + YUSBHub.imm_getAPIVersion();
         }
 
         /**
@@ -454,9 +454,16 @@ public class YAPI
          * <para>
          *   <b><i>x.x.x.x</i></b> or <b><i>hostname</i></b>: The API will use the devices connected to the
          *   host with the given IP address or hostname. That host can be a regular computer
-         *   running a VirtualHub, or a networked YoctoHub such as YoctoHub-Ethernet or
+         *   running a <i>native VirtualHub</i>, a <i>VirtualHub for web</i> hosted on a server,
+         *   or a networked YoctoHub such as YoctoHub-Ethernet or
          *   YoctoHub-Wireless. If you want to use the VirtualHub running on you local
-         *   computer, use the IP address 127.0.0.1.
+         *   computer, use the IP address 127.0.0.1. If the given IP is unresponsive, <c>yRegisterHub</c>
+         *   will not return until a time-out defined by <c>ySetNetworkTimeout</c> has elapsed.
+         *   However, it is possible to preventively test a connection  with <c>yTestHub</c>.
+         *   If you cannot afford a network time-out, you can use the non blocking <c>yPregisterHub</c>
+         *   function that will establish the connection as soon as it is available.
+         * </para>
+         * <para>
          * </para>
          * <para>
          *   <b>callback</b>: that keyword make the API run in "<i>HTTP Callback</i>" mode.
@@ -533,9 +540,16 @@ public class YAPI
          * <para>
          *   <b><i>x.x.x.x</i></b> or <b><i>hostname</i></b>: The API will use the devices connected to the
          *   host with the given IP address or hostname. That host can be a regular computer
-         *   running a VirtualHub, or a networked YoctoHub such as YoctoHub-Ethernet or
+         *   running a <i>native VirtualHub</i>, a <i>VirtualHub for web</i> hosted on a server,
+         *   or a networked YoctoHub such as YoctoHub-Ethernet or
          *   YoctoHub-Wireless. If you want to use the VirtualHub running on you local
-         *   computer, use the IP address 127.0.0.1.
+         *   computer, use the IP address 127.0.0.1. If the given IP is unresponsive, <c>yRegisterHub</c>
+         *   will not return until a time-out defined by <c>ySetNetworkTimeout</c> has elapsed.
+         *   However, it is possible to preventively test a connection  with <c>yTestHub</c>.
+         *   If you cannot afford a network time-out, you can use the non blocking <c>yPregisterHub</c>
+         *   function that will establish the connection as soon as it is available.
+         * </para>
+         * <para>
          * </para>
          * <para>
          *   <b>callback</b>: that keyword make the API run in "<i>HTTP Callback</i>" mode.
@@ -594,7 +608,8 @@ public class YAPI
          *   This function has the same
          *   purpose and same arguments as <c>yRegisterHub()</c>, but does not trigger
          *   an error when the selected hub is not available at the time of the function call.
-         *   This makes it possible to register a network hub independently of the current
+         *   If the connexion cannot be established immediately, a background task will automatically
+         *   perform periodic retries. This makes it possible to register a network hub independently of the current
          *   connectivity, and to try to contact it only when a device is actively needed.
          * </para>
          * <para>
@@ -632,7 +647,8 @@ public class YAPI
          *   This function has the same
          *   purpose and same arguments as <c>yRegisterHub()</c>, but does not trigger
          *   an error when the selected hub is not available at the time of the function call.
-         *   This makes it possible to register a network hub independently of the current
+         *   If the connexion cannot be established immediately, a background task will automatically
+         *   perform periodic retries. This makes it possible to register a network hub independently of the current
          *   connectivity, and to try to contact it only when a device is actively needed.
          * </para>
          * <para>

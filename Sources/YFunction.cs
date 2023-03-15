@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 48028 2022-01-12 09:20:48Z seb $
+ * $Id: YFunction.cs 53218 2023-02-14 09:56:19Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -733,6 +733,7 @@ public class YFunction
             string extra = "/" + attrname + "?" + attrname + "=" + YAPIContext.imm_escapeAttr(newval) + "&.";
             await _devRequest(extra);
             if (_cacheExpiration != 0) {
+
                 _cacheExpiration = YAPI.GetTickCount();
             }
             return YAPI.SUCCESS;

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 32629 2018-10-10 13:38:20Z seb $
+ *  $Id: Demo.cs 52208 2022-12-07 08:17:21Z mvuilleu $
  *
  *  An example that show how to use a  Yocto-RS485
  *
@@ -71,10 +71,10 @@ namespace Demo
 
         WriteLine("Current value: " + val.ToString());
 
-        if (Value != "" && (reg % 30000) < 10000) {
+        if (Value != "" && (reg % 40000) < 10000) {
           val = Convert.ToInt32(Value);
-          if (reg >= 30001) {
-            await serialPort.modbusWriteRegister(slave, reg - 30001, val);
+          if (reg >= 40001) {
+            await serialPort.modbusWriteRegister(slave, reg - 40001, val);
           } else {
             await serialPort.modbusWriteBit(slave, reg - 1, val);
           }

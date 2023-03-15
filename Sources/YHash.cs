@@ -74,6 +74,9 @@ namespace com.yoctopuce.YoctoAPI
         // Remove a device from YAPI after an unplug detected by device refresh
         internal virtual void imm_forgetDevice(string serial)
         {
+            if (!_devs.ContainsKey(serial)) {
+                return;
+            }
             YDevice dev = _devs[serial];
             if (dev == null) {
                 return;
