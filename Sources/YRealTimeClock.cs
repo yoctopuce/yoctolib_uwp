@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRealTimeClock.cs 50595 2022-07-28 07:54:15Z mvuilleu $
+ *  $Id: YRealTimeClock.cs 53873 2023-04-04 17:25:52Z mvuilleu $
  *
  *  Implements FindRealTimeClock(), the high-level API for RealTimeClock functions
  *
@@ -367,6 +367,10 @@ public class YRealTimeClock : YFunction
      * <para>
      *   To disable automatic synchronization, set the value to true.
      *   To enable automatic synchronization (default), set the value to false.
+     * </para>
+     * <para>
+     *   If you want the change to be kept after a device reboot,
+     *   make sure  to call the matching module <c>saveToFlash()</c>.
      * </para>
      * <para>
      * </para>

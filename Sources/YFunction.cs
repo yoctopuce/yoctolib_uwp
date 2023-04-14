@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 53218 2023-02-14 09:56:19Z seb $
+ * $Id: YFunction.cs 53689 2023-03-22 11:17:15Z mvuilleu $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -526,16 +526,16 @@ public class YFunction
     //public virtual async Task<bool> isReadOnly_internal()
     /**
      * <summary>
-     *   Test if the function is readOnly.
+     *   Indicates whether changes to the function are prohibited or allowed.
      * <para>
-     *   Return <c>true</c> if the function is write protected
-     *   or that the function is not available.
+     *   Returns <c>true</c> if the function is blocked by an admin password
+     *   or if the function is not available.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   <c>true</c> if the function is readOnly or not online.
+     *   <c>true</c> if the function is write-protected or not online.
      * </returns>
      */
     public virtual async Task<bool> isReadOnly()
