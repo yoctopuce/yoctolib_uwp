@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YConsolidatedDataSet.cs 43337 2021-01-18 10:36:22Z web $
+ *  $Id: YConsolidatedDataSet.cs 54280 2023-04-28 10:11:44Z seb $
  *
  *  Implements FindConsolidatedDataSet(), the high-level API for ConsolidatedDataSet functions
  *
@@ -262,7 +262,7 @@ public class YConsolidatedDataSet
                 newvalue =  measures[idx].get_averageValue();
                 datarec.Add(newvalue);
                 _nexttim[s] = 0.0;
-                _nextidx[s] = idx+1;
+                _nextidx[s] = idx + 1;
             } else {
                 datarec.Add(Double.NaN);
             }

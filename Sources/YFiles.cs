@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFiles.cs 51903 2022-11-29 17:25:59Z mvuilleu $
+ * $Id: YFiles.cs 54259 2023-04-28 08:06:26Z seb $
  *
  * Implements FindFiles(), the high-level API for Files functions
  *
@@ -401,8 +401,8 @@ public class YFiles : YFunction
         json = await this.sendCommand("dir&f="+pattern);
         filelist = this.imm_json_get_array(json);
         res.Clear();
-        for (int ii = 0; ii < filelist.Count; ii++) {
-            res.Add(new YFileRecord(filelist[ii]));
+        for (int ii_0 = 0; ii_0 < filelist.Count; ii_0++) {
+            res.Add(new YFileRecord(filelist[ii_0]));
         }
         return res;
     }

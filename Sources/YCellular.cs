@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellular.cs 50494 2022-07-19 16:08:56Z mvuilleu $
+ * $Id: YCellular.cs 54259 2023-04-28 08:06:26Z seb $
  *
  * Implements FindCellular(), the high-level API for Cellular functions
  *
@@ -1516,24 +1516,24 @@ public class YCellular : YFunction
         recs = new List<string>(moni.Split(new char[] {'#'}));
         // process each line in turn
         res.Clear();
-        for (int ii = 0; ii < recs.Count; ii++) {
-            llen = (recs[ii]).Length - 2;
+        for (int ii_0 = 0; ii_0 < recs.Count; ii_0++) {
+            llen = (recs[ii_0]).Length - 2;
             if (llen >= 44) {
-                if ((recs[ii]).Substring(41, 3) == "dbm") {
-                    lac = Convert.ToInt32((recs[ii]).Substring(16, 4), 16);
-                    cellId = Convert.ToInt32((recs[ii]).Substring(23, 4), 16);
-                    dbms = (recs[ii]).Substring(37, 4);
+                if ((recs[ii_0]).Substring(41, 3) == "dbm") {
+                    lac = Convert.ToInt32((recs[ii_0]).Substring(16, 4), 16);
+                    cellId = Convert.ToInt32((recs[ii_0]).Substring(23, 4), 16);
+                    dbms = (recs[ii_0]).Substring(37, 4);
                     if ((dbms).Substring(0, 1) == " ") {
                         dbms = (dbms).Substring(1, 3);
                     }
                     dbm = YAPIContext.imm_atoi(dbms);
                     if (llen > 66) {
-                        tads = (recs[ii]).Substring(54, 2);
+                        tads = (recs[ii_0]).Substring(54, 2);
                         if ((tads).Substring(0, 1) == " ") {
                             tads = (tads).Substring(1, 3);
                         }
                         tad = YAPIContext.imm_atoi(tads);
-                        oper = (recs[ii]).Substring(66, llen-66);
+                        oper = (recs[ii_0]).Substring(66, llen-66);
                     } else {
                         tad = -1;
                         oper = "";

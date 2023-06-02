@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 53258 2023-02-16 11:16:45Z seb $
+ * $Id: YAPIContext.cs 54275 2023-04-28 08:36:55Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -64,6 +64,7 @@ public class YAPIContext
 //--- (end of generated code: YAPIContext class start)
         internal ulong _deviceListValidityMs = 10000;
         internal uint _networkTimeoutMs = YHTTPHub.YIO_DEFAULT_TCP_TIMEOUT;
+        protected Dictionary<int, YHub> _yhub_cache = new Dictionary<int, YHub>();
 
         //--- (generated code: YAPIContext definitions)
     protected ulong _defaultCacheValidity = 5;
@@ -884,6 +885,11 @@ public class YAPIContext
             return (int) _networkTimeoutMs;
         }
 
+        internal int imm_GetNetworkTimeout()
+        {
+            return (int)_networkTimeoutMs;
+        }
+
         private async Task<string> AddUdevRule_internal(bool force)
         {
             return "error: Not supported in UWP";
@@ -1053,8 +1059,61 @@ public class YAPIContext
         return _defaultCacheValidity;
     }
 
+    //cannot be generated for UWP:
+    //public virtual YHub nextHubInUseInternal_internal(int hubref)
+    public virtual YHub nextHubInUseInternal(int hubref)
+    {
+        return nextHubInUseInternal_internal(hubref);
+    }
+
+    public virtual YHub getYHubObj(int hubref)
+    {
+        YHub obj;
+        obj = this._findYHubFromCache(hubref);
+        if (obj == null) {
+            obj = new YHub(this, hubref);
+            this._addYHubToCache(hubref, obj);
+        }
+        return obj;
+    }
+
 #pragma warning restore 1998
     //--- (end of generated code: YAPIContext implementation)
+
+
+        private YHub nextHubInUseInternal_internal(int hubref)
+        {
+            int nextref = hubref < 0 ? 0 : hubref + 1;
+            while (nextref < _hubs.Count && !_hubs[nextref].isEnabled())
+            {
+                nextref++;
+            }
+            if (nextref >= _hubs.Count)
+            {
+                return null;
+            }
+            return this.getYHubObj(nextref);
+        }
+
+
+        // function cache methods
+        protected YHub _findYHubFromCache(int hubref)
+        {
+            if (_yhub_cache.ContainsKey(hubref))
+                return _yhub_cache[hubref];
+            return null;
+        }
+
+
+        protected void _addYHubToCache(int hubref, YHub obj)
+        {
+            _yhub_cache[hubref] = obj;
+        }
+
+        internal void _ClearCache()
+        {
+            _yhub_cache.Clear();
+        }
 
         /**
          * <summary>
@@ -1077,8 +1136,7 @@ public class YAPIContext
          * <para>
          *   Be aware than when exceptions are enabled, every function that fails
          *   triggers an exception. If the exception is not caught by the user code,
-         *   it  either fires the debugger or aborts (i.e. crash) the program.
-         *   On failure, throws an exception or returns a negative error code.
+         *   it either fires the debugger or aborts (i.e. crash) the program.
          * </para>
          * </summary>
          */
@@ -1145,7 +1203,7 @@ public class YAPIContext
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public async Task<int> InitAPI(int mode)
@@ -1197,14 +1255,14 @@ public class YAPIContext
          * </para>
          * </summary>
          */
-        public void FreeAPI()
+        public async Task FreeAPI()
         {
             if ((_apiMode & YAPI.DETECT_NET) != 0) {
                 _ssdp.Stop();
             }
 
             foreach (YGenericHub h in _hubs) {
-                h.stopNotifications();
+                await h.stopNotifications();
                 h.imm_release();
             }
 
@@ -1282,7 +1340,7 @@ public class YAPIContext
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public async Task<int> RegisterHub(string url)
@@ -1319,7 +1377,7 @@ public class YAPIContext
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public async Task<int> PreregisterHub(string url)
@@ -1446,7 +1504,7 @@ public class YAPIContext
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public async Task<int> UpdateDeviceList()
@@ -1477,7 +1535,7 @@ public class YAPIContext
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public async Task<int> HandleEvents()
@@ -1533,13 +1591,13 @@ public class YAPIContext
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
-        public async Task<int> Sleep(ulong ms_duration)
+        public async Task<int> Sleep(int ms_duration)
         {
             try {
-                ulong end = GetTickCount() + ms_duration;
+                ulong end = GetTickCount() + (ulong)ms_duration;
 
                 do {
                     await HandleEvents();
@@ -1571,7 +1629,7 @@ public class YAPIContext
          * </param>
          * <returns>
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </returns>
          */
         public Task<int> TriggerHubDiscovery()
@@ -1718,5 +1776,13 @@ public class YAPIContext
 
             return res;
         }
-    }
+
+        internal YGenericHub getGenHub(int hubref)
+        {
+            if (hubref < 0 | hubref >= _hubs.Count)            {
+                return null;
+            }
+            return _hubs[hubref];
+        }
+}
 }

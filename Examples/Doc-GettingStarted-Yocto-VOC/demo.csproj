@@ -96,15 +96,6 @@
       <Link>yoctolib\NotificationHandler.cs</Link>
     </Compile>
     
-    <Compile Include="..\..\Sources\YHumidity.cs">
-      <Link>yoctolib\YHumidity.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YTemperature.cs">
-      <Link>yoctolib\YTemperature.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Sources\YTvoc.cs">
-      <Link>yoctolib\YTvoc.cs</Link>
-    </Compile>
     <Compile Include="..\..\Sources\YVoc.cs">
       <Link>yoctolib\YVoc.cs</Link>
     </Compile>
@@ -127,6 +118,9 @@
     </Compile>
     <Compile Include="..\..\Sources\YAPIContext.cs">
       <Link>yoctolib\YAPIContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YHub.cs">
+      <Link>yoctolib\YHub.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YAPI_Exception.cs">
       <Link>yoctolib\YAPI_Exception.cs</Link>

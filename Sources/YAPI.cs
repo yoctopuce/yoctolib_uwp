@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 53258 2023-02-16 11:16:45Z seb $
+ * $Id: YAPI.cs 54259 2023-04-28 08:06:26Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "54037";
+        public const string YOCTO_API_BUILD_STR = "54821";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -287,6 +287,14 @@ public class YAPI
     {
         return await imm_GetYCtx().GetCacheValidity();
     }
+    public static YHub nextHubInUseInternal(int hubref)
+    {
+        return imm_GetYCtx().nextHubInUseInternal(hubref);
+    }
+    public static YHub getYHubObj(int hubref)
+    {
+        return imm_GetYCtx().getYHubObj(hubref);
+    }
 //--- (end of generated code: YAPIContext yapiwrapper)
 
 
@@ -316,7 +324,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".54037" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".54821" + YUSBHub.imm_getAPIVersion();
         }
 
         /**
@@ -346,7 +354,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> InitAPI(int mode, YRefParam errmsg)
@@ -387,7 +395,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> InitAPI(int mode)
@@ -426,12 +434,12 @@ public class YAPI
          * </para>
          * </summary>
          */
-        public static void FreeAPI()
+        public static async Task FreeAPI()
         {
             YAPIContext yctx;
             yctx = _SingleYAPI;
             if (yctx != null) {
-                yctx.FreeAPI();
+                await yctx.FreeAPI();
             }
             _SingleYAPI = null;
         }
@@ -507,7 +515,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> RegisterHub(string url, YRefParam errmsg)
@@ -593,7 +601,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> RegisterHub(string url)
@@ -626,7 +634,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> PreregisterHub(string url, YRefParam errmsg)
@@ -665,7 +673,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> PreregisterHub(string url)
@@ -789,7 +797,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> UpdateDeviceList(YRefParam errmsg)
@@ -827,7 +835,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> UpdateDeviceList()
@@ -857,7 +865,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> HandleEvents(YRefParam errmsg)
@@ -896,7 +904,7 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
         public static async Task<int> HandleEvents()
@@ -931,10 +939,10 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
-        public static async Task<int> Sleep(ulong ms_duration, YRefParam errmsg)
+        public static async Task<int> Sleep(int ms_duration, YRefParam errmsg)
         {
             YAPIContext yctx = imm_GetYCtx();
             try {
@@ -972,10 +980,10 @@ public class YAPI
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
          * </returns>
          * <para>
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </para>
          */
-        public static async Task<int> Sleep(ulong ms_duration)
+        public static async Task<int> Sleep(int ms_duration)
         {
             return await imm_GetYCtx().Sleep(ms_duration);
         }
@@ -993,7 +1001,7 @@ public class YAPI
          * </param>
          * <returns>
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </returns>
          */
         public static async Task<int> TriggerHubDiscovery(YRefParam errmsg)
@@ -1019,7 +1027,7 @@ public class YAPI
          * </param>
          * <returns>
          *   <c>YAPI.SUCCESS</c> when the call succeeds.
-         *   On failure, throws an exception or returns a negative error code.
+         *   On failure returns a negative error code.
          * </returns>
          */
         public static async Task<int> TriggerHubDiscovery()

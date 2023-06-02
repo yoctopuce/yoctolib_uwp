@@ -108,8 +108,9 @@
     <Compile Include="..\..\Sources\YFiles.cs">
       <Link>yoctolib\YFiles.cs</Link>
     </Compile>
-
-
+    <Compile Include="..\..\Sources\YHub.cs">
+      <Link>yoctolib\YHub.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\TCPNotificationHandler.cs">
       <Link>yoctolib\TCPNotificationHandler.cs</Link>
     </Compile>

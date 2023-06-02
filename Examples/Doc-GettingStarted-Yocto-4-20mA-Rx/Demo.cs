@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 32629 2018-10-10 13:38:20Z seb $
+ *  $Id: Demo.cs 54356 2023-05-04 07:15:58Z seb $
  *
  *  An example that show how to use a  Yocto-4-20mA-Rx
  *
@@ -64,13 +64,13 @@ namespace Demo
           await YAPI.Sleep(1000);
         }
 
-        YAPI.FreeAPI();
+        await YAPI.FreeAPI();
         WriteLine("Module not connected (check identification and USB cable)");
       } catch (YAPI_Exception ex) {
         WriteLine("error: " + ex.Message);
       }
 
-      YAPI.FreeAPI();
+      await YAPI.FreeAPI();
       return 0;
     }
   }

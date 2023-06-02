@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 46632 2021-09-28 08:44:25Z web $
+ *  $Id: Demo.cs 54356 2023-05-04 07:15:58Z seb $
  *
  *  An example that show how to use a  Yocto-Inclinometer
  *
@@ -63,7 +63,7 @@ namespace Demo
         WriteLine("error: " + ex.Message);
       }
 
-      YAPI.FreeAPI();
+      await YAPI.FreeAPI();
       return 0;
     }
   }

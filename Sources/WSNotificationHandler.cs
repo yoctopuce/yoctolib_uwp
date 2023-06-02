@@ -239,7 +239,7 @@ namespace com.yoctopuce.YoctoAPI
             _webSock.Control.MessageType = SocketMessageType.Binary;
             _webSock.MessageReceived += WebSock_MessageReceived;
             _webSock.Closed += WebSock_Closed;
-            string url = _hub._http_params.imm_getUrl(true, false) + "/not.byn";
+            string url = _hub._http_params.imm_getUrl(true, false,false) + "/not.byn";
             Uri serverUri = new Uri(url);
 
             try {

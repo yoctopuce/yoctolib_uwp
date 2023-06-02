@@ -101,7 +101,7 @@ namespace Demo
         WriteLine("error: " + ex.Message);
       }
 
-      YAPI.FreeAPI();
+      await YAPI.FreeAPI();
       return 0;
     }
   }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YGyro.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ * $Id: YGyro.cs 54280 2023-04-28 10:11:44Z seb $
  *
  * Implements FindGyro(), the high-level API for Gyro functions
  *
@@ -868,7 +868,7 @@ public class YGyro : YSensor
 
     public virtual async Task<int> _invokeGyroCallbacks(int qtIndex,double qtValue)
     {
-        switch(qtIndex - 1) {
+        switch (qtIndex - 1) {
         case 0:
             _w = qtValue;
             break;

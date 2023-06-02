@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 52208 2022-12-07 08:17:21Z mvuilleu $
+ *  $Id: Demo.cs 54356 2023-05-04 07:15:58Z seb $
  *
  *  An example that show how to use a  Yocto-RS485
  *
@@ -83,7 +83,7 @@ namespace Demo
         WriteLine("error: " + ex.Message);
       }
 
-      YAPI.FreeAPI();
+      await YAPI.FreeAPI();
       return 0;
     }
   }

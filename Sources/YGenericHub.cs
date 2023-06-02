@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 53392 2023-03-06 07:29:04Z seb $
+ * $Id: YGenericHub.cs 54259 2023-04-28 08:06:26Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -118,6 +118,11 @@ namespace com.yoctopuce.YoctoAPI
         protected internal Dictionary<string, YDevice> _devices = new Dictionary<string, YDevice>();
         protected internal readonly bool _reportConnnectionLost;
         private string _hubSerialNumber = null;
+        protected bool _enabled = true;
+        private List<String> _knownUrls = new List<string>();
+        private int _networkTimeoutMs;
+        private string _lastErrorMessage="";
+        private int _lastErrorType= YAPI.SUCCESS;
 
         public YGenericHub(YAPIContext yctx, HTTPParams httpParams, int idx, bool reportConnnectionLost)
         {
@@ -125,6 +130,7 @@ namespace com.yoctopuce.YoctoAPI
             _hubidx = idx;
             _reportConnnectionLost = reportConnnectionLost;
             _http_params = httpParams;
+            _networkTimeoutMs = yctx.imm_GetNetworkTimeout();
         }
 
         internal abstract void imm_release();
@@ -285,11 +291,11 @@ namespace com.yoctopuce.YoctoAPI
             foreach (YDevice dev in _devices.Values) {
                 string devSerialNumber = dev.imm_getSerialNumber();
                 if (devSerialNumber.Equals(serialNumber)) {
-                    return _http_params.imm_getUrl(true, false) + dev._wpRec.NetworkUrl + "/";
+                    return _http_params.imm_getUrl(true, false,false) + dev._wpRec.NetworkUrl + "/";
                 }
             }
 
-            return _http_params.imm_getUrl(true, false)+"/";
+            return _http_params.imm_getUrl(true, false, true);
         }
 
         public virtual List<string> imm_get_subDeviceOf(string serialNumber)
@@ -379,9 +385,11 @@ namespace com.yoctopuce.YoctoAPI
             internal readonly string _pass;
             internal readonly string _proto;
             internal readonly string _subdomain;
+            internal readonly string _org_url;
 
             public HTTPParams(string url)
             {
+                _org_url = url;
                 int pos = 0;
                 if (url.StartsWith("http://", StringComparison.Ordinal)) {
                     pos = 7;
@@ -458,10 +466,10 @@ namespace com.yoctopuce.YoctoAPI
             }
 
             internal virtual string Url {
-                get { return imm_getUrl(false, true); }
+                get { return imm_getUrl(false, true,false); }
             }
 
-            internal virtual string imm_getUrl(bool withProto, bool withUserPass)
+            internal virtual string imm_getUrl(bool withProto, bool withUserPass, bool withEndSlash)
             {
                 StringBuilder url = new StringBuilder();
                 if (withProto) {
@@ -482,6 +490,9 @@ namespace com.yoctopuce.YoctoAPI
                 url.Append(":");
                 url.Append(_port);
                 url.Append(_subdomain);
+                if (withEndSlash) {
+                    url.Append("/");
+                }
                 return url.ToString();
             }
 
@@ -493,9 +504,58 @@ namespace com.yoctopuce.YoctoAPI
             {
                 return !_user.Equals("");
             }
+
+            public string getOriginalURL()
+            {
+                return _org_url;
+            }
+         
         }
 
         abstract internal string get_debugMsg(string serial);
         public abstract bool isReadOnly();
+
+        public string getSerialNumber()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public abstract bool isOnline();
+
+        public void set_networkTimeout(int networkMsTimeout)
+        {
+            _networkTimeoutMs = networkMsTimeout;
+        }
+
+        public int get_networkTimeout()
+        {
+            return _networkTimeoutMs;
+        }
+
+        public string getLastErrorMessage()
+        {
+            return _lastErrorMessage;
+        }
+
+        public int getLastErrorType()
+        {
+            return _lastErrorType;
+        }
+
+        public void merge(YGenericHub newhub)
+        {
+            _knownUrls.Add(newhub._http_params._org_url);
+        }
+
+        public void disable()
+        {
+            _enabled = false;
+        }
+
+        public bool isEnabled()
+        {
+            return _enabled;
+        }
     }
 }

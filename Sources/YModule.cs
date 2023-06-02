@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 53392 2023-03-06 07:29:04Z seb $
+ * $Id: YModule.cs 54280 2023-04-28 10:11:44Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -1060,7 +1060,7 @@ public class YModule : YFunction
         prodname = await this.get_productName();
         prodrel = await this.get_productRelease();
         if (prodrel > 1) {
-            fullname = ""+ prodname+" rev. "+((char)(64+prodrel)).ToString();
+            fullname = ""+ prodname+" rev. "+((char)(64 + prodrel)).ToString();
         } else {
             fullname = prodname;
         }
@@ -1413,18 +1413,18 @@ public class YModule : YFunction
         ext_settings = ", \"extras\":[";
         templist = await this.get_functionIds("Temperature");
         sep = "";
-        for (int ii = 0; ii <  templist.Count; ii++) {
+        for (int ii_0 = 0; ii_0 <  templist.Count; ii_0++) {
             if (YAPIContext.imm_atoi(await this.get_firmwareRelease()) > 9000) {
-                url = "api/"+ templist[ii]+"/sensorType";
+                url = "api/"+ templist[ii_0]+"/sensorType";
                 t_type = YAPI.DefaultEncoding.GetString(await this._download(url));
                 if (t_type == "RES_NTC" || t_type == "RES_LINEAR") {
-                    id = ( templist[ii]).Substring( 11, ( templist[ii]).Length - 11);
+                    id = ( templist[ii_0]).Substring( 11, ( templist[ii_0]).Length - 11);
                     if (id == "") {
                         id = "1";
                     }
                     temp_data_bin = await this._download("extra.json?page="+id);
                     if ((temp_data_bin).Length > 0) {
-                        item = ""+ sep+"{\"fid\":\""+  templist[ii]+"\", \"json\":"+YAPI.DefaultEncoding.GetString(temp_data_bin)+"}\n";
+                        item = ""+ sep+"{\"fid\":\""+  templist[ii_0]+"\", \"json\":"+YAPI.DefaultEncoding.GetString(temp_data_bin)+"}\n";
                         ext_settings = ext_settings + item;
                         sep = ",";
                     }
@@ -1439,8 +1439,8 @@ public class YModule : YFunction
             }
             filelist = this.imm_json_get_array(json);
             sep = "";
-            for (int ii = 0; ii <  filelist.Count; ii++) {
-                name = this.imm_json_get_key(YAPI.DefaultEncoding.GetBytes( filelist[ii]), "name");
+            for (int ii_1 = 0; ii_1 <  filelist.Count; ii_1++) {
+                name = this.imm_json_get_key(YAPI.DefaultEncoding.GetBytes( filelist[ii_1]), "name");
                 if (((name).Length > 0) && !(name == "startupConf.json")) {
                     file_data_bin = await this._download(this.imm_escapeAttr(name));
                     file_data = YAPIContext.imm_bytesToHexStr(file_data_bin, 0, file_data_bin.Length);
@@ -1485,10 +1485,10 @@ public class YModule : YFunction
         string functionId;
         string data;
         extras = this.imm_json_get_array(YAPI.DefaultEncoding.GetBytes(jsonExtra));
-        for (int ii = 0; ii <  extras.Count; ii++) {
-            functionId = this.imm_get_json_path( extras[ii], "fid");
+        for (int ii_0 = 0; ii_0 <  extras.Count; ii_0++) {
+            functionId = this.imm_get_json_path( extras[ii_0], "fid");
             functionId = this.imm_decode_json_string(functionId);
-            data = this.imm_get_json_path( extras[ii], "json");
+            data = this.imm_get_json_path( extras[ii_0], "json");
             if (await this.hasFunction(functionId)) {
                 await this.loadThermistorExtra(functionId, data);
             }
@@ -1549,10 +1549,10 @@ public class YModule : YFunction
             if (!(res == "ok")) { this._throw( YAPI.IO_ERROR, "format failed"); return YAPI.IO_ERROR; }
             json_files = this.imm_get_json_path(json, "files");
             files = this.imm_json_get_array(YAPI.DefaultEncoding.GetBytes(json_files));
-            for (int ii = 0; ii <  files.Count; ii++) {
-                name = this.imm_get_json_path( files[ii], "name");
+            for (int ii_0 = 0; ii_0 <  files.Count; ii_0++) {
+                name = this.imm_get_json_path( files[ii_0], "name");
                 name = this.imm_decode_json_string(name);
-                data = this.imm_get_json_path( files[ii], "data");
+                data = this.imm_get_json_path( files[ii_0], "data");
                 data = this.imm_decode_json_string(data);
                 if (name == "") {
                     fuperror = fuperror + 1;
@@ -1772,8 +1772,8 @@ public class YModule : YFunction
             } else {
                 if (paramVer == 1) {
                     words_str = new List<string>(param.Split(new char[] {','}));
-                    for (int ii = 0; ii < words_str.Count; ii++) {
-                        words.Add(YAPIContext.imm_atoi(words_str[ii]));
+                    for (int ii_0 = 0; ii_0 < words_str.Count; ii_0++) {
+                        words.Add(YAPIContext.imm_atoi(words_str[ii_0]));
                     }
                     if (param == "" || (words[0] > 10)) {
                         paramScale = 0;
@@ -1959,8 +1959,8 @@ public class YModule : YFunction
         newval = "";
         old_json_flat = this.imm_flattenJsonStruct(settings);
         old_dslist = this.imm_json_get_array(old_json_flat);
-        for (int ii = 0; ii < old_dslist.Count; ii++) {
-            each_str = this.imm_json_get_string(YAPI.DefaultEncoding.GetBytes(old_dslist[ii]));
+        for (int ii_0 = 0; ii_0 < old_dslist.Count; ii_0++) {
+            each_str = this.imm_json_get_string(YAPI.DefaultEncoding.GetBytes(old_dslist[ii_0]));
             // split json path and attr
             leng = (each_str).Length;
             eqpos = (each_str).IndexOf("=");
@@ -1985,9 +1985,9 @@ public class YModule : YFunction
         }
         actualSettings = this.imm_flattenJsonStruct(actualSettings);
         new_dslist = this.imm_json_get_array(actualSettings);
-        for (int ii = 0; ii < new_dslist.Count; ii++) {
+        for (int ii_1 = 0; ii_1 < new_dslist.Count; ii_1++) {
             // remove quotes
-            each_str = this.imm_json_get_string(YAPI.DefaultEncoding.GetBytes(new_dslist[ii]));
+            each_str = this.imm_json_get_string(YAPI.DefaultEncoding.GetBytes(new_dslist[ii_1]));
             // split json path and attr
             leng = (each_str).Length;
             eqpos = (each_str).IndexOf("=");
@@ -2205,8 +2205,8 @@ public class YModule : YFunction
             }
             i = i + 1;
         }
-        for (int ii = 0; ii < restoreLast.Count; ii++) {
-            subres = await this._tryExec(restoreLast[ii]);
+        for (int ii_2 = 0; ii_2 < restoreLast.Count; ii_2++) {
+            subres = await this._tryExec(restoreLast[ii_2]);
             if ((res == YAPI.SUCCESS) && (subres != YAPI.SUCCESS)) {
                 res = subres;
             }

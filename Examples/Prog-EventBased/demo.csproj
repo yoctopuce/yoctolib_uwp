@@ -95,7 +95,9 @@
     <Compile Include="..\..\Sources\NotificationHandler.cs">
       <Link>yoctolib\NotificationHandler.cs</Link>
     </Compile>
-    
+    <Compile Include="..\..\Sources\YHub.cs">
+      <Link>yoctolib\YHub.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YAccelerometer.cs">
       <Link>yoctolib\YAccelerometer.cs</Link>
     </Compile>

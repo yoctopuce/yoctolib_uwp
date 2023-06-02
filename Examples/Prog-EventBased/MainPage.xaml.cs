@@ -153,7 +153,7 @@ namespace Prog_EventBased
                 started = true;
             } else {
                 timer.Stop();
-                YAPI.FreeAPI();
+                await YAPI.FreeAPI();
                 initButton.Content = "Start";
                 started = false;
             }

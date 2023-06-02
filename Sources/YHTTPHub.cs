@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPHub.cs 41070 2020-06-26 08:33:56Z seb $
+ * $Id: YHTTPHub.cs 54259 2023-04-28 08:06:26Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -216,7 +216,7 @@ namespace com.yoctopuce.YoctoAPI
         internal override bool imm_isSameHub(string url, object request, object response, object session)
         {
             HTTPParams param = new HTTPParams(url);
-            bool url_equals = param.imm_getUrl(false, false).Equals(_http_params.imm_getUrl(false, false));
+            bool url_equals = param.imm_getUrl(false, false,false).Equals(_http_params.imm_getUrl(false, false,false));
             return url_equals;
         }
 
@@ -474,6 +474,11 @@ namespace com.yoctopuce.YoctoAPI
         public override bool isReadOnly()
         {
             return _writeProtected && !_notificationHandler.hasRwAccess();
+        }
+
+        public override bool isOnline()
+        {
+            return _notificationHandler.Connected;
         }
 
         internal virtual string Host {

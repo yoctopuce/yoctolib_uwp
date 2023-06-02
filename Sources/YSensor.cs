@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ * $Id: YSensor.cs 54280 2023-04-28 10:11:44Z seb $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -1220,7 +1220,7 @@ public class YSensor : YFunction
         byte[] res = new byte[0];
 
         res = await this._download("api/dataLogger/recording?recording=1");
-        if (!((res).Length>0)) { this._throw( YAPI.IO_ERROR, "unable to start datalogger"); return YAPI.IO_ERROR; }
+        if (!((res).Length > 0)) { this._throw( YAPI.IO_ERROR, "unable to start datalogger"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 
@@ -1239,7 +1239,7 @@ public class YSensor : YFunction
         byte[] res = new byte[0];
 
         res = await this._download("api/dataLogger/recording?recording=0");
-        if (!((res).Length>0)) { this._throw( YAPI.IO_ERROR, "unable to stop datalogger"); return YAPI.IO_ERROR; }
+        if (!((res).Length > 0)) { this._throw( YAPI.IO_ERROR, "unable to stop datalogger"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 
@@ -1415,11 +1415,11 @@ public class YSensor : YFunction
         }
         rawValues.Clear();
         refValues.Clear();
-        for (int ii = 0; ii < _calraw.Count; ii++) {
-            rawValues.Add(_calraw[ii]);
+        for (int ii_0 = 0; ii_0 < _calraw.Count; ii_0++) {
+            rawValues.Add(_calraw[ii_0]);
         }
-        for (int ii = 0; ii < _calref.Count; ii++) {
-            refValues.Add(_calref[ii]);
+        for (int ii_1 = 0; ii_1 < _calref.Count; ii_1++) {
+            refValues.Add(_calref[ii_1]);
         }
         return YAPI.SUCCESS;
     }

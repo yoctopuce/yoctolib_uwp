@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YWireless.cs 48028 2022-01-12 09:20:48Z seb $
+ * $Id: YWireless.cs 54259 2023-04-28 08:06:26Z seb $
  *
  * Implements FindWireless(), the high-level API for Wireless functions
  *
@@ -715,8 +715,8 @@ public class YWireless : YFunction
         json = await this._download("wlan.json?by=name");
         wlanlist = this.imm_json_get_array(json);
         res.Clear();
-        for (int ii = 0; ii < wlanlist.Count; ii++) {
-            res.Add(new YWlanRecord(wlanlist[ii]));
+        for (int ii_0 = 0; ii_0 < wlanlist.Count; ii_0++) {
+            res.Add(new YWlanRecord(wlanlist[ii_0]));
         }
         return res;
     }

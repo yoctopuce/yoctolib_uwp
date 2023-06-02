@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataLogger.cs 45843 2021-08-04 07:51:59Z mvuilleu $
+ * $Id: YDataLogger.cs 54259 2023-04-28 08:06:26Z seb $
  *
  * Implements yFindDataLogger(), the high-level API for DataLogger functions
  *
@@ -779,9 +779,9 @@ public class YDataLogger : YFunction
 
         dslist = this.imm_json_get_array(json);
         res.Clear();
-        for (int ii = 0; ii < dslist.Count; ii++) {
+        for (int ii_0 = 0; ii_0 < dslist.Count; ii_0++) {
             dataset = new YDataSet(this);
-            await dataset._parse(dslist[ii]);
+            await dataset._parse(dslist[ii_0]);
             res.Add(dataset);
         }
         return res;

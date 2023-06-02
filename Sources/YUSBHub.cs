@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBHub.cs 35437 2019-05-14 15:09:33Z seb $
+ * $Id: YUSBHub.cs 54259 2023-04-28 08:06:26Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -176,6 +176,11 @@ namespace com.yoctopuce.YoctoAPI
         public override bool isReadOnly()
         {
             return false;
+        }
+
+        public override bool isOnline()
+        {
+            return true;
         }
 
 

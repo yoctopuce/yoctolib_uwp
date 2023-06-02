@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 38156 2019-11-15 09:56:42Z seb $
+ *  $Id: Demo.cs 54356 2023-05-04 07:15:58Z seb $
  *
  *  Doc-Inventory example
  *
@@ -57,7 +57,7 @@ namespace Demo
             }
 
 
-            YAPI.FreeAPI();
+            await YAPI.FreeAPI();
             return 0;
         }
     }

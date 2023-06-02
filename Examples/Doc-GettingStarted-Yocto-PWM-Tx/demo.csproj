@@ -122,6 +122,9 @@
     <Compile Include="..\..\Sources\YAPIContext.cs">
       <Link>yoctolib\YAPIContext.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YHub.cs">
+      <Link>yoctolib\YHub.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YAPI_Exception.cs">
       <Link>yoctolib\YAPI_Exception.cs</Link>
     </Compile>

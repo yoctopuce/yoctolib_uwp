@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 32629 2018-10-10 13:38:20Z seb $
+ *  $Id: Demo.cs 54356 2023-05-04 07:15:58Z seb $
  *
  *  Doc-ModuleControl example
  *
@@ -57,7 +57,7 @@ namespace Demo
         WriteLine(Target + " not connected  on" + HubURL +
                   "(check identification and USB cable)");
       }
-      YAPI.FreeAPI();
+      await YAPI.FreeAPI();
       return 0;
     }
   }

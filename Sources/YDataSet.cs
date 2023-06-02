@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataSet.cs 52848 2023-01-20 15:49:48Z mvuilleu $
+ * $Id: YDataSet.cs 54280 2023-04-28 10:11:44Z seb $
  *
  * Implements yFindDataSet(), the high-level API for DataSet functions
  *
@@ -234,33 +234,33 @@ public class YDataSet
         summaryStopMs = YAPI.MIN_DOUBLE;
 
         // Parse complete streams
-        for (int ii = 0; ii <  _streams.Count; ii++) {
-            streamStartTimeMs = Math.Round(await  _streams[ii].get_realStartTimeUTC() *1000);
-            streamDuration = await  _streams[ii].get_realDuration() ;
+        for (int ii_0 = 0; ii_0 <  _streams.Count; ii_0++) {
+            streamStartTimeMs = Math.Round(await  _streams[ii_0].get_realStartTimeUTC() * 1000);
+            streamDuration = await  _streams[ii_0].get_realDuration();
             streamEndTimeMs = streamStartTimeMs + Math.Round(streamDuration * 1000);
             if ((streamStartTimeMs >= _startTimeMs) && ((_endTimeMs == 0) || (streamEndTimeMs <= _endTimeMs))) {
                 // stream that are completely inside the dataset
-                previewMinVal = await  _streams[ii].get_minValue();
-                previewAvgVal = await  _streams[ii].get_averageValue();
-                previewMaxVal = await  _streams[ii].get_maxValue();
+                previewMinVal = await  _streams[ii_0].get_minValue();
+                previewAvgVal = await  _streams[ii_0].get_averageValue();
+                previewMaxVal = await  _streams[ii_0].get_maxValue();
                 previewStartMs = streamStartTimeMs;
                 previewStopMs = streamEndTimeMs;
                 previewDuration = streamDuration;
             } else {
                 // stream that are partially in the dataset
                 // we need to parse data to filter value outside the dataset
-                if (!( _streams[ii].imm_wasLoaded())) {
-                    url =  _streams[ii].imm_get_url();
+                if (!( _streams[ii_0].imm_wasLoaded())) {
+                    url =  _streams[ii_0].imm_get_url();
                     data = await _parent._download(url);
-                    _streams[ii].imm_parseStream(data);
+                    _streams[ii_0].imm_parseStream(data);
                 }
-                dataRows = await  _streams[ii].get_dataRows();
+                dataRows = await  _streams[ii_0].get_dataRows();
                 if (dataRows.Count == 0) {
                     return await this.get_progress();
                 }
                 tim = streamStartTimeMs;
-                fitv = Math.Round(await  _streams[ii].get_firstDataSamplesInterval() * 1000);
-                itv = Math.Round(await  _streams[ii].get_dataSamplesInterval() * 1000);
+                fitv = Math.Round(await  _streams[ii_0].get_firstDataSamplesInterval() * 1000);
+                itv = Math.Round(await  _streams[ii_0].get_dataSamplesInterval() * 1000);
                 nCols = dataRows[0].Count;
                 minCol = 0;
                 if (nCols > 2) {
@@ -281,7 +281,7 @@ public class YDataSet
                 previewMaxVal = YAPI.MIN_DOUBLE;
                 m_pos = 0;
                 while (m_pos < dataRows.Count) {
-                    measure_data  = dataRows[m_pos];
+                    measure_data = dataRows[m_pos];
                     if (m_pos == 0) {
                         mitv = fitv;
                     } else {
@@ -412,16 +412,16 @@ public class YDataSet
         }
 
         firstMeasure = true;
-        for (int ii = 0; ii < dataRows.Count; ii++) {
+        for (int ii_0 = 0; ii_0 < dataRows.Count; ii_0++) {
             if (firstMeasure) {
                 end_ = tim + fitv;
                 firstMeasure = false;
             } else {
                 end_ = tim + itv;
             }
-            avgv = dataRows[ii][avgCol];
+            avgv = dataRows[ii_0][avgCol];
             if ((end_ > _startTimeMs) && ((_endTimeMs == 0) || (tim < _endTimeMs)) && !(Double.IsNaN(avgv))) {
-                _measures.Add(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii][minCol], avgv, dataRows[ii][maxCol]));
+                _measures.Add(new YMeasure(tim / 1000, end_ / 1000, dataRows[ii_0][minCol], avgv, dataRows[ii_0][maxCol]));
             }
             tim = end_;
         }
@@ -435,7 +435,7 @@ public class YDataSet
             url = stream.imm_get_url();
             suffix = stream.imm_get_urlsuffix();
             suffixes.Add(suffix);
-            idx = _progress+1;
+            idx = _progress + 1;
             while ((idx < _streams.Count) && (suffixes.Count < _bulkLoad)) {
                 stream = _streams[idx];
                 if (!(stream.imm_wasLoaded()) && (stream.imm_get_baseurl() == baseurl)) {
@@ -657,7 +657,7 @@ public class YDataSet
                 url = ""+url+"&from="+Convert.ToString(this.imm_get_startTimeUTC());
             }
             if (_endTimeMs != 0) {
-                url = ""+url+"&to="+Convert.ToString(this.imm_get_endTimeUTC()+1);
+                url = ""+url+"&to="+Convert.ToString(this.imm_get_endTimeUTC() + 1);
             }
         } else {
             if (_progress >= _streams.Count) {
@@ -777,9 +777,9 @@ public class YDataSet
 
         startUtcMs = measure.get_startTimeUTC() * 1000;
         stream = null;
-        for (int ii = 0; ii < _streams.Count; ii++) {
-            if (Math.Round(await _streams[ii].get_realStartTimeUTC() *1000) == startUtcMs) {
-                stream = _streams[ii];
+        for (int ii_0 = 0; ii_0 < _streams.Count; ii_0++) {
+            if (Math.Round(await _streams[ii_0].get_realStartTimeUTC() *1000) == startUtcMs) {
+                stream = _streams[ii_0];
             }
         }
         if (stream == null) {
@@ -807,10 +807,10 @@ public class YDataSet
             maxCol = 0;
         }
 
-        for (int ii = 0; ii < dataRows.Count; ii++) {
+        for (int ii_1 = 0; ii_1 < dataRows.Count; ii_1++) {
             end_ = tim + itv;
             if ((end_ > _startTimeMs) && ((_endTimeMs == 0) || (tim < _endTimeMs))) {
-                measures.Add(new YMeasure(tim / 1000.0, end_ / 1000.0, dataRows[ii][minCol], dataRows[ii][avgCol], dataRows[ii][maxCol]));
+                measures.Add(new YMeasure(tim / 1000.0, end_ / 1000.0, dataRows[ii_1][minCol], dataRows[ii_1][avgCol], dataRows[ii_1][maxCol]));
             }
             tim = end_;
         }
