@@ -381,10 +381,6 @@
       <Device Id="vidpid:24e0 009c">
         <Function Type="usage:ff00 0001" />
       </Device>
-      <!-- YoctoHub-GSM-3G-WW -->
-      <Device Id="vidpid:24e0 009d">
-        <Function Type="usage:ff00 0001" />
-      </Device>
       <!-- Yocto-MaxiKnob -->
       <Device Id="vidpid:24e0 009e">
         <Function Type="usage:ff00 0001" />
@@ -403,6 +399,26 @@
       </Device>
       <!-- Yocto-SDI12 -->
       <Device Id="vidpid:24e0 00ab">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-IO-V2 -->
+      <Device Id="vidpid:24e0 00af">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-RFID-15693 -->
+      <Device Id="vidpid:24e0 00b0">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-LatchingRelay -->
+      <Device Id="vidpid:24e0 00b1">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-TinyPower -->
+      <Device Id="vidpid:24e0 00b3">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-RFID-14443A -->
+      <Device Id="vidpid:24e0 00b5">
         <Function Type="usage:ff00 0001" />
       </Device>
 <!-- USABLE DEVICES STOP -->

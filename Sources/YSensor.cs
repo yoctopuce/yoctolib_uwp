@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 54280 2023-04-28 10:11:44Z seb $
+ * $Id: YSensor.cs 59221 2024-02-05 15:46:32Z seb $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -1404,7 +1404,7 @@ public class YSensor : YFunction
         rawValues.Clear();
         refValues.Clear();
         // Load function parameters if not yet loaded
-        if (_scale == 0) {
+        if ((_scale == 0) || (_cacheExpiration <= YAPIContext.GetTickCount())) {
             if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
                 return YAPI.DEVICE_NOT_FOUND;
             }

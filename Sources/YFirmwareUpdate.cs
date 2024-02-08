@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFirmwareUpdate.cs 49750 2022-05-13 07:10:42Z seb $
+ * $Id: YFirmwareUpdate.cs 56045 2023-08-14 15:51:05Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -36,6 +36,7 @@
  *  WARRANTY, OR OTHERWISE.
  *
  *********************************************************************/
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -50,7 +51,6 @@ using Windows.Web.Http;
 
 namespace com.yoctopuce.YoctoAPI
 {
-
     //--- (generated code: YFirmwareUpdate return codes)
 //--- (end of generated code: YFirmwareUpdate return codes)
     //--- (generated code: YFirmwareUpdate class start)
@@ -140,7 +140,6 @@ public class YFirmwareUpdate
         }
 
 
-
         public YFirmwareUpdate(YAPIContext yctx, string serial, string path, byte[] settings, bool force)
         {
             _serial = serial;
@@ -153,11 +152,13 @@ public class YFirmwareUpdate
         }
 
 
-        public YFirmwareUpdate(YAPIContext yctx, string serial, string path, byte[] settings) : this(yctx, serial, path, settings, false)
+        public YFirmwareUpdate(YAPIContext yctx, string serial, string path, byte[] settings) : this(yctx, serial, path,
+            settings, false)
         {
         }
 
-        public YFirmwareUpdate(string serial, string path, byte[] settings) : this(YAPI.imm_GetYCtx(), serial, path, settings, false)
+        public YFirmwareUpdate(string serial, string path, byte[] settings) : this(YAPI.imm_GetYCtx(), serial, path,
+            settings, false)
         {
         }
 
@@ -175,7 +176,8 @@ public class YFirmwareUpdate
             YFirmwareFile firmware;
             try {
                 //1% -> 5%
-                if (_firmwarepath.StartsWith("www.yoctopuce.com") || _firmwarepath.StartsWith("http://www.yoctopuce.com")) {
+                if (_firmwarepath.StartsWith("www.yoctopuce.com") ||
+                    _firmwarepath.StartsWith("http://www.yoctopuce.com")) {
                     this.imm_reportprogress(1, "Downloading firmware");
                     byte[] bytes = await YFirmwareUpdate._downloadfile(_firmwarepath);
                     firmware = YFirmwareFile.imm_Parse(_firmwarepath, bytes);
@@ -242,7 +244,7 @@ public class YFirmwareUpdate
         {
             imm_reportprogress(5 + percent * 80 / 100, message);
         }
-#pragma warning restore 1998        
+#pragma warning restore 1998
 
         /// <summary>
         /// Test if the byn file is valid for this module. It is possible to pass a directory instead of a file.
@@ -260,29 +262,36 @@ public class YFirmwareUpdate
         {
             string link = "";
             int best_rev = 0;
-            if (path.StartsWith("www.yoctopuce.com", StringComparison.Ordinal) || path.StartsWith("http://www.yoctopuce.com", StringComparison.Ordinal)) {
-                byte[] json = await YFirmwareUpdate._downloadfile("http://www.yoctopuce.com//FR/common/getLastFirmwareLink.php?serial=" + serial);
-                YJSONObject obj;
-                obj = new YJSONObject(YAPI.DefaultEncoding.GetString(json));
-                obj.parse();
-                link = obj.getString("link");
-                best_rev = obj.getInt("version");
-
-            } else {
-                YFirmwareFile firmware = await YFirmwareUpdate.checkFirmware_r(path, serial.Substring(0, YAPI.YOCTO_BASE_SERIAL_LEN));
-                if (firmware != null) {
-                    best_rev = firmware.FirmwareReleaseAsInt;
-                    link = firmware.Path;
-                }
-            }
-            if (minrelease != 0) {
-                if (minrelease < best_rev) {
-                    return link;
+            try {
+                if (path.StartsWith("www.yoctopuce.com", StringComparison.Ordinal) ||
+                    path.StartsWith("http://www.yoctopuce.com", StringComparison.Ordinal)) {
+                    byte[] json =
+                        await YFirmwareUpdate._downloadfile(
+                            "http://www.yoctopuce.com//FR/common/getLastFirmwareLink.php?serial=" + serial);
+                    YJSONObject obj;
+                    obj = new YJSONObject(YAPI.DefaultEncoding.GetString(json));
+                    obj.parse();
+                    link = obj.getString("link");
+                    best_rev = obj.getInt("version");
                 } else {
-                    return "";
+                    YFirmwareFile firmware =
+                        await YFirmwareUpdate.checkFirmware_r(path, serial.Substring(0, YAPI.YOCTO_BASE_SERIAL_LEN));
+                    if (firmware != null) {
+                        best_rev = firmware.FirmwareReleaseAsInt;
+                        link = firmware.Path;
+                    }
                 }
+                if (minrelease != 0) {
+                    if (minrelease < best_rev) {
+                        return link;
+                    } else {
+                        return "";
+                    }
+                }
+                return link;
+            } catch (Exception ex) {
+                return "error:" + ex.Message;
             }
-            return link;
         }
 
         /// <summary>
@@ -506,6 +515,4 @@ public class YFirmwareUpdate
 #pragma warning restore 1998
     //--- (end of generated code: YFirmwareUpdate implementation)
     }
-
-
 }

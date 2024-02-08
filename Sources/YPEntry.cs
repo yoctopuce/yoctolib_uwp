@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YPEntry.cs 29015 2017-10-24 16:29:41Z seb $
+ * $Id: YPEntry.cs 56045 2023-08-14 15:51:05Z seb $
  *
  * Yellow page implementation
  *
@@ -36,24 +36,29 @@
  *  WARRANTY, OR OTHERWISE.
  *
  *********************************************************************/
+
 using System;
 using System.Collections.Generic;
 
-namespace com.yoctopuce.YoctoAPI {
-
-    internal class YPEntry {
-        internal sealed class BaseClass {
+namespace com.yoctopuce.YoctoAPI
+{
+    internal class YPEntry
+    {
+        internal sealed class BaseClass
+        {
             public static readonly BaseClass Function = new BaseClass("Function", InnerEnum.Function, 0);
             public static readonly BaseClass Sensor = new BaseClass("Sensor", InnerEnum.Sensor, 1);
 
             private static readonly IList<BaseClass> valueList = new List<BaseClass>();
 
-            static BaseClass() {
+            static BaseClass()
+            {
                 valueList.Add(Function);
                 valueList.Add(Sensor);
             }
 
-            public enum InnerEnum {
+            public enum InnerEnum
+            {
                 Function,
                 Sensor
             }
@@ -65,7 +70,8 @@ namespace com.yoctopuce.YoctoAPI {
 
             internal int _intval = 0;
 
-            internal BaseClass(string name, InnerEnum innerEnum, int intval) {
+            internal BaseClass(string name, InnerEnum innerEnum, int intval)
+            {
                 _intval = intval;
 
                 nameValue = name;
@@ -73,32 +79,37 @@ namespace com.yoctopuce.YoctoAPI {
                 innerEnumValue = innerEnum;
             }
 
-            public override string ToString() {
+            public override string ToString()
+            {
                 if (this == Sensor) {
                     return "Sensor";
-                }
-                else
+                } else
                     return "Function";
             }
 
-            public static BaseClass forByte(byte bval) {
+            public static BaseClass forByte(byte bval)
+            {
                 return values()[bval];
             }
 
 
-            public static IList<BaseClass> values() {
+            public static IList<BaseClass> values()
+            {
                 return valueList;
             }
 
-            public InnerEnum InnerEnumValue() {
+            public InnerEnum InnerEnumValue()
+            {
                 return innerEnumValue;
             }
 
-            public int ordinal() {
+            public int ordinal()
+            {
                 return ordinalValue;
             }
 
-            public static BaseClass valueOf(string name) {
+            public static BaseClass valueOf(string name)
+            {
                 foreach (BaseClass enumInstance in BaseClass.values()) {
                     if (enumInstance.nameValue == name) {
                         return enumInstance;
@@ -116,7 +127,8 @@ namespace com.yoctopuce.YoctoAPI {
         private int _index = -1;
         private readonly BaseClass _baseclass;
 
-        public YPEntry(YJSONObject json) {
+        public YPEntry(YJSONObject json)
+        {
             string hardwareId = json.getString("hardwareId");
             int pos = hardwareId.IndexOf('.');
             _serial = hardwareId.Substring(0, pos);
@@ -124,17 +136,20 @@ namespace com.yoctopuce.YoctoAPI {
             _classname = YAPIContext.imm_functionClass(_funcId);
             _logicalName = json.getString("logicalName");
             _advertisedValue = json.getString("advertisedValue");
-            _index = json.getInt("index");
-
+            try {
+                _index = json.getInt("index");
+            } catch (Exception) {
+                _index = 0;
+            }
             if (json.has("baseType")) {
                 _baseclass = BaseClass.values()[json.getInt("baseType")];
-            }
-            else {
+            } else {
                 _baseclass = BaseClass.Function;
             }
         }
 
-        public YPEntry(string serial, string functionID, BaseClass baseclass) {
+        public YPEntry(string serial, string functionID, BaseClass baseclass)
+        {
             _serial = serial;
             _funcId = functionID;
             _baseclass = baseclass;
@@ -142,7 +157,9 @@ namespace com.yoctopuce.YoctoAPI {
         }
 
         //called from Jni
-        public YPEntry(string classname, string serial, string funcId, string logicalName, string advertisedValue, int baseType, int funYdx) {
+        public YPEntry(string classname, string serial, string funcId, string logicalName, string advertisedValue,
+            int baseType, int funYdx)
+        {
             _serial = serial;
             _funcId = funcId;
             _logicalName = logicalName;
@@ -152,100 +169,86 @@ namespace com.yoctopuce.YoctoAPI {
             _classname = classname;
         }
 
-        public override string ToString() {
-            return "YPEntry{" + "_classname='" + _classname + '\'' + ", _serial='" + _serial + '\'' + ", _funcId='" + _funcId + '\'' + ", _logicalName='" + _logicalName + '\'' + ", _advertisedValue='" + _advertisedValue + '\'' + ", _index=" + _index + ", _baseclass=" + _baseclass + '}';
+        public override string ToString()
+        {
+            return "YPEntry{" + "_classname='" + _classname + '\'' + ", _serial='" + _serial + '\'' + ", _funcId='" +
+                   _funcId + '\'' + ", _logicalName='" + _logicalName + '\'' + ", _advertisedValue='" +
+                   _advertisedValue + '\'' + ", _index=" + _index + ", _baseclass=" + _baseclass + '}';
         }
 
-        public virtual string AdvertisedValue {
-            get {
-                return _advertisedValue;
-            }
-            set {
-                this._advertisedValue = value;
-            }
-        }
-
-
-        public virtual string HardwareId {
-            get {
-                return _serial + "." + _funcId;
-            }
-        }
-
-        public virtual string Serial {
-            get {
-                return _serial;
-            }
-        }
-
-        public virtual string FuncId {
-            get {
-                return _funcId;
-            }
-        }
-
-        public virtual int Index {
-            get {
-                return _index;
-            }
-            set {
-                _index = value;
-            }
+        public virtual string AdvertisedValue
+        {
+            get { return _advertisedValue; }
+            set { this._advertisedValue = value; }
         }
 
 
-        public virtual BaseClass getBaseClass() {
+        public virtual string HardwareId
+        {
+            get { return _serial + "." + _funcId; }
+        }
+
+        public virtual string Serial
+        {
+            get { return _serial; }
+        }
+
+        public virtual string FuncId
+        {
+            get { return _funcId; }
+        }
+
+        public virtual int Index
+        {
+            get { return _index; }
+            set { _index = value; }
+        }
+
+
+        public virtual BaseClass getBaseClass()
+        {
             return _baseclass;
         }
 
-        public virtual string BaseType {
-            get {
-                return _baseclass.ToString();
-            }
+        public virtual string BaseType
+        {
+            get { return _baseclass.ToString(); }
         }
 
-        public virtual string LogicalName {
-            get {
-                return _logicalName;
-            }
-            set {
-                this._logicalName = value;
-            }
+        public virtual string LogicalName
+        {
+            get { return _logicalName; }
+            set { this._logicalName = value; }
         }
 
 
-        public virtual string Classname {
-            get {
-                return _classname;
-            }
+        public virtual string Classname
+        {
+            get { return _classname; }
         }
 
         // Find the exact Hardware Id of the specified function, if currently connected
         // If device is not known as connected, return a clean error
         // This function will not cause any network access
-        public virtual string getFriendlyName(YAPIContext ctx) {
+        public virtual string getFriendlyName(YAPIContext ctx)
+        {
             if (_classname.Equals("Module")) {
                 if (_logicalName.Equals("")) {
                     return _serial + ".module";
-                }
-                else {
+                } else {
                     return _logicalName + ".module";
                 }
-            }
-            else {
+            } else {
                 YPEntry moduleYP = ctx._yHash.imm_resolveFunction("Module", _serial);
                 string module = moduleYP.getFriendlyName(ctx);
                 int pos = module.IndexOf(".", StringComparison.Ordinal);
                 module = module.Substring(0, pos);
                 if (_logicalName.Equals("")) {
                     return module + "." + _funcId;
-                }
-                else {
+                } else {
                     return module + "." + _logicalName;
                 }
             }
         }
-
     }
-
 }

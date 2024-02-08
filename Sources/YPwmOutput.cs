@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmOutput.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YPwmOutput.cs 58892 2024-01-11 11:11:28Z mvuilleu $
  *
  *  Implements FindPwmOutput(), the high-level API for PwmOutput functions
  *
@@ -100,6 +100,14 @@ public class YPwmOutput : YFunction
     public const  string PWMTRANSITION_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
+     *   invalid invertedOutput value
+     * </summary>
+     */
+    public const int INVERTEDOUTPUT_FALSE = 0;
+    public const int INVERTEDOUTPUT_TRUE = 1;
+    public const int INVERTEDOUTPUT_INVALID = -1;
+    /**
+     * <summary>
      *   invalid enabledAtPowerOn value
      * </summary>
      */
@@ -118,6 +126,7 @@ public class YPwmOutput : YFunction
     protected double _dutyCycle = DUTYCYCLE_INVALID;
     protected double _pulseDuration = PULSEDURATION_INVALID;
     protected string _pwmTransition = PWMTRANSITION_INVALID;
+    protected int _invertedOutput = INVERTEDOUTPUT_INVALID;
     protected int _enabledAtPowerOn = ENABLEDATPOWERON_INVALID;
     protected double _dutyCycleAtPowerOn = DUTYCYCLEATPOWERON_INVALID;
     protected ValueCallback _valueCallbackPwmOutput = null;
@@ -174,6 +183,9 @@ public class YPwmOutput : YFunction
         }
         if (json_val.has("pwmTransition")) {
             _pwmTransition = json_val.getString("pwmTransition");
+        }
+        if (json_val.has("invertedOutput")) {
+            _invertedOutput = json_val.getInt("invertedOutput") > 0 ? 1 : 0;
         }
         if (json_val.has("enabledAtPowerOn")) {
             _enabledAtPowerOn = json_val.getInt("enabledAtPowerOn") > 0 ? 1 : 0;
@@ -501,6 +513,66 @@ public class YPwmOutput : YFunction
         string rest_val;
         rest_val = newval;
         await _setAttr("pwmTransition",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns true if the output signal is configured as inverted, and false otherwise.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YPwmOutput.INVERTEDOUTPUT_FALSE</c> or <c>YPwmOutput.INVERTEDOUTPUT_TRUE</c>, according
+     *   to true if the output signal is configured as inverted, and false otherwise
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YPwmOutput.INVERTEDOUTPUT_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_invertedOutput()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return INVERTEDOUTPUT_INVALID;
+            }
+        }
+        res = _invertedOutput;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the inversion mode of the output signal.
+     * <para>
+     *   Remember to call the matching module <c>saveToFlash()</c> method if you want
+     *   the change to be kept after power cycle.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YPwmOutput.INVERTEDOUTPUT_FALSE</c> or <c>YPwmOutput.INVERTEDOUTPUT_TRUE</c>, according
+     *   to the inversion mode of the output signal
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_invertedOutput(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval > 0 ? "1" : "0");
+        await _setAttr("invertedOutput",rest_val);
         return YAPI.SUCCESS;
     }
 

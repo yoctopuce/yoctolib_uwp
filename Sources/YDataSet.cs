@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataSet.cs 54280 2023-04-28 10:11:44Z seb $
+ * $Id: YDataSet.cs 56045 2023-08-14 15:51:05Z seb $
  *
  * Implements yFindDataSet(), the high-level API for DataSet functions
  *
@@ -129,37 +129,40 @@ public class YDataSet
             YJSONArray jstreams;
             double streamStartTime;
             double streamEndTime;
-
-            json = new YJSONObject(json_str);
-            json.parse();
-            _functionId = json.getString("id");
-            _unit = json.getString("unit");
-            if (json.has("bulk")) {
-                _bulkLoad = YAPIContext.imm_atoi(json.getString("bulk"));
-            }
-            if (json.has("calib")) {
-                _calib = YAPIContext.imm_decodeFloats(json.getString("calib"));
-                _calib[0] = _calib[0] / 1000;
-            } else {
-                _calib = YAPIContext.imm_decodeWords(json.getString("cal"));
-            }
-            _streams = new List<YDataStream>();
-            _preview = new List<YMeasure>();
-            _measures = new List<YMeasure>();
-            jstreams = json.getYJSONArray("streams");
-            for (int i = 0; i < jstreams.Length; i++) {
-                YDataStream stream = _parent.imm_findDataStream(this, jstreams.getString(i));
-                // the timestamp in the data streams is the end of the measure, so the actual
-                // measurement start time is computed as one interval before the first timestamp
-                streamStartTime = await stream.get_realStartTimeUTC() * 1000;
-                streamEndTime = streamStartTime + await stream.get_realDuration() * 1000;
-                if (_startTimeMs > 0 && streamEndTime <= _startTimeMs) {
-                    // this stream is too early, drop it
-                } else if (_endTimeMs > 0 && streamStartTime >= _endTimeMs) {
-                    // this stream is too late, drop it
-                } else {
-                    _streams.Add(stream);
+            try {
+                json = new YJSONObject(json_str);
+                json.parse();
+                _functionId = json.getString("id");
+                _unit = json.getString("unit");
+                if (json.has("bulk")) {
+                    _bulkLoad = YAPIContext.imm_atoi(json.getString("bulk"));
                 }
+                if (json.has("calib")) {
+                    _calib = YAPIContext.imm_decodeFloats(json.getString("calib"));
+                    _calib[0] = _calib[0] / 1000;
+                } else {
+                    _calib = YAPIContext.imm_decodeWords(json.getString("cal"));
+                }
+                _streams = new List<YDataStream>();
+                _preview = new List<YMeasure>();
+                _measures = new List<YMeasure>();
+                jstreams = json.getYJSONArray("streams");
+                for (int i = 0; i < jstreams.Length; i++) {
+                    YDataStream stream = _parent.imm_findDataStream(this, jstreams.getString(i));
+                    // the timestamp in the data streams is the end of the measure, so the actual
+                    // measurement start time is computed as one interval before the first timestamp
+                    streamStartTime = await stream.get_realStartTimeUTC() * 1000;
+                    streamEndTime = streamStartTime + await stream.get_realDuration() * 1000;
+                    if (_startTimeMs > 0 && streamEndTime <= _startTimeMs) {
+                        // this stream is too early, drop it
+                    } else if (_endTimeMs > 0 && streamStartTime >= _endTimeMs) {
+                        // this stream is too late, drop it
+                    } else {
+                        _streams.Add(stream);
+                    }
+                }
+            } catch (Exception e) {
+                throw new YAPI_Exception(YAPI.IO_ERROR, "invalid json structure for YDataSet: " + e.Message);
             }
             _progress = 0;
             return await this.get_progress();

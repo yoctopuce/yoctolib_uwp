@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YHTTPHub.cs 54259 2023-04-28 08:06:26Z seb $
+ * $Id: YHTTPHub.cs 56045 2023-08-14 15:51:05Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -36,6 +36,7 @@
  *  WARRANTY, OR OTHERWISE.
  *
  *********************************************************************/
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,8 +47,6 @@ using Windows.Storage.Streams;
 
 namespace com.yoctopuce.YoctoAPI
 {
-
-
     internal class YHTTPHub : YGenericHub
     {
         public const int YIO_DEFAULT_TCP_TIMEOUT = 20000;
@@ -95,13 +94,14 @@ namespace com.yoctopuce.YoctoAPI
             _nounce_count = 0;
 
             string[] tags = header.Split(' ');
-            char[] delim = {
-                    '[',
-                    '=',
-                    '\"',
-                    ',',
-                    ']'
-                };
+            char[] delim =
+            {
+                '[',
+                '=',
+                '\"',
+                ',',
+                ']'
+            };
             foreach (string tag in tags) {
                 string[] parts = tag.Split(delim, StringSplitOptions.RemoveEmptyEntries);
                 string name, value;
@@ -206,24 +206,24 @@ namespace com.yoctopuce.YoctoAPI
 
         internal override void imm_release()
         {
-
         }
 
-        internal override string RootUrl {
+        internal override string RootUrl
+        {
             get { return _http_params.Url; }
         }
 
         internal override bool imm_isSameHub(string url, object request, object response, object session)
         {
             HTTPParams param = new HTTPParams(url);
-            bool url_equals = param.imm_getUrl(false, false,false).Equals(_http_params.imm_getUrl(false, false,false));
+            bool url_equals = param.imm_getUrl(false, false, false)
+                .Equals(_http_params.imm_getUrl(false, false, false));
             return url_equals;
         }
 
 
         internal override async Task updateDeviceListAsync(bool forceupdate)
         {
-
             ulong now = YAPI.GetTickCount();
             if (forceupdate) {
                 _devListExpires = 0;
@@ -255,38 +255,43 @@ namespace com.yoctopuce.YoctoAPI
             List<WPEntry> whitePages = new List<WPEntry>();
 
             YJSONObject loadval = new YJSONObject(json_data);
-            loadval.parse();
-            if (!loadval.has("services") || !loadval.getYJSONObject("services").has("whitePages")) {
-                throw new YAPI_Exception(YAPI.INVALID_ARGUMENT, "Device " + _http_params.Host + " is not a hub");
-            }
-            _serial = loadval.getYJSONObject("module").getString("serialNumber");
-            YJSONArray whitePages_json = loadval.getYJSONObject("services").getYJSONArray("whitePages");
-            YJSONObject yellowPages_json = loadval.getYJSONObject("services").getYJSONObject("yellowPages");
-            if (loadval.has("network")) {
-                string adminpass = loadval.getYJSONObject("network").getString("adminPassword");
-                _writeProtected = adminpass.Length > 0;
-            }
-            // Reindex all functions from yellow pages
-            //HashMap<String, Boolean> refresh = new HashMap<String, Boolean>();
-            List<string> keys = yellowPages_json.keys();
-            foreach (string classname in keys) {
-                YJSONArray yprecs_json = yellowPages_json.getYJSONArray(classname);
-                List<YPEntry> yprecs_arr = new List<YPEntry>(yprecs_json.Length);
-                for (int i = 0; i < yprecs_json.Length; i++) {
-                    YPEntry yprec = new YPEntry(yprecs_json.getYJSONObject(i));
-                    yprecs_arr.Add(yprec);
+            try {
+                loadval.parse();
+                if (!loadval.has("services") || !loadval.getYJSONObject("services").has("whitePages")) {
+                    throw new YAPI_Exception(YAPI.INVALID_ARGUMENT, "Device " + _http_params.Host + " is not a hub");
                 }
-                yellowPages[classname] = yprecs_arr;
-            }
+                _serial = loadval.getYJSONObject("module").getString("serialNumber");
+                YJSONArray whitePages_json = loadval.getYJSONObject("services").getYJSONArray("whitePages");
+                YJSONObject yellowPages_json = loadval.getYJSONObject("services").getYJSONObject("yellowPages");
+                if (loadval.has("network")) {
+                    string adminpass = loadval.getYJSONObject("network").getString("adminPassword");
+                    _writeProtected = adminpass.Length > 0;
+                }
+                // Reindex all functions from yellow pages
+                //HashMap<String, Boolean> refresh = new HashMap<String, Boolean>();
+                List<string> keys = yellowPages_json.keys();
+                foreach (string classname in keys) {
+                    YJSONArray yprecs_json = yellowPages_json.getYJSONArray(classname);
+                    List<YPEntry> yprecs_arr = new List<YPEntry>(yprecs_json.Length);
+                    for (int i = 0; i < yprecs_json.Length; i++) {
+                        YPEntry yprec = new YPEntry(yprecs_json.getYJSONObject(i));
+                        yprecs_arr.Add(yprec);
+                    }
+                    yellowPages[classname] = yprecs_arr;
+                }
 
-            _serialByYdx.Clear();
-            // Reindex all devices from white pages
-            for (int i = 0; i < whitePages_json.Length; i++) {
-                YJSONObject jsonObject = whitePages_json.getYJSONObject(i);
-                WPEntry devinfo = new WPEntry(jsonObject);
-                int index = jsonObject.getInt("index");
-                _serialByYdx[index] = devinfo.SerialNumber;
-                whitePages.Add(devinfo);
+                _serialByYdx.Clear();
+                // Reindex all devices from white pages
+                for (int i = 0; i < whitePages_json.Length; i++) {
+                    YJSONObject jsonObject = whitePages_json.getYJSONObject(i);
+                    WPEntry devinfo = new WPEntry(jsonObject);
+                    int index = jsonObject.getInt("index");
+                    _serialByYdx[index] = devinfo.SerialNumber;
+                    whitePages.Add(devinfo);
+                }
+            } catch (Exception) {
+                string lastErrorMessage = "Request failed, could not parse API result for " + this.Host;
+                throw new YAPI_Exception(YAPI.IO_ERROR, lastErrorMessage);
             }
             await updateFromWpAndYp(whitePages, yellowPages);
 
@@ -299,7 +304,8 @@ namespace com.yoctopuce.YoctoAPI
             }
         }
 
-        internal override async Task<List<string>> firmwareUpdate(string serial, YFirmwareFile firmware, byte[] settings,
+        internal override async Task<List<string>> firmwareUpdate(string serial, YFirmwareFile firmware,
+            byte[] settings,
             UpdateProgress progress)
         {
             bool use_self_flash = false;
@@ -316,7 +322,8 @@ namespace com.yoctopuce.YoctoAPI
                         _yctx._networkTimeoutMs);
                     baseurl = "/bySerial/" + serial;
                     use_self_flash = true;
-                } catch (YAPI_Exception) { }
+                } catch (YAPI_Exception) {
+                }
             }
             //5% -> 10%
             await progress(5, "Enter in bootloader");
@@ -339,10 +346,15 @@ namespace com.yoctopuce.YoctoAPI
                 _yctx._networkTimeoutMs);
             string uploadstate = YAPI.DefaultEncoding.GetString(bytes);
             YJSONObject uploadres = new YJSONObject(uploadstate);
-            uploadres.parse();
-            string state = uploadres.getYJSONString("state").getString();
-            if (state.Equals("uploading") || state.Equals("flashing")) {
-                throw new YAPI_Exception(YAPI.IO_ERROR, "Cannot start firmware update: busy (" + state + ")");
+            string state = "";
+            try {
+                uploadres.parse();
+                state = uploadres.getYJSONString("state").getString();
+                if (state.Equals("uploading") || state.Equals("flashing")) {
+                    throw new YAPI_Exception(YAPI.IO_ERROR, "Cannot start firmware update: busy (" + state + ")");
+                }
+            } catch (Exception ex) {
+                throw new YAPI_Exception(YAPI.IO_ERROR, "invalid json response :" + ex.Message);
             }
             // start firmware upload
             //10% -> 40%
@@ -354,23 +366,32 @@ namespace com.yoctopuce.YoctoAPI
                 YIO_10_MINUTES_TCP_TIMEOUT);
             string uploadresstr = YAPI.DefaultEncoding.GetString(bytes);
             uploadres = new YJSONObject(uploadresstr);
-            uploadres.parse();
-            state = uploadres.getString("state");
-            if (state != "valid") {
-                throw new YAPI_Exception(YAPI.IO_ERROR, "Upload of firmware failed: invalid firmware(" + state + ")");
-            }
-            if (uploadres.getInt("progress") != 100) {
-                throw new YAPI_Exception(YAPI.IO_ERROR, "Upload of firmware failed: incomplete upload");
+            try {
+                uploadres.parse();
+                state = uploadres.getString("state");
+                if (state != "valid") {
+                    throw new YAPI_Exception(YAPI.IO_ERROR,
+                        "Upload of firmware failed: invalid firmware(" + state + ")");
+                }
+                if (uploadres.getInt("progress") != 100) {
+                    throw new YAPI_Exception(YAPI.IO_ERROR, "Upload of firmware failed: incomplete upload");
+                }
+            } catch (Exception ex) {
+                throw new YAPI_Exception(YAPI.IO_ERROR, "invalid json response :" + ex.Message);
             }
             if (use_self_flash) {
                 byte[] startupConf;
                 string json = YAPI.DefaultEncoding.GetString(settings);
-                YJSONObject jsonObject = new YJSONObject(json);
-                jsonObject.parse();
-                YJSONObject settingsOnly = jsonObject.getYJSONObject("api");
-                settingsOnly.remove("services");
-                string startupConfStr = settingsOnly.ToString();
-                startupConf = YAPI.DefaultEncoding.GetBytes(startupConfStr);
+                try {
+                    YJSONObject jsonObject = new YJSONObject(json);
+                    jsonObject.parse();
+                    YJSONObject settingsOnly = jsonObject.getYJSONObject("api");
+                    settingsOnly.remove("services");
+                    string startupConfStr = settingsOnly.ToString();
+                    startupConf = YAPI.DefaultEncoding.GetBytes(startupConfStr);
+                } catch (Exception) {
+                    startupConf = new byte[0];
+                }
                 await progress(20, "Upload startupConf.json");
                 head_body = YDevice.imm_formatHTTPUpload("startupConf.json", startupConf);
                 await _notificationHandler.hubRequestSync("POST " + baseurl + "/upload.html", head_body,
@@ -386,7 +407,8 @@ namespace com.yoctopuce.YoctoAPI
                 await progress(40, "Flash firmware");
                 // the hub itself -> reboot in autoflash mode
                 await _notificationHandler.hubRequestSync(
-                    "GET " + baseurl + "/api/module/rebootCountdown?rebootCountdown=-1003", null, YIO_DEFAULT_TCP_TIMEOUT);
+                    "GET " + baseurl + "/api/module/rebootCountdown?rebootCountdown=-1003", null,
+                    YIO_DEFAULT_TCP_TIMEOUT);
                 await Task.Delay(TimeSpan.FromSeconds(7));
             } else {
                 // reboot device to bootloader if needed
@@ -419,15 +441,18 @@ namespace com.yoctopuce.YoctoAPI
                 res = await _notificationHandler.hubRequestSync("GET /flash.json?a=flash&s=" + serial, null,
                     YIO_10_MINUTES_TCP_TIMEOUT);
                 string jsonstr = YAPI.DefaultEncoding.GetString(res);
-                YJSONObject flashres = new YJSONObject(jsonstr);
-                flashres.parse();
-                YJSONArray logslist = flashres.getYJSONArray("logs");
-                List<string> logs = new List<string>(logslist.Length);
-                for (int i = 0; i < logslist.Length; i++) {
-                    logs.Add(logslist.getString(i));
+                try {
+                    YJSONObject flashres = new YJSONObject(jsonstr);
+                    flashres.parse();
+                    YJSONArray logslist = flashres.getYJSONArray("logs");
+                    List<string> logs = new List<string>(logslist.Length);
+                    for (int i = 0; i < logslist.Length; i++) {
+                        logs.Add(logslist.getString(i));
+                    }
+                    return logs;
+                } catch (Exception) {
+                    throw new YAPI_Exception(YAPI.IO_ERROR, "invalid response");
                 }
-                return logs;
-
             }
 
             return null;
@@ -447,7 +472,8 @@ namespace com.yoctopuce.YoctoAPI
                 asyncContext);
         }
 
-        internal override async Task<byte[]> devRequestSync(YDevice device, string req_first_line, byte[] req_head_and_body,
+        internal override async Task<byte[]> devRequestSync(YDevice device, string req_first_line,
+            byte[] req_head_and_body,
             RequestProgress progress, object context)
         {
             if (!_notificationHandler.Connected) {
@@ -456,8 +482,10 @@ namespace com.yoctopuce.YoctoAPI
             // Setup timeout counter
             uint tcpTimeout = YIO_DEFAULT_TCP_TIMEOUT;
             if (req_first_line.Contains("/testcb.txt") || req_first_line.Contains("/logger.json")
-                || req_first_line.Contains("/rxmsg.json") || req_first_line.Contains("/rxdata.bin")
-                || req_first_line.Contains("/at.txt") || req_first_line.Contains("/files.json")) {
+                                                       || req_first_line.Contains("/rxmsg.json") ||
+                                                       req_first_line.Contains("/rxdata.bin")
+                                                       || req_first_line.Contains("/at.txt") ||
+                                                       req_first_line.Contains("/files.json")) {
                 tcpTimeout = YIO_1_MINUTE_TCP_TIMEOUT;
             } else if (req_first_line.Contains("/flash.json") || req_first_line.Contains("/upload.html")) {
                 tcpTimeout = YIO_10_MINUTES_TCP_TIMEOUT;
@@ -481,39 +509,41 @@ namespace com.yoctopuce.YoctoAPI
             return _notificationHandler.Connected;
         }
 
-        internal virtual string Host {
+        internal virtual string Host
+        {
             get { return _http_params.Host; }
         }
 
-        internal virtual int Port {
+        internal virtual int Port
+        {
             get { return _http_params.Port; }
         }
 
         public override async Task<List<string>> getBootloaders()
         {
             List<string> res = new List<string>();
-            byte[] raw_data = await _notificationHandler.hubRequestSync("GET /flash.json?a=list", null, _yctx._networkTimeoutMs);
+            byte[] raw_data =
+                await _notificationHandler.hubRequestSync("GET /flash.json?a=list", null, _yctx._networkTimeoutMs);
             string jsonstr = YAPI.DefaultEncoding.GetString(raw_data);
-            YJSONObject flashres = new YJSONObject(jsonstr);
-            flashres.parse();
-            YJSONArray list = flashres.getYJSONArray("list");
-            for (int i = 0; i < list.Length; i++) {
-                res.Add(list.getString(i));
+            try {
+                YJSONObject flashres = new YJSONObject(jsonstr);
+                flashres.parse();
+                YJSONArray list = flashres.getYJSONArray("list");
+                for (int i = 0; i < list.Length; i++) {
+                    res.Add(list.getString(i));
+                }
+            } catch (Exception) {
+                throw new YAPI_Exception(YAPI.IO_ERROR, "Unable to retrieve bootloader list");
             }
             return res;
-
         }
 
         internal override async Task<int> ping(uint mstimeout)
         {
-
             await startNotifications();
             await _notificationHandler.hubRequestSync("GET /api/module/firmwareRelease.json", null, mstimeout);
             await stopNotifications();
             return YAPI.SUCCESS;
         }
-
-
     }
-
 }

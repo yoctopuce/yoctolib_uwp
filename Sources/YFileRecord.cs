@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFileRecord.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YFileRecord.cs 56045 2023-08-14 15:51:05Z seb $
  *
  * Implements FindFileRecord(), the high-level API for FileRecord functions
  *
@@ -37,6 +37,7 @@
  *
  *********************************************************************/
 
+using System;
 using System.Threading.Tasks;
 
 namespace com.yoctopuce.YoctoAPI
@@ -70,12 +71,16 @@ public class YFileRecord
 
         public YFileRecord(string json_str)
         {
-            YJSONObject json;
-            json = new YJSONObject(json_str);
-            json.parse();
-            _name = json.getString("name");
-            _crc = json.getInt("crc");
-            _size = json.getInt("size");
+            try {
+                YJSONObject json;
+                json = new YJSONObject(json_str);
+                json.parse();
+                _name = json.getString("name");
+                _crc = json.getInt("crc");
+                _size = json.getInt("size");
+            } catch (Exception) {
+                throw new YAPI_Exception(YAPI.IO_ERROR, "invalid json struct for YFileRecord");
+            }
         }
 
         //--- (generated code: YFileRecord implementation)

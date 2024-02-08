@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 53689 2023-03-22 11:17:15Z mvuilleu $
+ * $Id: YFunction.cs 56045 2023-08-14 15:51:05Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -121,10 +121,12 @@ public class YFunction
         }
 
         protected internal YFunction(YAPIContext yctx, string func) : this(yctx, func, "Function")
-        { }
+        {
+        }
 
         public YFunction(string func) : this(YAPI.imm_GetYCtx(), func, "Function")
-        { }
+        {
+        }
 
         public int _throw(int errType, string errMsg)
         {
@@ -174,7 +176,6 @@ public class YFunction
                 return true;
             }
         }
-
 
 
         //--- (generated code: YFunction implementation)
@@ -643,7 +644,8 @@ public class YFunction
             try {
                 string hwid = _yapi._yHash.imm_resolveHwID(_className, _func);
                 return _className + "(" + _func + ")=" + hwid;
-            } catch (YAPI_Exception) { }
+            } catch (YAPI_Exception) {
+            }
             return _className + "(" + _func + ")=unresolved";
         }
 
@@ -713,7 +715,11 @@ public class YFunction
         internal virtual async void _parse(YJSONObject json, ulong msValidity)
         {
             _cacheExpiration = YAPI.GetTickCount() + msValidity;
-            imm_parseAttr(json);
+            try {
+                imm_parseAttr(json);
+            } catch (Exception e) {
+                _throw(YAPI.IO_ERROR, e.Message);
+            }
             await _parserHelper();
         }
 
@@ -733,7 +739,6 @@ public class YFunction
             string extra = "/" + attrname + "?" + attrname + "=" + YAPIContext.imm_escapeAttr(newval) + "&.";
             await _devRequest(extra);
             if (_cacheExpiration != 0) {
-
                 _cacheExpiration = YAPI.GetTickCount();
             }
             return YAPI.SUCCESS;
@@ -787,20 +792,33 @@ public class YFunction
         protected internal virtual string imm_json_get_string(byte[] json)
         {
             string s = YAPI.DefaultEncoding.GetString(json);
-            YJSONString jstring = new YJSONString(s, 0, s.Length);
-            jstring.parse();
-            return jstring.getString();
+            try {
+                YJSONString jstring = new YJSONString(s, 0, s.Length);
+                jstring.parse();
+                return jstring.getString();
+            } catch (Exception e) {
+                _throw(YAPI.IO_ERROR, e.Message);
+                return "";
+            }
         }
 
         protected internal virtual List<string> imm_json_get_array(byte[] json)
         {
             YJSONArray array = new YJSONArray(YAPI.DefaultEncoding.GetString(json));
-            array.parse();
+            try {
+                array.parse();
+            } catch (Exception e) {
+                _throw(YAPI.IO_ERROR, e.Message);
+            }
             List<string> list = new List<string>();
             int len = array.Length;
             for (int i = 0; i < len; i++) {
-                YJSONContent o = array.get(i);
-                list.Add(o.toJSON());
+                try {
+                    YJSONContent o = array.get(i);
+                    list.Add(o.toJSON());
+                } catch (Exception e) {
+                    _throw(YAPI.IO_ERROR, e.Message);
+                }
             }
             return list;
         }
@@ -854,9 +872,13 @@ public class YFunction
         protected internal virtual string imm_get_json_path(string json, string path)
         {
             YJSONObject jsonObject = null;
-            jsonObject = new YJSONObject(json);
-            jsonObject.parse();
-            string[] split = path.Split(new char[] {'\\', '|'});
+            try {
+                jsonObject = new YJSONObject(json);
+                jsonObject.parse();
+            } catch (Exception) {
+                return "";
+            }
+            string[] split = path.Split(new char[] { '\\', '|' });
             return imm_get_json_path_struct(jsonObject, split, 0);
         }
 
@@ -865,9 +887,13 @@ public class YFunction
             if (json.Length == 0) {
                 return "";
             }
-            YJSONString ystr = new YJSONString(json, 0, json.Length);
-            ystr.parse();
-            return ystr.getString();
+            try {
+                YJSONString ystr = new YJSONString(json, 0, json.Length);
+                ystr.parse();
+                return ystr.getString();
+            } catch (Exception) {
+                return "";
+            }
         }
 
         // Load and parse the REST API for a function given by class name and
@@ -878,7 +904,7 @@ public class YFunction
         {
             YDevice dev = await getYDevice();
             _hwId = _yapi._yHash.imm_resolveHwID(_className, _func);
-            string[] split = _hwId.Split(new char[] {'\\', '.'});
+            string[] split = _hwId.Split(new char[] { '\\', '.' });
             _funId = split[1];
             _serial = split[0];
             YJSONObject loadval = null;
@@ -886,7 +912,12 @@ public class YFunction
                 // use a cached API string, without reloading unless module is
                 // requested
                 YJSONObject jsonval = await dev.requestAPI();
-                loadval = jsonval.getYJSONObject(_funId);
+                try {
+                    loadval = jsonval.getYJSONObject(_funId);
+                } catch (Exception) {
+                    throw new YAPI_Exception(YAPI.IO_ERROR,
+                        "Request failed, could not parse API result for " + dev);
+                }
             } else {
                 dev.imm_clearCache();
             }
@@ -895,8 +926,13 @@ public class YFunction
                 if (extra.Equals("")) {
                     string httpreq = "GET /api/" + _funId + ".json";
                     string yreq = await dev.requestHTTPSyncAsString(httpreq, null);
-                    loadval = new YJSONObject(yreq);
-                    loadval.parse();
+                    try {
+                        loadval = new YJSONObject(yreq);
+                        loadval.parse();
+                    } catch (Exception) {
+                        throw new YAPI_Exception(YAPI.IO_ERROR, "Request failed, could not parse API value for "
+                                                                + httpreq);
+                    }
                 } else {
                     string httpreq = "GET /api/" + _funId + extra;
                     await dev.requestHTTPAsync(httpreq, null, null, null);
@@ -976,9 +1012,9 @@ public class YFunction
             return _lastErrorType;
         }
 
-        
 
-        public virtual int ErrorType {
+        public virtual int ErrorType
+        {
             get { return _lastErrorType; }
         }
 
@@ -1004,7 +1040,8 @@ public class YFunction
             return _lastErrorMsg;
         }
 
-        public virtual string ErrorMessage {
+        public virtual string ErrorMessage
+        {
             get { return _lastErrorMsg; }
         }
 
@@ -1030,7 +1067,8 @@ public class YFunction
             try {
                 YDevice dev = await getYDevice();
                 dev.imm_clearCache();
-            } catch (YAPI_Exception) { }
+            } catch (YAPI_Exception) {
+            }
             if (_cacheExpiration != 0) {
                 _cacheExpiration = YAPI.GetTickCount();
             }
@@ -1075,14 +1113,16 @@ public class YFunction
                 try {
                     string serial = _yapi._yHash.imm_resolveSerial(_className, _func);
                     return YModule.FindModuleInContext(_yapi, serial + ".module");
-                } catch (YAPI_Exception) { }
+                } catch (YAPI_Exception) {
+                }
             }
 
             if (ofs >= 0) {
                 try {
                     string serial = _func.Substring(0, ofs);
                     return YModule.FindModuleInContext(_yapi, serial + ".module");
-                } catch (YAPI_Exception) { }
+                } catch (YAPI_Exception) {
+                }
             }
 
             try {
@@ -1091,7 +1131,8 @@ public class YFunction
                     string serial = _yapi._yHash.imm_resolveSerial(_className, _func);
                     return YModule.FindModuleInContext(_yapi, serial + ".module");
                 }
-            } catch (YAPI_Exception) { }
+            } catch (YAPI_Exception) {
+            }
             // return a true yFindModule object even if it is not a module valid for communicating
             return YModule.FindModuleInContext(_yapi, "module_of_" + _className + "_" + _func);
         }

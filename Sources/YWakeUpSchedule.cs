@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpSchedule.cs 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: YWakeUpSchedule.cs 56230 2023-08-21 15:20:59Z mvuilleu $
  *
  *  Implements FindWakeUpSchedule(), the high-level API for WakeUpSchedule functions
  *
@@ -99,6 +99,12 @@ public class YWakeUpSchedule : YFunction
     public const  int MONTHS_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
+     *   invalid secondsBefore value
+     * </summary>
+     */
+    public const  int SECONDSBEFORE_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
      *   invalid nextOccurence value
      * </summary>
      */
@@ -109,6 +115,7 @@ public class YWakeUpSchedule : YFunction
     protected int _weekDays = WEEKDAYS_INVALID;
     protected int _monthDays = MONTHDAYS_INVALID;
     protected int _months = MONTHS_INVALID;
+    protected int _secondsBefore = SECONDSBEFORE_INVALID;
     protected long _nextOccurence = NEXTOCCURENCE_INVALID;
     protected ValueCallback _valueCallbackWakeUpSchedule = null;
 
@@ -164,6 +171,9 @@ public class YWakeUpSchedule : YFunction
         }
         if (json_val.has("months")) {
             _months = json_val.getInt("months");
+        }
+        if (json_val.has("secondsBefore")) {
+            _secondsBefore = json_val.getInt("secondsBefore");
         }
         if (json_val.has("nextOccurence")) {
             _nextOccurence = json_val.getLong("nextOccurence");
@@ -516,6 +526,68 @@ public class YWakeUpSchedule : YFunction
         string rest_val;
         rest_val = (newval).ToString();
         await _setAttr("months",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the number of seconds to anticipate wake-up time to allow
+     *   the system to power-up.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the number of seconds to anticipate wake-up time to allow
+     *   the system to power-up
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YWakeUpSchedule.SECONDSBEFORE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_secondsBefore()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return SECONDSBEFORE_INVALID;
+            }
+        }
+        res = _secondsBefore;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the number of seconds to anticipate wake-up time to allow
+     *   the system to power-up.
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the
+     *   modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   an integer corresponding to the number of seconds to anticipate wake-up time to allow
+     *   the system to power-up
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_secondsBefore(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval).ToString();
+        await _setAttr("secondsBefore",rest_val);
         return YAPI.SUCCESS;
     }
 

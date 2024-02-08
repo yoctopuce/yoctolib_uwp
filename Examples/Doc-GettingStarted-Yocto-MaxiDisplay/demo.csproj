@@ -111,6 +111,9 @@
     <Compile Include="..\..\Sources\YFiles.cs">
       <Link>yoctolib\YFiles.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YQuadratureDecoder.cs">
+      <Link>yoctolib\YQuadratureDecoder.cs</Link>
+    </Compile>
 
 
     <Compile Include="..\..\Sources\TCPNotificationHandler.cs">

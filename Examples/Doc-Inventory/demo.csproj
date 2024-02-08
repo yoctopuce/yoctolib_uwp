@@ -279,6 +279,27 @@
     <Compile Include="..\..\Sources\YRelay.cs">
       <Link>yoctolib\YRelay.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YRfidTagInfo.cs">
+      <Link>yoctolib\YRfidTagInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YRfidOptions.cs">
+      <Link>yoctolib\YRfidOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YRfidStatus.cs">
+      <Link>yoctolib\YRfidStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YRfidReader.cs">
+      <Link>yoctolib\YRfidReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSdi12SnoopingRecord.cs">
+      <Link>yoctolib\YSdi12SnoopingRecord.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSdi12Sensor.cs">
+      <Link>yoctolib\YSdi12Sensor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSdi12Port.cs">
+      <Link>yoctolib\YSdi12Port.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YSegmentedDisplay.cs">
       <Link>yoctolib\YSegmentedDisplay.cs</Link>
     </Compile>
@@ -302,6 +323,9 @@
     </Compile>
     <Compile Include="..\..\Sources\YTemperature.cs">
       <Link>yoctolib\YTemperature.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YThreshold.cs">
+      <Link>yoctolib\YThreshold.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YTilt.cs">
       <Link>yoctolib\YTilt.cs</Link>

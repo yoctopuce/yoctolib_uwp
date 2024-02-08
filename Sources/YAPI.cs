@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 54259 2023-04-28 08:06:26Z seb $
+ * $Id: YAPI.cs 56115 2023-08-16 09:40:13Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "54852";
+        public const string YOCTO_API_BUILD_STR = "59271";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -91,6 +91,9 @@ public class YAPI
         public const int RTC_NOT_READY = -13;           // real-time clock has not been initialized (or time was lost)
         public const int FILE_NOT_FOUND = -14;          // the file is not found
         public const int SSL_ERROR = -15;               // Error reported by mbedSSL
+        public const int RFID_SOFT_ERROR = -16;         // Recoverable error with RFID tag (eg. tag out of reach), check YRfidStatus for details
+        public const int RFID_HARD_ERROR = -17;         // Serious RFID error (eg. write-protected, out-of-boundary), check YRfidStatus for details
+        public const int BUFFER_TOO_SMALL = -18;        // The buffer provided is too small
 
 //--- (end of generated code: YFunction return codes)
         internal static Encoding DefaultEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
@@ -324,7 +327,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".54852" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".59271" + YUSBHub.imm_getAPIVersion();
         }
 
         /**

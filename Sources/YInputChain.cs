@@ -153,7 +153,7 @@ public class YInputChain : YFunction
     protected int _watchdogPeriod = WATCHDOGPERIOD_INVALID;
     protected int _chainDiags = CHAINDIAGS_INVALID;
     protected ValueCallback _valueCallbackInputChain = null;
-    protected YEventCallback _eventCallback;
+    protected YStateChangeCallback _stateChangeCallback;
     protected int _prevPos = 0;
     protected int _eventPos = 0;
     protected int _eventStamp = 0;
@@ -161,7 +161,7 @@ public class YInputChain : YFunction
 
     public new delegate Task ValueCallback(YInputChain func, string value);
     public new delegate Task TimedReportCallback(YInputChain func, YMeasure measure);
-    public delegate Task YEventCallback(YInputChain obj, int timestamp, string eventType, string eventData, string eventChange);
+    public delegate Task YStateChangeCallback(YInputChain obj, int timestamp, string eventType, string eventData, string eventChange);
 
     protected static async Task yInternalEventCallback(YInputChain obj, String value)
     {
@@ -1008,7 +1008,7 @@ public class YInputChain : YFunction
      *   On failure, throws an exception or returns a negative error code.
      * </param>
      */
-    public virtual async Task<int> registerEventCallback(YEventCallback callback)
+    public virtual async Task<int> registerStateChangeCallback(YStateChangeCallback callback)
     {
         if (callback != null) {
             await this.registerValueCallback(yInternalEventCallback);
@@ -1017,7 +1017,7 @@ public class YInputChain : YFunction
         }
         // register user callback AFTER the internal pseudo-event,
         // to make sure we start with future events only
-        _eventCallback = callback;
+        _stateChangeCallback = callback;
         return 0;
     }
 
@@ -1049,7 +1049,7 @@ public class YInputChain : YFunction
         if (newPos < _eventPos) {
             return YAPI.SUCCESS;
         }
-        if (!(_eventCallback != null)) {
+        if (!(_stateChangeCallback != null)) {
             // first simulated event, use it to initialize reference values
             _eventPos = newPos;
             _eventChains.Clear();
@@ -1098,7 +1098,7 @@ public class YInputChain : YFunction
                             _eventChains[chainIdx] = evtData;
                         }
                     }
-                    await _eventCallback(this, evtStamp, evtType, evtData, evtChange);
+                    await _stateChangeCallback(this, evtStamp, evtType, evtData, evtChange);
                 }
             }
             arrPos = arrPos + 1;

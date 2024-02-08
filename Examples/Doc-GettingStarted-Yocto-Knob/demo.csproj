@@ -99,6 +99,9 @@
     <Compile Include="..\..\Sources\YAnButton.cs">
       <Link>yoctolib\YAnButton.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YQuadratureDecoder.cs">
+      <Link>yoctolib\YQuadratureDecoder.cs</Link>
+    </Compile>
 
 
     <Compile Include="..\..\Sources\TCPNotificationHandler.cs">

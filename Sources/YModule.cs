@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 54280 2023-04-28 10:11:44Z seb $
+ * $Id: YModule.cs 56045 2023-08-14 15:51:05Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -291,7 +291,11 @@ public class YModule : YFunction
             YJSONArray jsonout = new YJSONArray();
             string accutalSettingsStr = YAPI.DefaultEncoding.GetString(actualSettings);
             YJSONObject json = new YJSONObject(accutalSettingsStr);
-            json.parse();
+            try {
+                json.parse();
+            } catch (Exception e) {
+                throw new YAPI_Exception(YAPI.IO_ERROR, e.Message);
+            }
             List<string> functionList = json.keys();
             foreach (string fun_key in functionList) {
                 if (!fun_key.Equals("services")) {

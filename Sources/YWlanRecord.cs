@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YWlanRecord.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YWlanRecord.cs 56045 2023-08-14 15:51:05Z seb $
  *
  * Implements FindWlanRecord(), the high-level API for WlanRecord functions
  *
@@ -42,7 +42,6 @@ using System.Threading.Tasks;
 
 namespace com.yoctopuce.YoctoAPI
 {
-
     //--- (generated code: YWlanRecord return codes)
 //--- (end of generated code: YWlanRecord return codes)
     //--- (generated code: YWlanRecord class start)
@@ -70,17 +69,21 @@ public class YWlanRecord
 
     //--- (end of generated code: YWlanRecord definitions)
 
-    internal YWlanRecord(string json_str)
-    {
-        YJSONObject json = new YJSONObject(json_str);
-        json.parse();
-        _ssid = json.getString("ssid");
-        _channel = json.getInt("channel");
-        _sec = json.getString("sec");
-        _rssi = json.getInt("rssi");
-    }
+        internal YWlanRecord(string json_str)
+        {
+            try {
+                YJSONObject json = new YJSONObject(json_str);
+                json.parse();
+                _ssid = json.getString("ssid");
+                _channel = json.getInt("channel");
+                _sec = json.getString("sec");
+                _rssi = json.getInt("rssi");
+            } catch (Exception) {
+                throw new YAPI_Exception(YAPI.IO_ERROR, "invalid json struct for YWlanRecord");
+            }
+        }
 
-    //--- (generated code: YWlanRecord implementation)
+        //--- (generated code: YWlanRecord implementation)
 #pragma warning disable 1998
 
     /**
@@ -204,5 +207,4 @@ public class YWlanRecord
 #pragma warning restore 1998
     //--- (end of generated code: YWlanRecord implementation)
     }
-
 }

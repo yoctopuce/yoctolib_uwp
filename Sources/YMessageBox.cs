@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMessageBox.cs 50144 2022-06-17 06:59:52Z seb $
+ * $Id: YMessageBox.cs 55576 2023-07-25 06:26:34Z mvuilleu $
  *
  * Implements FindMessageBox(), the high-level API for MessageBox functions
  *
@@ -92,6 +92,12 @@ public class YMessageBox : YFunction
     public const  int PDURECEIVED_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
+     *   invalid obey value
+     * </summary>
+     */
+    public const  string OBEY_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
      *   invalid command value
      * </summary>
      */
@@ -101,6 +107,7 @@ public class YMessageBox : YFunction
     protected string _slotsBitmap = SLOTSBITMAP_INVALID;
     protected int _pduSent = PDUSENT_INVALID;
     protected int _pduReceived = PDURECEIVED_INVALID;
+    protected string _obey = OBEY_INVALID;
     protected string _command = COMMAND_INVALID;
     protected ValueCallback _valueCallbackMessageBox = null;
     protected int _nextMsgRef = 0;
@@ -161,6 +168,9 @@ public class YMessageBox : YFunction
         }
         if (json_val.has("pduReceived")) {
             _pduReceived = json_val.getInt("pduReceived");
+        }
+        if (json_val.has("obey")) {
+            _obey = json_val.getString("obey");
         }
         if (json_val.has("command")) {
             _command = json_val.getString("command");
@@ -351,6 +361,77 @@ public class YMessageBox : YFunction
         string rest_val;
         rest_val = (newval).ToString();
         await _setAttr("pduReceived",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the phone number authorized to send remote management commands.
+     * <para>
+     *   When a phone number is specified, the hub will take contre of all incoming
+     *   SMS messages: it will execute commands coming from the authorized number,
+     *   and delete all messages once received (whether authorized or not).
+     *   If you need to receive SMS messages using your own software, leave this
+     *   attribute empty.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string corresponding to the phone number authorized to send remote management commands
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YMessageBox.OBEY_INVALID</c>.
+     * </para>
+     */
+    public async Task<string> get_obey()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return OBEY_INVALID;
+            }
+        }
+        res = _obey;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the phone number authorized to send remote management commands.
+     * <para>
+     *   The phone number usually starts with a '+' and does not include spacers.
+     *   When a phone number is specified, the hub will take contre of all incoming
+     *   SMS messages: it will execute commands coming from the authorized number,
+     *   and delete all messages once received (whether authorized or not).
+     *   If you need to receive SMS messages using your own software, leave this
+     *   attribute empty. Remember to call the <c>saveToFlash()</c> method of the
+     *   module if the modification must be kept.
+     * </para>
+     * <para>
+     *   This feature is only available since YoctoHub-GSM-4G.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a string corresponding to the phone number authorized to send remote management commands
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_obey(string  newval)
+    {
+        string rest_val;
+        rest_val = newval;
+        await _setAttr("obey",rest_val);
         return YAPI.SUCCESS;
     }
 

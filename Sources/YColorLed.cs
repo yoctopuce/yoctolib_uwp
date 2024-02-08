@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YColorLed.cs 41109 2020-06-29 12:40:42Z seb $
+ *  $Id: YColorLed.cs 55978 2023-08-11 07:56:43Z seb $
  *
  *  Implements FindColorLed(), the high-level API for ColorLed functions
  *
@@ -307,7 +307,7 @@ public class YColorLed : YFunction
 
     /**
      * <summary>
-     *   Changes the current color of the LED, using a color HSL.
+     *   Changes the current color of the LED, using a specific HSL color.
      * <para>
      *   Encoding is done as follows: 0xHHSSLL.
      * </para>
@@ -315,7 +315,7 @@ public class YColorLed : YFunction
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the current color of the LED, using a color HSL
+     *   an integer corresponding to the current color of the LED, using a specific HSL color
      * </param>
      * <para>
      * </para>
@@ -564,7 +564,7 @@ public class YColorLed : YFunction
 
     /**
      * <summary>
-     *   Return the blinking sequence signature.
+     *   Returns the blinking sequence signature.
      * <para>
      *   Since blinking
      *   sequences cannot be read from the device, this can be used
@@ -575,7 +575,7 @@ public class YColorLed : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   an integer
+     *   an integer corresponding to the blinking sequence signature
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorLed.BLINKSEQSIGNATURE_INVALID</c>.

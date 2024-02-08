@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSnoopingRecord.cs 41171 2020-07-02 17:49:00Z mvuilleu $
+ * $Id: YSnoopingRecord.cs 58914 2024-01-12 09:29:29Z seb $
  *
  * - - - - - - - - - License information: - - - - - - - - -
  *
@@ -60,22 +60,34 @@ public class YSnoopingRecord
 //--- (end of generated code: YSnoopingRecord class start)
 //--- (generated code: YSnoopingRecord definitions)
     protected int _tim = 0;
+    protected int _pos = 0;
     protected int _dir = 0;
     protected string _msg;
 
     //--- (end of generated code: YSnoopingRecord definitions)
 
-    internal YSnoopingRecord(string json_str)
-    {
-        YJSONObject json = new YJSONObject(json_str);
-        json.parse();
-        _tim = json.getInt("t");
-        string m = json.getString("m");
-        _dir = (m[0] == '<' ? 1 : 0);
-        _msg = m.Substring(1);
-    }
+        internal YSnoopingRecord(string json_str)
+        {
+            try {
+                YJSONObject json = new YJSONObject(json_str);
+                json.parse();
+                if (json.has("t")) {
+                    _tim = json.getInt("t");
+                }
+                if (json.has("p")) {
+                    _pos = json.getInt("p");
+                }
+                if (json.has("m")) {
+                    string m = json.getString("m");
+                    _dir = (m[0] == '<' ? 1 : 0);
+                    _msg = m.Substring(1);
+                }
+            } catch (Exception) {
+                throw new YAPI_Exception(YAPI.IO_ERROR, "invalid json struct for YSnoopingRecord");
+            }
+        }
 
-    //--- (generated code: YSnoopingRecord implementation)
+        //--- (generated code: YSnoopingRecord implementation)
 #pragma warning disable 1998
 
     /**
@@ -105,6 +117,35 @@ public class YSnoopingRecord
     public virtual int imm_get_time()
     {
         return _tim;
+    }
+
+    /**
+     * <summary>
+     *   Returns the absolute position of the message end.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the absolute position of the message end.
+     * </returns>
+     */
+    public virtual async Task<int> get_pos()
+    {
+        return imm_get_pos();
+    }
+    /**
+     * <summary>
+     *   Returns the absolute position of the message end.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the absolute position of the message end.
+     * </returns>
+     */
+    public virtual int imm_get_pos()
+    {
+        return _pos;
     }
 
     /**
@@ -168,5 +209,4 @@ public class YSnoopingRecord
 #pragma warning restore 1998
     //--- (end of generated code: YSnoopingRecord implementation)
     }
-
 }

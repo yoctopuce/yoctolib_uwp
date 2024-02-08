@@ -147,6 +147,9 @@ public class YInputCaptureData
         int ms;
         int recSize;
         int count;
+        int mult1;
+        int mult2;
+        int mult3;
         double v;
 
         buffSize = (sdata).Length;
@@ -197,11 +200,31 @@ public class YInputCaptureData
                 recOfs = recOfs + 1;
             }
         }
+        if (((recOfs) & (1)) == 1) {
+            // align to next word
+            recOfs = recOfs + 1;
+        }
+        mult1 = 1;
+        mult2 = 1;
+        mult3 = 1;
+        if (recOfs < _recOfs) {
+            // load optional value multiplier
+            mult1 = this.imm_decodeU16(sdata, _recOfs);
+            recOfs = recOfs + 2;
+            if (_var2size > 0) {
+                mult2 = this.imm_decodeU16(sdata, _recOfs);
+                recOfs = recOfs + 2;
+            }
+            if (_var3size > 0) {
+                mult3 = this.imm_decodeU16(sdata, _recOfs);
+                recOfs = recOfs + 2;
+            }
+        }
         recOfs = _recOfs;
         count = _nRecs;
         while ((count > 0) && (recOfs + _var1size <= buffSize)) {
             v = this.imm_decodeVal(sdata,  recOfs, _var1size) / 1000.0;
-            _var1samples.Add(v);
+            _var1samples.Add(v*mult1);
             recOfs = recOfs + recSize;
         }
         if (_var2size > 0) {
@@ -209,7 +232,7 @@ public class YInputCaptureData
             count = _nRecs;
             while ((count > 0) && (recOfs + _var2size <= buffSize)) {
                 v = this.imm_decodeVal(sdata,  recOfs, _var2size) / 1000.0;
-                _var2samples.Add(v);
+                _var2samples.Add(v*mult2);
                 recOfs = recOfs + recSize;
             }
         }
@@ -218,7 +241,7 @@ public class YInputCaptureData
             count = _nRecs;
             while ((count > 0) && (recOfs + _var3size <= buffSize)) {
                 v = this.imm_decodeVal(sdata,  recOfs, _var3size) / 1000.0;
-                _var3samples.Add(v);
+                _var3samples.Add(v*mult3);
                 recOfs = recOfs + recSize;
             }
         }
