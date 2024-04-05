@@ -50,8 +50,33 @@ namespace com.yoctopuce.YoctoAPI
  * <summary>
  *   YRfidReader Class: RfidReader function interface
  * <para>
- *   The <c>RfidReader</c> class provides access detect,
- *   read and write RFID tags.
+ *   The <c>YRfidReader</c> class allows you to detect RFID tags, as well as
+ *   read and write on these tags if the security settings allow it.
+ * </para>
+ * <para>
+ *   Short reminder:
+ * </para>
+ * <para>
+ * </para>
+ * <para>
+ *   - A tag's memory is generally organized in fixed-size blocks.
+ * </para>
+ * <para>
+ *   - At tag level, each block must be read and written in its entirety.
+ * </para>
+ * <para>
+ *   - Some blocks are special configuration blocks, and may alter the tag's behaviour
+ *   tag behavior if they are rewritten with arbitrary data.
+ * </para>
+ * <para>
+ *   - Data blocks can be set to read-only mode, but on many tags, this operation is irreversible.
+ * </para>
+ * <para>
+ * </para>
+ * <para>
+ *   By default, the RfidReader class automatically manages these blocks so that
+ *   arbitrary size data  can be manipulated of  without risk and without knowledge of
+ *   tag architecture .
  * </para>
  * </summary>
  */
@@ -194,7 +219,8 @@ public class YRfidReader : YFunction
      *   The reader will do
      *   its best to respect it. Note that the reader cannot detect tag arrival or removal
      *   while it is  communicating with a tag.  Maximum frequency is limited to 100Hz,
-     *   but in real life it will be difficult to do better than 50Hz.
+     *   but in real life it will be difficult to do better than 50Hz.  A zero value
+     *   will power off the device radio.
      *   Remember to call the <c>saveToFlash()</c> method of the module if the
      *   modification must be kept.
      * </para>
@@ -435,7 +461,7 @@ public class YRfidReader : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   a list of strings, corresponding to each tag identifier.
+     *   a list of strings, corresponding to each tag identifier (UID).
      * </returns>
      * <para>
      *   On failure, throws an exception or returns an empty list.
@@ -698,7 +724,8 @@ public class YRfidReader : YFunction
      *   number of bytes is larger than the RFID tag block size. By default
      *   firstBlock cannot be a special block, and any special block encountered
      *   in the middle of the read operation will be skipped automatically.
-     *   If you rather want to read special blocks, use EnableRawAccess option.
+     *   If you rather want to read special blocks, use the <c>EnableRawAccess</c>
+     *   field from the <c>options</c> parameter.
      * </para>
      * <para>
      * </para>
@@ -757,7 +784,8 @@ public class YRfidReader : YFunction
      *   is larger than the RFID tag block size.  By default
      *   firstBlock cannot be a special block, and any special block encountered
      *   in the middle of the read operation will be skipped automatically.
-     *   If you rather want to read special blocks, use EnableRawAccess option.
+     *   If you rather want to read special blocks, use the <c>EnableRawAccess</c>
+     *   field frrm the <c>options</c> parameter.
      * </para>
      * <para>
      * </para>
@@ -802,7 +830,8 @@ public class YRfidReader : YFunction
      *   is larger than the RFID tag block size.  By default
      *   firstBlock cannot be a special block, and any special block encountered
      *   in the middle of the read operation will be skipped automatically.
-     *   If you rather want to read special blocks, use EnableRawAccess option.
+     *   If you rather want to read special blocks, use the <c>EnableRawAccess</c>
+     *   field from the <c>options</c> parameter.
      * </para>
      * <para>
      * </para>
@@ -858,7 +887,8 @@ public class YRfidReader : YFunction
      *   is larger than the RFID tag block size.  By default
      *   firstBlock cannot be a special block, and any special block encountered
      *   in the middle of the read operation will be skipped automatically.
-     *   If you rather want to read special blocks, use EnableRawAccess option.
+     *   If you rather want to read special blocks, use the <c>EnableRawAccess</c>
+     *   field from the <c>options</c> parameter.
      * </para>
      * <para>
      * </para>
@@ -902,8 +932,10 @@ public class YRfidReader : YFunction
      *   number of bytes to write is larger than the RFID tag block size.
      *   By default firstBlock cannot be a special block, and any special block
      *   encountered in the middle of the write operation will be skipped
-     *   automatically. If you rather want to rewrite special blocks as well,
-     *   use EnableRawAccess option.
+     *   automatically. The last data block affected by the operation will
+     *   be automatically padded with zeros if neccessary.  If you rather want
+     *   to rewrite special blocks as well,
+     *   use the <c>EnableRawAccess</c> field from the <c>options</c> parameter.
      * </para>
      * <para>
      * </para>
@@ -963,8 +995,10 @@ public class YRfidReader : YFunction
      *   number of bytes to write is larger than the RFID tag block size.
      *   By default firstBlock cannot be a special block, and any special block
      *   encountered in the middle of the write operation will be skipped
-     *   automatically. If you rather want to rewrite special blocks as well,
-     *   use EnableRawAccess option.
+     *   automatically. The last data block affected by the operation will
+     *   be automatically padded with zeros if neccessary.
+     *   If you rather want to rewrite special blocks as well,
+     *   use the <c>EnableRawAccess</c> field from the <c>options</c> parameter.
      * </para>
      * <para>
      * </para>
@@ -1021,8 +1055,10 @@ public class YRfidReader : YFunction
      *   number of bytes to write is larger than the RFID tag block size.
      *   By default firstBlock cannot be a special block, and any special block
      *   encountered in the middle of the write operation will be skipped
-     *   automatically. If you rather want to rewrite special blocks as well,
-     *   use EnableRawAccess option.
+     *   automatically. The last data block affected by the operation will
+     *   be automatically padded with zeros if neccessary.
+     *   If you rather want to rewrite special blocks as well,
+     *   use the <c>EnableRawAccess</c> field from the <c>options</c> parameter.
      * </para>
      * <para>
      * </para>
@@ -1089,10 +1125,16 @@ public class YRfidReader : YFunction
      * <para>
      *   The write operation may span accross multiple blocks if the
      *   number of bytes to write is larger than the RFID tag block size.
+     *   Note that only the characters présent  in  the provided string
+     *   will be written, there is no notion of string length. If your
+     *   string data have variable length, you'll have to encode the
+     *   string length yourself.
      *   By default firstBlock cannot be a special block, and any special block
      *   encountered in the middle of the write operation will be skipped
-     *   automatically. If you rather want to rewrite special blocks as well,
-     *   use EnableRawAccess option.
+     *   automatically. The last data block affected by the operation will
+     *   be automatically padded with zeros if neccessary.
+     *   If you rather want to rewrite special blocks as well,
+     *   use the <c>EnableRawAccess</c> field from the <c>options</c> parameter.
      * </para>
      * <para>
      * </para>
@@ -1129,6 +1171,256 @@ public class YRfidReader : YFunction
         buff = YAPI.DefaultEncoding.GetBytes(text);
 
         return await this.tagWriteBin(tagId,  firstBlock,  buff,  options, status);
+    }
+
+    /**
+     * <summary>
+     *   Reads an RFID tag AFI byte (ISO 15693 only).
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   the AFI value (0...255)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagGetAFI(string tagId,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        int res;
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=rdsf&t="+tagId+"&b=0"+optstr;
+
+        json = await this._download(url);
+        await this._chkerror(tagId,  json, status);
+        if (await status.get_yapiError() == YAPI.SUCCESS) {
+            res = YAPIContext.imm_atoi(this.imm_json_get_key(json, "res"));
+        } else {
+            res = await status.get_yapiError();
+        }
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Change an RFID tag AFI byte (ISO 15693 only).
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="afi">
+     *   the AFI value to write (0...255)
+     * </param>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagSetAFI(string tagId,int afi,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=wrsf&t="+tagId+"&b=0&v="+Convert.ToString(afi)+""+optstr;
+
+        json = await this._download(url);
+        return await this._chkerror(tagId,  json, status);
+    }
+
+    /**
+     * <summary>
+     *   Locks the RFID tag AFI byte (ISO 15693 only).
+     * <para>
+     *   This operation is definitive and irreversible.
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagLockAFI(string tagId,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=lksf&t="+tagId+"&b=0"+optstr;
+
+        json = await this._download(url);
+        return await this._chkerror(tagId,  json, status);
+    }
+
+    /**
+     * <summary>
+     *   Reads an RFID tag DSFID byte (ISO 15693 only).
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   the DSFID value (0...255)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagGetDSFID(string tagId,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        int res;
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=rdsf&t="+tagId+"&b=1"+optstr;
+
+        json = await this._download(url);
+        await this._chkerror(tagId,  json, status);
+        if (await status.get_yapiError() == YAPI.SUCCESS) {
+            res = YAPIContext.imm_atoi(this.imm_json_get_key(json, "res"));
+        } else {
+            res = await status.get_yapiError();
+        }
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Change an RFID tag DSFID byte (ISO 15693 only).
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="dsfid">
+     *   the DSFID value to write (0...255)
+     * </param>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagSetDSFID(string tagId,int dsfid,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=wrsf&t="+tagId+"&b=1&v="+Convert.ToString(dsfid)+""+optstr;
+
+        json = await this._download(url);
+        return await this._chkerror(tagId,  json, status);
+    }
+
+    /**
+     * <summary>
+     *   Locks the RFID tag DSFID byte (ISO 15693 only).
+     * <para>
+     *   This operation is definitive and irreversible.
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagLockDSFID(string tagId,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=lksf&t="+tagId+"&b=1"+optstr;
+
+        json = await this._download(url);
+        return await this._chkerror(tagId,  json, status);
     }
 
     /**

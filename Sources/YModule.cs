@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 56045 2023-08-14 15:51:05Z seb $
+ * $Id: YModule.cs 59953 2024-03-18 09:15:08Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -1170,8 +1170,10 @@ public class YModule : YFunction
      * </para>
      * </summary>
      * <param name="callback">
-     *   the callback function to call, or a null pointer. The callback function should take two
-     *   arguments: the module object that emitted the log message, and the character string containing the log.
+     *   the callback function to call, or a null pointer.
+     *   The callback function should take two
+     *   arguments: the module object that emitted the log message,
+     *   and the character string containing the log.
      *   On failure, throws an exception or returns a negative error code.
      * </param>
      */

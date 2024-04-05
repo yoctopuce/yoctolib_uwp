@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YI2cPort.cs 52943 2023-01-26 15:46:47Z mvuilleu $
+ *  $Id: YI2cPort.cs 59641 2024-03-05 20:50:20Z mvuilleu $
  *
  *  Implements FindI2cPort(), the high-level API for I2cPort functions
  *
@@ -1818,6 +1818,9 @@ public class YI2cPort : YFunction
      *   the maximum number of milliseconds to wait for a message if none is found
      *   in the receive buffer.
      * </param>
+     * <param name="maxMsg">
+     *   the maximum number of messages to be returned by the function; up to 254.
+     * </param>
      * <returns>
      *   an array of <c>YI2cSnoopingRecord</c> objects containing the messages found, if any.
      * </returns>
@@ -1825,7 +1828,7 @@ public class YI2cPort : YFunction
      *   On failure, throws an exception or returns an empty array.
      * </para>
      */
-    public virtual async Task<List<YI2cSnoopingRecord>> snoopMessages(int maxWait)
+    public virtual async Task<List<YI2cSnoopingRecord>> snoopMessagesEx(int maxWait,int maxMsg)
     {
         string url;
         byte[] msgbin = new byte[0];
@@ -1834,7 +1837,7 @@ public class YI2cPort : YFunction
         List<YI2cSnoopingRecord> res = new List<YI2cSnoopingRecord>();
         int idx;
 
-        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString(maxWait)+"&t=0";
+        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString( maxWait)+"&t=0&len="+Convert.ToString(maxMsg);
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.Count;
@@ -1850,6 +1853,32 @@ public class YI2cPort : YFunction
             idx = idx + 1;
         }
         return res;
+    }
+
+    /**
+     * <summary>
+     *   Retrieves messages (both direction) in the I2C port buffer, starting at current position.
+     * <para>
+     * </para>
+     * <para>
+     *   If no message is found, the search waits for one up to the specified maximum timeout
+     *   (in milliseconds).
+     * </para>
+     * </summary>
+     * <param name="maxWait">
+     *   the maximum number of milliseconds to wait for a message if none is found
+     *   in the receive buffer.
+     * </param>
+     * <returns>
+     *   an array of <c>YI2cSnoopingRecord</c> objects containing the messages found, if any.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns an empty array.
+     * </para>
+     */
+    public virtual async Task<List<YI2cSnoopingRecord>> snoopMessages(int maxWait)
+    {
+        return await this.snoopMessagesEx(maxWait, 255);
     }
 
     /**

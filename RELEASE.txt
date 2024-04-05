@@ -1,3 +1,15 @@
-UWP v1.10.59271
+UWP v1.10.60394
 
-- test release
+- Add support for Yocto-RFID
+- Add new secondsBefore attribute to wakeUpSchedule
+- Add support for multiplier in InputCapture
+- Add YThreshold class
+- Add position indicator in SnoopingRecords
+- Add snoopMessagesEx function to serial communication classes
+- Add implicitly init api in yapi::SetDeviceListValidity, YAPI::GetDeviceListValidity, YAPI::AddUdevRule, YAPI::SetNetworkTimeout, YAPI::GetNetworkTimeout,  YAPI::SetCacheValidity and  YAPI::GetCacheValidity methods
+- Remove conflict between YEventCallback
+- Fix warning about malformed XML comment
+- Fix parsing of float on host where the decimal separator is not '.''
+- Fix cache latency on method YSensor.loadCalibrationPoints()
+- Fix handling of long strings in many parse situations (including json_get_key)
+- Fix a few typos

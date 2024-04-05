@@ -42,12 +42,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 namespace com.yoctopuce.YoctoAPI
 {
-    //--- (generated code: YSdi12Sensor return codes)
-//--- (end of generated code: YSdi12Sensor return codes)
-    //--- (generated code: YSdi12Sensor class start)
+    //--- (generated code: YSdi12SensorInfo return codes)
+//--- (end of generated code: YSdi12SensorInfo return codes)
+    //--- (generated code: YSdi12SensorInfo class start)
 /**
  * <summary>
- *   YSdi12Sensor Class: Description of a discovered SDI12 sensor, returned by <c>sdi12Port.discoverSingleSensor</c> and <c>sdi12Port.
+ *   YSdi12SensorInfo Class: Description of a discovered SDI12 sensor, returned by <c>sdi12Port.discoverSingleSensor</c> and <c>sdi12Port.
  * <para>
  *   discoverAllSensors</c> methods
  * </para>
@@ -57,10 +57,10 @@ namespace com.yoctopuce.YoctoAPI
  * </para>
  * </summary>
  */
-public class YSdi12Sensor
+public class YSdi12SensorInfo
 {
-//--- (end of generated code: YSdi12Sensor class start)
-//--- (generated code: YSdi12Sensor definitions)
+//--- (end of generated code: YSdi12SensorInfo class start)
+//--- (generated code: YSdi12SensorInfo definitions)
     protected YSdi12Port _sdi12Port;
     protected string _addr;
     protected string _proto;
@@ -70,7 +70,7 @@ public class YSdi12Sensor
     protected string _sn;
     protected List<List<string>> _valuesDesc = new List<List<string>>();
 
-    //--- (end of generated code: YSdi12Sensor definitions)
+    //--- (end of generated code: YSdi12SensorInfo definitions)
 
     /**
      * <summary>
@@ -79,13 +79,13 @@ public class YSdi12Sensor
      *   functionid
      * </param>
      */
-    internal YSdi12Sensor(YSdi12Port sdi12Port, string func)
+    internal YSdi12SensorInfo(YSdi12Port sdi12Port, string func)
     {
             _sdi12Port = sdi12Port;
             imm_parseInfoStr(func);
     }
 
-    //--- (generated code: YSdi12Sensor implementation)
+    //--- (generated code: YSdi12SensorInfo implementation)
 #pragma warning disable 1998
 
     /**
@@ -266,6 +266,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the number of sensor measurements.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <returns>
@@ -280,6 +282,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the number of sensor measurements.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <returns>
@@ -295,6 +299,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the sensor measurement command.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -312,6 +318,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the sensor measurement command.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -330,6 +338,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns sensor measurement position.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -347,6 +357,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns sensor measurement position.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -365,6 +377,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the measured value symbol.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -382,6 +396,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the measured value symbol.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -400,6 +416,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the unit of the measured value.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -417,6 +435,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the unit of the measured value.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -435,6 +455,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the description of the measured value.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -452,6 +474,8 @@ public class YSdi12Sensor
      * <summary>
      *   Returns the description of the measured value.
      * <para>
+     *   This function only works if the sensor is in version 1.4 SDI-12
+     *   and supports metadata commands.
      * </para>
      * </summary>
      * <param name="measureIndex">
@@ -551,7 +575,7 @@ public class YSdi12Sensor
     }
 
 #pragma warning restore 1998
-    //--- (end of generated code: YSdi12Sensor implementation)
+    //--- (end of generated code: YSdi12SensorInfo implementation)
     }
 
 }

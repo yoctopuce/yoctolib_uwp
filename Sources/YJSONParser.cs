@@ -649,8 +649,15 @@ namespace com.yoctopuce.YoctoAPI
 
         public string getString(string key)
         {
-            YJSONString ystr = (YJSONString)parsed[key];
-            return ystr.getString();
+            if (parsed[key].getJSONType() == YJSONType.NUMBER) {
+                YJSONNumber yint = (YJSONNumber)parsed[key];
+                return yint.getInt().ToString();
+            } else if (parsed[key].getJSONType() == YJSONType.STRING) {
+                YJSONString ystr = (YJSONString)parsed[key];
+                return ystr.getString();
+            } else {
+                return "<JSON_getString_error>";
+            }
         }
 
         public int getInt(string key)

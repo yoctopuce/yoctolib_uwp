@@ -294,8 +294,8 @@
     <Compile Include="..\..\Sources\YSdi12SnoopingRecord.cs">
       <Link>yoctolib\YSdi12SnoopingRecord.cs</Link>
     </Compile>
-    <Compile Include="..\..\Sources\YSdi12Sensor.cs">
-      <Link>yoctolib\YSdi12Sensor.cs</Link>
+    <Compile Include="..\..\Sources\YSdi12SensorInfo.cs">
+      <Link>yoctolib\YSdi12SensorInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YSdi12Port.cs">
       <Link>yoctolib\YSdi12Port.cs</Link>

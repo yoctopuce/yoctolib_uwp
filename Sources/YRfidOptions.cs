@@ -48,11 +48,15 @@ namespace com.yoctopuce.YoctoAPI
 //--- (generated code: YRfidOptions class start)
 /**
  * <summary>
- *   YRfidOptions Class: Extra parameters for performing RFID tag operations
+ *   YRfidOptions Class: Additional parameters for operations on RFID tags.
  * <para>
- *   <c>YRfidOptions</c> objects are used to provide optional
- *   parameters to RFID commands that interact with tags, and in
- *   particular to provide security keys when required.
+ * </para>
+ * <para>
+ *   The <c>YRfidOptions</c> objects are used to specify additional
+ *   optional parameters to RFID commands that interact with tags,
+ *   including security keys. When instantiated,the parameters of
+ *   this object are pre-initialized to a value  which corresponds
+ *   to the most common usage.
  * </para>
  * </summary>
  */
@@ -146,7 +150,7 @@ public class YRfidOptions
      *   By default, the Yoctopuce
      *   library's read/write functions detect overruns and do not run
      *   commands that are likely to fail. If you nevertheless wish to
-     *   access more memory than the tag announces, you can try to use
+     *   try to access more memory than the tag announces, you can try to use
      *   this option.
      * </para>
      * </summary>

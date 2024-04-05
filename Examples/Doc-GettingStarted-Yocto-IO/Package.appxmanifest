@@ -413,12 +413,16 @@
       <Device Id="vidpid:24e0 00b1">
         <Function Type="usage:ff00 0001" />
       </Device>
-      <!-- Yocto-TinyPower -->
+      <!-- Yocto-TinySupply -->
       <Device Id="vidpid:24e0 00b3">
         <Function Type="usage:ff00 0001" />
       </Device>
-      <!-- Yocto-RFID-14443A -->
-      <Device Id="vidpid:24e0 00b5">
+      <!-- Yocto-Multiplexer -->
+      <Device Id="vidpid:24e0 00b7">
+        <Function Type="usage:ff00 0001" />
+      </Device>
+      <!-- Yocto-Maxi-IO-V3 -->
+      <Device Id="vidpid:24e0 00bb">
         <Function Type="usage:ff00 0001" />
       </Device>
 <!-- USABLE DEVICES STOP -->

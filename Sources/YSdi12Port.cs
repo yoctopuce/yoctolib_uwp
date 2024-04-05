@@ -832,7 +832,7 @@ public class YSdi12Port : YFunction
 
     /**
      * <summary>
-     *   Retrieves a SDI12 port for a given identifier.
+     *   Retrieves an SDI12 port for a given identifier.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -860,7 +860,7 @@ public class YSdi12Port : YFunction
      *   it is invoked. The returned object is nevertheless valid.
      *   Use the method <c>YSdi12Port.isOnline()</c> to test if the SDI12 port is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a SDI12 port by logical name, no error is notified: the first instance
+     *   an SDI12 port by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -893,7 +893,7 @@ public class YSdi12Port : YFunction
 
     /**
      * <summary>
-     *   Retrieves a SDI12 port for a given identifier in a YAPI context.
+     *   Retrieves an SDI12 port for a given identifier in a YAPI context.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -921,7 +921,7 @@ public class YSdi12Port : YFunction
      *   it is invoked. The returned object is nevertheless valid.
      *   Use the method <c>YSdi12Port.isOnline()</c> to test if the SDI12 port is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a SDI12 port by logical name, no error is notified: the first instance
+     *   an SDI12 port by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -1927,19 +1927,19 @@ public class YSdi12Port : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   the reply returned by the sensor, as a YSdi12Sensor object.
+     *   the reply returned by the sensor, as a YSdi12SensorInfo object.
      * </returns>
      * <para>
      *   On failure, throws an exception or returns an empty string.
      * </para>
      */
-    public virtual async Task<YSdi12Sensor> discoverSingleSensor()
+    public virtual async Task<YSdi12SensorInfo> discoverSingleSensor()
     {
         string resStr;
 
         resStr = await this.querySdi12("?", "", 5000);
         if (resStr == "") {
-            return new YSdi12Sensor(this, "ERSensor Not Found");
+            return new YSdi12SensorInfo(this, "ERSensor Not Found");
         }
 
         return await this.getSensorInformation(resStr);
@@ -1955,15 +1955,15 @@ public class YSdi12Port : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   all the information from every connected sensor, as an array of YSdi12Sensor object.
+     *   all the information from every connected sensor, as an array of YSdi12SensorInfo object.
      * </returns>
      * <para>
      *   On failure, throws an exception or returns an empty string.
      * </para>
      */
-    public virtual async Task<List<YSdi12Sensor>> discoverAllSensors()
+    public virtual async Task<List<YSdi12SensorInfo>> discoverAllSensors()
     {
-        List<YSdi12Sensor> sensors = new List<YSdi12Sensor>();
+        List<YSdi12SensorInfo> sensors = new List<YSdi12SensorInfo>();
         List<string> idSens = new List<string>();
         string res;
         int i;
@@ -2074,15 +2074,15 @@ public class YSdi12Port : YFunction
      *   New sensor address, as a string
      * </param>
      * <returns>
-     *   the sensor address and information , as a YSdi12Sensor object.
+     *   the sensor address and information , as a YSdi12SensorInfo object.
      * </returns>
      * <para>
      *   On failure, throws an exception or returns an empty string.
      * </para>
      */
-    public virtual async Task<YSdi12Sensor> changeAddress(string oldAddress,string newAddress)
+    public virtual async Task<YSdi12SensorInfo> changeAddress(string oldAddress,string newAddress)
     {
-        YSdi12Sensor addr;
+        YSdi12SensorInfo addr;
 
         await this.querySdi12(oldAddress,  "A" + newAddress, 1000);
         addr = await this.getSensorInformation(newAddress);
@@ -2106,16 +2106,16 @@ public class YSdi12Port : YFunction
      *   On failure, throws an exception or returns an empty string.
      * </para>
      */
-    public virtual async Task<YSdi12Sensor> getSensorInformation(string sensorAddr)
+    public virtual async Task<YSdi12SensorInfo> getSensorInformation(string sensorAddr)
     {
         string res;
-        YSdi12Sensor sensor;
+        YSdi12SensorInfo sensor;
 
         res = await this.querySdi12(sensorAddr, "I", 1000);
         if (res == "") {
-            return new YSdi12Sensor(this, "ERSensor Not Found");
+            return new YSdi12SensorInfo(this, "ERSensor Not Found");
         }
-        sensor = new YSdi12Sensor(this, res);
+        sensor = new YSdi12SensorInfo(this, res);
         await sensor._queryValueInfo();
         return sensor;
     }
@@ -2187,6 +2187,9 @@ public class YSdi12Port : YFunction
      *   the maximum number of milliseconds to wait for a message if none is found
      *   in the receive buffer.
      * </param>
+     * <param name="maxMsg">
+     *   the maximum number of messages to be returned by the function; up to 254.
+     * </param>
      * <returns>
      *   an array of <c>YSdi12SnoopingRecord</c> objects containing the messages found, if any.
      * </returns>
@@ -2194,7 +2197,7 @@ public class YSdi12Port : YFunction
      *   On failure, throws an exception or returns an empty array.
      * </para>
      */
-    public virtual async Task<List<YSdi12SnoopingRecord>> snoopMessages(int maxWait)
+    public virtual async Task<List<YSdi12SnoopingRecord>> snoopMessagesEx(int maxWait,int maxMsg)
     {
         string url;
         byte[] msgbin = new byte[0];
@@ -2203,7 +2206,7 @@ public class YSdi12Port : YFunction
         List<YSdi12SnoopingRecord> res = new List<YSdi12SnoopingRecord>();
         int idx;
 
-        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString(maxWait)+"&t=0";
+        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString( maxWait)+"&t=0&len="+Convert.ToString(maxMsg);
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.Count;
@@ -2223,16 +2226,42 @@ public class YSdi12Port : YFunction
 
     /**
      * <summary>
+     *   Retrieves messages (both direction) in the SDI12 port buffer, starting at current position.
+     * <para>
+     * </para>
+     * <para>
+     *   If no message is found, the search waits for one up to the specified maximum timeout
+     *   (in milliseconds).
+     * </para>
+     * </summary>
+     * <param name="maxWait">
+     *   the maximum number of milliseconds to wait for a message if none is found
+     *   in the receive buffer.
+     * </param>
+     * <returns>
+     *   an array of <c>YSdi12SnoopingRecord</c> objects containing the messages found, if any.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns an empty array.
+     * </para>
+     */
+    public virtual async Task<List<YSdi12SnoopingRecord>> snoopMessages(int maxWait)
+    {
+        return await this.snoopMessagesEx(maxWait, 255);
+    }
+
+    /**
+     * <summary>
      *   Continues the enumeration of SDI12 ports started using <c>yFirstSdi12Port()</c>.
      * <para>
      *   Caution: You can't make any assumption about the returned SDI12 ports order.
-     *   If you want to find a specific a SDI12 port, use <c>Sdi12Port.findSdi12Port()</c>
+     *   If you want to find a specific an SDI12 port, use <c>Sdi12Port.findSdi12Port()</c>
      *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>
      *   a pointer to a <c>YSdi12Port</c> object, corresponding to
-     *   a SDI12 port currently online, or a <c>null</c> pointer
+     *   an SDI12 port currently online, or a <c>null</c> pointer
      *   if there are no more SDI12 ports to enumerate.
      * </returns>
      */
