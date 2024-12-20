@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFunction.cs 56045 2023-08-14 15:51:05Z seb $
+ * $Id: YFunction.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -344,7 +344,7 @@ public class YFunction
         obj = (YFunction) YFunction._FindFromCache("Function", func);
         if (obj == null) {
             obj = new YFunction(func);
-            YFunction._AddToCache("Function",  func, obj);
+            YFunction._AddToCache("Function", func, obj);
         }
         return obj;
     }
@@ -398,10 +398,10 @@ public class YFunction
     public static YFunction FindFunctionInContext(YAPIContext yctx,string func)
     {
         YFunction obj;
-        obj = (YFunction) YFunction._FindFromCacheInContext(yctx,  "Function", func);
+        obj = (YFunction) YFunction._FindFromCacheInContext(yctx, "Function", func);
         if (obj == null) {
             obj = new YFunction(yctx, func);
-            YFunction._AddToCache("Function",  func, obj);
+            YFunction._AddToCache("Function", func, obj);
         }
         return obj;
     }
@@ -518,7 +518,7 @@ public class YFunction
     {
         string url;
         byte[] attrVal = new byte[0];
-        url = "api/"+ await this.get_functionId()+"/"+attrName;
+        url = "api/"+await this.get_functionId()+"/"+attrName;
         attrVal = await this._download(url);
         return YAPI.DefaultEncoding.GetString(attrVal);
     }

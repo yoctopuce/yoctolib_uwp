@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLatitude.cs 39658 2020-03-12 15:36:29Z seb $
+ *  $Id: YLatitude.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindLatitude(), the high-level API for Latitude functions
  *
@@ -157,7 +157,7 @@ public class YLatitude : YSensor
         obj = (YLatitude) YFunction._FindFromCache("Latitude", func);
         if (obj == null) {
             obj = new YLatitude(func);
-            YFunction._AddToCache("Latitude",  func, obj);
+            YFunction._AddToCache("Latitude", func, obj);
         }
         return obj;
     }
@@ -211,10 +211,10 @@ public class YLatitude : YSensor
     public static YLatitude FindLatitudeInContext(YAPIContext yctx,string func)
     {
         YLatitude obj;
-        obj = (YLatitude) YFunction._FindFromCacheInContext(yctx,  "Latitude", func);
+        obj = (YLatitude) YFunction._FindFromCacheInContext(yctx, "Latitude", func);
         if (obj == null) {
             obj = new YLatitude(yctx, func);
-            YFunction._AddToCache("Latitude",  func, obj);
+            YFunction._AddToCache("Latitude", func, obj);
         }
         return obj;
     }

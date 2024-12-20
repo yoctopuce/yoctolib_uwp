@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YFirmwareUpdate.cs 56045 2023-08-14 15:51:05Z seb $
+ * $Id: YFirmwareUpdate.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -503,7 +503,7 @@ public class YFirmwareUpdate
         leng = (err).Length;
         if ((leng >= 6) && ("error:" == (err).Substring(0, 6))) {
             _progress = -1;
-            _progress_msg = (err).Substring( 6, leng - 6);
+            _progress_msg = (err).Substring(6, leng - 6);
         } else {
             _progress = 0;
             _progress_c = 0;

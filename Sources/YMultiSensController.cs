@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiSensController.cs 49501 2022-04-21 07:09:25Z mvuilleu $
+ *  $Id: YMultiSensController.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindMultiSensController(), the high-level API for MultiSensController functions
  *
@@ -51,7 +51,7 @@ namespace com.yoctopuce.YoctoAPI
  *   YMultiSensController Class: Sensor chain configuration interface, available for instance in the
  *   Yocto-Temperature-IR
  * <para>
- *   The <c>YMultiSensController</c> class allows you to setup a customized
+ *   The <c>YMultiSensController</c> class allows you to set up a customized
  *   sensor chain on devices featuring that functionality.
  * </para>
  * </summary>
@@ -415,7 +415,7 @@ public class YMultiSensController : YFunction
         obj = (YMultiSensController) YFunction._FindFromCache("MultiSensController", func);
         if (obj == null) {
             obj = new YMultiSensController(func);
-            YFunction._AddToCache("MultiSensController",  func, obj);
+            YFunction._AddToCache("MultiSensController", func, obj);
         }
         return obj;
     }
@@ -469,10 +469,10 @@ public class YMultiSensController : YFunction
     public static YMultiSensController FindMultiSensControllerInContext(YAPIContext yctx,string func)
     {
         YMultiSensController obj;
-        obj = (YMultiSensController) YFunction._FindFromCacheInContext(yctx,  "MultiSensController", func);
+        obj = (YMultiSensController) YFunction._FindFromCacheInContext(yctx, "MultiSensController", func);
         if (obj == null) {
             obj = new YMultiSensController(yctx, func);
-            YFunction._AddToCache("MultiSensController",  func, obj);
+            YFunction._AddToCache("MultiSensController", func, obj);
         }
         return obj;
     }
@@ -552,11 +552,11 @@ public class YMultiSensController : YFunction
         int res;
         cmd = "A"+Convert.ToString(addr);
         res = await this.set_command(cmd);
-        if (!(res == YAPI.SUCCESS)) { this._throw( YAPI.IO_ERROR, "unable to trigger address change"); return YAPI.IO_ERROR; }
+        if (!(res == YAPI.SUCCESS)) { this._throw(YAPI.IO_ERROR,"unable to trigger address change"); return YAPI.IO_ERROR; }
         await YAPI.Sleep(1500);
         res = await this.get_lastAddressDetected();
-        if (!(res > 0)) { this._throw( YAPI.IO_ERROR, "IR sensor not found"); return YAPI.IO_ERROR; }
-        if (!(res == addr)) { this._throw( YAPI.IO_ERROR, "address change failed"); return YAPI.IO_ERROR; }
+        if (!(res > 0)) { this._throw(YAPI.IO_ERROR,"IR sensor not found"); return YAPI.IO_ERROR; }
+        if (!(res == addr)) { this._throw(YAPI.IO_ERROR,"address change failed"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 
@@ -579,7 +579,7 @@ public class YMultiSensController : YFunction
     {
         int res;
         res = await this.set_command("a");
-        if (!(res == YAPI.SUCCESS)) { this._throw( YAPI.IO_ERROR, "unable to trigger address detection"); return res; }
+        if (!(res == YAPI.SUCCESS)) { this._throw(YAPI.IO_ERROR,"unable to trigger address detection"); return res; }
         await YAPI.Sleep(1000);
         res = await this.get_lastAddressDetected();
         return res;

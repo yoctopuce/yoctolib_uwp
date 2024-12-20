@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YUSBHub.cs 54259 2023-04-28 08:06:26Z seb $
+ * $Id: YUSBHub.cs 60416 2024-04-08 09:18:24Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -36,6 +36,7 @@
  *  WARRANTY, OR OTHERWISE.
  *
  *********************************************************************/
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,19 +44,27 @@ using System.Threading.Tasks;
 
 namespace com.yoctopuce.YoctoAPI
 {
-
-
-
     internal class YUSBHub : YGenericHub
     {
         private YUSBWatcher _ywatcher;
         private new const long YPROG_BOOTLOADER_TIMEOUT = 3600000; // 1 hour
 
-        internal override string SerialNumber {
-            get {
-                return "";
-            }
+        public override string getSerialNumber()
+        {
+            return "";
         }
+
+        public override void set_networkTimeout(int networkMsTimeout)
+        {
+
+        }
+
+        public override int get_networkTimeout()
+        {
+            return 2000;
+        }
+
+
 
         public override string imm_get_urlOf(string serialNumber)
         {
@@ -67,7 +76,8 @@ namespace com.yoctopuce.YoctoAPI
             return new List<string>();
         }
 
-        internal YUSBHub(YAPIContext yctx, int idx, bool requestPermission) : base(yctx, new HTTPParams("usb://"), idx, true)
+        internal YUSBHub(YAPIContext yctx, int idx, bool requestPermission) : base(yctx, new HTTPParams("usb"), idx,
+            true)
         {
             _ywatcher = new YUSBWatcher(this);
         }
@@ -87,8 +97,6 @@ namespace com.yoctopuce.YoctoAPI
         {
             _ywatcher.Stop();
         }
-
-
 
 
         internal override async Task updateDeviceListAsync(bool forceupdate)
@@ -112,7 +120,7 @@ namespace com.yoctopuce.YoctoAPI
             }
             // Reindex all devices from white pages
             for (int i = 0; i < whitePages.Count; i++) {
-                _serialByYdx[i] =  whitePages[i].SerialNumber;
+                _serialByYdx[i] = whitePages[i].SerialNumber;
             }
             await updateFromWpAndYp(whitePages, yellowPages);
             // reset device list cache timeout for this hub
@@ -120,7 +128,7 @@ namespace com.yoctopuce.YoctoAPI
             _devListExpires = now + 500;
         }
 
-        public override  Task<List<string>> getBootloaders()
+        public override Task<List<string>> getBootloaders()
         {
             //todo: implement get bootloaders
             throw new NotImplementedException();
@@ -131,7 +139,8 @@ namespace com.yoctopuce.YoctoAPI
             return Task.FromResult(YAPI.SUCCESS);
         }
 
-        internal override Task<List<string>> firmwareUpdate(string serial, YFirmwareFile firmware, byte[] settings, UpdateProgress progress)
+        internal override Task<List<string>> firmwareUpdate(string serial, YFirmwareFile firmware, byte[] settings,
+            UpdateProgress progress)
         {
             //todo: implement firmware upate
             throw new NotImplementedException();
@@ -152,16 +161,17 @@ namespace com.yoctopuce.YoctoAPI
             return currentRequest;
         }
 
-        internal override async Task devRequestAsync(YDevice device, string req_first_line, byte[] req_head_and_body, RequestAsyncResult asyncResult, object asyncContext)
+        internal override async Task devRequestAsync(YDevice device, string req_first_line, byte[] req_head_and_body,
+            RequestAsyncResult asyncResult, object asyncContext)
         {
             String serial = device.imm_getSerialNumber();
             byte[] req = imm_prepareRequest(req_first_line, req_head_and_body);
             await _ywatcher.DevRequestAsync(serial, req, asyncResult, asyncContext);
             //Debug.WriteLine("async req to " + serial + " " + req_first_line);
-
         }
 
-        internal override async Task<byte[]> devRequestSync(YDevice device, string req_first_line, byte[] req_head_and_body, RequestProgress progress, object context)
+        internal override async Task<byte[]> devRequestSync(YDevice device, string req_first_line,
+            byte[] req_head_and_body, RequestProgress progress, object context)
         {
             String serial = device.imm_getSerialNumber();
             byte[] req = imm_prepareRequest(req_first_line, req_head_and_body);
@@ -184,17 +194,14 @@ namespace com.yoctopuce.YoctoAPI
         }
 
 
-        internal override string RootUrl {
-            get {
-                return "usb";
-            }
+        internal override string RootUrl
+        {
+            get { return "usb"; }
         }
 
         internal override bool imm_isSameHub(string url, object request, object response, object session)
         {
             return url.StartsWith("usb", StringComparison.Ordinal);
         }
-        
     }
-
 }

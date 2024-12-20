@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YSensor.cs 59504 2024-02-26 11:42:03Z seb $
+ * $Id: YSensor.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -53,7 +53,7 @@ namespace com.yoctopuce.YoctoAPI {
  *   The <c>YSensor</c> class is the parent class for all Yoctopuce sensor types. It can be
  *   used to read the current value and unit of any sensor, read the min/max
  *   value, configure autonomous recording frequency and access recorded data.
- *   It also provide a function to register a callback invoked each time the
+ *   It also provides a function to register a callback invoked each time the
  *   observed value changes, or at a predefined interval. Using this class rather
  *   than a specific subclass makes it possible to create generic applications
  *   that work with any Yoctopuce sensor, even those that do not yet exist.
@@ -915,7 +915,7 @@ public class YSensor : YFunction
         obj = (YSensor) YFunction._FindFromCache("Sensor", func);
         if (obj == null) {
             obj = new YSensor(func);
-            YFunction._AddToCache("Sensor",  func, obj);
+            YFunction._AddToCache("Sensor", func, obj);
         }
         return obj;
     }
@@ -969,10 +969,10 @@ public class YSensor : YFunction
     public static YSensor FindSensorInContext(YAPIContext yctx,string func)
     {
         YSensor obj;
-        obj = (YSensor) YFunction._FindFromCacheInContext(yctx,  "Sensor", func);
+        obj = (YSensor) YFunction._FindFromCacheInContext(yctx, "Sensor", func);
         if (obj == null) {
             obj = new YSensor(yctx, func);
-            YFunction._AddToCache("Sensor",  func, obj);
+            YFunction._AddToCache("Sensor", func, obj);
         }
         return obj;
     }
@@ -1053,7 +1053,7 @@ public class YSensor : YFunction
         if ((_calibrationParam).IndexOf(",") >= 0) {
             // Plain text format
             iCalib = YAPIContext.imm_decodeFloats(_calibrationParam);
-            _caltyp = ((iCalib[0]) / (1000));
+            _caltyp = (iCalib[0] / 1000);
             if (_caltyp > 0) {
                 if (_caltyp < YAPI.YOCTO_CALIB_TYPE_OFS) {
                     // Unknown calibration type: calibrated value will be provided by the device
@@ -1220,7 +1220,7 @@ public class YSensor : YFunction
         byte[] res = new byte[0];
 
         res = await this._download("api/dataLogger/recording?recording=1");
-        if (!((res).Length > 0)) { this._throw( YAPI.IO_ERROR, "unable to start datalogger"); return YAPI.IO_ERROR; }
+        if (!((res).Length > 0)) { this._throw(YAPI.IO_ERROR,"unable to start datalogger"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 
@@ -1239,7 +1239,7 @@ public class YSensor : YFunction
         byte[] res = new byte[0];
 
         res = await this._download("api/dataLogger/recording?recording=0");
-        if (!((res).Length > 0)) { this._throw( YAPI.IO_ERROR, "unable to stop datalogger"); return YAPI.IO_ERROR; }
+        if (!((res).Length > 0)) { this._throw(YAPI.IO_ERROR,"unable to stop datalogger"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 
@@ -1453,7 +1453,7 @@ public class YSensor : YFunction
         res = ""+Convert.ToString(YAPI.YOCTO_CALIB_TYPE_OFS);
         idx = 0;
         while (idx < npt) {
-            res = ""+ res+","+YAPIContext.imm_floatToStr( rawValues[idx])+","+YAPIContext.imm_floatToStr(refValues[idx]);
+            res = ""+res+","+YAPIContext.imm_floatToStr(rawValues[idx])+","+YAPIContext.imm_floatToStr(refValues[idx]);
             idx = idx + 1;
         }
         return res;
@@ -1514,7 +1514,7 @@ public class YSensor : YFunction
                 poww = poww * 0x100;
                 i = i + 1;
             }
-            if (((byteVal) & (0x80)) != 0) {
+            if ((byteVal & 0x80) != 0) {
                 avgRaw = avgRaw - poww;
             }
             avgVal = avgRaw / 1000.0;
@@ -1527,7 +1527,7 @@ public class YSensor : YFunction
             maxVal = avgVal;
         } else {
             // averaged report: avg,avg-min,max-avg
-            sublen = 1 + ((report[1]) & (3));
+            sublen = 1 + (report[1] & 3);
             poww = 1;
             avgRaw = 0;
             byteVal = 0;
@@ -1539,10 +1539,10 @@ public class YSensor : YFunction
                 i = i + 1;
                 sublen = sublen - 1;
             }
-            if (((byteVal) & (0x80)) != 0) {
+            if ((byteVal & 0x80) != 0) {
                 avgRaw = avgRaw - poww;
             }
-            sublen = 1 + ((((report[1]) >> (2))) & (3));
+            sublen = 1 + ((report[1] >> 2) & 3);
             poww = 1;
             difRaw = 0;
             while ((sublen > 0) && (i < report.Count)) {
@@ -1553,7 +1553,7 @@ public class YSensor : YFunction
                 sublen = sublen - 1;
             }
             minRaw = avgRaw - difRaw;
-            sublen = 1 + ((((report[1]) >> (4))) & (3));
+            sublen = 1 + ((report[1] >> 4) & 3);
             poww = 1;
             difRaw = 0;
             while ((sublen > 0) && (i < report.Count)) {

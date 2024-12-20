@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLightSensor.cs 45292 2021-05-25 23:27:54Z mvuilleu $
+ *  $Id: YLightSensor.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindLightSensor(), the high-level API for LightSensor functions
  *
@@ -286,7 +286,7 @@ public class YLightSensor : YSensor
         obj = (YLightSensor) YFunction._FindFromCache("LightSensor", func);
         if (obj == null) {
             obj = new YLightSensor(func);
-            YFunction._AddToCache("LightSensor",  func, obj);
+            YFunction._AddToCache("LightSensor", func, obj);
         }
         return obj;
     }
@@ -340,10 +340,10 @@ public class YLightSensor : YSensor
     public static YLightSensor FindLightSensorInContext(YAPIContext yctx,string func)
     {
         YLightSensor obj;
-        obj = (YLightSensor) YFunction._FindFromCacheInContext(yctx,  "LightSensor", func);
+        obj = (YLightSensor) YFunction._FindFromCacheInContext(yctx, "LightSensor", func);
         if (obj == null) {
             obj = new YLightSensor(yctx, func);
-            YFunction._AddToCache("LightSensor",  func, obj);
+            YFunction._AddToCache("LightSensor", func, obj);
         }
         return obj;
     }

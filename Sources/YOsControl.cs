@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YOsControl.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YOsControl.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindOsControl(), the high-level API for OsControl functions
  *
@@ -65,7 +65,7 @@ public class YOsControl : YFunction
      *   invalid shutdownCountdown value
      * </summary>
      */
-    public const  int SHUTDOWNCOUNTDOWN_INVALID = YAPI.INVALID_UINT;
+    public const  int SHUTDOWNCOUNTDOWN_INVALID = YAPI.INVALID_INT;
     protected int _shutdownCountdown = SHUTDOWNCOUNTDOWN_INVALID;
     protected ValueCallback _valueCallbackOsControl = null;
 
@@ -204,7 +204,7 @@ public class YOsControl : YFunction
         obj = (YOsControl) YFunction._FindFromCache("OsControl", func);
         if (obj == null) {
             obj = new YOsControl(func);
-            YFunction._AddToCache("OsControl",  func, obj);
+            YFunction._AddToCache("OsControl", func, obj);
         }
         return obj;
     }
@@ -258,10 +258,10 @@ public class YOsControl : YFunction
     public static YOsControl FindOsControlInContext(YAPIContext yctx,string func)
     {
         YOsControl obj;
-        obj = (YOsControl) YFunction._FindFromCacheInContext(yctx,  "OsControl", func);
+        obj = (YOsControl) YFunction._FindFromCacheInContext(yctx, "OsControl", func);
         if (obj == null) {
             obj = new YOsControl(yctx, func);
-            YFunction._AddToCache("OsControl",  func, obj);
+            YFunction._AddToCache("OsControl", func, obj);
         }
         return obj;
     }
@@ -332,6 +332,27 @@ public class YOsControl : YFunction
     public virtual async Task<int> shutdown(int secBeforeShutDown)
     {
         return await this.set_shutdownCountdown(secBeforeShutDown);
+    }
+
+    /**
+     * <summary>
+     *   Schedules an OS reboot after a given number of seconds.
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="secBeforeReboot">
+     *   number of seconds before reboot
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> reboot(int secBeforeReboot)
+    {
+        return await this.set_shutdownCountdown(0 - secBeforeReboot);
     }
 
     /**

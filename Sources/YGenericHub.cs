@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YGenericHub.cs 54259 2023-04-28 08:06:26Z seb $
+ * $Id: YGenericHub.cs 60416 2024-04-08 09:18:24Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -119,7 +119,7 @@ namespace com.yoctopuce.YoctoAPI
         protected internal readonly bool _reportConnnectionLost;
         private string _hubSerialNumber = null;
         protected bool _enabled = true;
-        private List<String> _knownUrls = new List<string>();
+        protected internal List<String> _knownUrls = new List<string>();
         private int _networkTimeoutMs;
         private string _lastErrorMessage="";
         private int _lastErrorType= YAPI.SUCCESS;
@@ -130,6 +130,7 @@ namespace com.yoctopuce.YoctoAPI
             _hubidx = idx;
             _reportConnnectionLost = reportConnnectionLost;
             _http_params = httpParams;
+            _knownUrls.Add(httpParams.getOriginalURL());
             _networkTimeoutMs = yctx.imm_GetNetworkTimeout();
         }
 
@@ -273,7 +274,7 @@ namespace com.yoctopuce.YoctoAPI
 
             if (_hubSerialNumber == null) {
                 foreach (WPEntry wp in whitePages) {
-                    if (wp.NetworkUrl.Equals("")) {
+                    if (wp.NetworkUrl=="") {
                         _hubSerialNumber = wp.SerialNumber;
                     }
                 }
@@ -290,7 +291,7 @@ namespace com.yoctopuce.YoctoAPI
         {
             foreach (YDevice dev in _devices.Values) {
                 string devSerialNumber = dev.imm_getSerialNumber();
-                if (devSerialNumber.Equals(serialNumber)) {
+                if (devSerialNumber ==serialNumber) {
                     return _http_params.imm_getUrl(true, false,false) + dev._wpRec.NetworkUrl + "/";
                 }
             }
@@ -303,11 +304,13 @@ namespace com.yoctopuce.YoctoAPI
             List<string> res = new List<string>();
             foreach (YDevice dev in _devices.Values) {
                 string devSerialNumber = dev.imm_getSerialNumber();
-                if (devSerialNumber.Equals(serialNumber)) {
-                    if (!dev._wpRec.NetworkUrl.Equals("")) {
+                if (devSerialNumber==serialNumber) {
+                    if (dev._wpRec.NetworkUrl!="") {
                         //
                         res.Clear();
                         return res;
+                    } else {
+                        continue;
                     }
                 }
 
@@ -397,9 +400,16 @@ namespace com.yoctopuce.YoctoAPI
                 } else if (url.StartsWith("wss://", StringComparison.Ordinal)) {
                     pos = 6;
                     _proto = "wss";
-                } else if (url.StartsWith("usb://", StringComparison.Ordinal)) {
+                } else if (url=="usb" |url.StartsWith("usb://", StringComparison.Ordinal) ) {
                     pos = 6;
                     _proto = "usb";
+                    _proto = "usb";
+                    _user = "";
+                    _pass = "";
+                    _subdomain = "";
+                    _host = "";
+                    _port = -1;
+                    return;
                 } else {
                     _proto = "ws";
                     if (url.StartsWith("ws://", StringComparison.Ordinal)) {
@@ -471,6 +481,9 @@ namespace com.yoctopuce.YoctoAPI
 
             internal virtual string imm_getUrl(bool withProto, bool withUserPass, bool withEndSlash)
             {
+                if (_proto=="usb") {
+                    return "usb";
+                }
                 StringBuilder url = new StringBuilder();
                 if (withProto) {
                     url.Append(_proto).Append("://");
@@ -515,20 +528,20 @@ namespace com.yoctopuce.YoctoAPI
         abstract internal string get_debugMsg(string serial);
         public abstract bool isReadOnly();
 
-        public string getSerialNumber()
+        public virtual string getSerialNumber()
         {
-            throw new NotImplementedException();
+            return _hubSerialNumber;
         }
 
 
         public abstract bool isOnline();
 
-        public void set_networkTimeout(int networkMsTimeout)
+        public virtual void set_networkTimeout(int networkMsTimeout)
         {
             _networkTimeoutMs = networkMsTimeout;
         }
 
-        public int get_networkTimeout()
+        public virtual int get_networkTimeout()
         {
             return _networkTimeoutMs;
         }

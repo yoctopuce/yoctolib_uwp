@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAccelerometer.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YAccelerometer.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindAccelerometer(), the high-level API for Accelerometer functions
  *
@@ -382,7 +382,7 @@ public class YAccelerometer : YSensor
         obj = (YAccelerometer) YFunction._FindFromCache("Accelerometer", func);
         if (obj == null) {
             obj = new YAccelerometer(func);
-            YFunction._AddToCache("Accelerometer",  func, obj);
+            YFunction._AddToCache("Accelerometer", func, obj);
         }
         return obj;
     }
@@ -436,10 +436,10 @@ public class YAccelerometer : YSensor
     public static YAccelerometer FindAccelerometerInContext(YAPIContext yctx,string func)
     {
         YAccelerometer obj;
-        obj = (YAccelerometer) YFunction._FindFromCacheInContext(yctx,  "Accelerometer", func);
+        obj = (YAccelerometer) YFunction._FindFromCacheInContext(yctx, "Accelerometer", func);
         if (obj == null) {
             obj = new YAccelerometer(yctx, func);
-            YFunction._AddToCache("Accelerometer",  func, obj);
+            YFunction._AddToCache("Accelerometer", func, obj);
         }
         return obj;
     }

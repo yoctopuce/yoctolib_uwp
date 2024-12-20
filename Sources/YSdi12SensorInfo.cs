@@ -364,7 +364,7 @@ public class YSdi12SensorInfo
      */
     public virtual string imm_get_measureCommand(int measureIndex)
     {
-        if (!(measureIndex < _valuesDesc.Count)) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid measure index"); return ""; }
+        if (!(measureIndex < _valuesDesc.Count)) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid measure index"); return ""; }
         return _valuesDesc[measureIndex][0];
     }
 
@@ -406,7 +406,7 @@ public class YSdi12SensorInfo
      */
     public virtual int imm_get_measurePosition(int measureIndex)
     {
-        if (!(measureIndex < _valuesDesc.Count)) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid measure index"); return 0; }
+        if (!(measureIndex < _valuesDesc.Count)) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid measure index"); return 0; }
         return YAPIContext.imm_atoi(_valuesDesc[measureIndex][2]);
     }
 
@@ -448,7 +448,7 @@ public class YSdi12SensorInfo
      */
     public virtual string imm_get_measureSymbol(int measureIndex)
     {
-        if (!(measureIndex < _valuesDesc.Count)) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid measure index"); return ""; }
+        if (!(measureIndex < _valuesDesc.Count)) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid measure index"); return ""; }
         return _valuesDesc[measureIndex][3];
     }
 
@@ -490,7 +490,7 @@ public class YSdi12SensorInfo
      */
     public virtual string imm_get_measureUnit(int measureIndex)
     {
-        if (!(measureIndex < _valuesDesc.Count)) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid measure index"); return ""; }
+        if (!(measureIndex < _valuesDesc.Count)) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid measure index"); return ""; }
         return _valuesDesc[measureIndex][4];
     }
 
@@ -532,7 +532,7 @@ public class YSdi12SensorInfo
      */
     public virtual string imm_get_measureDescription(int measureIndex)
     {
-        if (!(measureIndex < _valuesDesc.Count)) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid measure index"); return ""; }
+        if (!(measureIndex < _valuesDesc.Count)) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid measure index"); return ""; }
         return _valuesDesc[measureIndex][5];
     }
 
@@ -550,8 +550,8 @@ public class YSdi12SensorInfo
         string errmsg;
 
         if ((infoStr).Length > 1) {
-            if ((infoStr).Substring( 0, 2) == "ER") {
-                errmsg = (infoStr).Substring( 2, (infoStr).Length-2);
+            if ((infoStr).Substring(0, 2) == "ER") {
+                errmsg = (infoStr).Substring(2, (infoStr).Length-2);
                 _addr = errmsg;
                 _proto = errmsg;
                 _mfg = errmsg;
@@ -560,12 +560,12 @@ public class YSdi12SensorInfo
                 _sn = errmsg;
                 _isValid = false;
             } else {
-                _addr = (infoStr).Substring( 0, 1);
-                _proto = (infoStr).Substring( 1, 2);
-                _mfg = (infoStr).Substring( 3, 8);
-                _model = (infoStr).Substring( 11, 6);
-                _ver = (infoStr).Substring( 17, 3);
-                _sn = (infoStr).Substring( 20, (infoStr).Length-20);
+                _addr = (infoStr).Substring(0, 1);
+                _proto = (infoStr).Substring(1, 2);
+                _mfg = (infoStr).Substring(3, 8);
+                _model = (infoStr).Substring(11, 6);
+                _ver = (infoStr).Substring(17, 3);
+                _sn = (infoStr).Substring(20, (infoStr).Length-20);
                 _isValid = true;
             }
         }
@@ -589,16 +589,16 @@ public class YSdi12SensorInfo
         k = 0;
         size = 4;
         while (k < 10) {
-            infoNbVal = await _sdi12Port.querySdi12(_addr,  "IM"+Convert.ToString(k), 5000);
+            infoNbVal = await _sdi12Port.querySdi12(_addr, "IM"+Convert.ToString(k), 5000);
             if ((infoNbVal).Length > 1) {
-                value = (infoNbVal).Substring( 4, (infoNbVal).Length-4);
+                value = (infoNbVal).Substring(4, (infoNbVal).Length-4);
                 nbVal = YAPIContext.imm_atoi(value);
                 if (nbVal != 0) {
                     val.Clear();
                     i = 0;
                     while (i < nbVal) {
-                        cmd = "IM"+Convert.ToString( k)+"_00"+Convert.ToString(i+1);
-                        infoVal = await _sdi12Port.querySdi12(_addr,  cmd, 5000);
+                        cmd = "IM"+Convert.ToString(k)+"_00"+Convert.ToString(i+1);
+                        infoVal = await _sdi12Port.querySdi12(_addr, cmd, 5000);
                         data = new List<string>(infoVal.Split(new char[] {';'}));
                         data = new List<string>(data[0].Split(new char[] {','}));
                         listVal.Clear();

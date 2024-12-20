@@ -737,7 +737,7 @@ public class YInputCapture : YFunction
         obj = (YInputCapture) YFunction._FindFromCache("InputCapture", func);
         if (obj == null) {
             obj = new YInputCapture(func);
-            YFunction._AddToCache("InputCapture",  func, obj);
+            YFunction._AddToCache("InputCapture", func, obj);
         }
         return obj;
     }
@@ -791,10 +791,10 @@ public class YInputCapture : YFunction
     public static YInputCapture FindInputCaptureInContext(YAPIContext yctx,string func)
     {
         YInputCapture obj;
-        obj = (YInputCapture) YFunction._FindFromCacheInContext(yctx,  "InputCapture", func);
+        obj = (YInputCapture) YFunction._FindFromCacheInContext(yctx, "InputCapture", func);
         if (obj == null) {
             obj = new YInputCapture(yctx, func);
-            YFunction._AddToCache("InputCapture",  func, obj);
+            YFunction._AddToCache("InputCapture", func, obj);
         }
         return obj;
     }
@@ -893,8 +893,8 @@ public class YInputCapture : YFunction
         if (msDuration > 1000) {
             msDuration = 1000;
         }
-        snapStart = ((-msDuration) / (2));
-        snapUrl = "snap.bin?t="+Convert.ToString( snapStart)+"&d="+Convert.ToString(msDuration);
+        snapStart = ((-msDuration) / 2);
+        snapUrl = "snap.bin?t="+Convert.ToString(snapStart)+"&d="+Convert.ToString(msDuration);
 
         snapData = await this._download(snapUrl);
         return new YInputCaptureData(this, snapData);

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTilt.cs 43478 2021-01-21 13:49:12Z mvuilleu $
+ *  $Id: YTilt.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindTilt(), the high-level API for Tilt functions
  *
@@ -53,7 +53,7 @@ namespace com.yoctopuce.YoctoAPI
  *   The <c>YSensor</c> class is the parent class for all Yoctopuce sensor types. It can be
  *   used to read the current value and unit of any sensor, read the min/max
  *   value, configure autonomous recording frequency and access recorded data.
- *   It also provide a function to register a callback invoked each time the
+ *   It also provides a function to register a callback invoked each time the
  *   observed value changes, or at a predefined interval. Using this class rather
  *   than a specific subclass makes it possible to create generic applications
  *   that work with any Yoctopuce sensor, even those that do not yet exist.
@@ -264,7 +264,7 @@ public class YTilt : YSensor
         obj = (YTilt) YFunction._FindFromCache("Tilt", func);
         if (obj == null) {
             obj = new YTilt(func);
-            YFunction._AddToCache("Tilt",  func, obj);
+            YFunction._AddToCache("Tilt", func, obj);
         }
         return obj;
     }
@@ -318,10 +318,10 @@ public class YTilt : YSensor
     public static YTilt FindTiltInContext(YAPIContext yctx,string func)
     {
         YTilt obj;
-        obj = (YTilt) YFunction._FindFromCacheInContext(yctx,  "Tilt", func);
+        obj = (YTilt) YFunction._FindFromCacheInContext(yctx, "Tilt", func);
         if (obj == null) {
             obj = new YTilt(yctx, func);
-            YFunction._AddToCache("Tilt",  func, obj);
+            YFunction._AddToCache("Tilt", func, obj);
         }
         return obj;
     }

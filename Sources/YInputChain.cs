@@ -830,7 +830,7 @@ public class YInputChain : YFunction
         obj = (YInputChain) YFunction._FindFromCache("InputChain", func);
         if (obj == null) {
             obj = new YInputChain(func);
-            YFunction._AddToCache("InputChain",  func, obj);
+            YFunction._AddToCache("InputChain", func, obj);
         }
         return obj;
     }
@@ -884,10 +884,10 @@ public class YInputChain : YFunction
     public static YInputChain FindInputChainInContext(YAPIContext yctx,string func)
     {
         YInputChain obj;
-        obj = (YInputChain) YFunction._FindFromCacheInContext(yctx,  "InputChain", func);
+        obj = (YInputChain) YFunction._FindFromCacheInContext(yctx, "InputChain", func);
         if (obj == null) {
             obj = new YInputChain(yctx, func);
-            YFunction._AddToCache("InputChain",  func, obj);
+            YFunction._AddToCache("InputChain", func, obj);
         }
         return obj;
     }
@@ -943,7 +943,7 @@ public class YInputChain : YFunction
      * <summary>
      *   Resets the application watchdog countdown.
      * <para>
-     *   If you have setup a non-zero <c>watchdogPeriod</c>, you should
+     *   If you have set up a non-zero <c>watchdogPeriod</c>, you should
      *   call this function on a regular basis to prevent the application
      *   inactivity error to be triggered.
      * </para>
@@ -1068,11 +1068,11 @@ public class YInputChain : YFunction
         contentStr = YAPI.DefaultEncoding.GetString(content);
         eventArr = new List<string>(contentStr.Split(new char[] {'\n'}));
         arrLen = eventArr.Count;
-        if (!(arrLen > 0)) { this._throw( YAPI.IO_ERROR, "fail to download events"); return YAPI.IO_ERROR; }
+        if (!(arrLen > 0)) { this._throw(YAPI.IO_ERROR,"fail to download events"); return YAPI.IO_ERROR; }
         // last element of array is the new position preceeded by '@'
         arrLen = arrLen - 1;
         lenStr = eventArr[arrLen];
-        lenStr = (lenStr).Substring( 1, (lenStr).Length-1);
+        lenStr = (lenStr).Substring(1, (lenStr).Length-1);
         // update processed event position pointer
         _eventPos = YAPIContext.imm_atoi(lenStr);
         // now generate callbacks for each event received
@@ -1081,17 +1081,17 @@ public class YInputChain : YFunction
             eventStr = eventArr[arrPos];
             eventLen = (eventStr).Length;
             if (eventLen >= 1) {
-                hexStamp = (eventStr).Substring( 0, 8);
+                hexStamp = (eventStr).Substring(0, 8);
                 evtStamp = Convert.ToInt32(hexStamp, 16);
                 typePos = (eventStr).IndexOf(":")+1;
                 if ((evtStamp >= _eventStamp) && (typePos > 8)) {
                     _eventStamp = evtStamp;
                     dataPos = (eventStr).IndexOf("=")+1;
-                    evtType = (eventStr).Substring( typePos, 1);
+                    evtType = (eventStr).Substring(typePos, 1);
                     evtData = "";
                     evtChange = "";
                     if (dataPos > 10) {
-                        evtData = (eventStr).Substring( dataPos, (eventStr).Length-dataPos);
+                        evtData = (eventStr).Substring(dataPos, (eventStr).Length-dataPos);
                         if (("1234567").IndexOf(evtType) >= 0) {
                             chainIdx = YAPIContext.imm_atoi(evtType) - 1;
                             evtChange = await this._strXor(evtData, _eventChains[chainIdx]);
@@ -1118,19 +1118,19 @@ public class YInputChain : YFunction
         lenA = (a).Length;
         lenB = (b).Length;
         if (lenA > lenB) {
-            res = (a).Substring( 0, lenA-lenB);
-            a = (a).Substring( lenA-lenB, lenB);
+            res = (a).Substring(0, lenA-lenB);
+            a = (a).Substring(lenA-lenB, lenB);
             lenA = lenB;
         } else {
             res = "";
-            b = (b).Substring( lenA-lenB, lenA);
+            b = (b).Substring(lenA-lenB, lenA);
         }
         // scan strings and compare digit by digit
         idx = 0;
         while (idx < lenA) {
-            digitA = Convert.ToInt32((a).Substring( idx, 1), 16);
-            digitB = Convert.ToInt32((b).Substring( idx, 1), 16);
-            res = ""+ res+""+String.Format("{0:x}",((digitA) ^ (digitB)));
+            digitA = Convert.ToInt32((a).Substring(idx, 1), 16);
+            digitB = Convert.ToInt32((b).Substring(idx, 1), 16);
+            res = ""+res+""+String.Format("{0:x}",(digitA ^ digitB));
             idx = idx + 1;
         }
         return res;
@@ -1147,11 +1147,11 @@ public class YInputChain : YFunction
         idx = hexlen;
         while (idx > 0) {
             idx = idx - 1;
-            digit = Convert.ToInt32((hexstr).Substring( idx, 1), 16);
-            res.Add(((digit) & (1)));
-            res.Add(((((digit) >> (1))) & (1)));
-            res.Add(((((digit) >> (2))) & (1)));
-            res.Add(((((digit) >> (3))) & (1)));
+            digit = Convert.ToInt32((hexstr).Substring(idx, 1), 16);
+            res.Add((digit & 1));
+            res.Add(((digit >> 1) & 1));
+            res.Add(((digit >> 2) & 1));
+            res.Add(((digit >> 3) & 1));
         }
         return res;
     }

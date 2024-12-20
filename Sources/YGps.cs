@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGps.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YGps.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindGps(), the high-level API for Gps functions
  *
@@ -898,7 +898,7 @@ public class YGps : YFunction
         obj = (YGps) YFunction._FindFromCache("Gps", func);
         if (obj == null) {
             obj = new YGps(func);
-            YFunction._AddToCache("Gps",  func, obj);
+            YFunction._AddToCache("Gps", func, obj);
         }
         return obj;
     }
@@ -952,10 +952,10 @@ public class YGps : YFunction
     public static YGps FindGpsInContext(YAPIContext yctx,string func)
     {
         YGps obj;
-        obj = (YGps) YFunction._FindFromCacheInContext(yctx,  "Gps", func);
+        obj = (YGps) YFunction._FindFromCacheInContext(yctx, "Gps", func);
         if (obj == null) {
             obj = new YGps(yctx, func);
-            YFunction._AddToCache("Gps",  func, obj);
+            YFunction._AddToCache("Gps", func, obj);
         }
         return obj;
     }

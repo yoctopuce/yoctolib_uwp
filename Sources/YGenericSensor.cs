@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGenericSensor.cs 51903 2022-11-29 17:25:59Z mvuilleu $
+ *  $Id: YGenericSensor.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindGenericSensor(), the high-level API for GenericSensor functions
  *
@@ -407,7 +407,7 @@ public class YGenericSensor : YSensor
      * <summary>
      *   Changes the electric signal bias for zero shift adjustment.
      * <para>
-     *   If your electric signal reads positive when it should be zero, setup
+     *   If your electric signal reads positive when it should be zero, set up
      *   a positive signalBias of the same value to fix the zero shift.
      *   Remember to call the <c>saveToFlash()</c>
      *   method of the module if the modification must be kept.
@@ -658,7 +658,7 @@ public class YGenericSensor : YSensor
         obj = (YGenericSensor) YFunction._FindFromCache("GenericSensor", func);
         if (obj == null) {
             obj = new YGenericSensor(func);
-            YFunction._AddToCache("GenericSensor",  func, obj);
+            YFunction._AddToCache("GenericSensor", func, obj);
         }
         return obj;
     }
@@ -712,10 +712,10 @@ public class YGenericSensor : YSensor
     public static YGenericSensor FindGenericSensorInContext(YAPIContext yctx,string func)
     {
         YGenericSensor obj;
-        obj = (YGenericSensor) YFunction._FindFromCacheInContext(yctx,  "GenericSensor", func);
+        obj = (YGenericSensor) YFunction._FindFromCacheInContext(yctx, "GenericSensor", func);
         if (obj == null) {
             obj = new YGenericSensor(yctx, func);
-            YFunction._AddToCache("GenericSensor",  func, obj);
+            YFunction._AddToCache("GenericSensor", func, obj);
         }
         return obj;
     }

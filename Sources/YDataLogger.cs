@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataLogger.cs 59504 2024-02-26 11:42:03Z seb $
+ * $Id: YDataLogger.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements yFindDataLogger(), the high-level API for DataLogger functions
  *
@@ -617,7 +617,7 @@ public class YDataLogger : YFunction
         obj = (YDataLogger) YFunction._FindFromCache("DataLogger", func);
         if (obj == null) {
             obj = new YDataLogger(func);
-            YFunction._AddToCache("DataLogger",  func, obj);
+            YFunction._AddToCache("DataLogger", func, obj);
         }
         return obj;
     }
@@ -671,10 +671,10 @@ public class YDataLogger : YFunction
     public static YDataLogger FindDataLoggerInContext(YAPIContext yctx,string func)
     {
         YDataLogger obj;
-        obj = (YDataLogger) YFunction._FindFromCacheInContext(yctx,  "DataLogger", func);
+        obj = (YDataLogger) YFunction._FindFromCacheInContext(yctx, "DataLogger", func);
         if (obj == null) {
             obj = new YDataLogger(yctx, func);
-            YFunction._AddToCache("DataLogger",  func, obj);
+            YFunction._AddToCache("DataLogger", func, obj);
         }
         return obj;
     }

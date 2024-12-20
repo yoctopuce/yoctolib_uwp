@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YModule.cs 59953 2024-03-18 09:15:08Z seb $
+ * $Id: YModule.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -335,7 +335,7 @@ public class YModule : YFunction
         {
             YDevice dev = imm_getDev();
             YGenericHub hub = dev.Hub;
-            return hub.imm_get_subDeviceOf(_serialNumber);
+            return hub.imm_get_subDeviceOf(await this.get_serialNumber());
         }
 
 
@@ -939,7 +939,7 @@ public class YModule : YFunction
         obj = (YModule) YFunction._FindFromCache("Module", cleanHwId);
         if (obj == null) {
             obj = new YModule(cleanHwId);
-            YFunction._AddToCache("Module",  cleanHwId, obj);
+            YFunction._AddToCache("Module", cleanHwId, obj);
         }
         return obj;
     }
@@ -1000,10 +1000,10 @@ public class YModule : YFunction
         if (modpos != ((func).Length - 7)) {
             cleanHwId = func + ".module";
         }
-        obj = (YModule) YFunction._FindFromCacheInContext(yctx,  "Module", cleanHwId);
+        obj = (YModule) YFunction._FindFromCacheInContext(yctx, "Module", cleanHwId);
         if (obj == null) {
             obj = new YModule(yctx, cleanHwId);
-            YFunction._AddToCache("Module",  cleanHwId, obj);
+            YFunction._AddToCache("Module", cleanHwId, obj);
         }
         return obj;
     }
@@ -1064,7 +1064,7 @@ public class YModule : YFunction
         prodname = await this.get_productName();
         prodrel = await this.get_productRelease();
         if (prodrel > 1) {
-            fullname = ""+ prodname+" rev. "+((char)(64 + prodrel)).ToString();
+            fullname = ""+prodname+" rev. "+((char)(64 + prodrel)).ToString();
         } else {
             fullname = prodname;
         }
@@ -1314,7 +1314,7 @@ public class YModule : YFunction
         }
         //may throw an exception
         serial = await this.get_serialNumber();
-        tmp_res = await YFirmwareUpdate.CheckFirmware(serial,  path, release);
+        tmp_res = await YFirmwareUpdate.CheckFirmware(serial, path, release);
         if ((tmp_res).IndexOf("error:") == 0) {
             this._throw(YAPI.INVALID_ARGUMENT, tmp_res);
         }
@@ -1419,18 +1419,18 @@ public class YModule : YFunction
         ext_settings = ", \"extras\":[";
         templist = await this.get_functionIds("Temperature");
         sep = "";
-        for (int ii_0 = 0; ii_0 <  templist.Count; ii_0++) {
+        for (int ii_0 = 0; ii_0 < templist.Count; ii_0++) {
             if (YAPIContext.imm_atoi(await this.get_firmwareRelease()) > 9000) {
-                url = "api/"+ templist[ii_0]+"/sensorType";
+                url = "api/"+templist[ii_0]+"/sensorType";
                 t_type = YAPI.DefaultEncoding.GetString(await this._download(url));
                 if (t_type == "RES_NTC" || t_type == "RES_LINEAR") {
-                    id = ( templist[ii_0]).Substring( 11, ( templist[ii_0]).Length - 11);
+                    id = (templist[ii_0]).Substring(11, (templist[ii_0]).Length - 11);
                     if (id == "") {
                         id = "1";
                     }
                     temp_data_bin = await this._download("extra.json?page="+id);
                     if ((temp_data_bin).Length > 0) {
-                        item = ""+ sep+"{\"fid\":\""+  templist[ii_0]+"\", \"json\":"+YAPI.DefaultEncoding.GetString(temp_data_bin)+"}\n";
+                        item = ""+sep+"{\"fid\":\""+templist[ii_0]+"\", \"json\":"+YAPI.DefaultEncoding.GetString(temp_data_bin)+"}\n";
                         ext_settings = ext_settings + item;
                         sep = ",";
                     }
@@ -1445,12 +1445,12 @@ public class YModule : YFunction
             }
             filelist = this.imm_json_get_array(json);
             sep = "";
-            for (int ii_1 = 0; ii_1 <  filelist.Count; ii_1++) {
-                name = this.imm_json_get_key(YAPI.DefaultEncoding.GetBytes( filelist[ii_1]), "name");
+            for (int ii_1 = 0; ii_1 < filelist.Count; ii_1++) {
+                name = this.imm_json_get_key(YAPI.DefaultEncoding.GetBytes(filelist[ii_1]), "name");
                 if (((name).Length > 0) && !(name == "startupConf.json")) {
                     file_data_bin = await this._download(this.imm_escapeAttr(name));
                     file_data = YAPIContext.imm_bytesToHexStr(file_data_bin, 0, file_data_bin.Length);
-                    item = ""+ sep+"{\"name\":\""+ name+"\", \"data\":\""+file_data+"\"}\n";
+                    item = ""+sep+"{\"name\":\""+name+"\", \"data\":\""+file_data+"\"}\n";
                     ext_settings = ext_settings + item;
                     sep = ",";
                 }
@@ -1478,7 +1478,7 @@ public class YModule : YFunction
         while (ofs + 1 < size) {
             curr = values[ofs];
             currTemp = values[ofs + 1];
-            url = "api/"+ funcId+".json?command=m"+ curr+":"+currTemp;
+            url = "api/"+funcId+".json?command=m"+curr+":"+currTemp;
             await this._download(url);
             ofs = ofs + 2;
         }
@@ -1491,10 +1491,10 @@ public class YModule : YFunction
         string functionId;
         string data;
         extras = this.imm_json_get_array(YAPI.DefaultEncoding.GetBytes(jsonExtra));
-        for (int ii_0 = 0; ii_0 <  extras.Count; ii_0++) {
-            functionId = this.imm_get_json_path( extras[ii_0], "fid");
+        for (int ii_0 = 0; ii_0 < extras.Count; ii_0++) {
+            functionId = this.imm_get_json_path(extras[ii_0], "fid");
             functionId = this.imm_decode_json_string(functionId);
-            data = this.imm_get_json_path( extras[ii_0], "json");
+            data = this.imm_get_json_path(extras[ii_0], "json");
             if (await this.hasFunction(functionId)) {
                 await this.loadThermistorExtra(functionId, data);
             }
@@ -1552,13 +1552,13 @@ public class YModule : YFunction
             down = await this._download("files.json?a=format");
             res = this.imm_get_json_path(YAPI.DefaultEncoding.GetString(down), "res");
             res = this.imm_decode_json_string(res);
-            if (!(res == "ok")) { this._throw( YAPI.IO_ERROR, "format failed"); return YAPI.IO_ERROR; }
+            if (!(res == "ok")) { this._throw(YAPI.IO_ERROR,"format failed"); return YAPI.IO_ERROR; }
             json_files = this.imm_get_json_path(json, "files");
             files = this.imm_json_get_array(YAPI.DefaultEncoding.GetBytes(json_files));
-            for (int ii_0 = 0; ii_0 <  files.Count; ii_0++) {
-                name = this.imm_get_json_path( files[ii_0], "name");
+            for (int ii_0 = 0; ii_0 < files.Count; ii_0++) {
+                name = this.imm_get_json_path(files[ii_0], "name");
                 name = this.imm_decode_json_string(name);
-                data = this.imm_get_json_path( files[ii_0], "data");
+                data = this.imm_get_json_path(files[ii_0], "data");
                 data = this.imm_decode_json_string(data);
                 if (name == "") {
                     fuperror = fuperror + 1;
@@ -1569,7 +1569,7 @@ public class YModule : YFunction
         }
         // Apply settings a second time for file-dependent settings and dynamic sensor nodes
         globalres = await this.set_allSettings(YAPI.DefaultEncoding.GetBytes(json_api));
-        if (!(fuperror == 0)) { this._throw( YAPI.IO_ERROR, "Error during file upload"); return YAPI.IO_ERROR; }
+        if (!(fuperror == 0)) { this._throw(YAPI.IO_ERROR,"Error during file upload"); return YAPI.IO_ERROR; }
         return globalres;
     }
 
@@ -1797,7 +1797,7 @@ public class YModule : YFunction
                     }
                 } else {
                     if (paramVer == 0) {
-                        ratio = Double.Parse(param);
+                        ratio = YAPIContext.imm_atof(param);
                         if (ratio > 0) {
                             calibData.Add(0.0);
                             calibData.Add(0.0);
@@ -1839,7 +1839,7 @@ public class YModule : YFunction
                 param = (30 + calibType).ToString();
                 i = 0;
                 while (i < calibData.Count) {
-                    if (((i) & (1)) > 0) {
+                    if ((i & 1) > 0) {
                         param = param + ":";
                     } else {
                         param = param + " ";
@@ -1852,7 +1852,7 @@ public class YModule : YFunction
         } else {
             if (funVer >= 1) {
                 // Encode parameters for older devices
-                nPoints = ((calibData.Count) / (2));
+                nPoints = (calibData.Count / 2);
                 param = (nPoints).ToString();
                 i = 0;
                 while (i < 2 * nPoints) {
@@ -1974,9 +1974,9 @@ public class YModule : YFunction
                 this._throw(YAPI.INVALID_ARGUMENT, "Invalid settings");
                 return YAPI.INVALID_ARGUMENT;
             }
-            jpath = (each_str).Substring( 0, eqpos);
+            jpath = (each_str).Substring(0, eqpos);
             eqpos = eqpos + 1;
-            value = (each_str).Substring( eqpos, leng - eqpos);
+            value = (each_str).Substring(eqpos, leng - eqpos);
             old_jpath.Add(jpath);
             old_jpath_len.Add((jpath).Length);
             old_val_arr.Add(value);
@@ -2001,9 +2001,9 @@ public class YModule : YFunction
                 this._throw(YAPI.INVALID_ARGUMENT, "Invalid settings");
                 return YAPI.INVALID_ARGUMENT;
             }
-            jpath = (each_str).Substring( 0, eqpos);
+            jpath = (each_str).Substring(0, eqpos);
             eqpos = eqpos + 1;
-            value = (each_str).Substring( eqpos, leng - eqpos);
+            value = (each_str).Substring(eqpos, leng - eqpos);
             new_jpath.Add(jpath);
             new_jpath_len.Add((jpath).Length);
             new_val_arr.Add(value);
@@ -2016,9 +2016,9 @@ public class YModule : YFunction
             if ((cpos < 0) || (leng == 0)) {
                 continue;
             }
-            fun = (njpath).Substring( 0, cpos);
+            fun = (njpath).Substring(0, cpos);
             cpos = cpos + 1;
-            attr = (njpath).Substring( cpos, leng - cpos);
+            attr = (njpath).Substring(cpos, leng - cpos);
             do_update = true;
             if (fun == "services") {
                 do_update = false;
@@ -2191,7 +2191,7 @@ public class YModule : YFunction
                         }
                         j = j + 1;
                     }
-                    newval = await this.calibConvert(old_calib,  new_val_arr[i],  unit_name, sensorType);
+                    newval = await this.calibConvert(old_calib, new_val_arr[i], unit_name, sensorType);
                     url = "api/" + fun + ".json?" + attr + "=" + this.imm_escapeAttr(newval);
                     subres = await this._tryExec(url);
                     if ((res == YAPI.SUCCESS) && (subres != YAPI.SUCCESS)) {

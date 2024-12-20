@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAnButton.cs 56268 2023-08-25 17:43:56Z mvuilleu $
+ *  $Id: YAnButton.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindAnButton(), the high-level API for AnButton functions
  *
@@ -803,7 +803,7 @@ public class YAnButton : YFunction
         obj = (YAnButton) YFunction._FindFromCache("AnButton", func);
         if (obj == null) {
             obj = new YAnButton(func);
-            YFunction._AddToCache("AnButton",  func, obj);
+            YFunction._AddToCache("AnButton", func, obj);
         }
         return obj;
     }
@@ -857,10 +857,10 @@ public class YAnButton : YFunction
     public static YAnButton FindAnButtonInContext(YAPIContext yctx,string func)
     {
         YAnButton obj;
-        obj = (YAnButton) YFunction._FindFromCacheInContext(yctx,  "AnButton", func);
+        obj = (YAnButton) YFunction._FindFromCacheInContext(yctx, "AnButton", func);
         if (obj == null) {
             obj = new YAnButton(yctx, func);
-            YFunction._AddToCache("AnButton",  func, obj);
+            YFunction._AddToCache("AnButton", func, obj);
         }
         return obj;
     }

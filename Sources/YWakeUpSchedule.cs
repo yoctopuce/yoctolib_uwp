@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpSchedule.cs 56230 2023-08-21 15:20:59Z mvuilleu $
+ *  $Id: YWakeUpSchedule.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindWakeUpSchedule(), the high-level API for WakeUpSchedule functions
  *
@@ -675,7 +675,7 @@ public class YWakeUpSchedule : YFunction
         obj = (YWakeUpSchedule) YFunction._FindFromCache("WakeUpSchedule", func);
         if (obj == null) {
             obj = new YWakeUpSchedule(func);
-            YFunction._AddToCache("WakeUpSchedule",  func, obj);
+            YFunction._AddToCache("WakeUpSchedule", func, obj);
         }
         return obj;
     }
@@ -729,10 +729,10 @@ public class YWakeUpSchedule : YFunction
     public static YWakeUpSchedule FindWakeUpScheduleInContext(YAPIContext yctx,string func)
     {
         YWakeUpSchedule obj;
-        obj = (YWakeUpSchedule) YFunction._FindFromCacheInContext(yctx,  "WakeUpSchedule", func);
+        obj = (YWakeUpSchedule) YFunction._FindFromCacheInContext(yctx, "WakeUpSchedule", func);
         if (obj == null) {
             obj = new YWakeUpSchedule(yctx, func);
-            YFunction._AddToCache("WakeUpSchedule",  func, obj);
+            YFunction._AddToCache("WakeUpSchedule", func, obj);
         }
         return obj;
     }
@@ -796,7 +796,7 @@ public class YWakeUpSchedule : YFunction
         long res;
 
         res = await this.get_minutesB();
-        res = ((res) << (30));
+        res = (res << 30);
         res = res + await this.get_minutesA();
         return res;
     }
@@ -819,9 +819,9 @@ public class YWakeUpSchedule : YFunction
      */
     public virtual async Task<int> set_minutes(long bitmap)
     {
-        await this.set_minutesA((int)(((bitmap) & (0x3fffffff))));
-        bitmap = ((bitmap) >> (30));
-        return await this.set_minutesB((int)(((bitmap) & (0x3fffffff))));
+        await this.set_minutesA((int)((bitmap & 0x3fffffff)));
+        bitmap = (bitmap >> 30);
+        return await this.set_minutesB((int)((bitmap & 0x3fffffff)));
     }
 
     /**

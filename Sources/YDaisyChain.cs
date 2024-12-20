@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YDaisyChain.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YDaisyChain.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindDaisyChain(), the high-level API for DaisyChain functions
  *
@@ -309,7 +309,7 @@ public class YDaisyChain : YFunction
         obj = (YDaisyChain) YFunction._FindFromCache("DaisyChain", func);
         if (obj == null) {
             obj = new YDaisyChain(func);
-            YFunction._AddToCache("DaisyChain",  func, obj);
+            YFunction._AddToCache("DaisyChain", func, obj);
         }
         return obj;
     }
@@ -363,10 +363,10 @@ public class YDaisyChain : YFunction
     public static YDaisyChain FindDaisyChainInContext(YAPIContext yctx,string func)
     {
         YDaisyChain obj;
-        obj = (YDaisyChain) YFunction._FindFromCacheInContext(yctx,  "DaisyChain", func);
+        obj = (YDaisyChain) YFunction._FindFromCacheInContext(yctx, "DaisyChain", func);
         if (obj == null) {
             obj = new YDaisyChain(yctx, func);
-            YFunction._AddToCache("DaisyChain",  func, obj);
+            YFunction._AddToCache("DaisyChain", func, obj);
         }
         return obj;
     }

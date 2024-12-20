@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YMessageBox.cs 55576 2023-07-25 06:26:34Z mvuilleu $
+ * $Id: YMessageBox.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindMessageBox(), the high-level API for MessageBox functions
  *
@@ -517,7 +517,7 @@ public class YMessageBox : YFunction
         obj = (YMessageBox) YFunction._FindFromCache("MessageBox", func);
         if (obj == null) {
             obj = new YMessageBox(func);
-            YFunction._AddToCache("MessageBox",  func, obj);
+            YFunction._AddToCache("MessageBox", func, obj);
         }
         return obj;
     }
@@ -571,10 +571,10 @@ public class YMessageBox : YFunction
     public static YMessageBox FindMessageBoxInContext(YAPIContext yctx,string func)
     {
         YMessageBox obj;
-        obj = (YMessageBox) YFunction._FindFromCacheInContext(yctx,  "MessageBox", func);
+        obj = (YMessageBox) YFunction._FindFromCacheInContext(yctx, "MessageBox", func);
         if (obj == null) {
             obj = new YMessageBox(yctx, func);
-            YFunction._AddToCache("MessageBox",  func, obj);
+            YFunction._AddToCache("MessageBox", func, obj);
         }
         return obj;
     }
@@ -647,10 +647,10 @@ public class YMessageBox : YFunction
             await this.clearCache();
             bitmapStr = await this.get_slotsBitmap();
             newBitmap = YAPIContext.imm_hexStrToBin(bitmapStr);
-            idx = ((slot) >> (3));
+            idx = (slot >> 3);
             if (idx < (newBitmap).Length) {
-                bitVal = ((1) << ((((slot) & (7)))));
-                if ((((newBitmap[idx]) & (bitVal))) != 0) {
+                bitVal = (1 << ((slot & 7)));
+                if (((newBitmap[idx] & bitVal)) != 0) {
                     _prevBitmapStr = "";
                     int_res = await this.set_command("DS"+Convert.ToString(slot));
                     if (int_res < 0) {
@@ -685,19 +685,19 @@ public class YMessageBox : YFunction
         cmdLen = (cmd).Length;
         chrPos = (cmd).IndexOf("#");
         while (chrPos >= 0) {
-            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"23"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmd = ""+(cmd).Substring(0, chrPos)+""+((char)(37)).ToString()+"23"+(cmd).Substring(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).IndexOf("#");
         }
         chrPos = (cmd).IndexOf("+");
         while (chrPos >= 0) {
-            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"2B"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmd = ""+(cmd).Substring(0, chrPos)+""+((char)(37)).ToString()+"2B"+(cmd).Substring(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).IndexOf("+");
         }
         chrPos = (cmd).IndexOf("=");
         while (chrPos >= 0) {
-            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"3D"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmd = ""+(cmd).Substring(0, chrPos)+""+((char)(37)).ToString()+"3D"+(cmd).Substring(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).IndexOf("=");
         }
@@ -717,14 +717,14 @@ public class YMessageBox : YFunction
             if (buff[idx] == 64) {
                 // continuation detected
                 suffixlen = bufflen - idx;
-                cmd = "at.txt?cmd="+(buffstr).Substring( buffstrlen - suffixlen, suffixlen);
-                buffstr = (buffstr).Substring( 0, buffstrlen - suffixlen);
+                cmd = "at.txt?cmd="+(buffstr).Substring(buffstrlen - suffixlen, suffixlen);
+                buffstr = (buffstr).Substring(0, buffstrlen - suffixlen);
                 waitMore = waitMore - 1;
             } else {
                 // request complete
                 waitMore = 0;
             }
-            res = ""+ res+""+buffstr;
+            res = ""+res+""+buffstr;
         }
         return res;
     }
@@ -1118,10 +1118,10 @@ public class YMessageBox : YFunction
         while (pduIdx < _pdus.Count) {
             sms = _pdus[pduIdx];
             slot = await sms.get_slot();
-            idx = ((slot) >> (3));
+            idx = (slot >> 3);
             if (idx < (newBitmap).Length) {
-                bitVal = ((1) << ((((slot) & (7)))));
-                if ((((newBitmap[idx]) & (bitVal))) != 0) {
+                bitVal = (1 << ((slot & 7)));
+                if (((newBitmap[idx] & bitVal)) != 0) {
                     newArr.Add(sms);
                     if (await sms.get_concatCount() == 0) {
                         newMsg.Add(sms);
@@ -1146,13 +1146,13 @@ public class YMessageBox : YFunction
         // receive new messages
         slot = 0;
         while (slot < nslots) {
-            idx = ((slot) >> (3));
-            bitVal = ((1) << ((((slot) & (7)))));
+            idx = (slot >> 3);
+            bitVal = (1 << ((slot & 7)));
             prevBit = 0;
             if (idx < (prevBitmap).Length) {
-                prevBit = ((prevBitmap[idx]) & (bitVal));
+                prevBit = (prevBitmap[idx] & bitVal);
             }
-            if ((((newBitmap[idx]) & (bitVal))) != 0) {
+            if (((newBitmap[idx] & bitVal)) != 0) {
                 if (prevBit == 0) {
                     sms = await this.fetchPdu(slot);
                     newArr.Add(sms);

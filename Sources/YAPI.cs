@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPI.cs 56115 2023-08-16 09:40:13Z seb $
+ * $Id: YAPI.cs 62273 2024-08-23 07:20:59Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.10";
-        public const string YOCTO_API_BUILD_STR = "60394";
+        public const string YOCTO_API_BUILD_STR = "63797";
         public const int YOCTO_API_VERSION_BCD = 0x0110;
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
@@ -327,7 +327,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return YOCTO_API_VERSION_STR + ".60394" + YUSBHub.imm_getAPIVersion();
+            return YOCTO_API_VERSION_STR + ".63797" + YUSBHub.imm_getAPIVersion();
         }
 
         /**
@@ -419,7 +419,7 @@ public class YAPI
          * <para>
          *   From an operating system standpoint, it is generally not required to call
          *   this function since the OS will automatically free allocated resources
-         *   once your program is completed. However there are two situations when
+         *   once your program is completed. However, there are two situations when
          *   you may really want to use that function:
          * </para>
          * <para>
@@ -450,7 +450,7 @@ public class YAPI
 
         /**
          * <summary>
-         *   Setup the Yoctopuce library to use modules connected on a given machine.
+         *   Set up the Yoctopuce library to use modules connected on a given machine.
          * <para>
          *   Idealy this
          *   call will be made once at the begining of your application.  The
@@ -489,7 +489,7 @@ public class YAPI
          *   while trying to access the USB modules. In particular, this means
          *   that you must stop the VirtualHub software before starting
          *   an application that uses direct USB access. The workaround
-         *   for this limitation is to setup the library to use the VirtualHub
+         *   for this limitation is to set up the library to use the VirtualHub
          *   rather than direct USB access.
          * </para>
          * <para>
@@ -536,7 +536,7 @@ public class YAPI
 
         /**
          * <summary>
-         *   Setup the Yoctopuce library to use modules connected on a given machine.
+         *   Set up the Yoctopuce library to use modules connected on a given machine.
          * <para>
          *   Idealy this
          *   call will be made once at the begining of your application.  The
@@ -575,7 +575,7 @@ public class YAPI
          *   while trying to access the USB modules. In particular, this means
          *   that you must stop the VirtualHub software before starting
          *   an application that uses direct USB access. The workaround
-         *   for this limitation is to setup the library to use the VirtualHub
+         *   for this limitation is to set up the library to use the VirtualHub
          *   rather than direct USB access.
          * </para>
          * <para>
@@ -687,7 +687,7 @@ public class YAPI
 
         /**
          * <summary>
-         *   Setup the Yoctopuce library to no more use modules connected on a previously
+         *   Set up the Yoctopuce library to no more use modules connected on a previously
          *   registered machine with RegisterHub.
          * <para>
          * </para>
@@ -1062,7 +1062,7 @@ public class YAPI
          *   Checks if a given string is valid as logical name for a module or a function.
          * <para>
          *   A valid logical name has a maximum of 19 characters, all among
-         *   <c>A..Z</c>, <c>a..z</c>, <c>0..9</c>, <c>_</c>, and <c>-</c>.
+         *   <c>A...Z</c>, <c>a...z</c>, <c>0...9</c>, <c>_</c>, and <c>-</c>.
          *   If you try to configure a logical name with an incorrect string,
          *   the invalid characters are ignored.
          * </para>

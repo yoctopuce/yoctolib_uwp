@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YVoc.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YVoc.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindVoc(), the high-level API for Voc functions
  *
@@ -157,7 +157,7 @@ public class YVoc : YSensor
         obj = (YVoc) YFunction._FindFromCache("Voc", func);
         if (obj == null) {
             obj = new YVoc(func);
-            YFunction._AddToCache("Voc",  func, obj);
+            YFunction._AddToCache("Voc", func, obj);
         }
         return obj;
     }
@@ -211,10 +211,10 @@ public class YVoc : YSensor
     public static YVoc FindVocInContext(YAPIContext yctx,string func)
     {
         YVoc obj;
-        obj = (YVoc) YFunction._FindFromCacheInContext(yctx,  "Voc", func);
+        obj = (YVoc) YFunction._FindFromCacheInContext(yctx, "Voc", func);
         if (obj == null) {
             obj = new YVoc(yctx, func);
-            YFunction._AddToCache("Voc",  func, obj);
+            YFunction._AddToCache("Voc", func, obj);
         }
         return obj;
     }

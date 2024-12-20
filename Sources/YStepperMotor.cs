@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YStepperMotor.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YStepperMotor.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindStepperMotor(), the high-level API for StepperMotor functions
  *
@@ -322,7 +322,7 @@ public class YStepperMotor : YFunction
      * <summary>
      *   Changes the current logical motor position, measured in steps.
      * <para>
-     *   This command does not cause any motor move, as its purpose is only to setup
+     *   This command does not cause any motor move, as its purpose is only to set up
      *   the origin of the position counter. The fractional part of the position,
      *   that corresponds to the physical position of the rotor, is not changed.
      *   To trigger a motor move, use methods <c>moveTo()</c> or <c>moveRel()</c>
@@ -998,7 +998,7 @@ public class YStepperMotor : YFunction
         obj = (YStepperMotor) YFunction._FindFromCache("StepperMotor", func);
         if (obj == null) {
             obj = new YStepperMotor(func);
-            YFunction._AddToCache("StepperMotor",  func, obj);
+            YFunction._AddToCache("StepperMotor", func, obj);
         }
         return obj;
     }
@@ -1052,10 +1052,10 @@ public class YStepperMotor : YFunction
     public static YStepperMotor FindStepperMotorInContext(YAPIContext yctx,string func)
     {
         YStepperMotor obj;
-        obj = (YStepperMotor) YFunction._FindFromCacheInContext(yctx,  "StepperMotor", func);
+        obj = (YStepperMotor) YFunction._FindFromCacheInContext(yctx, "StepperMotor", func);
         if (obj == null) {
             obj = new YStepperMotor(yctx, func);
-            YFunction._AddToCache("StepperMotor",  func, obj);
+            YFunction._AddToCache("StepperMotor", func, obj);
         }
         return obj;
     }
@@ -1114,15 +1114,15 @@ public class YStepperMotor : YFunction
         byte[] retBin = new byte[0];
         int res;
         id = await this.get_functionId();
-        id = (id).Substring( 12, 1);
-        url = "cmd.txt?"+ id+"="+command;
+        id = (id).Substring(12, 1);
+        url = "cmd.txt?"+id+"="+command;
         //may throw an exception
         retBin = await this._download(url);
         res = retBin[0];
         if (res < 58) {
-            if (!(res == 48)) { this._throw( YAPI.DEVICE_BUSY, "Motor command pipeline is full, try again later"); return YAPI.DEVICE_BUSY; }
+            if (!(res == 48)) { this._throw(YAPI.DEVICE_BUSY,"Motor command pipeline is full, try again later"); return YAPI.DEVICE_BUSY; }
         } else {
-            if (!(res == 48)) { this._throw( YAPI.IO_ERROR, "Motor command failed permanently"); return YAPI.IO_ERROR; }
+            if (!(res == 48)) { this._throw(YAPI.IO_ERROR,"Motor command failed permanently"); return YAPI.IO_ERROR; }
         }
         return YAPI.SUCCESS;
     }
@@ -1324,7 +1324,7 @@ public class YStepperMotor : YFunction
      */
     public virtual async Task<int> alertStepDir(int dir)
     {
-        if (!(dir != 0)) { this._throw( YAPI.INVALID_ARGUMENT, "direction must be +1 or -1"); return YAPI.INVALID_ARGUMENT; }
+        if (!(dir != 0)) { this._throw(YAPI.INVALID_ARGUMENT,"direction must be +1 or -1"); return YAPI.INVALID_ARGUMENT; }
         if (dir > 0) {
             return await this.set_command(".+");
         }

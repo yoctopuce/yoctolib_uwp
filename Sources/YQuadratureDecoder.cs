@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YQuadratureDecoder.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YQuadratureDecoder.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindQuadratureDecoder(), the high-level API for QuadratureDecoder functions
  *
@@ -365,7 +365,7 @@ public class YQuadratureDecoder : YSensor
         obj = (YQuadratureDecoder) YFunction._FindFromCache("QuadratureDecoder", func);
         if (obj == null) {
             obj = new YQuadratureDecoder(func);
-            YFunction._AddToCache("QuadratureDecoder",  func, obj);
+            YFunction._AddToCache("QuadratureDecoder", func, obj);
         }
         return obj;
     }
@@ -419,10 +419,10 @@ public class YQuadratureDecoder : YSensor
     public static YQuadratureDecoder FindQuadratureDecoderInContext(YAPIContext yctx,string func)
     {
         YQuadratureDecoder obj;
-        obj = (YQuadratureDecoder) YFunction._FindFromCacheInContext(yctx,  "QuadratureDecoder", func);
+        obj = (YQuadratureDecoder) YFunction._FindFromCacheInContext(yctx, "QuadratureDecoder", func);
         if (obj == null) {
             obj = new YQuadratureDecoder(yctx, func);
-            YFunction._AddToCache("QuadratureDecoder",  func, obj);
+            YFunction._AddToCache("QuadratureDecoder", func, obj);
         }
         return obj;
     }

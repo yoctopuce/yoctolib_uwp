@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAudioIn.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YAudioIn.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindAudioIn(), the high-level API for AudioIn functions
  *
@@ -410,7 +410,7 @@ public class YAudioIn : YFunction
         obj = (YAudioIn) YFunction._FindFromCache("AudioIn", func);
         if (obj == null) {
             obj = new YAudioIn(func);
-            YFunction._AddToCache("AudioIn",  func, obj);
+            YFunction._AddToCache("AudioIn", func, obj);
         }
         return obj;
     }
@@ -464,10 +464,10 @@ public class YAudioIn : YFunction
     public static YAudioIn FindAudioInInContext(YAPIContext yctx,string func)
     {
         YAudioIn obj;
-        obj = (YAudioIn) YFunction._FindFromCacheInContext(yctx,  "AudioIn", func);
+        obj = (YAudioIn) YFunction._FindFromCacheInContext(yctx, "AudioIn", func);
         if (obj == null) {
             obj = new YAudioIn(yctx, func);
-            YFunction._AddToCache("AudioIn",  func, obj);
+            YFunction._AddToCache("AudioIn", func, obj);
         }
         return obj;
     }

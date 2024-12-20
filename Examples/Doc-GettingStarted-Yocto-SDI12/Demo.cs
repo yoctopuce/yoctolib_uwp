@@ -1,12 +1,10 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 59884 2024-03-14 13:28:06Z mvuilleu $
+ *  $Id: Demo.cs 63137 2024-10-31 09:38:54Z tiago $
  *
- *  An example that shows how to use a  Yocto-SDI12
+ *  Doc-GettingStarted-Yocto-SDI12 example
  *
  *  You can find more information on our web site:
- *   Yocto-I2C documentation:
- *      https://www.yoctopuce.com/EN/products/yocto-i2c/doc.html
  *   uwp API Reference:
  *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-uwp-EN.html
  *

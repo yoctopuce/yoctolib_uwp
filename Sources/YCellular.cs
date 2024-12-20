@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YCellular.cs 54259 2023-04-28 08:06:26Z seb $
+ * $Id: YCellular.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindCellular(), the high-level API for Cellular functions
  *
@@ -1144,7 +1144,7 @@ public class YCellular : YFunction
         obj = (YCellular) YFunction._FindFromCache("Cellular", func);
         if (obj == null) {
             obj = new YCellular(func);
-            YFunction._AddToCache("Cellular",  func, obj);
+            YFunction._AddToCache("Cellular", func, obj);
         }
         return obj;
     }
@@ -1198,10 +1198,10 @@ public class YCellular : YFunction
     public static YCellular FindCellularInContext(YAPIContext yctx,string func)
     {
         YCellular obj;
-        obj = (YCellular) YFunction._FindFromCacheInContext(yctx,  "Cellular", func);
+        obj = (YCellular) YFunction._FindFromCacheInContext(yctx, "Cellular", func);
         if (obj == null) {
             obj = new YCellular(yctx, func);
-            YFunction._AddToCache("Cellular",  func, obj);
+            YFunction._AddToCache("Cellular", func, obj);
         }
         return obj;
     }
@@ -1256,7 +1256,7 @@ public class YCellular : YFunction
     /**
      * <summary>
      *   Sends a PUK code to unlock the SIM card after three failed PIN code attempts, and
-     *   setup a new PIN into the SIM card.
+     *   set up a new PIN into the SIM card.
      * <para>
      *   Only ten consecutive tentatives are permitted:
      *   after that, the SIM card will be blocked permanently without any mean of recovery
@@ -1283,7 +1283,7 @@ public class YCellular : YFunction
     {
         string gsmMsg;
         gsmMsg = await this.get_message();
-        if (!((gsmMsg).Substring(0, 13) == "Enter SIM PUK")) { this._throw(YAPI.INVALID_ARGUMENT, "PUK not expected at this time"); return YAPI.INVALID_ARGUMENT; }
+        if (!((gsmMsg).Substring(0, 13) == "Enter SIM PUK")) { this._throw(YAPI.INVALID_ARGUMENT,"PUK not expected at this time"); return YAPI.INVALID_ARGUMENT; }
         if (newPin == "") {
             return await this.set_command("AT+CPIN="+puk+",0000;+CLCK=SC,0,0000");
         }
@@ -1378,19 +1378,19 @@ public class YCellular : YFunction
         cmdLen = (cmd).Length;
         chrPos = (cmd).IndexOf("#");
         while (chrPos >= 0) {
-            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"23"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmd = ""+(cmd).Substring(0, chrPos)+""+((char)(37)).ToString()+"23"+(cmd).Substring(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).IndexOf("#");
         }
         chrPos = (cmd).IndexOf("+");
         while (chrPos >= 0) {
-            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"2B"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmd = ""+(cmd).Substring(0, chrPos)+""+((char)(37)).ToString()+"2B"+(cmd).Substring(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).IndexOf("+");
         }
         chrPos = (cmd).IndexOf("=");
         while (chrPos >= 0) {
-            cmd = ""+ (cmd).Substring( 0, chrPos)+""+((char)( 37)).ToString()+"3D"+(cmd).Substring( chrPos+1, cmdLen-chrPos-1);
+            cmd = ""+(cmd).Substring(0, chrPos)+""+((char)(37)).ToString()+"3D"+(cmd).Substring(chrPos+1, cmdLen-chrPos-1);
             cmdLen = cmdLen + 2;
             chrPos = (cmd).IndexOf("=");
         }
@@ -1410,14 +1410,14 @@ public class YCellular : YFunction
             if (buff[idx] == 64) {
                 // continuation detected
                 suffixlen = bufflen - idx;
-                cmd = "at.txt?cmd="+(buffstr).Substring( buffstrlen - suffixlen, suffixlen);
-                buffstr = (buffstr).Substring( 0, buffstrlen - suffixlen);
+                cmd = "at.txt?cmd="+(buffstr).Substring(buffstrlen - suffixlen, suffixlen);
+                buffstr = (buffstr).Substring(0, buffstrlen - suffixlen);
                 waitMore = waitMore - 1;
             } else {
                 // request complete
                 waitMore = 0;
             }
-            res = ""+ res+""+buffstr;
+            res = ""+res+""+buffstr;
         }
         return res;
     }
@@ -1449,14 +1449,14 @@ public class YCellular : YFunction
         idx = (cops).IndexOf("(");
         while (idx >= 0) {
             slen = slen - (idx+1);
-            cops = (cops).Substring( idx+1, slen);
+            cops = (cops).Substring(idx+1, slen);
             idx = (cops).IndexOf("\"");
             if (idx > 0) {
                 slen = slen - (idx+1);
-                cops = (cops).Substring( idx+1, slen);
+                cops = (cops).Substring(idx+1, slen);
                 idx = (cops).IndexOf("\"");
                 if (idx > 0) {
-                    res.Add((cops).Substring( 0, idx));
+                    res.Add((cops).Substring(0, idx));
                 }
             }
             idx = (cops).IndexOf("(");
@@ -6033,14 +6033,14 @@ public class YCellular : YFunction
         profiles = await this._AT("+UMNOPROF=?");
         lines = new List<string>(profiles.Split(new char[] {'\n'}));
         nlines = lines.Count;
-        if (!(nlines > 0)) { this._throw( YAPI.IO_ERROR, "fail to retrieve profile list"); return res; }
+        if (!(nlines > 0)) { this._throw(YAPI.IO_ERROR,"fail to retrieve profile list"); return res; }
         res.Clear();
         idx = 0;
         while (idx < nlines) {
             line = lines[idx];
             cpos = (line).IndexOf(":");
             if (cpos > 0) {
-                profno = YAPIContext.imm_atoi((line).Substring( 0, cpos));
+                profno = YAPIContext.imm_atoi((line).Substring(0, cpos));
                 if (profno > 1) {
                     res.Add(line);
                 }

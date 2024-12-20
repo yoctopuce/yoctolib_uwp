@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 42114 2020-10-22 08:25:08Z seb $
+ * $Id: YDisplay.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -719,7 +719,7 @@ public class YDisplay : YFunction
         obj = (YDisplay) YFunction._FindFromCache("Display", func);
         if (obj == null) {
             obj = new YDisplay(func);
-            YFunction._AddToCache("Display",  func, obj);
+            YFunction._AddToCache("Display", func, obj);
         }
         return obj;
     }
@@ -773,10 +773,10 @@ public class YDisplay : YFunction
     public static YDisplay FindDisplayInContext(YAPIContext yctx,string func)
     {
         YDisplay obj;
-        obj = (YDisplay) YFunction._FindFromCacheInContext(yctx,  "Display", func);
+        obj = (YDisplay) YFunction._FindFromCacheInContext(yctx, "Display", func);
         if (obj == null) {
             obj = new YDisplay(yctx, func);
-            YFunction._AddToCache("Display",  func, obj);
+            YFunction._AddToCache("Display", func, obj);
         }
         return obj;
     }
@@ -1113,7 +1113,7 @@ public class YDisplay : YFunction
         int layercount;
         int idx;
         layercount = await this.get_layerCount();
-        if (!((layerId >= 0) && (layerId < layercount))) { this._throw( YAPI.INVALID_ARGUMENT, "invalid DisplayLayer index"); return null; }
+        if (!((layerId >= 0) && (layerId < layercount))) { this._throw(YAPI.INVALID_ARGUMENT,"invalid DisplayLayer index"); return null; }
         if (_allDisplayLayers.Count == 0) {
             idx = 0;
             while (idx < layercount) {

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YBuzzer.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YBuzzer.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindBuzzer(), the high-level API for Buzzer functions
  *
@@ -446,7 +446,7 @@ public class YBuzzer : YFunction
         obj = (YBuzzer) YFunction._FindFromCache("Buzzer", func);
         if (obj == null) {
             obj = new YBuzzer(func);
-            YFunction._AddToCache("Buzzer",  func, obj);
+            YFunction._AddToCache("Buzzer", func, obj);
         }
         return obj;
     }
@@ -500,10 +500,10 @@ public class YBuzzer : YFunction
     public static YBuzzer FindBuzzerInContext(YAPIContext yctx,string func)
     {
         YBuzzer obj;
-        obj = (YBuzzer) YFunction._FindFromCacheInContext(yctx,  "Buzzer", func);
+        obj = (YBuzzer) YFunction._FindFromCacheInContext(yctx, "Buzzer", func);
         if (obj == null) {
             obj = new YBuzzer(yctx, func);
-            YFunction._AddToCache("Buzzer",  func, obj);
+            YFunction._AddToCache("Buzzer", func, obj);
         }
         return obj;
     }
@@ -756,7 +756,7 @@ public class YBuzzer : YFunction
             }
             if (ch == 46) {
                 // . (duration modifier)
-                num = ((num * 2) / (3));
+                num = ((num * 2) / 3);
             }
             if (((ch == 32) || (i+1 == notesLen)) && ((note > -99) || (typ != 3))) {
                 if (num == 0) {
@@ -777,7 +777,7 @@ public class YBuzzer : YFunction
                     }
                     pitch = prevPitch + dNote;
                     freq = (int) Math.Round(440 * Math.Exp(pitch * 0.05776226504666));
-                    ms16 = ((ms) >> (4));
+                    ms16 = (ms >> 4);
                     rest = 0;
                     if (typ == 3) {
                         rest = 2 * ms16;

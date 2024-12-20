@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSerialPort.cs 59641 2024-03-05 20:50:20Z mvuilleu $
+ * $Id: YSerialPort.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindSerialPort(), the high-level API for SerialPort functions
  *
@@ -907,7 +907,7 @@ public class YSerialPort : YFunction
         obj = (YSerialPort) YFunction._FindFromCache("SerialPort", func);
         if (obj == null) {
             obj = new YSerialPort(func);
-            YFunction._AddToCache("SerialPort",  func, obj);
+            YFunction._AddToCache("SerialPort", func, obj);
         }
         return obj;
     }
@@ -961,10 +961,10 @@ public class YSerialPort : YFunction
     public static YSerialPort FindSerialPortInContext(YAPIContext yctx,string func)
     {
         YSerialPort obj;
-        obj = (YSerialPort) YFunction._FindFromCacheInContext(yctx,  "SerialPort", func);
+        obj = (YSerialPort) YFunction._FindFromCacheInContext(yctx, "SerialPort", func);
         if (obj == null) {
             obj = new YSerialPort(yctx, func);
-            YFunction._AddToCache("SerialPort",  func, obj);
+            YFunction._AddToCache("SerialPort", func, obj);
         }
         return obj;
     }
@@ -1107,7 +1107,7 @@ public class YSerialPort : YFunction
         List<string> res = new List<string>();
         int idx;
 
-        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString( maxWait)+"&pat="+pattern;
+        url = "rxmsg.json?pos="+Convert.ToString(_rxptr)+"&maxw="+Convert.ToString(maxWait)+"&pat="+pattern;
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.Count;
@@ -1183,7 +1183,7 @@ public class YSerialPort : YFunction
         databin = await this._download("rxcnt.bin?pos="+Convert.ToString(_rxptr));
         availPosStr = YAPI.DefaultEncoding.GetString(databin);
         atPos = (availPosStr).IndexOf("@");
-        res = YAPIContext.imm_atoi((availPosStr).Substring( 0, atPos));
+        res = YAPIContext.imm_atoi((availPosStr).Substring(0, atPos));
         return res;
     }
 
@@ -1197,7 +1197,7 @@ public class YSerialPort : YFunction
         databin = await this._download("rxcnt.bin?pos="+Convert.ToString(_rxptr));
         availPosStr = YAPI.DefaultEncoding.GetString(databin);
         atPos = (availPosStr).IndexOf("@");
-        res = YAPIContext.imm_atoi((availPosStr).Substring( atPos+1, (availPosStr).Length-atPos-1));
+        res = YAPIContext.imm_atoi((availPosStr).Substring(atPos+1, (availPosStr).Length-atPos-1));
         return res;
     }
 
@@ -1232,12 +1232,12 @@ public class YSerialPort : YFunction
         string res;
         if ((query).Length <= 80) {
             // fast query
-            url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=!"+this.imm_escapeAttr(query);
+            url = "rxmsg.json?len=1&maxw="+Convert.ToString(maxWait)+"&cmd=!"+this.imm_escapeAttr(query);
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload("txdata", YAPI.DefaultEncoding.GetBytes(query + "\r\n"));
-            url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&pos="+Convert.ToString(prevpos);
+            url = "rxmsg.json?len=1&maxw="+Convert.ToString(maxWait)+"&pos="+Convert.ToString(prevpos);
         }
 
         msgbin = await this._download(url);
@@ -1288,12 +1288,12 @@ public class YSerialPort : YFunction
         string res;
         if ((hexString).Length <= 80) {
             // fast query
-            url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=$"+hexString;
+            url = "rxmsg.json?len=1&maxw="+Convert.ToString(maxWait)+"&cmd=$"+hexString;
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload("txdata", YAPIContext.imm_hexStrToBin(hexString));
-            url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&pos="+Convert.ToString(prevpos);
+            url = "rxmsg.json?len=1&maxw="+Convert.ToString(maxWait)+"&pos="+Convert.ToString(prevpos);
         }
 
         msgbin = await this._download(url);
@@ -1538,11 +1538,11 @@ public class YSerialPort : YFunction
         if (bufflen < 100) {
             return await this.sendCommand("$"+hexString);
         }
-        bufflen = ((bufflen) >> (1));
+        bufflen = (bufflen >> 1);
         buff = new byte[bufflen];
         idx = 0;
         while (idx < bufflen) {
-            hexb = Convert.ToInt32((hexString).Substring( 2 * idx, 2), 16);
+            hexb = Convert.ToInt32((hexString).Substring(2 * idx, 2), 16);
             buff[idx] = (byte)(hexb & 0xff);
             idx = idx + 1;
         }
@@ -1699,7 +1699,7 @@ public class YSerialPort : YFunction
             nChars = 65535;
         }
 
-        buff = await this._download("rxdata.bin?pos="+Convert.ToString( _rxptr)+"&len="+Convert.ToString(nChars));
+        buff = await this._download("rxdata.bin?pos="+Convert.ToString(_rxptr)+"&len="+Convert.ToString(nChars));
         bufflen = (buff).Length - 1;
         endpos = 0;
         mult = 1;
@@ -1709,7 +1709,7 @@ public class YSerialPort : YFunction
             bufflen = bufflen - 1;
         }
         _rxptr = endpos;
-        res = (YAPI.DefaultEncoding.GetString(buff)).Substring( 0, bufflen);
+        res = (YAPI.DefaultEncoding.GetString(buff)).Substring(0, bufflen);
         return res;
     }
 
@@ -1743,7 +1743,7 @@ public class YSerialPort : YFunction
             nChars = 65535;
         }
 
-        buff = await this._download("rxdata.bin?pos="+Convert.ToString( _rxptr)+"&len="+Convert.ToString(nChars));
+        buff = await this._download("rxdata.bin?pos="+Convert.ToString(_rxptr)+"&len="+Convert.ToString(nChars));
         bufflen = (buff).Length - 1;
         endpos = 0;
         mult = 1;
@@ -1793,7 +1793,7 @@ public class YSerialPort : YFunction
             nChars = 65535;
         }
 
-        buff = await this._download("rxdata.bin?pos="+Convert.ToString( _rxptr)+"&len="+Convert.ToString(nChars));
+        buff = await this._download("rxdata.bin?pos="+Convert.ToString(_rxptr)+"&len="+Convert.ToString(nChars));
         bufflen = (buff).Length - 1;
         endpos = 0;
         mult = 1;
@@ -1843,7 +1843,7 @@ public class YSerialPort : YFunction
             nBytes = 65535;
         }
 
-        buff = await this._download("rxdata.bin?pos="+Convert.ToString( _rxptr)+"&len="+Convert.ToString(nBytes));
+        buff = await this._download("rxdata.bin?pos="+Convert.ToString(_rxptr)+"&len="+Convert.ToString(nBytes));
         bufflen = (buff).Length - 1;
         endpos = 0;
         mult = 1;
@@ -1856,11 +1856,11 @@ public class YSerialPort : YFunction
         res = "";
         ofs = 0;
         while (ofs + 3 < bufflen) {
-            res = ""+ res+""+String.Format("{0:X02}", buff[ofs])+""+String.Format("{0:X02}", buff[ofs + 1])+""+String.Format("{0:X02}", buff[ofs + 2])+""+String.Format("{0:X02}",buff[ofs + 3]);
+            res = ""+res+""+String.Format("{0:X02}",buff[ofs])+""+String.Format("{0:X02}",buff[ofs + 1])+""+String.Format("{0:X02}",buff[ofs + 2])+""+String.Format("{0:X02}",buff[ofs + 3]);
             ofs = ofs + 4;
         }
         while (ofs < bufflen) {
-            res = ""+ res+""+String.Format("{0:X02}",buff[ofs]);
+            res = ""+res+""+String.Format("{0:X02}",buff[ofs]);
             ofs = ofs + 1;
         }
         return res;
@@ -1941,7 +1941,7 @@ public class YSerialPort : YFunction
         int res;
 
         buff = await this._download("cts.txt");
-        if (!((buff).Length == 1)) { this._throw( YAPI.IO_ERROR, "invalid CTS reply"); return YAPI.IO_ERROR; }
+        if (!((buff).Length == 1)) { this._throw(YAPI.IO_ERROR,"invalid CTS reply"); return YAPI.IO_ERROR; }
         res = buff[0] - 48;
         return res;
     }
@@ -1982,7 +1982,7 @@ public class YSerialPort : YFunction
         List<YSnoopingRecord> res = new List<YSnoopingRecord>();
         int idx;
 
-        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString( maxWait)+"&t=0&len="+Convert.ToString(maxMsg);
+        url = "rxmsg.json?pos="+Convert.ToString(_rxptr)+"&maxw="+Convert.ToString(maxWait)+"&t=0&len="+Convert.ToString(maxMsg);
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.Count;
@@ -2119,7 +2119,7 @@ public class YSerialPort : YFunction
     public virtual async Task<int> writeStxEtx(string text)
     {
         byte[] buff = new byte[0];
-        buff = YAPI.DefaultEncoding.GetBytes(""+((char)( 2)).ToString()+""+ text+""+((char)(3)).ToString());
+        buff = YAPI.DefaultEncoding.GetBytes(""+((char)(2)).ToString()+""+text+""+((char)(3)).ToString());
         // send string using file upload
         return await this._upload("txdata", buff);
     }
@@ -2185,30 +2185,30 @@ public class YSerialPort : YFunction
         int replen;
         int hexb;
         funCode = pduBytes[0];
-        nib = ((funCode) >> (4));
-        pat = ""+String.Format("{0:X02}", slaveNo)+"["+String.Format("{0:X}", nib)+""+String.Format("{0:X}", (nib+8))+"]"+String.Format("{0:X}",((funCode) & (15)))+".*";
-        cmd = ""+String.Format("{0:X02}", slaveNo)+""+String.Format("{0:X02}",funCode);
+        nib = (funCode >> 4);
+        pat = ""+String.Format("{0:X02}",slaveNo)+"["+String.Format("{0:X}",nib)+""+String.Format("{0:X}",(nib+8))+"]"+String.Format("{0:X}",(funCode & 15))+".*";
+        cmd = ""+String.Format("{0:X02}",slaveNo)+""+String.Format("{0:X02}",funCode);
         i = 1;
         while (i < pduBytes.Count) {
-            cmd = ""+ cmd+""+String.Format("{0:X02}",((pduBytes[i]) & (0xff)));
+            cmd = ""+cmd+""+String.Format("{0:X02}",(pduBytes[i] & 0xff));
             i = i + 1;
         }
         if ((cmd).Length <= 80) {
             // fast query
-            url = "rxmsg.json?cmd=:"+ cmd+"&pat=:"+pat;
+            url = "rxmsg.json?cmd=:"+cmd+"&pat=:"+pat;
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload("txdata:", YAPIContext.imm_hexStrToBin(cmd));
-            url = "rxmsg.json?pos="+Convert.ToString( prevpos)+"&maxw=2000&pat=:"+pat;
+            url = "rxmsg.json?pos="+Convert.ToString(prevpos)+"&maxw=2000&pat=:"+pat;
         }
 
         msgs = await this._download(url);
         reps = this.imm_json_get_array(msgs);
-        if (!(reps.Count > 1)) { this._throw( YAPI.IO_ERROR, "no reply from MODBUS slave"); return res; }
+        if (!(reps.Count > 1)) { this._throw(YAPI.IO_ERROR,"no reply from MODBUS slave"); return res; }
         if (reps.Count > 1) {
             rep = this.imm_json_get_string(YAPI.DefaultEncoding.GetBytes(reps[0]));
-            replen = (((rep).Length - 3) >> (1));
+            replen = (((rep).Length - 3) >> 1);
             i = 0;
             while (i < replen) {
                 hexb = Convert.ToInt32((rep).Substring(2 * i + 3, 2), 16);
@@ -2217,10 +2217,10 @@ public class YSerialPort : YFunction
             }
             if (res[0] != funCode) {
                 i = res[1];
-                if (!(i > 1)) { this._throw( YAPI.NOT_SUPPORTED, "MODBUS error: unsupported function code"); return res; }
-                if (!(i > 2)) { this._throw( YAPI.INVALID_ARGUMENT, "MODBUS error: illegal data address"); return res; }
-                if (!(i > 3)) { this._throw( YAPI.INVALID_ARGUMENT, "MODBUS error: illegal data value"); return res; }
-                if (!(i > 4)) { this._throw( YAPI.INVALID_ARGUMENT, "MODBUS error: failed to execute function"); return res; }
+                if (!(i > 1)) { this._throw(YAPI.NOT_SUPPORTED,"MODBUS error: unsupported function code"); return res; }
+                if (!(i > 2)) { this._throw(YAPI.INVALID_ARGUMENT,"MODBUS error: illegal data address"); return res; }
+                if (!(i > 3)) { this._throw(YAPI.INVALID_ARGUMENT,"MODBUS error: illegal data value"); return res; }
+                if (!(i > 4)) { this._throw(YAPI.INVALID_ARGUMENT,"MODBUS error: failed to execute function"); return res; }
             }
         }
         return res;
@@ -2259,10 +2259,10 @@ public class YSerialPort : YFunction
         int val;
         int mask;
         pdu.Add(0x01);
-        pdu.Add(((pduAddr) >> (8)));
-        pdu.Add(((pduAddr) & (0xff)));
-        pdu.Add(((nBits) >> (8)));
-        pdu.Add(((nBits) & (0xff)));
+        pdu.Add((pduAddr >> 8));
+        pdu.Add((pduAddr & 0xff));
+        pdu.Add((nBits >> 8));
+        pdu.Add((nBits & 0xff));
 
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.Count == 0) {
@@ -2276,7 +2276,7 @@ public class YSerialPort : YFunction
         val = reply[idx];
         mask = 1;
         while (bitpos < nBits) {
-            if (((val) & (mask)) == 0) {
+            if ((val & mask) == 0) {
                 res.Add(0);
             } else {
                 res.Add(1);
@@ -2287,7 +2287,7 @@ public class YSerialPort : YFunction
                 val = reply[idx];
                 mask = 1;
             } else {
-                mask = ((mask) << (1));
+                mask = (mask << 1);
             }
         }
         return res;
@@ -2326,10 +2326,10 @@ public class YSerialPort : YFunction
         int val;
         int mask;
         pdu.Add(0x02);
-        pdu.Add(((pduAddr) >> (8)));
-        pdu.Add(((pduAddr) & (0xff)));
-        pdu.Add(((nBits) >> (8)));
-        pdu.Add(((nBits) & (0xff)));
+        pdu.Add((pduAddr >> 8));
+        pdu.Add((pduAddr & 0xff));
+        pdu.Add((nBits >> 8));
+        pdu.Add((nBits & 0xff));
 
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.Count == 0) {
@@ -2343,7 +2343,7 @@ public class YSerialPort : YFunction
         val = reply[idx];
         mask = 1;
         while (bitpos < nBits) {
-            if (((val) & (mask)) == 0) {
+            if ((val & mask) == 0) {
                 res.Add(0);
             } else {
                 res.Add(1);
@@ -2354,7 +2354,7 @@ public class YSerialPort : YFunction
                 val = reply[idx];
                 mask = 1;
             } else {
-                mask = ((mask) << (1));
+                mask = (mask << 1);
             }
         }
         return res;
@@ -2391,12 +2391,12 @@ public class YSerialPort : YFunction
         int regpos;
         int idx;
         int val;
-        if (!(nWords<=256)) { this._throw( YAPI.INVALID_ARGUMENT, "Cannot read more than 256 words"); return res; }
+        if (!(nWords<=256)) { this._throw(YAPI.INVALID_ARGUMENT,"Cannot read more than 256 words"); return res; }
         pdu.Add(0x03);
-        pdu.Add(((pduAddr) >> (8)));
-        pdu.Add(((pduAddr) & (0xff)));
-        pdu.Add(((nWords) >> (8)));
-        pdu.Add(((nWords) & (0xff)));
+        pdu.Add((pduAddr >> 8));
+        pdu.Add((pduAddr & 0xff));
+        pdu.Add((nWords >> 8));
+        pdu.Add((nWords & 0xff));
 
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.Count == 0) {
@@ -2408,7 +2408,7 @@ public class YSerialPort : YFunction
         regpos = 0;
         idx = 2;
         while (regpos < nWords) {
-            val = ((reply[idx]) << (8));
+            val = (reply[idx] << 8);
             idx = idx + 1;
             val = val + reply[idx];
             idx = idx + 1;
@@ -2450,10 +2450,10 @@ public class YSerialPort : YFunction
         int idx;
         int val;
         pdu.Add(0x04);
-        pdu.Add(((pduAddr) >> (8)));
-        pdu.Add(((pduAddr) & (0xff)));
-        pdu.Add(((nWords) >> (8)));
-        pdu.Add(((nWords) & (0xff)));
+        pdu.Add((pduAddr >> 8));
+        pdu.Add((pduAddr & 0xff));
+        pdu.Add((nWords >> 8));
+        pdu.Add((nWords & 0xff));
 
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.Count == 0) {
@@ -2465,7 +2465,7 @@ public class YSerialPort : YFunction
         regpos = 0;
         idx = 2;
         while (regpos < nWords) {
-            val = ((reply[idx]) << (8));
+            val = (reply[idx] << 8);
             idx = idx + 1;
             val = val + reply[idx];
             idx = idx + 1;
@@ -2508,8 +2508,8 @@ public class YSerialPort : YFunction
             value = 0xff;
         }
         pdu.Add(0x05);
-        pdu.Add(((pduAddr) >> (8)));
-        pdu.Add(((pduAddr) & (0xff)));
+        pdu.Add((pduAddr >> 8));
+        pdu.Add((pduAddr & 0xff));
         pdu.Add(value);
         pdu.Add(0x00);
 
@@ -2559,19 +2559,19 @@ public class YSerialPort : YFunction
         int res;
         res = 0;
         nBits = bits.Count;
-        nBytes = (((nBits + 7)) >> (3));
+        nBytes = ((nBits + 7) >> 3);
         pdu.Add(0x0f);
-        pdu.Add(((pduAddr) >> (8)));
-        pdu.Add(((pduAddr) & (0xff)));
-        pdu.Add(((nBits) >> (8)));
-        pdu.Add(((nBits) & (0xff)));
+        pdu.Add((pduAddr >> 8));
+        pdu.Add((pduAddr & 0xff));
+        pdu.Add((nBits >> 8));
+        pdu.Add((nBits & 0xff));
         pdu.Add(nBytes);
         bitpos = 0;
         val = 0;
         mask = 1;
         while (bitpos < nBits) {
             if (bits[bitpos] != 0) {
-                val = ((val) | (mask));
+                val = (val | mask);
             }
             bitpos = bitpos + 1;
             if (mask == 0x80) {
@@ -2579,7 +2579,7 @@ public class YSerialPort : YFunction
                 val = 0;
                 mask = 1;
             } else {
-                mask = ((mask) << (1));
+                mask = (mask << 1);
             }
         }
         if (mask != 1) {
@@ -2593,7 +2593,7 @@ public class YSerialPort : YFunction
         if (reply[0] != pdu[0]) {
             return res;
         }
-        res = ((reply[3]) << (8));
+        res = (reply[3] << 8);
         res = res + reply[4];
         return res;
     }
@@ -2628,10 +2628,10 @@ public class YSerialPort : YFunction
         int res;
         res = 0;
         pdu.Add(0x06);
-        pdu.Add(((pduAddr) >> (8)));
-        pdu.Add(((pduAddr) & (0xff)));
-        pdu.Add(((value) >> (8)));
-        pdu.Add(((value) & (0xff)));
+        pdu.Add((pduAddr >> 8));
+        pdu.Add((pduAddr & 0xff));
+        pdu.Add((value >> 8));
+        pdu.Add((value & 0xff));
 
         reply = await this.queryMODBUS(slaveNo, pdu);
         if (reply.Count == 0) {
@@ -2680,16 +2680,16 @@ public class YSerialPort : YFunction
         nWords = values.Count;
         nBytes = 2 * nWords;
         pdu.Add(0x10);
-        pdu.Add(((pduAddr) >> (8)));
-        pdu.Add(((pduAddr) & (0xff)));
-        pdu.Add(((nWords) >> (8)));
-        pdu.Add(((nWords) & (0xff)));
+        pdu.Add((pduAddr >> 8));
+        pdu.Add((pduAddr & 0xff));
+        pdu.Add((nWords >> 8));
+        pdu.Add((nWords & 0xff));
         pdu.Add(nBytes);
         regpos = 0;
         while (regpos < nWords) {
             val = values[regpos];
-            pdu.Add(((val) >> (8)));
-            pdu.Add(((val) & (0xff)));
+            pdu.Add((val >> 8));
+            pdu.Add((val & 0xff));
             regpos = regpos + 1;
         }
 
@@ -2700,7 +2700,7 @@ public class YSerialPort : YFunction
         if (reply[0] != pdu[0]) {
             return res;
         }
-        res = ((reply[3]) << (8));
+        res = (reply[3] << 8);
         res = res + reply[4];
         return res;
     }
@@ -2748,20 +2748,20 @@ public class YSerialPort : YFunction
         nWriteWords = values.Count;
         nBytes = 2 * nWriteWords;
         pdu.Add(0x17);
-        pdu.Add(((pduReadAddr) >> (8)));
-        pdu.Add(((pduReadAddr) & (0xff)));
-        pdu.Add(((nReadWords) >> (8)));
-        pdu.Add(((nReadWords) & (0xff)));
-        pdu.Add(((pduWriteAddr) >> (8)));
-        pdu.Add(((pduWriteAddr) & (0xff)));
-        pdu.Add(((nWriteWords) >> (8)));
-        pdu.Add(((nWriteWords) & (0xff)));
+        pdu.Add((pduReadAddr >> 8));
+        pdu.Add((pduReadAddr & 0xff));
+        pdu.Add((nReadWords >> 8));
+        pdu.Add((nReadWords & 0xff));
+        pdu.Add((pduWriteAddr >> 8));
+        pdu.Add((pduWriteAddr & 0xff));
+        pdu.Add((nWriteWords >> 8));
+        pdu.Add((nWriteWords & 0xff));
         pdu.Add(nBytes);
         regpos = 0;
         while (regpos < nWriteWords) {
             val = values[regpos];
-            pdu.Add(((val) >> (8)));
-            pdu.Add(((val) & (0xff)));
+            pdu.Add((val >> 8));
+            pdu.Add((val & 0xff));
             regpos = regpos + 1;
         }
 
@@ -2775,7 +2775,7 @@ public class YSerialPort : YFunction
         regpos = 0;
         idx = 2;
         while (regpos < nReadWords) {
-            val = ((reply[idx]) << (8));
+            val = (reply[idx] << 8);
             idx = idx + 1;
             val = val + reply[idx];
             idx = idx + 1;

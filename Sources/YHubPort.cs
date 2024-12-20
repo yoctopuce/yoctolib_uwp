@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YHubPort.cs 43478 2021-01-21 13:49:12Z mvuilleu $
+ *  $Id: YHubPort.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindHubPort(), the high-level API for HubPort functions
  *
@@ -315,7 +315,7 @@ public class YHubPort : YFunction
         obj = (YHubPort) YFunction._FindFromCache("HubPort", func);
         if (obj == null) {
             obj = new YHubPort(func);
-            YFunction._AddToCache("HubPort",  func, obj);
+            YFunction._AddToCache("HubPort", func, obj);
         }
         return obj;
     }
@@ -369,10 +369,10 @@ public class YHubPort : YFunction
     public static YHubPort FindHubPortInContext(YAPIContext yctx,string func)
     {
         YHubPort obj;
-        obj = (YHubPort) YFunction._FindFromCacheInContext(yctx,  "HubPort", func);
+        obj = (YHubPort) YFunction._FindFromCacheInContext(yctx, "HubPort", func);
         if (obj == null) {
             obj = new YHubPort(yctx, func);
-            YFunction._AddToCache("HubPort",  func, obj);
+            YFunction._AddToCache("HubPort", func, obj);
         }
         return obj;
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpMonitor.cs 48183 2022-01-20 10:26:11Z mvuilleu $
+ *  $Id: YWakeUpMonitor.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindWakeUpMonitor(), the high-level API for WakeUpMonitor functions
  *
@@ -481,7 +481,7 @@ public class YWakeUpMonitor : YFunction
         obj = (YWakeUpMonitor) YFunction._FindFromCache("WakeUpMonitor", func);
         if (obj == null) {
             obj = new YWakeUpMonitor(func);
-            YFunction._AddToCache("WakeUpMonitor",  func, obj);
+            YFunction._AddToCache("WakeUpMonitor", func, obj);
         }
         return obj;
     }
@@ -535,10 +535,10 @@ public class YWakeUpMonitor : YFunction
     public static YWakeUpMonitor FindWakeUpMonitorInContext(YAPIContext yctx,string func)
     {
         YWakeUpMonitor obj;
-        obj = (YWakeUpMonitor) YFunction._FindFromCacheInContext(yctx,  "WakeUpMonitor", func);
+        obj = (YWakeUpMonitor) YFunction._FindFromCacheInContext(yctx, "WakeUpMonitor", func);
         if (obj == null) {
             obj = new YWakeUpMonitor(yctx, func);
-            YFunction._AddToCache("WakeUpMonitor",  func, obj);
+            YFunction._AddToCache("WakeUpMonitor", func, obj);
         }
         return obj;
     }
@@ -623,7 +623,7 @@ public class YWakeUpMonitor : YFunction
     {
         int currTime;
         currTime = (int)(await this.get_rtcTime());
-        if (!(currTime != 0)) { this._throw( YAPI.RTC_NOT_READY, "RTC time not set"); return YAPI.RTC_NOT_READY; }
+        if (!(currTime != 0)) { this._throw(YAPI.RTC_NOT_READY,"RTC time not set"); return YAPI.RTC_NOT_READY; }
         await this.set_nextWakeUp(_endOfTime);
         await this.set_sleepCountdown(secBeforeSleep);
         return YAPI.SUCCESS;
@@ -655,7 +655,7 @@ public class YWakeUpMonitor : YFunction
     {
         int currTime;
         currTime = (int)(await this.get_rtcTime());
-        if (!(currTime != 0)) { this._throw( YAPI.RTC_NOT_READY, "RTC time not set"); return YAPI.RTC_NOT_READY; }
+        if (!(currTime != 0)) { this._throw(YAPI.RTC_NOT_READY,"RTC time not set"); return YAPI.RTC_NOT_READY; }
         await this.set_nextWakeUp(currTime+secUntilWakeUp);
         await this.set_sleepCountdown(secBeforeSleep);
         return YAPI.SUCCESS;
@@ -687,7 +687,7 @@ public class YWakeUpMonitor : YFunction
     {
         int currTime;
         currTime = (int)(await this.get_rtcTime());
-        if (!(currTime != 0)) { this._throw( YAPI.RTC_NOT_READY, "RTC time not set"); return YAPI.RTC_NOT_READY; }
+        if (!(currTime != 0)) { this._throw(YAPI.RTC_NOT_READY,"RTC time not set"); return YAPI.RTC_NOT_READY; }
         await this.set_nextWakeUp(wakeUpTime);
         await this.set_sleepCountdown(secBeforeSleep);
         return YAPI.SUCCESS;

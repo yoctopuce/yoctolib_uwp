@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmPowerSource.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YPwmPowerSource.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindPwmPowerSource(), the high-level API for PwmPowerSource functions
  *
@@ -236,7 +236,7 @@ public class YPwmPowerSource : YFunction
         obj = (YPwmPowerSource) YFunction._FindFromCache("PwmPowerSource", func);
         if (obj == null) {
             obj = new YPwmPowerSource(func);
-            YFunction._AddToCache("PwmPowerSource",  func, obj);
+            YFunction._AddToCache("PwmPowerSource", func, obj);
         }
         return obj;
     }
@@ -290,10 +290,10 @@ public class YPwmPowerSource : YFunction
     public static YPwmPowerSource FindPwmPowerSourceInContext(YAPIContext yctx,string func)
     {
         YPwmPowerSource obj;
-        obj = (YPwmPowerSource) YFunction._FindFromCacheInContext(yctx,  "PwmPowerSource", func);
+        obj = (YPwmPowerSource) YFunction._FindFromCacheInContext(yctx, "PwmPowerSource", func);
         if (obj == null) {
             obj = new YPwmPowerSource(yctx, func);
-            YFunction._AddToCache("PwmPowerSource",  func, obj);
+            YFunction._AddToCache("PwmPowerSource", func, obj);
         }
         return obj;
     }

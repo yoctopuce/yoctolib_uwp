@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCurrent.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YCurrent.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindCurrent(), the high-level API for Current functions
  *
@@ -234,7 +234,7 @@ public class YCurrent : YSensor
         obj = (YCurrent) YFunction._FindFromCache("Current", func);
         if (obj == null) {
             obj = new YCurrent(func);
-            YFunction._AddToCache("Current",  func, obj);
+            YFunction._AddToCache("Current", func, obj);
         }
         return obj;
     }
@@ -288,10 +288,10 @@ public class YCurrent : YSensor
     public static YCurrent FindCurrentInContext(YAPIContext yctx,string func)
     {
         YCurrent obj;
-        obj = (YCurrent) YFunction._FindFromCacheInContext(yctx,  "Current", func);
+        obj = (YCurrent) YFunction._FindFromCacheInContext(yctx, "Current", func);
         if (obj == null) {
             obj = new YCurrent(yctx, func);
-            YFunction._AddToCache("Current",  func, obj);
+            YFunction._AddToCache("Current", func, obj);
         }
         return obj;
     }

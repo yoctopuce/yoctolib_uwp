@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRangeFinder.cs 52848 2023-01-20 15:49:48Z mvuilleu $
+ *  $Id: YRangeFinder.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindRangeFinder(), the high-level API for RangeFinder functions
  *
@@ -494,7 +494,7 @@ public class YRangeFinder : YSensor
         obj = (YRangeFinder) YFunction._FindFromCache("RangeFinder", func);
         if (obj == null) {
             obj = new YRangeFinder(func);
-            YFunction._AddToCache("RangeFinder",  func, obj);
+            YFunction._AddToCache("RangeFinder", func, obj);
         }
         return obj;
     }
@@ -548,10 +548,10 @@ public class YRangeFinder : YSensor
     public static YRangeFinder FindRangeFinderInContext(YAPIContext yctx,string func)
     {
         YRangeFinder obj;
-        obj = (YRangeFinder) YFunction._FindFromCacheInContext(yctx,  "RangeFinder", func);
+        obj = (YRangeFinder) YFunction._FindFromCacheInContext(yctx, "RangeFinder", func);
         if (obj == null) {
             obj = new YRangeFinder(yctx, func);
-            YFunction._AddToCache("RangeFinder",  func, obj);
+            YFunction._AddToCache("RangeFinder", func, obj);
         }
         return obj;
     }

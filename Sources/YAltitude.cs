@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAltitude.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YAltitude.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindAltitude(), the high-level API for Altitude functions
  *
@@ -308,7 +308,7 @@ public class YAltitude : YSensor
         obj = (YAltitude) YFunction._FindFromCache("Altitude", func);
         if (obj == null) {
             obj = new YAltitude(func);
-            YFunction._AddToCache("Altitude",  func, obj);
+            YFunction._AddToCache("Altitude", func, obj);
         }
         return obj;
     }
@@ -362,10 +362,10 @@ public class YAltitude : YSensor
     public static YAltitude FindAltitudeInContext(YAPIContext yctx,string func)
     {
         YAltitude obj;
-        obj = (YAltitude) YFunction._FindFromCacheInContext(yctx,  "Altitude", func);
+        obj = (YAltitude) YFunction._FindFromCacheInContext(yctx, "Altitude", func);
         if (obj == null) {
             obj = new YAltitude(yctx, func);
-            YFunction._AddToCache("Altitude",  func, obj);
+            YFunction._AddToCache("Altitude", func, obj);
         }
         return obj;
     }

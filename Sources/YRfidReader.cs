@@ -303,7 +303,7 @@ public class YRfidReader : YFunction
         obj = (YRfidReader) YFunction._FindFromCache("RfidReader", func);
         if (obj == null) {
             obj = new YRfidReader(func);
-            YFunction._AddToCache("RfidReader",  func, obj);
+            YFunction._AddToCache("RfidReader", func, obj);
         }
         return obj;
     }
@@ -357,10 +357,10 @@ public class YRfidReader : YFunction
     public static YRfidReader FindRfidReaderInContext(YAPIContext yctx,string func)
     {
         YRfidReader obj;
-        obj = (YRfidReader) YFunction._FindFromCacheInContext(yctx,  "RfidReader", func);
+        obj = (YRfidReader) YFunction._FindFromCacheInContext(yctx, "RfidReader", func);
         if (obj == null) {
             obj = new YRfidReader(yctx, func);
-            YFunction._AddToCache("RfidReader",  func, obj);
+            YFunction._AddToCache("RfidReader", func, obj);
         }
         return obj;
     }
@@ -438,9 +438,9 @@ public class YRfidReader : YFunction
                 lab = -1;
             }
         }
-        status.imm_init(tagId,  errCode,  errBlk,  fab, lab);
+        status.imm_init(tagId, errCode, errBlk, fab, lab);
         retcode = await status.get_yapiError();
-        if (!(retcode == YAPI.SUCCESS)) { this._throw( retcode, await status.get_errorMessage()); return retcode; }
+        if (!(retcode == YAPI.SUCCESS)) { this._throw(retcode,await status.get_errorMessage()); return retcode; }
         return YAPI.SUCCESS;
     }
 
@@ -451,7 +451,7 @@ public class YRfidReader : YFunction
         status = new YRfidStatus();
 
         json = await this._download("rfid.json?a=reset");
-        return await this._chkerror("",  json, status);
+        return await this._chkerror("", json, status);
     }
 
     /**
@@ -522,7 +522,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=info&t="+tagId;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         tagType = YAPIContext.imm_atoi(this.imm_json_get_key(json, "type"));
         size = YAPIContext.imm_atoi(this.imm_json_get_key(json, "size"));
         usable = YAPIContext.imm_atoi(this.imm_json_get_key(json, "usable"));
@@ -530,7 +530,7 @@ public class YRfidReader : YFunction
         fblk = YAPIContext.imm_atoi(this.imm_json_get_key(json, "fblk"));
         lblk = YAPIContext.imm_atoi(this.imm_json_get_key(json, "lblk"));
         res = new YRfidTagInfo();
-        res.imm_init(tagId,  tagType,  size,  usable,  blksize,  fblk, lblk);
+        res.imm_init(tagId, tagType, size, usable, blksize, fblk, lblk);
         return res;
     }
 
@@ -581,7 +581,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=lock&t="+tagId+"&b="+Convert.ToString(firstBlock)+"&n="+Convert.ToString(nBlocks)+""+optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -635,15 +635,15 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=chkl&t="+tagId+"&b="+Convert.ToString(firstBlock)+"&n="+Convert.ToString(nBlocks)+""+optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() != YAPI.SUCCESS) {
             return res;
         }
         binRes = YAPIContext.imm_hexStrToBin(this.imm_json_get_key(json, "bitmap"));
         idx = 0;
         while (idx < nBlocks) {
-            val = binRes[((idx) >> (3))];
-            isLocked = (((val) & (((1) << (((idx) & (7)))))) != 0);
+            val = binRes[(idx >> 3)];
+            isLocked = ((val & (1 << (idx & 7))) != 0);
             res.Add(isLocked);
             idx = idx + 1;
         }
@@ -701,15 +701,15 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=chks&t="+tagId+"&b="+Convert.ToString(firstBlock)+"&n="+Convert.ToString(nBlocks)+""+optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() != YAPI.SUCCESS) {
             return res;
         }
         binRes = YAPIContext.imm_hexStrToBin(this.imm_json_get_key(json, "bitmap"));
         idx = 0;
         while (idx < nBlocks) {
-            val = binRes[((idx) >> (3))];
-            isLocked = (((val) & (((1) << (((idx) & (7)))))) != 0);
+            val = binRes[(idx >> 3)];
+            isLocked = ((val & (1 << (idx & 7))) != 0);
             res.Add(isLocked);
             idx = idx + 1;
         }
@@ -766,7 +766,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=read&t="+tagId+"&b="+Convert.ToString(firstBlock)+"&n="+Convert.ToString(nBytes)+""+optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() == YAPI.SUCCESS) {
             hexbuf = this.imm_json_get_key(json, "res");
         } else {
@@ -818,7 +818,7 @@ public class YRfidReader : YFunction
      */
     public virtual async Task<byte[]> tagReadBin(string tagId,int firstBlock,int nBytes,YRfidOptions options,YRfidStatus status)
     {
-        return YAPIContext.imm_hexStrToBin(await this.tagReadHex(tagId,  firstBlock,  nBytes,  options, status));
+        return YAPIContext.imm_hexStrToBin(await this.tagReadHex(tagId, firstBlock, nBytes, options, status));
     }
 
     /**
@@ -868,7 +868,7 @@ public class YRfidReader : YFunction
         int idx;
         int endidx;
         List<int> res = new List<int>();
-        blk = await this.tagReadBin(tagId,  firstBlock,  nBytes,  options, status);
+        blk = await this.tagReadBin(tagId, firstBlock, nBytes, options, status);
         endidx = (blk).Length;
         idx = 0;
         while (idx < endidx) {
@@ -921,7 +921,7 @@ public class YRfidReader : YFunction
      */
     public virtual async Task<string> tagReadStr(string tagId,int firstBlock,int nChars,YRfidOptions options,YRfidStatus status)
     {
-        return YAPI.DefaultEncoding.GetString(await this.tagReadBin(tagId,  firstBlock,  nChars,  options, status));
+        return YAPI.DefaultEncoding.GetString(await this.tagReadBin(tagId, firstBlock, nChars, options, status));
     }
 
     /**
@@ -977,13 +977,13 @@ public class YRfidReader : YFunction
         if (buflen <= 16) {
             // short data, use an URL-based command
             hexstr = YAPIContext.imm_bytesToHexStr(buff, 0, buff.Length);
-            return await this.tagWriteHex(tagId,  firstBlock,  hexstr,  options, status);
+            return await this.tagWriteHex(tagId, firstBlock, hexstr, options, status);
         } else {
             // long data, use an upload command
             optstr = options.imm_getParams();
             fname = "Rfid:t="+tagId+"&b="+Convert.ToString(firstBlock)+"&n="+Convert.ToString(buflen)+""+optstr;
             json = await this._uploadEx(fname, buff);
-            return await this._chkerror(tagId,  json, status);
+            return await this._chkerror(tagId, json, status);
         }
     }
 
@@ -1044,7 +1044,7 @@ public class YRfidReader : YFunction
             idx = idx + 1;
         }
 
-        return await this.tagWriteBin(tagId,  firstBlock,  buff,  options, status);
+        return await this.tagWriteBin(tagId, firstBlock, buff, options, status);
     }
 
     /**
@@ -1099,23 +1099,23 @@ public class YRfidReader : YFunction
         int idx;
         int hexb;
         bufflen = (hexString).Length;
-        bufflen = ((bufflen) >> (1));
+        bufflen = (bufflen >> 1);
         if (bufflen <= 16) {
             // short data, use an URL-based command
             optstr = options.imm_getParams();
             url = "rfid.json?a=writ&t="+tagId+"&b="+Convert.ToString(firstBlock)+"&w="+hexString+""+optstr;
             json = await this._download(url);
-            return await this._chkerror(tagId,  json, status);
+            return await this._chkerror(tagId, json, status);
         } else {
             // long data, use an upload command
             buff = new byte[bufflen];
             idx = 0;
             while (idx < bufflen) {
-                hexb = Convert.ToInt32((hexString).Substring( 2 * idx, 2), 16);
+                hexb = Convert.ToInt32((hexString).Substring(2 * idx, 2), 16);
                 buff[idx] = (byte)(hexb & 0xff);
                 idx = idx + 1;
             }
-            return await this.tagWriteBin(tagId,  firstBlock,  buff,  options, status);
+            return await this.tagWriteBin(tagId, firstBlock, buff, options, status);
         }
     }
 
@@ -1128,13 +1128,21 @@ public class YRfidReader : YFunction
      *   Note that only the characters présent  in  the provided string
      *   will be written, there is no notion of string length. If your
      *   string data have variable length, you'll have to encode the
-     *   string length yourself.
+     *   string length yourself, with a terminal zero for instannce.
+     * </para>
+     * <para>
+     *   This function only works with ISO-latin characters, if you wish to
+     *   write strings encoded with alternate character sets, you'll have to
+     *   use tagWriteBin() function.
+     * </para>
+     * <para>
      *   By default firstBlock cannot be a special block, and any special block
      *   encountered in the middle of the write operation will be skipped
      *   automatically. The last data block affected by the operation will
      *   be automatically padded with zeros if neccessary.
      *   If you rather want to rewrite special blocks as well,
-     *   use the <c>EnableRawAccess</c> field from the <c>options</c> parameter.
+     *   use the <c>EnableRawAccess</c> field from the <c>options</c> parameter
+     *   (definitely not recommanded).
      * </para>
      * <para>
      * </para>
@@ -1170,7 +1178,7 @@ public class YRfidReader : YFunction
         byte[] buff = new byte[0];
         buff = YAPI.DefaultEncoding.GetBytes(text);
 
-        return await this.tagWriteBin(tagId,  firstBlock,  buff,  options, status);
+        return await this.tagWriteBin(tagId, firstBlock, buff, options, status);
     }
 
     /**
@@ -1209,7 +1217,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=rdsf&t="+tagId+"&b=0"+optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() == YAPI.SUCCESS) {
             res = YAPIContext.imm_atoi(this.imm_json_get_key(json, "res"));
         } else {
@@ -1256,7 +1264,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=wrsf&t="+tagId+"&b=0&v="+Convert.ToString(afi)+""+optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -1295,7 +1303,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=lksf&t="+tagId+"&b=0"+optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -1334,7 +1342,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=rdsf&t="+tagId+"&b=1"+optstr;
 
         json = await this._download(url);
-        await this._chkerror(tagId,  json, status);
+        await this._chkerror(tagId, json, status);
         if (await status.get_yapiError() == YAPI.SUCCESS) {
             res = YAPIContext.imm_atoi(this.imm_json_get_key(json, "res"));
         } else {
@@ -1381,7 +1389,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=wrsf&t="+tagId+"&b=1&v="+Convert.ToString(dsfid)+""+optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -1420,7 +1428,7 @@ public class YRfidReader : YFunction
         url = "rfid.json?a=lksf&t="+tagId+"&b=1"+optstr;
 
         json = await this._download(url);
-        return await this._chkerror(tagId,  json, status);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**
@@ -1506,8 +1514,8 @@ public class YRfidReader : YFunction
         string evtData;
         // detect possible power cycle of the reader to clear event pointer
         cbPos = YAPIContext.imm_atoi(cbVal);
-        cbPos = ((cbPos) / (1000));
-        cbDPos = ((cbPos - _prevCbPos) & (0x7ffff));
+        cbPos = (cbPos / 1000);
+        cbDPos = ((cbPos - _prevCbPos) & 0x7ffff);
         _prevCbPos = cbPos;
         if (cbDPos > 16384) {
             _eventPos = 0;
@@ -1524,11 +1532,11 @@ public class YRfidReader : YFunction
             contentStr = YAPI.DefaultEncoding.GetString(content);
             eventArr = new List<string>(contentStr.Split(new char[] {'\n'}));
             arrLen = eventArr.Count;
-            if (!(arrLen > 0)) { this._throw( YAPI.IO_ERROR, "fail to download events"); return YAPI.IO_ERROR; }
+            if (!(arrLen > 0)) { this._throw(YAPI.IO_ERROR,"fail to download events"); return YAPI.IO_ERROR; }
             // first element of array is the new position preceeded by '@'
             arrPos = 1;
             lenStr = eventArr[0];
-            lenStr = (lenStr).Substring( 1, (lenStr).Length-1);
+            lenStr = (lenStr).Substring(1, (lenStr).Length-1);
             // update processed event position pointer
             _eventPos = YAPIContext.imm_atoi(lenStr);
         } else {
@@ -1538,12 +1546,12 @@ public class YRfidReader : YFunction
             contentStr = YAPI.DefaultEncoding.GetString(content);
             eventArr = new List<string>(contentStr.Split(new char[] {'\n'}));
             arrLen = eventArr.Count;
-            if (!(arrLen > 0)) { this._throw( YAPI.IO_ERROR, "fail to download events"); return YAPI.IO_ERROR; }
+            if (!(arrLen > 0)) { this._throw(YAPI.IO_ERROR,"fail to download events"); return YAPI.IO_ERROR; }
             // last element of array is the new position preceeded by '@'
             arrPos = 0;
             arrLen = arrLen - 1;
             lenStr = eventArr[arrLen];
-            lenStr = (lenStr).Substring( 1, (lenStr).Length-1);
+            lenStr = (lenStr).Substring(1, (lenStr).Length-1);
             // update processed event position pointer
             _eventPos = YAPIContext.imm_atoi(lenStr);
         }
@@ -1553,18 +1561,18 @@ public class YRfidReader : YFunction
             eventLen = (eventStr).Length;
             typePos = (eventStr).IndexOf(":")+1;
             if ((eventLen >= 14) && (typePos > 10)) {
-                hexStamp = (eventStr).Substring( 0, 8);
+                hexStamp = (eventStr).Substring(0, 8);
                 intStamp = Convert.ToInt32(hexStamp, 16);
                 if (intStamp >= _eventStamp) {
                     _eventStamp = intStamp;
-                    binMStamp = YAPI.DefaultEncoding.GetBytes((eventStr).Substring( 8, 2));
+                    binMStamp = YAPI.DefaultEncoding.GetBytes((eventStr).Substring(8, 2));
                     msStamp = (binMStamp[0]-64) * 32 + binMStamp[1];
                     evtStamp = intStamp + (0.001 * msStamp);
                     dataPos = (eventStr).IndexOf("=")+1;
-                    evtType = (eventStr).Substring( typePos, 1);
+                    evtType = (eventStr).Substring(typePos, 1);
                     evtData = "";
                     if (dataPos > 10) {
-                        evtData = (eventStr).Substring( dataPos, eventLen-dataPos);
+                        evtData = (eventStr).Substring(dataPos, eventLen-dataPos);
                     }
                     if (_eventCallback != null) {
                         await _eventCallback(this, evtStamp, evtType, evtData);

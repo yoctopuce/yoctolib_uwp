@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YNetwork.cs 53886 2023-04-05 08:06:39Z mvuilleu $
+ *  $Id: YNetwork.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindNetwork(), the high-level API for Network functions
  *
@@ -578,7 +578,7 @@ public class YNetwork : YFunction
      * <para>
      * </para>
      * <para>
-     *   If the network interface is setup to use a static IP address, the string starts with "STATIC:" and
+     *   If the network interface is set up to use a static IP address, the string starts with "STATIC:" and
      *   is followed by three
      *   parameters, separated by "/". The first is the device IP address, followed by the subnet mask
      *   length, and finally the
@@ -1820,7 +1820,7 @@ public class YNetwork : YFunction
         obj = (YNetwork) YFunction._FindFromCache("Network", func);
         if (obj == null) {
             obj = new YNetwork(func);
-            YFunction._AddToCache("Network",  func, obj);
+            YFunction._AddToCache("Network", func, obj);
         }
         return obj;
     }
@@ -1874,10 +1874,10 @@ public class YNetwork : YFunction
     public static YNetwork FindNetworkInContext(YAPIContext yctx,string func)
     {
         YNetwork obj;
-        obj = (YNetwork) YFunction._FindFromCacheInContext(yctx,  "Network", func);
+        obj = (YNetwork) YFunction._FindFromCacheInContext(yctx, "Network", func);
         if (obj == null) {
             obj = new YNetwork(yctx, func);
-            YFunction._AddToCache("Network",  func, obj);
+            YFunction._AddToCache("Network", func, obj);
         }
         return obj;
     }
@@ -1958,7 +1958,7 @@ public class YNetwork : YFunction
      */
     public virtual async Task<int> useDHCP(string fallbackIpAddr,int fallbackSubnetMaskLen,string fallbackRouter)
     {
-        return await this.set_ipConfig("DHCP:"+ fallbackIpAddr+"/"+Convert.ToString( fallbackSubnetMaskLen)+"/"+fallbackRouter);
+        return await this.set_ipConfig("DHCP:"+fallbackIpAddr+"/"+Convert.ToString(fallbackSubnetMaskLen)+"/"+fallbackRouter);
     }
 
     /**
@@ -2008,7 +2008,7 @@ public class YNetwork : YFunction
      */
     public virtual async Task<int> useStaticIP(string ipAddress,int subnetMaskLen,string router)
     {
-        return await this.set_ipConfig("STATIC:"+ ipAddress+"/"+Convert.ToString( subnetMaskLen)+"/"+router);
+        return await this.set_ipConfig("STATIC:"+ipAddress+"/"+Convert.ToString(subnetMaskLen)+"/"+router);
     }
 
     /**
@@ -2061,7 +2061,7 @@ public class YNetwork : YFunction
 
     /**
      * <summary>
-     *   Setup periodic HTTP callbacks (simplified function).
+     *   Set up periodic HTTP callbacks (simplified function).
      * <para>
      * </para>
      * </summary>

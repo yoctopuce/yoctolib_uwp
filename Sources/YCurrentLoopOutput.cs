@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCurrentLoopOutput.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YCurrentLoopOutput.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindCurrentLoopOutput(), the high-level API for CurrentLoopOutput functions
  *
@@ -374,7 +374,7 @@ public class YCurrentLoopOutput : YFunction
         obj = (YCurrentLoopOutput) YFunction._FindFromCache("CurrentLoopOutput", func);
         if (obj == null) {
             obj = new YCurrentLoopOutput(func);
-            YFunction._AddToCache("CurrentLoopOutput",  func, obj);
+            YFunction._AddToCache("CurrentLoopOutput", func, obj);
         }
         return obj;
     }
@@ -428,10 +428,10 @@ public class YCurrentLoopOutput : YFunction
     public static YCurrentLoopOutput FindCurrentLoopOutputInContext(YAPIContext yctx,string func)
     {
         YCurrentLoopOutput obj;
-        obj = (YCurrentLoopOutput) YFunction._FindFromCacheInContext(yctx,  "CurrentLoopOutput", func);
+        obj = (YCurrentLoopOutput) YFunction._FindFromCacheInContext(yctx, "CurrentLoopOutput", func);
         if (obj == null) {
             obj = new YCurrentLoopOutput(yctx, func);
-            YFunction._AddToCache("CurrentLoopOutput",  func, obj);
+            YFunction._AddToCache("CurrentLoopOutput", func, obj);
         }
         return obj;
     }
@@ -511,7 +511,7 @@ public class YCurrentLoopOutput : YFunction
         if (mA_target > 21.0) {
             mA_target = 21.0;
         }
-        newval = ""+Convert.ToString( (int) Math.Round(mA_target*65536))+":"+Convert.ToString(ms_duration);
+        newval = ""+Convert.ToString((int) Math.Round(mA_target*65536))+":"+Convert.ToString(ms_duration);
 
         return await this.set_currentTransition(newval);
     }

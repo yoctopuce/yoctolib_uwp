@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMotor.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YMotor.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindMotor(), the high-level API for Motor functions
  *
@@ -780,7 +780,7 @@ public class YMotor : YFunction
         obj = (YMotor) YFunction._FindFromCache("Motor", func);
         if (obj == null) {
             obj = new YMotor(func);
-            YFunction._AddToCache("Motor",  func, obj);
+            YFunction._AddToCache("Motor", func, obj);
         }
         return obj;
     }
@@ -834,10 +834,10 @@ public class YMotor : YFunction
     public static YMotor FindMotorInContext(YAPIContext yctx,string func)
     {
         YMotor obj;
-        obj = (YMotor) YFunction._FindFromCacheInContext(yctx,  "Motor", func);
+        obj = (YMotor) YFunction._FindFromCacheInContext(yctx, "Motor", func);
         if (obj == null) {
             obj = new YMotor(yctx, func);
-            YFunction._AddToCache("Motor",  func, obj);
+            YFunction._AddToCache("Motor", func, obj);
         }
         return obj;
     }

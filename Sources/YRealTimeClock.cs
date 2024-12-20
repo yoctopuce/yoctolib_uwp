@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRealTimeClock.cs 53873 2023-04-04 17:25:52Z mvuilleu $
+ *  $Id: YRealTimeClock.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindRealTimeClock(), the high-level API for RealTimeClock functions
  *
@@ -452,7 +452,7 @@ public class YRealTimeClock : YFunction
         obj = (YRealTimeClock) YFunction._FindFromCache("RealTimeClock", func);
         if (obj == null) {
             obj = new YRealTimeClock(func);
-            YFunction._AddToCache("RealTimeClock",  func, obj);
+            YFunction._AddToCache("RealTimeClock", func, obj);
         }
         return obj;
     }
@@ -506,10 +506,10 @@ public class YRealTimeClock : YFunction
     public static YRealTimeClock FindRealTimeClockInContext(YAPIContext yctx,string func)
     {
         YRealTimeClock obj;
-        obj = (YRealTimeClock) YFunction._FindFromCacheInContext(yctx,  "RealTimeClock", func);
+        obj = (YRealTimeClock) YFunction._FindFromCacheInContext(yctx, "RealTimeClock", func);
         if (obj == null) {
             obj = new YRealTimeClock(yctx, func);
-            YFunction._AddToCache("RealTimeClock",  func, obj);
+            YFunction._AddToCache("RealTimeClock", func, obj);
         }
         return obj;
     }

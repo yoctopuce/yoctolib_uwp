@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YWireless.cs 54259 2023-04-28 08:06:26Z seb $
+ * $Id: YWireless.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindWireless(), the high-level API for Wireless functions
  *
@@ -450,7 +450,7 @@ public class YWireless : YFunction
         obj = (YWireless) YFunction._FindFromCache("Wireless", func);
         if (obj == null) {
             obj = new YWireless(func);
-            YFunction._AddToCache("Wireless",  func, obj);
+            YFunction._AddToCache("Wireless", func, obj);
         }
         return obj;
     }
@@ -504,10 +504,10 @@ public class YWireless : YFunction
     public static YWireless FindWirelessInContext(YAPIContext yctx,string func)
     {
         YWireless obj;
-        obj = (YWireless) YFunction._FindFromCacheInContext(yctx,  "Wireless", func);
+        obj = (YWireless) YFunction._FindFromCacheInContext(yctx, "Wireless", func);
         if (obj == null) {
             obj = new YWireless(yctx, func);
-            YFunction._AddToCache("Wireless",  func, obj);
+            YFunction._AddToCache("Wireless", func, obj);
         }
         return obj;
     }
@@ -607,7 +607,7 @@ public class YWireless : YFunction
      */
     public virtual async Task<int> joinNetwork(string ssid,string securityKey)
     {
-        return await this.set_wlanConfig("INFRA:"+ ssid+"\\"+securityKey);
+        return await this.set_wlanConfig("INFRA:"+ssid+"\\"+securityKey);
     }
 
     /**
@@ -644,7 +644,7 @@ public class YWireless : YFunction
      */
     public virtual async Task<int> adhocNetwork(string ssid,string securityKey)
     {
-        return await this.set_wlanConfig("ADHOC:"+ ssid+"\\"+securityKey);
+        return await this.set_wlanConfig("ADHOC:"+ssid+"\\"+securityKey);
     }
 
     /**
@@ -684,7 +684,7 @@ public class YWireless : YFunction
      */
     public virtual async Task<int> softAPNetwork(string ssid,string securityKey)
     {
-        return await this.set_wlanConfig("SOFTAP:"+ ssid+"\\"+securityKey);
+        return await this.set_wlanConfig("SOFTAP:"+ssid+"\\"+securityKey);
     }
 
     /**

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YVoltageOutput.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YVoltageOutput.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindVoltageOutput(), the high-level API for VoltageOutput functions
  *
@@ -325,7 +325,7 @@ public class YVoltageOutput : YFunction
         obj = (YVoltageOutput) YFunction._FindFromCache("VoltageOutput", func);
         if (obj == null) {
             obj = new YVoltageOutput(func);
-            YFunction._AddToCache("VoltageOutput",  func, obj);
+            YFunction._AddToCache("VoltageOutput", func, obj);
         }
         return obj;
     }
@@ -379,10 +379,10 @@ public class YVoltageOutput : YFunction
     public static YVoltageOutput FindVoltageOutputInContext(YAPIContext yctx,string func)
     {
         YVoltageOutput obj;
-        obj = (YVoltageOutput) YFunction._FindFromCacheInContext(yctx,  "VoltageOutput", func);
+        obj = (YVoltageOutput) YFunction._FindFromCacheInContext(yctx, "VoltageOutput", func);
         if (obj == null) {
             obj = new YVoltageOutput(yctx, func);
-            YFunction._AddToCache("VoltageOutput",  func, obj);
+            YFunction._AddToCache("VoltageOutput", func, obj);
         }
         return obj;
     }
@@ -462,7 +462,7 @@ public class YVoltageOutput : YFunction
         if (V_target > 10.0) {
             V_target = 10.0;
         }
-        newval = ""+Convert.ToString( (int) Math.Round(V_target*65536))+":"+Convert.ToString(ms_duration);
+        newval = ""+Convert.ToString((int) Math.Round(V_target*65536))+":"+Convert.ToString(ms_duration);
 
         return await this.set_voltageTransition(newval);
     }

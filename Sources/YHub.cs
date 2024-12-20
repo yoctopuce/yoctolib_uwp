@@ -130,18 +130,22 @@ public class YHub
             YGenericHub hub = _ctx.getGenHub(_hubref);
             if (hub != null && attrName == "networkTimeout") {
                 hub.set_networkTimeout(value);
-            }
-            else {
+            } else {
                 await Task.Yield();
-                
             }
         }
 
 
-        private Task<List<string>> get_knownUrls_internal()
+        private async Task<List<string>> get_knownUrls_internal()
         {
-            throw new NotImplementedException();
+            List<string> res = new List<string>();
+            YGenericHub hub = _ctx.getGenHub(_hubref);
+            if (hub != null) {
+                res = hub._knownUrls;
+            }
+            return await Task.FromResult(res);
         }
+
 
         //--- (generated code: YHub implementation)
 #pragma warning disable 1998
@@ -444,6 +448,5 @@ public class YHub
 
 #pragma warning restore 1998
     //--- (end of generated code: YHub implementation)
-}
-
+    }
 }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLongitude.cs 39658 2020-03-12 15:36:29Z seb $
+ *  $Id: YLongitude.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindLongitude(), the high-level API for Longitude functions
  *
@@ -157,7 +157,7 @@ public class YLongitude : YSensor
         obj = (YLongitude) YFunction._FindFromCache("Longitude", func);
         if (obj == null) {
             obj = new YLongitude(func);
-            YFunction._AddToCache("Longitude",  func, obj);
+            YFunction._AddToCache("Longitude", func, obj);
         }
         return obj;
     }
@@ -211,10 +211,10 @@ public class YLongitude : YSensor
     public static YLongitude FindLongitudeInContext(YAPIContext yctx,string func)
     {
         YLongitude obj;
-        obj = (YLongitude) YFunction._FindFromCacheInContext(yctx,  "Longitude", func);
+        obj = (YLongitude) YFunction._FindFromCacheInContext(yctx, "Longitude", func);
         if (obj == null) {
             obj = new YLongitude(yctx, func);
-            YFunction._AddToCache("Longitude",  func, obj);
+            YFunction._AddToCache("Longitude", func, obj);
         }
         return obj;
     }

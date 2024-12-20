@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTemperature.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YTemperature.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindTemperature(), the high-level API for Temperature functions
  *
@@ -416,7 +416,7 @@ public class YTemperature : YSensor
         obj = (YTemperature) YFunction._FindFromCache("Temperature", func);
         if (obj == null) {
             obj = new YTemperature(func);
-            YFunction._AddToCache("Temperature",  func, obj);
+            YFunction._AddToCache("Temperature", func, obj);
         }
         return obj;
     }
@@ -470,10 +470,10 @@ public class YTemperature : YSensor
     public static YTemperature FindTemperatureInContext(YAPIContext yctx,string func)
     {
         YTemperature obj;
-        obj = (YTemperature) YFunction._FindFromCacheInContext(yctx,  "Temperature", func);
+        obj = (YTemperature) YFunction._FindFromCacheInContext(yctx, "Temperature", func);
         if (obj == null) {
             obj = new YTemperature(yctx, func);
-            YFunction._AddToCache("Temperature",  func, obj);
+            YFunction._AddToCache("Temperature", func, obj);
         }
         return obj;
     }
@@ -649,11 +649,11 @@ public class YTemperature : YSensor
         double currTemp;
         double idxres;
         siz = tempValues.Count;
-        if (!(siz >= 2)) { this._throw( YAPI.INVALID_ARGUMENT, "thermistor response table must have at least two points"); return YAPI.INVALID_ARGUMENT; }
-        if (!(siz == resValues.Count)) { this._throw( YAPI.INVALID_ARGUMENT, "table sizes mismatch"); return YAPI.INVALID_ARGUMENT; }
+        if (!(siz >= 2)) { this._throw(YAPI.INVALID_ARGUMENT,"thermistor response table must have at least two points"); return YAPI.INVALID_ARGUMENT; }
+        if (!(siz == resValues.Count)) { this._throw(YAPI.INVALID_ARGUMENT,"table sizes mismatch"); return YAPI.INVALID_ARGUMENT; }
 
         res = await this.set_command("Z");
-        if (!(res==YAPI.SUCCESS)) { this._throw( YAPI.IO_ERROR, "unable to reset thermistor parameters"); return YAPI.IO_ERROR; }
+        if (!(res==YAPI.SUCCESS)) { this._throw(YAPI.IO_ERROR,"unable to reset thermistor parameters"); return YAPI.IO_ERROR; }
         // add records in growing resistance value
         found = 1;
         prev = 0.0;
@@ -672,8 +672,8 @@ public class YTemperature : YSensor
                 idx = idx + 1;
             }
             if (found > 0) {
-                res = await this.set_command("m"+Convert.ToString( (int) Math.Round(1000*curr))+":"+Convert.ToString((int) Math.Round(1000*currTemp)));
-                if (!(res==YAPI.SUCCESS)) { this._throw( YAPI.IO_ERROR, "unable to reset thermistor parameters"); return YAPI.IO_ERROR; }
+                res = await this.set_command("m"+Convert.ToString((int) Math.Round(1000*curr))+":"+Convert.ToString((int) Math.Round(1000*currTemp)));
+                if (!(res==YAPI.SUCCESS)) { this._throw(YAPI.IO_ERROR,"unable to reset thermistor parameters"); return YAPI.IO_ERROR; }
                 prev = curr;
             }
         }
@@ -725,18 +725,18 @@ public class YTemperature : YSensor
         resValues.Clear();
 
         id = await this.get_functionId();
-        id = (id).Substring( 11, (id).Length - 11);
+        id = (id).Substring(11, (id).Length - 11);
         if (id == "") {
             id = "1";
         }
         bin_json = await this._download("extra.json?page="+id);
         paramlist = this.imm_json_get_array(bin_json);
         // first convert all temperatures to float
-        siz = ((paramlist.Count) >> (1));
+        siz = (paramlist.Count >> 1);
         templist.Clear();
         idx = 0;
         while (idx < siz) {
-            temp = Double.Parse(paramlist[2*idx+1])/1000.0;
+            temp = YAPIContext.imm_atof(paramlist[2*idx+1])/1000.0;
             templist.Add(temp);
             idx = idx + 1;
         }
@@ -754,7 +754,7 @@ public class YTemperature : YSensor
                 temp = templist[idx];
                 if ((temp > prev) && (temp < curr)) {
                     curr = temp;
-                    currRes = Double.Parse(paramlist[2*idx])/1000.0;
+                    currRes = YAPIContext.imm_atof(paramlist[2*idx])/1000.0;
                     found = 1;
                 }
                 idx = idx + 1;

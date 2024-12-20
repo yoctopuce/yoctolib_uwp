@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMagnetometer.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YMagnetometer.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindMagnetometer(), the high-level API for Magnetometer functions
  *
@@ -53,7 +53,7 @@ namespace com.yoctopuce.YoctoAPI
  *   The <c>YSensor</c> class is the parent class for all Yoctopuce sensor types. It can be
  *   used to read the current value and unit of any sensor, read the min/max
  *   value, configure autonomous recording frequency and access recorded data.
- *   It also provide a function to register a callback invoked each time the
+ *   It also provides a function to register a callback invoked each time the
  *   observed value changes, or at a predefined interval. Using this class rather
  *   than a specific subclass makes it possible to create generic applications
  *   that work with any Yoctopuce sensor, even those that do not yet exist.
@@ -347,7 +347,7 @@ public class YMagnetometer : YSensor
         obj = (YMagnetometer) YFunction._FindFromCache("Magnetometer", func);
         if (obj == null) {
             obj = new YMagnetometer(func);
-            YFunction._AddToCache("Magnetometer",  func, obj);
+            YFunction._AddToCache("Magnetometer", func, obj);
         }
         return obj;
     }
@@ -401,10 +401,10 @@ public class YMagnetometer : YSensor
     public static YMagnetometer FindMagnetometerInContext(YAPIContext yctx,string func)
     {
         YMagnetometer obj;
-        obj = (YMagnetometer) YFunction._FindFromCacheInContext(yctx,  "Magnetometer", func);
+        obj = (YMagnetometer) YFunction._FindFromCacheInContext(yctx, "Magnetometer", func);
         if (obj == null) {
             obj = new YMagnetometer(yctx, func);
-            YFunction._AddToCache("Magnetometer",  func, obj);
+            YFunction._AddToCache("Magnetometer", func, obj);
         }
         return obj;
     }

@@ -731,7 +731,7 @@ public class YRfidStatus
                 errMsg = "Radio is OFF (refreshRate=0).";
             }
             if (errBlk >= 0) {
-                errMsg = ""+ errMsg+" (block "+Convert.ToString(errBlk)+")";
+                errMsg = ""+errMsg+" (block "+Convert.ToString(errBlk)+")";
             }
         }
         _tagId = tagId;

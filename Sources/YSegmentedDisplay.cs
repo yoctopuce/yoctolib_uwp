@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YSegmentedDisplay.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YSegmentedDisplay.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindSegmentedDisplay(), the high-level API for SegmentedDisplay functions
  *
@@ -260,7 +260,7 @@ public class YSegmentedDisplay : YFunction
         obj = (YSegmentedDisplay) YFunction._FindFromCache("SegmentedDisplay", func);
         if (obj == null) {
             obj = new YSegmentedDisplay(func);
-            YFunction._AddToCache("SegmentedDisplay",  func, obj);
+            YFunction._AddToCache("SegmentedDisplay", func, obj);
         }
         return obj;
     }
@@ -314,10 +314,10 @@ public class YSegmentedDisplay : YFunction
     public static YSegmentedDisplay FindSegmentedDisplayInContext(YAPIContext yctx,string func)
     {
         YSegmentedDisplay obj;
-        obj = (YSegmentedDisplay) YFunction._FindFromCacheInContext(yctx,  "SegmentedDisplay", func);
+        obj = (YSegmentedDisplay) YFunction._FindFromCacheInContext(yctx, "SegmentedDisplay", func);
         if (obj == null) {
             obj = new YSegmentedDisplay(yctx, func);
-            YFunction._AddToCache("SegmentedDisplay",  func, obj);
+            YFunction._AddToCache("SegmentedDisplay", func, obj);
         }
         return obj;
     }

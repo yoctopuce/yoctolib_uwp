@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFiles.cs 54259 2023-04-28 08:06:26Z seb $
+ * $Id: YFiles.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindFiles(), the high-level API for Files functions
  *
@@ -232,7 +232,7 @@ public class YFiles : YFunction
         obj = (YFiles) YFunction._FindFromCache("Files", func);
         if (obj == null) {
             obj = new YFiles(func);
-            YFunction._AddToCache("Files",  func, obj);
+            YFunction._AddToCache("Files", func, obj);
         }
         return obj;
     }
@@ -286,10 +286,10 @@ public class YFiles : YFunction
     public static YFiles FindFilesInContext(YAPIContext yctx,string func)
     {
         YFiles obj;
-        obj = (YFiles) YFunction._FindFromCacheInContext(yctx,  "Files", func);
+        obj = (YFiles) YFunction._FindFromCacheInContext(yctx, "Files", func);
         if (obj == null) {
             obj = new YFiles(yctx, func);
-            YFunction._AddToCache("Files",  func, obj);
+            YFunction._AddToCache("Files", func, obj);
         }
         return obj;
     }
@@ -369,7 +369,7 @@ public class YFiles : YFunction
         string res;
         json = await this.sendCommand("format");
         res = this.imm_json_get_key(json, "res");
-        if (!(res == "ok")) { this._throw( YAPI.IO_ERROR, "format failed"); return YAPI.IO_ERROR; }
+        if (!(res == "ok")) { this._throw(YAPI.IO_ERROR,"format failed"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 
@@ -511,7 +511,7 @@ public class YFiles : YFunction
         string res;
         json = await this.sendCommand("del&f="+pathname);
         res  = this.imm_json_get_key(json, "res");
-        if (!(res == "ok")) { this._throw( YAPI.IO_ERROR, "unable to remove file"); return YAPI.IO_ERROR; }
+        if (!(res == "ok")) { this._throw(YAPI.IO_ERROR,"unable to remove file"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 

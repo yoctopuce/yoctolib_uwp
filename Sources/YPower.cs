@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPower.cs 53420 2023-03-06 10:38:51Z mvuilleu $
+ *  $Id: YPower.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindPower(), the high-level API for Power functions
  *
@@ -417,7 +417,7 @@ public class YPower : YSensor
         obj = (YPower) YFunction._FindFromCache("Power", func);
         if (obj == null) {
             obj = new YPower(func);
-            YFunction._AddToCache("Power",  func, obj);
+            YFunction._AddToCache("Power", func, obj);
         }
         return obj;
     }
@@ -471,10 +471,10 @@ public class YPower : YSensor
     public static YPower FindPowerInContext(YAPIContext yctx,string func)
     {
         YPower obj;
-        obj = (YPower) YFunction._FindFromCacheInContext(yctx,  "Power", func);
+        obj = (YPower) YFunction._FindFromCacheInContext(yctx, "Power", func);
         if (obj == null) {
             obj = new YPower(yctx, func);
-            YFunction._AddToCache("Power",  func, obj);
+            YFunction._AddToCache("Power", func, obj);
         }
         return obj;
     }

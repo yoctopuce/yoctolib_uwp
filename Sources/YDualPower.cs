@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YDualPower.cs 38913 2019-12-20 18:59:49Z mvuilleu $
+ *  $Id: YDualPower.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindDualPower(), the high-level API for DualPower functions
  *
@@ -314,7 +314,7 @@ public class YDualPower : YFunction
         obj = (YDualPower) YFunction._FindFromCache("DualPower", func);
         if (obj == null) {
             obj = new YDualPower(func);
-            YFunction._AddToCache("DualPower",  func, obj);
+            YFunction._AddToCache("DualPower", func, obj);
         }
         return obj;
     }
@@ -368,10 +368,10 @@ public class YDualPower : YFunction
     public static YDualPower FindDualPowerInContext(YAPIContext yctx,string func)
     {
         YDualPower obj;
-        obj = (YDualPower) YFunction._FindFromCacheInContext(yctx,  "DualPower", func);
+        obj = (YDualPower) YFunction._FindFromCacheInContext(yctx, "DualPower", func);
         if (obj == null) {
             obj = new YDualPower(yctx, func);
-            YFunction._AddToCache("DualPower",  func, obj);
+            YFunction._AddToCache("DualPower", func, obj);
         }
         return obj;
     }

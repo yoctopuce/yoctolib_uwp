@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YDigitalIO.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YDigitalIO.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindDigitalIO(), the high-level API for DigitalIO functions
  *
@@ -52,7 +52,7 @@ namespace com.yoctopuce.YoctoAPI
  *   Yocto-Maxi-IO-V2
  * <para>
  *   The <c>YDigitalIO</c> class allows you drive a Yoctopuce digital input/output port.
- *   It can be used to setup the direction of each channel, to read the state of each channel
+ *   It can be used to set up the direction of each channel, to read the state of each channel
  *   and to switch the state of each channel configures as an output.
  *   You can work on all channels at once, or one by one. Most functions
  *   use a binary representation for channels where bit 0 matches channel #0 , bit 1 matches channel
@@ -448,17 +448,17 @@ public class YDigitalIO : YFunction
 
     /**
      * <summary>
-     *   Returns the port state diagnostics (Yocto-IO and Yocto-MaxiIO-V2 only).
+     *   Returns the port state diagnostics.
      * <para>
-     *   Bit 0 indicates a shortcut on
-     *   output 0, etc. Bit 8 indicates a power failure, and bit 9 signals overheating (overcurrent).
+     *   Bit 0 indicates a shortcut on output 0, etc.
+     *   Bit 8 indicates a power failure, and bit 9 signals overheating (overcurrent).
      *   During normal use, all diagnostic bits should stay clear.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the port state diagnostics (Yocto-IO and Yocto-MaxiIO-V2 only)
+     *   an integer corresponding to the port state diagnostics
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YDigitalIO.PORTDIAGS_INVALID</c>.
@@ -647,7 +647,7 @@ public class YDigitalIO : YFunction
         obj = (YDigitalIO) YFunction._FindFromCache("DigitalIO", func);
         if (obj == null) {
             obj = new YDigitalIO(func);
-            YFunction._AddToCache("DigitalIO",  func, obj);
+            YFunction._AddToCache("DigitalIO", func, obj);
         }
         return obj;
     }
@@ -701,10 +701,10 @@ public class YDigitalIO : YFunction
     public static YDigitalIO FindDigitalIOInContext(YAPIContext yctx,string func)
     {
         YDigitalIO obj;
-        obj = (YDigitalIO) YFunction._FindFromCacheInContext(yctx,  "DigitalIO", func);
+        obj = (YDigitalIO) YFunction._FindFromCacheInContext(yctx, "DigitalIO", func);
         if (obj == null) {
             obj = new YDigitalIO(yctx, func);
-            YFunction._AddToCache("DigitalIO",  func, obj);
+            YFunction._AddToCache("DigitalIO", func, obj);
         }
         return obj;
     }
@@ -778,8 +778,8 @@ public class YDigitalIO : YFunction
      */
     public virtual async Task<int> set_bitState(int bitno,int bitstate)
     {
-        if (!(bitstate >= 0)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bit state"); return YAPI.INVALID_ARGUMENT; }
-        if (!(bitstate <= 1)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bit state"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitstate >= 0)) { this._throw(YAPI.INVALID_ARGUMENT,"invalid bit state"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitstate <= 1)) { this._throw(YAPI.INVALID_ARGUMENT,"invalid bit state"); return YAPI.INVALID_ARGUMENT; }
         return await this.set_command(""+((char)(82+bitstate)).ToString()+""+Convert.ToString(bitno));
     }
 
@@ -804,7 +804,7 @@ public class YDigitalIO : YFunction
     {
         int portVal;
         portVal = await this.get_portState();
-        return ((((portVal) >> (bitno))) & (1));
+        return ((portVal >> bitno) & 1);
     }
 
     /**
@@ -852,8 +852,8 @@ public class YDigitalIO : YFunction
      */
     public virtual async Task<int> set_bitDirection(int bitno,int bitdirection)
     {
-        if (!(bitdirection >= 0)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid direction"); return YAPI.INVALID_ARGUMENT; }
-        if (!(bitdirection <= 1)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid direction"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitdirection >= 0)) { this._throw(YAPI.INVALID_ARGUMENT,"invalid direction"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitdirection <= 1)) { this._throw(YAPI.INVALID_ARGUMENT,"invalid direction"); return YAPI.INVALID_ARGUMENT; }
         return await this.set_command(""+((char)(73+6*bitdirection)).ToString()+""+Convert.ToString(bitno));
     }
 
@@ -878,7 +878,7 @@ public class YDigitalIO : YFunction
     {
         int portDir;
         portDir = await this.get_portDirection();
-        return ((((portDir) >> (bitno))) & (1));
+        return ((portDir >> bitno) & 1);
     }
 
     /**
@@ -903,8 +903,8 @@ public class YDigitalIO : YFunction
      */
     public virtual async Task<int> set_bitPolarity(int bitno,int bitpolarity)
     {
-        if (!(bitpolarity >= 0)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bit polarity"); return YAPI.INVALID_ARGUMENT; }
-        if (!(bitpolarity <= 1)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid bit polarity"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitpolarity >= 0)) { this._throw(YAPI.INVALID_ARGUMENT,"invalid bit polarity"); return YAPI.INVALID_ARGUMENT; }
+        if (!(bitpolarity <= 1)) { this._throw(YAPI.INVALID_ARGUMENT,"invalid bit polarity"); return YAPI.INVALID_ARGUMENT; }
         return await this.set_command(""+((char)(110+4*bitpolarity)).ToString()+""+Convert.ToString(bitno));
     }
 
@@ -928,7 +928,7 @@ public class YDigitalIO : YFunction
     {
         int portPol;
         portPol = await this.get_portPolarity();
-        return ((((portPol) >> (bitno))) & (1));
+        return ((portPol >> bitno) & 1);
     }
 
     /**
@@ -954,8 +954,8 @@ public class YDigitalIO : YFunction
      */
     public virtual async Task<int> set_bitOpenDrain(int bitno,int opendrain)
     {
-        if (!(opendrain >= 0)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid state"); return YAPI.INVALID_ARGUMENT; }
-        if (!(opendrain <= 1)) { this._throw( YAPI.INVALID_ARGUMENT, "invalid state"); return YAPI.INVALID_ARGUMENT; }
+        if (!(opendrain >= 0)) { this._throw(YAPI.INVALID_ARGUMENT,"invalid state"); return YAPI.INVALID_ARGUMENT; }
+        if (!(opendrain <= 1)) { this._throw(YAPI.INVALID_ARGUMENT,"invalid state"); return YAPI.INVALID_ARGUMENT; }
         return await this.set_command(""+((char)(100-32*opendrain)).ToString()+""+Convert.ToString(bitno));
     }
 
@@ -981,7 +981,7 @@ public class YDigitalIO : YFunction
     {
         int portOpenDrain;
         portOpenDrain = await this.get_portOpenDrain();
-        return ((((portOpenDrain) >> (bitno))) & (1));
+        return ((portOpenDrain >> bitno) & 1);
     }
 
     /**
@@ -1008,7 +1008,7 @@ public class YDigitalIO : YFunction
      */
     public virtual async Task<int> pulse(int bitno,int ms_duration)
     {
-        return await this.set_command("Z"+Convert.ToString( bitno)+",0,"+Convert.ToString(ms_duration));
+        return await this.set_command("Z"+Convert.ToString(bitno)+",0,"+Convert.ToString(ms_duration));
     }
 
     /**

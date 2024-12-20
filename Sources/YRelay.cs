@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRelay.cs 41109 2020-06-29 12:40:42Z seb $
+ *  $Id: YRelay.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindRelay(), the high-level API for Relay functions
  *
@@ -729,7 +729,7 @@ public class YRelay : YFunction
         obj = (YRelay) YFunction._FindFromCache("Relay", func);
         if (obj == null) {
             obj = new YRelay(func);
-            YFunction._AddToCache("Relay",  func, obj);
+            YFunction._AddToCache("Relay", func, obj);
         }
         return obj;
     }
@@ -783,10 +783,10 @@ public class YRelay : YFunction
     public static YRelay FindRelayInContext(YAPIContext yctx,string func)
     {
         YRelay obj;
-        obj = (YRelay) YFunction._FindFromCacheInContext(yctx,  "Relay", func);
+        obj = (YRelay) YFunction._FindFromCacheInContext(yctx, "Relay", func);
         if (obj == null) {
             obj = new YRelay(yctx, func);
-            YFunction._AddToCache("Relay",  func, obj);
+            YFunction._AddToCache("Relay", func, obj);
         }
         return obj;
     }

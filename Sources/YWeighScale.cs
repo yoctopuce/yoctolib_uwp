@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWeighScale.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YWeighScale.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindWeighScale(), the high-level API for WeighScale functions
  *
@@ -637,7 +637,7 @@ public class YWeighScale : YSensor
         obj = (YWeighScale) YFunction._FindFromCache("WeighScale", func);
         if (obj == null) {
             obj = new YWeighScale(func);
-            YFunction._AddToCache("WeighScale",  func, obj);
+            YFunction._AddToCache("WeighScale", func, obj);
         }
         return obj;
     }
@@ -691,10 +691,10 @@ public class YWeighScale : YSensor
     public static YWeighScale FindWeighScaleInContext(YAPIContext yctx,string func)
     {
         YWeighScale obj;
-        obj = (YWeighScale) YFunction._FindFromCacheInContext(yctx,  "WeighScale", func);
+        obj = (YWeighScale) YFunction._FindFromCacheInContext(yctx, "WeighScale", func);
         if (obj == null) {
             obj = new YWeighScale(yctx, func);
-            YFunction._AddToCache("WeighScale",  func, obj);
+            YFunction._AddToCache("WeighScale", func, obj);
         }
         return obj;
     }
@@ -834,7 +834,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> setupSpan(double currWeight,double maxWeight)
     {
-        return await this.set_command("S"+Convert.ToString( (int) Math.Round(1000*currWeight))+":"+Convert.ToString((int) Math.Round(1000*maxWeight)));
+        return await this.set_command("S"+Convert.ToString((int) Math.Round(1000*currWeight))+":"+Convert.ToString((int) Math.Round(1000*maxWeight)));
     }
 
     public virtual async Task<int> setCompensationTable(int tableIndex,List<double> tempValues,List<double> compValues)
@@ -848,11 +848,11 @@ public class YWeighScale : YSensor
         double currComp;
         double idxTemp;
         siz = tempValues.Count;
-        if (!(siz != 1)) { this._throw( YAPI.INVALID_ARGUMENT, "thermal compensation table must have at least two points"); return YAPI.INVALID_ARGUMENT; }
-        if (!(siz == compValues.Count)) { this._throw( YAPI.INVALID_ARGUMENT, "table sizes mismatch"); return YAPI.INVALID_ARGUMENT; }
+        if (!(siz != 1)) { this._throw(YAPI.INVALID_ARGUMENT,"thermal compensation table must have at least two points"); return YAPI.INVALID_ARGUMENT; }
+        if (!(siz == compValues.Count)) { this._throw(YAPI.INVALID_ARGUMENT,"table sizes mismatch"); return YAPI.INVALID_ARGUMENT; }
 
         res = await this.set_command(""+Convert.ToString(tableIndex)+"Z");
-        if (!(res==YAPI.SUCCESS)) { this._throw( YAPI.IO_ERROR, "unable to reset thermal compensation table"); return YAPI.IO_ERROR; }
+        if (!(res==YAPI.SUCCESS)) { this._throw(YAPI.IO_ERROR,"unable to reset thermal compensation table"); return YAPI.IO_ERROR; }
         // add records in growing temperature value
         found = 1;
         prev = -999999.0;
@@ -871,8 +871,8 @@ public class YWeighScale : YSensor
                 idx = idx + 1;
             }
             if (found > 0) {
-                res = await this.set_command(""+Convert.ToString( tableIndex)+"m"+Convert.ToString( (int) Math.Round(1000*curr))+":"+Convert.ToString((int) Math.Round(1000*currComp)));
-                if (!(res==YAPI.SUCCESS)) { this._throw( YAPI.IO_ERROR, "unable to set thermal compensation table"); return YAPI.IO_ERROR; }
+                res = await this.set_command(""+Convert.ToString(tableIndex)+"m"+Convert.ToString((int) Math.Round(1000*curr))+":"+Convert.ToString((int) Math.Round(1000*currComp)));
+                if (!(res==YAPI.SUCCESS)) { this._throw(YAPI.IO_ERROR,"unable to set thermal compensation table"); return YAPI.IO_ERROR; }
                 prev = curr;
             }
         }
@@ -890,17 +890,17 @@ public class YWeighScale : YSensor
         double comp;
 
         id = await this.get_functionId();
-        id = (id).Substring( 10, (id).Length - 10);
+        id = (id).Substring(10, (id).Length - 10);
         bin_json = await this._download("extra.json?page="+Convert.ToString((4*YAPIContext.imm_atoi(id))+tableIndex));
         paramlist = this.imm_json_get_array(bin_json);
         // convert all values to float and append records
-        siz = ((paramlist.Count) >> (1));
+        siz = (paramlist.Count >> 1);
         tempValues.Clear();
         compValues.Clear();
         idx = 0;
         while (idx < siz) {
-            temp = Double.Parse(paramlist[2*idx])/1000.0;
-            comp = Double.Parse(paramlist[2*idx+1])/1000.0;
+            temp = YAPIContext.imm_atof(paramlist[2*idx])/1000.0;
+            comp = YAPIContext.imm_atof(paramlist[2*idx+1])/1000.0;
             tempValues.Add(temp);
             compValues.Add(comp);
             idx = idx + 1;
@@ -936,7 +936,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> set_offsetAvgCompensationTable(List<double> tempValues,List<double> compValues)
     {
-        return await this.setCompensationTable(0,  tempValues, compValues);
+        return await this.setCompensationTable(0, tempValues, compValues);
     }
 
     /**
@@ -967,7 +967,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> loadOffsetAvgCompensationTable(List<double> tempValues,List<double> compValues)
     {
-        return await this.loadCompensationTable(0,  tempValues, compValues);
+        return await this.loadCompensationTable(0, tempValues, compValues);
     }
 
     /**
@@ -998,7 +998,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> set_offsetChgCompensationTable(List<double> tempValues,List<double> compValues)
     {
-        return await this.setCompensationTable(1,  tempValues, compValues);
+        return await this.setCompensationTable(1, tempValues, compValues);
     }
 
     /**
@@ -1029,7 +1029,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> loadOffsetChgCompensationTable(List<double> tempValues,List<double> compValues)
     {
-        return await this.loadCompensationTable(1,  tempValues, compValues);
+        return await this.loadCompensationTable(1, tempValues, compValues);
     }
 
     /**
@@ -1060,7 +1060,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> set_spanAvgCompensationTable(List<double> tempValues,List<double> compValues)
     {
-        return await this.setCompensationTable(2,  tempValues, compValues);
+        return await this.setCompensationTable(2, tempValues, compValues);
     }
 
     /**
@@ -1091,7 +1091,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> loadSpanAvgCompensationTable(List<double> tempValues,List<double> compValues)
     {
-        return await this.loadCompensationTable(2,  tempValues, compValues);
+        return await this.loadCompensationTable(2, tempValues, compValues);
     }
 
     /**
@@ -1122,7 +1122,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> set_spanChgCompensationTable(List<double> tempValues,List<double> compValues)
     {
-        return await this.setCompensationTable(3,  tempValues, compValues);
+        return await this.setCompensationTable(3, tempValues, compValues);
     }
 
     /**
@@ -1153,7 +1153,7 @@ public class YWeighScale : YSensor
      */
     public virtual async Task<int> loadSpanChgCompensationTable(List<double> tempValues,List<double> compValues)
     {
-        return await this.loadCompensationTable(3,  tempValues, compValues);
+        return await this.loadCompensationTable(3, tempValues, compValues);
     }
 
     /**

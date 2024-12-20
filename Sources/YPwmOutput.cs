@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmOutput.cs 58892 2024-01-11 11:11:28Z mvuilleu $
+ *  $Id: YPwmOutput.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindPwmOutput(), the high-level API for PwmOutput functions
  *
@@ -51,7 +51,7 @@ namespace com.yoctopuce.YoctoAPI
  *   YPwmOutput Class: PWM generator control interface, available for instance in the Yocto-PWM-Tx
  * <para>
  *   The <c>YPwmOutput</c> class allows you to drive a pulse-width modulated output (PWM).
- *   You can configure the frequency as well as the duty cycle, and setup progressive
+ *   You can configure the frequency as well as the duty cycle, and set up progressive
  *   transitions.
  * </para>
  * </summary>
@@ -751,7 +751,7 @@ public class YPwmOutput : YFunction
         obj = (YPwmOutput) YFunction._FindFromCache("PwmOutput", func);
         if (obj == null) {
             obj = new YPwmOutput(func);
-            YFunction._AddToCache("PwmOutput",  func, obj);
+            YFunction._AddToCache("PwmOutput", func, obj);
         }
         return obj;
     }
@@ -805,10 +805,10 @@ public class YPwmOutput : YFunction
     public static YPwmOutput FindPwmOutputInContext(YAPIContext yctx,string func)
     {
         YPwmOutput obj;
-        obj = (YPwmOutput) YFunction._FindFromCacheInContext(yctx,  "PwmOutput", func);
+        obj = (YPwmOutput) YFunction._FindFromCacheInContext(yctx, "PwmOutput", func);
         if (obj == null) {
             obj = new YPwmOutput(yctx, func);
-            YFunction._AddToCache("PwmOutput",  func, obj);
+            YFunction._AddToCache("PwmOutput", func, obj);
         }
         return obj;
     }
@@ -887,7 +887,7 @@ public class YPwmOutput : YFunction
         if (ms_target < 0.0) {
             ms_target = 0.0;
         }
-        newval = ""+Convert.ToString( (int) Math.Round(ms_target*65536))+"ms:"+Convert.ToString(ms_duration);
+        newval = ""+Convert.ToString((int) Math.Round(ms_target*65536))+"ms:"+Convert.ToString(ms_duration);
         return await this.set_pwmTransition(newval);
     }
 
@@ -921,7 +921,7 @@ public class YPwmOutput : YFunction
         if (target > 100.0) {
             target = 100.0;
         }
-        newval = ""+Convert.ToString( (int) Math.Round(target*65536))+":"+Convert.ToString(ms_duration);
+        newval = ""+Convert.ToString((int) Math.Round(target*65536))+":"+Convert.ToString(ms_duration);
         return await this.set_pwmTransition(newval);
     }
 
@@ -951,7 +951,7 @@ public class YPwmOutput : YFunction
         if (target < 0.001) {
             target = 0.001;
         }
-        newval = ""+YAPIContext.imm_floatToStr( target)+"Hz:"+Convert.ToString(ms_duration);
+        newval = ""+YAPIContext.imm_floatToStr(target)+"Hz:"+Convert.ToString(ms_duration);
         return await this.set_pwmTransition(newval);
     }
 
@@ -982,7 +982,7 @@ public class YPwmOutput : YFunction
     public virtual async Task<int> phaseMove(double target,int ms_duration)
     {
         string newval;
-        newval = ""+YAPIContext.imm_floatToStr( target)+"ps:"+Convert.ToString(ms_duration);
+        newval = ""+YAPIContext.imm_floatToStr(target)+"ps:"+Convert.ToString(ms_duration);
         return await this.set_pwmTransition(newval);
     }
 
@@ -1013,7 +1013,7 @@ public class YPwmOutput : YFunction
         if (ms_target < 0.0) {
             ms_target = 0.0;
         }
-        newval = ""+Convert.ToString( (int) Math.Round(ms_target*65536))+"ms*"+Convert.ToString(n_pulses);
+        newval = ""+Convert.ToString((int) Math.Round(ms_target*65536))+"ms*"+Convert.ToString(n_pulses);
         return await this.set_pwmTransition(newval);
     }
 
@@ -1047,7 +1047,7 @@ public class YPwmOutput : YFunction
         if (target > 100.0) {
             target = 100.0;
         }
-        newval = ""+Convert.ToString( (int) Math.Round(target*65536))+"*"+Convert.ToString(n_pulses);
+        newval = ""+Convert.ToString((int) Math.Round(target*65536))+"*"+Convert.ToString(n_pulses);
         return await this.set_pwmTransition(newval);
     }
 
@@ -1077,7 +1077,7 @@ public class YPwmOutput : YFunction
         if (target < 0.001) {
             target = 0.001;
         }
-        newval = ""+YAPIContext.imm_floatToStr( target)+"Hz*"+Convert.ToString(n_pulses);
+        newval = ""+YAPIContext.imm_floatToStr(target)+"Hz*"+Convert.ToString(n_pulses);
         return await this.set_pwmTransition(newval);
     }
 

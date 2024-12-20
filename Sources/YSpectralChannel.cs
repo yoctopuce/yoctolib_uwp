@@ -1,8 +1,8 @@
 /*********************************************************************
  *
- *  $Id: YVoltage.cs 63510 2024-11-28 10:46:59Z seb $
+ *  $Id: svn_id $
  *
- *  Implements FindVoltage(), the high-level API for Voltage functions
+ *  Implements FindSpectralChannel(), the high-level API for SpectralChannel functions
  *
  *  - - - - - - - - - License information: - - - - - - - - -
  *
@@ -43,39 +43,36 @@ using System.Threading.Tasks;
 namespace com.yoctopuce.YoctoAPI
 {
 
-//--- (YVoltage return codes)
-//--- (end of YVoltage return codes)
-//--- (YVoltage class start)
+//--- (YSpectralChannel return codes)
+//--- (end of YSpectralChannel return codes)
+//--- (YSpectralChannel class start)
 /**
  * <summary>
- *   YVoltage Class: voltage sensor control interface, available for instance in the Yocto-Motor-DC, the
- *   Yocto-Volt or the Yocto-Watt
+ *   YSpectralChannel Class: spectral analysis channel control interface
  * <para>
- *   The <c>YVoltage</c> class allows you to read and configure Yoctopuce voltage sensors.
+ *   The <c>YSpectralChannel</c> class allows you to read and configure Yoctopuce spectral analysis channels.
  *   It inherits from <c>YSensor</c> class the core functions to read measurements,
  *   to register callback functions, and to access the autonomous datalogger.
  * </para>
  * </summary>
  */
-public class YVoltage : YSensor
+public class YSpectralChannel : YSensor
 {
-//--- (end of YVoltage class start)
-//--- (YVoltage definitions)
+//--- (end of YSpectralChannel class start)
+//--- (YSpectralChannel definitions)
     /**
      * <summary>
-     *   invalid enabled value
+     *   invalid rawCount value
      * </summary>
      */
-    public const int ENABLED_FALSE = 0;
-    public const int ENABLED_TRUE = 1;
-    public const int ENABLED_INVALID = -1;
-    protected int _enabled = ENABLED_INVALID;
-    protected ValueCallback _valueCallbackVoltage = null;
-    protected TimedReportCallback _timedReportCallbackVoltage = null;
+    public const  int RAWCOUNT_INVALID = YAPI.INVALID_INT;
+    protected int _rawCount = RAWCOUNT_INVALID;
+    protected ValueCallback _valueCallbackSpectralChannel = null;
+    protected TimedReportCallback _timedReportCallbackSpectralChannel = null;
 
-    public new delegate Task ValueCallback(YVoltage func, string value);
-    public new delegate Task TimedReportCallback(YVoltage func, YMeasure measure);
-    //--- (end of YVoltage definitions)
+    public new delegate Task ValueCallback(YSpectralChannel func, string value);
+    public new delegate Task TimedReportCallback(YSpectralChannel func, YMeasure measure);
+    //--- (end of YSpectralChannel definitions)
 
 
     /**
@@ -85,11 +82,11 @@ public class YVoltage : YSensor
      *   functionid
      * </param>
      */
-    protected YVoltage(YAPIContext ctx, string func)
-        : base(ctx, func, "Voltage")
+    protected YSpectralChannel(YAPIContext ctx, string func)
+        : base(ctx, func, "SpectralChannel")
     {
-        //--- (YVoltage attributes initialization)
-        //--- (end of YVoltage attributes initialization)
+        //--- (YSpectralChannel attributes initialization)
+        //--- (end of YSpectralChannel attributes initialization)
     }
 
     /**
@@ -99,88 +96,54 @@ public class YVoltage : YSensor
      *   functionid
      * </param>
      */
-    protected YVoltage(string func)
+    protected YSpectralChannel(string func)
         : this(YAPI.imm_GetYCtx(), func)
     {
     }
 
-    //--- (YVoltage implementation)
+    //--- (YSpectralChannel implementation)
 #pragma warning disable 1998
     internal override void imm_parseAttr(YJSONObject json_val)
     {
-        if (json_val.has("enabled")) {
-            _enabled = json_val.getInt("enabled") > 0 ? 1 : 0;
+        if (json_val.has("rawCount")) {
+            _rawCount = json_val.getInt("rawCount");
         }
         base.imm_parseAttr(json_val);
     }
 
     /**
      * <summary>
-     *   Returns the activation state of this input.
+     *   Retrieves the raw count of data samples.
      * <para>
+     *   This method returns the current value of rawCount, representing the total number of samples collected
+     *   by the sensor.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   either <c>YVoltage.ENABLED_FALSE</c> or <c>YVoltage.ENABLED_TRUE</c>, according to the activation
-     *   state of this input
+     *   an integer
      * </returns>
      * <para>
-     *   On failure, throws an exception or returns <c>YVoltage.ENABLED_INVALID</c>.
+     *   On failure, throws an exception or returns <c>YSpectralChannel.RAWCOUNT_INVALID</c>.
      * </para>
      */
-    public async Task<int> get_enabled()
+    public async Task<int> get_rawCount()
     {
         int res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
             if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return ENABLED_INVALID;
+                return RAWCOUNT_INVALID;
             }
         }
-        res = _enabled;
+        res = _rawCount;
         return res;
     }
 
 
     /**
      * <summary>
-     *   Changes the activation state of this voltage input.
-     * <para>
-     *   When AC measurements are disabled,
-     *   the device will always assume a DC signal, and vice-versa. When both AC and DC measurements
-     *   are active, the device switches between AC and DC mode based on the relative amplitude
-     *   of variations compared to the average value.
-     *   Remember to call the <c>saveToFlash()</c>
-     *   method of the module if the modification must be kept.
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <param name="newval">
-     *   either <c>YVoltage.ENABLED_FALSE</c> or <c>YVoltage.ENABLED_TRUE</c>, according to the activation
-     *   state of this voltage input
-     * </param>
-     * <para>
-     * </para>
-     * <returns>
-     *   <c>YAPI.SUCCESS</c> if the call succeeds.
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns a negative error code.
-     * </para>
-     */
-    public async Task<int> set_enabled(int  newval)
-    {
-        string rest_val;
-        rest_val = (newval > 0 ? "1" : "0");
-        await _setAttr("enabled",rest_val);
-        return YAPI.SUCCESS;
-    }
-
-    /**
-     * <summary>
-     *   Retrieves a voltage sensor for a given identifier.
+     *   Retrieves a spectral analysis channel for a given identifier.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -204,11 +167,11 @@ public class YVoltage : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the voltage sensor is online at the time
+     *   This function does not require that the spectral analysis channel is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YVoltage.isOnline()</c> to test if the voltage sensor is
+     *   Use the method <c>YSpectralChannel.isOnline()</c> to test if the spectral analysis channel is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a voltage sensor by logical name, no error is notified: the first instance
+     *   a spectral analysis channel by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -221,27 +184,27 @@ public class YVoltage : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the voltage sensor, for instance
-     *   <c>MOTORCTL.voltage</c>.
+     *   a string that uniquely characterizes the spectral analysis channel, for instance
+     *   <c>MyDevice.spectralChannel1</c>.
      * </param>
      * <returns>
-     *   a <c>YVoltage</c> object allowing you to drive the voltage sensor.
+     *   a <c>YSpectralChannel</c> object allowing you to drive the spectral analysis channel.
      * </returns>
      */
-    public static YVoltage FindVoltage(string func)
+    public static YSpectralChannel FindSpectralChannel(string func)
     {
-        YVoltage obj;
-        obj = (YVoltage) YFunction._FindFromCache("Voltage", func);
+        YSpectralChannel obj;
+        obj = (YSpectralChannel) YFunction._FindFromCache("SpectralChannel", func);
         if (obj == null) {
-            obj = new YVoltage(func);
-            YFunction._AddToCache("Voltage", func, obj);
+            obj = new YSpectralChannel(func);
+            YFunction._AddToCache("SpectralChannel", func, obj);
         }
         return obj;
     }
 
     /**
      * <summary>
-     *   Retrieves a voltage sensor for a given identifier in a YAPI context.
+     *   Retrieves a spectral analysis channel for a given identifier in a YAPI context.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -265,11 +228,11 @@ public class YVoltage : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the voltage sensor is online at the time
+     *   This function does not require that the spectral analysis channel is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YVoltage.isOnline()</c> to test if the voltage sensor is
+     *   Use the method <c>YSpectralChannel.isOnline()</c> to test if the spectral analysis channel is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a voltage sensor by logical name, no error is notified: the first instance
+     *   a spectral analysis channel by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -278,20 +241,20 @@ public class YVoltage : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the voltage sensor, for instance
-     *   <c>MOTORCTL.voltage</c>.
+     *   a string that uniquely characterizes the spectral analysis channel, for instance
+     *   <c>MyDevice.spectralChannel1</c>.
      * </param>
      * <returns>
-     *   a <c>YVoltage</c> object allowing you to drive the voltage sensor.
+     *   a <c>YSpectralChannel</c> object allowing you to drive the spectral analysis channel.
      * </returns>
      */
-    public static YVoltage FindVoltageInContext(YAPIContext yctx,string func)
+    public static YSpectralChannel FindSpectralChannelInContext(YAPIContext yctx,string func)
     {
-        YVoltage obj;
-        obj = (YVoltage) YFunction._FindFromCacheInContext(yctx, "Voltage", func);
+        YSpectralChannel obj;
+        obj = (YSpectralChannel) YFunction._FindFromCacheInContext(yctx, "SpectralChannel", func);
         if (obj == null) {
-            obj = new YVoltage(yctx, func);
-            YFunction._AddToCache("Voltage", func, obj);
+            obj = new YSpectralChannel(yctx, func);
+            YFunction._AddToCache("SpectralChannel", func, obj);
         }
         return obj;
     }
@@ -322,7 +285,7 @@ public class YVoltage : YSensor
         } else {
             await YFunction._UpdateValueCallbackList(this, false);
         }
-        _valueCallbackVoltage = callback;
+        _valueCallbackSpectralChannel = callback;
         // Immediately invoke value callback with current value
         if (callback != null && await this.isOnline()) {
             val = _advertisedValue;
@@ -335,8 +298,8 @@ public class YVoltage : YSensor
 
     public override async Task<int> _invokeValueCallback(string value)
     {
-        if (_valueCallbackVoltage != null) {
-            await _valueCallbackVoltage(this, value);
+        if (_valueCallbackSpectralChannel != null) {
+            await _valueCallbackSpectralChannel(this, value);
         } else {
             await base._invokeValueCallback(value);
         }
@@ -370,14 +333,14 @@ public class YVoltage : YSensor
         } else {
             await YFunction._UpdateTimedReportCallbackList(sensor, false);
         }
-        _timedReportCallbackVoltage = callback;
+        _timedReportCallbackSpectralChannel = callback;
         return 0;
     }
 
     public override async Task<int> _invokeTimedReportCallback(YMeasure value)
     {
-        if (_timedReportCallbackVoltage != null) {
-            await _timedReportCallbackVoltage(this, value);
+        if (_timedReportCallbackSpectralChannel != null) {
+            await _timedReportCallbackSpectralChannel(this, value);
         } else {
             await base._invokeTimedReportCallback(value);
         }
@@ -386,20 +349,20 @@ public class YVoltage : YSensor
 
     /**
      * <summary>
-     *   Continues the enumeration of voltage sensors started using <c>yFirstVoltage()</c>.
+     *   Continues the enumeration of spectral analysis channels started using <c>yFirstSpectralChannel()</c>.
      * <para>
-     *   Caution: You can't make any assumption about the returned voltage sensors order.
-     *   If you want to find a specific a voltage sensor, use <c>Voltage.findVoltage()</c>
+     *   Caution: You can't make any assumption about the returned spectral analysis channels order.
+     *   If you want to find a specific a spectral analysis channel, use <c>SpectralChannel.findSpectralChannel()</c>
      *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>
-     *   a pointer to a <c>YVoltage</c> object, corresponding to
-     *   a voltage sensor currently online, or a <c>null</c> pointer
-     *   if there are no more voltage sensors to enumerate.
+     *   a pointer to a <c>YSpectralChannel</c> object, corresponding to
+     *   a spectral analysis channel currently online, or a <c>null</c> pointer
+     *   if there are no more spectral analysis channels to enumerate.
      * </returns>
      */
-    public YVoltage nextVoltage()
+    public YSpectralChannel nextSpectralChannel()
     {
         string next_hwid;
         try {
@@ -409,57 +372,57 @@ public class YVoltage : YSensor
             next_hwid = null;
         }
         if(next_hwid == null) return null;
-        return FindVoltageInContext(_yapi, next_hwid);
+        return FindSpectralChannelInContext(_yapi, next_hwid);
     }
 
     /**
      * <summary>
-     *   Starts the enumeration of voltage sensors currently accessible.
+     *   Starts the enumeration of spectral analysis channels currently accessible.
      * <para>
-     *   Use the method <c>YVoltage.nextVoltage()</c> to iterate on
-     *   next voltage sensors.
+     *   Use the method <c>YSpectralChannel.nextSpectralChannel()</c> to iterate on
+     *   next spectral analysis channels.
      * </para>
      * </summary>
      * <returns>
-     *   a pointer to a <c>YVoltage</c> object, corresponding to
-     *   the first voltage sensor currently online, or a <c>null</c> pointer
+     *   a pointer to a <c>YSpectralChannel</c> object, corresponding to
+     *   the first spectral analysis channel currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
-    public static YVoltage FirstVoltage()
+    public static YSpectralChannel FirstSpectralChannel()
     {
         YAPIContext yctx = YAPI.imm_GetYCtx();
-        string next_hwid = yctx._yHash.imm_getFirstHardwareId("Voltage");
+        string next_hwid = yctx._yHash.imm_getFirstHardwareId("SpectralChannel");
         if (next_hwid == null)  return null;
-        return FindVoltageInContext(yctx, next_hwid);
+        return FindSpectralChannelInContext(yctx, next_hwid);
     }
 
     /**
      * <summary>
-     *   Starts the enumeration of voltage sensors currently accessible.
+     *   Starts the enumeration of spectral analysis channels currently accessible.
      * <para>
-     *   Use the method <c>YVoltage.nextVoltage()</c> to iterate on
-     *   next voltage sensors.
+     *   Use the method <c>YSpectralChannel.nextSpectralChannel()</c> to iterate on
+     *   next spectral analysis channels.
      * </para>
      * </summary>
      * <param name="yctx">
      *   a YAPI context.
      * </param>
      * <returns>
-     *   a pointer to a <c>YVoltage</c> object, corresponding to
-     *   the first voltage sensor currently online, or a <c>null</c> pointer
+     *   a pointer to a <c>YSpectralChannel</c> object, corresponding to
+     *   the first spectral analysis channel currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
-    public static YVoltage FirstVoltageInContext(YAPIContext yctx)
+    public static YSpectralChannel FirstSpectralChannelInContext(YAPIContext yctx)
     {
-        string next_hwid = yctx._yHash.imm_getFirstHardwareId("Voltage");
+        string next_hwid = yctx._yHash.imm_getFirstHardwareId("SpectralChannel");
         if (next_hwid == null)  return null;
-        return FindVoltageInContext(yctx, next_hwid);
+        return FindSpectralChannelInContext(yctx, next_hwid);
     }
 
 #pragma warning restore 1998
-    //--- (end of YVoltage implementation)
+    //--- (end of YSpectralChannel implementation)
 }
 }
 

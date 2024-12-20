@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YConsolidatedDataSet.cs 54280 2023-04-28 10:11:44Z seb $
+ *  $Id: YConsolidatedDataSet.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindConsolidatedDataSet(), the high-level API for ConsolidatedDataSet functions
  *
@@ -234,7 +234,7 @@ public class YConsolidatedDataSet
                     measures = await _datasets[s].get_measures();
                 }
                 if (idx < measures.Count) {
-                    currnexttim =  measures[idx].get_endTimeUTC();
+                    currnexttim = measures[idx].get_endTimeUTC();
                     _nexttim[s] = currnexttim;
                 }
             }
@@ -259,7 +259,7 @@ public class YConsolidatedDataSet
             if (_nexttim[s] == nexttime) {
                 idx = _nextidx[s];
                 measures = await _datasets[s].get_measures();
-                newvalue =  measures[idx].get_averageValue();
+                newvalue = measures[idx].get_averageValue();
                 datarec.Add(newvalue);
                 _nexttim[s] = 0.0;
                 _nextidx[s] = idx + 1;
@@ -271,7 +271,7 @@ public class YConsolidatedDataSet
             s = s + 1;
         }
         if (globprogress > 0) {
-            globprogress = ((globprogress) / (_nsensors));
+            globprogress = (globprogress / _nsensors);
             if (globprogress > 99) {
                 globprogress = 99;
             }

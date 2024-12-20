@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YBluetoothLink.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YBluetoothLink.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindBluetoothLink(), the high-level API for BluetoothLink functions
  *
@@ -700,7 +700,7 @@ public class YBluetoothLink : YFunction
         obj = (YBluetoothLink) YFunction._FindFromCache("BluetoothLink", func);
         if (obj == null) {
             obj = new YBluetoothLink(func);
-            YFunction._AddToCache("BluetoothLink",  func, obj);
+            YFunction._AddToCache("BluetoothLink", func, obj);
         }
         return obj;
     }
@@ -754,10 +754,10 @@ public class YBluetoothLink : YFunction
     public static YBluetoothLink FindBluetoothLinkInContext(YAPIContext yctx,string func)
     {
         YBluetoothLink obj;
-        obj = (YBluetoothLink) YFunction._FindFromCacheInContext(yctx,  "BluetoothLink", func);
+        obj = (YBluetoothLink) YFunction._FindFromCacheInContext(yctx, "BluetoothLink", func);
         if (obj == null) {
             obj = new YBluetoothLink(yctx, func);
-            YFunction._AddToCache("BluetoothLink",  func, obj);
+            YFunction._AddToCache("BluetoothLink", func, obj);
         }
         return obj;
     }

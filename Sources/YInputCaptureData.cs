@@ -153,15 +153,15 @@ public class YInputCaptureData
         double v;
 
         buffSize = (sdata).Length;
-        if (!(buffSize >= 24)) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid snapshot data (too short)"); return YAPI.INVALID_ARGUMENT; }
+        if (!(buffSize >= 24)) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid snapshot data (too short)"); return YAPI.INVALID_ARGUMENT; }
         _fmt = sdata[0];
         _var1size = sdata[1] - 48;
         _var2size = sdata[2] - 48;
         _var3size = sdata[3] - 48;
-        if (!(_fmt == 83)) { this._throw( YAPI.INVALID_ARGUMENT, "Unsupported snapshot format"); return YAPI.INVALID_ARGUMENT; }
-        if (!((_var1size >= 2) && (_var1size <= 4))) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid sample size"); return YAPI.INVALID_ARGUMENT; }
-        if (!((_var2size >= 0) && (_var1size <= 4))) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid sample size"); return YAPI.INVALID_ARGUMENT; }
-        if (!((_var3size >= 0) && (_var1size <= 4))) { this._throw( YAPI.INVALID_ARGUMENT, "Invalid sample size"); return YAPI.INVALID_ARGUMENT; }
+        if (!(_fmt == 83)) { this._throw(YAPI.INVALID_ARGUMENT,"Unsupported snapshot format"); return YAPI.INVALID_ARGUMENT; }
+        if (!((_var1size >= 2) && (_var1size <= 4))) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid sample size"); return YAPI.INVALID_ARGUMENT; }
+        if (!((_var2size >= 0) && (_var1size <= 4))) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid sample size"); return YAPI.INVALID_ARGUMENT; }
+        if (!((_var3size >= 0) && (_var1size <= 4))) { this._throw(YAPI.INVALID_ARGUMENT,"Invalid sample size"); return YAPI.INVALID_ARGUMENT; }
         if (_var2size == 0) {
             _nVars = 1;
         } else {
@@ -176,31 +176,31 @@ public class YInputCaptureData
         _nRecs = this.imm_decodeU16(sdata, 6);
         _samplesPerSec = this.imm_decodeU16(sdata, 8);
         _trigType = this.imm_decodeU16(sdata, 10);
-        _trigVal = this.imm_decodeVal(sdata,  12, 4) / 1000;
+        _trigVal = this.imm_decodeVal(sdata, 12, 4) / 1000;
         _trigPos = this.imm_decodeU16(sdata, 16);
         ms = this.imm_decodeU16(sdata, 18);
-        _trigUTC = this.imm_decodeVal(sdata,  20, 4);
+        _trigUTC = this.imm_decodeVal(sdata, 20, 4);
         _trigUTC = _trigUTC + (ms / 1000.0);
         recOfs = 24;
         while (sdata[recOfs] >= 32) {
-            _var1unit = ""+ _var1unit+""+((char)(sdata[recOfs])).ToString();
+            _var1unit = ""+_var1unit+""+((char)(sdata[recOfs])).ToString();
             recOfs = recOfs + 1;
         }
         if (_var2size > 0) {
             recOfs = recOfs + 1;
             while (sdata[recOfs] >= 32) {
-                _var2unit = ""+ _var2unit+""+((char)(sdata[recOfs])).ToString();
+                _var2unit = ""+_var2unit+""+((char)(sdata[recOfs])).ToString();
                 recOfs = recOfs + 1;
             }
         }
         if (_var3size > 0) {
             recOfs = recOfs + 1;
             while (sdata[recOfs] >= 32) {
-                _var3unit = ""+ _var3unit+""+((char)(sdata[recOfs])).ToString();
+                _var3unit = ""+_var3unit+""+((char)(sdata[recOfs])).ToString();
                 recOfs = recOfs + 1;
             }
         }
-        if (((recOfs) & (1)) == 1) {
+        if ((recOfs & 1) == 1) {
             // align to next word
             recOfs = recOfs + 1;
         }
@@ -223,7 +223,7 @@ public class YInputCaptureData
         recOfs = _recOfs;
         count = _nRecs;
         while ((count > 0) && (recOfs + _var1size <= buffSize)) {
-            v = this.imm_decodeVal(sdata,  recOfs, _var1size) / 1000.0;
+            v = this.imm_decodeVal(sdata, recOfs, _var1size) / 1000.0;
             _var1samples.Add(v*mult1);
             recOfs = recOfs + recSize;
         }
@@ -231,7 +231,7 @@ public class YInputCaptureData
             recOfs = _recOfs + _var1size;
             count = _nRecs;
             while ((count > 0) && (recOfs + _var2size <= buffSize)) {
-                v = this.imm_decodeVal(sdata,  recOfs, _var2size) / 1000.0;
+                v = this.imm_decodeVal(sdata, recOfs, _var2size) / 1000.0;
                 _var2samples.Add(v*mult2);
                 recOfs = recOfs + recSize;
             }
@@ -240,7 +240,7 @@ public class YInputCaptureData
             recOfs = _recOfs + _var1size + _var2size;
             count = _nRecs;
             while ((count > 0) && (recOfs + _var3size <= buffSize)) {
-                v = this.imm_decodeVal(sdata,  recOfs, _var3size) / 1000.0;
+                v = this.imm_decodeVal(sdata, recOfs, _var3size) / 1000.0;
                 _var3samples.Add(v*mult3);
                 recOfs = recOfs + recSize;
             }
@@ -560,7 +560,7 @@ public class YInputCaptureData
      */
     public virtual string imm_get_serie2Unit()
     {
-        if (!(_nVars >= 2)) { this._throw( YAPI.INVALID_ARGUMENT, "There is no serie 2 in this capture data"); return ""; }
+        if (!(_nVars >= 2)) { this._throw(YAPI.INVALID_ARGUMENT,"There is no serie 2 in this capture data"); return ""; }
         return _var2unit;
     }
 
@@ -594,7 +594,7 @@ public class YInputCaptureData
      */
     public virtual string imm_get_serie3Unit()
     {
-        if (!(_nVars >= 3)) { this._throw( YAPI.INVALID_ARGUMENT, "There is no serie 3 in this capture data"); return ""; }
+        if (!(_nVars >= 3)) { this._throw(YAPI.INVALID_ARGUMENT,"There is no serie 3 in this capture data"); return ""; }
         return _var3unit;
     }
 
@@ -685,7 +685,7 @@ public class YInputCaptureData
      */
     public virtual List<double> imm_get_serie2Values()
     {
-        if (!(_nVars >= 2)) { this._throw( YAPI.INVALID_ARGUMENT, "There is no serie 2 in this capture data"); return _var2samples; }
+        if (!(_nVars >= 2)) { this._throw(YAPI.INVALID_ARGUMENT,"There is no serie 2 in this capture data"); return _var2samples; }
         return _var2samples;
     }
 
@@ -731,7 +731,7 @@ public class YInputCaptureData
      */
     public virtual List<double> imm_get_serie3Values()
     {
-        if (!(_nVars >= 3)) { this._throw( YAPI.INVALID_ARGUMENT, "There is no serie 3 in this capture data"); return _var3samples; }
+        if (!(_nVars >= 3)) { this._throw(YAPI.INVALID_ARGUMENT,"There is no serie 3 in this capture data"); return _var3samples; }
         return _var3samples;
     }
 

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YLed.cs 42060 2020-10-14 10:02:12Z seb $
+ *  $Id: YLed.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindLed(), the high-level API for Led functions
  *
@@ -369,7 +369,7 @@ public class YLed : YFunction
         obj = (YLed) YFunction._FindFromCache("Led", func);
         if (obj == null) {
             obj = new YLed(func);
-            YFunction._AddToCache("Led",  func, obj);
+            YFunction._AddToCache("Led", func, obj);
         }
         return obj;
     }
@@ -423,10 +423,10 @@ public class YLed : YFunction
     public static YLed FindLedInContext(YAPIContext yctx,string func)
     {
         YLed obj;
-        obj = (YLed) YFunction._FindFromCacheInContext(yctx,  "Led", func);
+        obj = (YLed) YFunction._FindFromCacheInContext(yctx, "Led", func);
         if (obj == null) {
             obj = new YLed(yctx, func);
-            YFunction._AddToCache("Led",  func, obj);
+            YFunction._AddToCache("Led", func, obj);
         }
         return obj;
     }

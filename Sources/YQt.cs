@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YQt.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ * $Id: YQt.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindQt(), the high-level API for Qt functions
  *
@@ -160,7 +160,7 @@ public class YQt : YSensor
         obj = (YQt) YFunction._FindFromCache("Qt", func);
         if (obj == null) {
             obj = new YQt(func);
-            YFunction._AddToCache("Qt",  func, obj);
+            YFunction._AddToCache("Qt", func, obj);
         }
         return obj;
     }
@@ -214,10 +214,10 @@ public class YQt : YSensor
     public static YQt FindQtInContext(YAPIContext yctx,string func)
     {
         YQt obj;
-        obj = (YQt) YFunction._FindFromCacheInContext(yctx,  "Qt", func);
+        obj = (YQt) YFunction._FindFromCacheInContext(yctx, "Qt", func);
         if (obj == null) {
             obj = new YQt(yctx, func);
-            YFunction._AddToCache("Qt",  func, obj);
+            YFunction._AddToCache("Qt", func, obj);
         }
         return obj;
     }

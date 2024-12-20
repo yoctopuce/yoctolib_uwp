@@ -370,7 +370,7 @@ public class YThreshold : YFunction
         obj = (YThreshold) YFunction._FindFromCache("Threshold", func);
         if (obj == null) {
             obj = new YThreshold(func);
-            YFunction._AddToCache("Threshold",  func, obj);
+            YFunction._AddToCache("Threshold", func, obj);
         }
         return obj;
     }
@@ -424,10 +424,10 @@ public class YThreshold : YFunction
     public static YThreshold FindThresholdInContext(YAPIContext yctx,string func)
     {
         YThreshold obj;
-        obj = (YThreshold) YFunction._FindFromCacheInContext(yctx,  "Threshold", func);
+        obj = (YThreshold) YFunction._FindFromCacheInContext(yctx, "Threshold", func);
         if (obj == null) {
             obj = new YThreshold(yctx, func);
-            YFunction._AddToCache("Threshold",  func, obj);
+            YFunction._AddToCache("Threshold", func, obj);
         }
         return obj;
     }

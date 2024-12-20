@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YI2cPort.cs 59641 2024-03-05 20:50:20Z mvuilleu $
+ *  $Id: YI2cPort.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindI2cPort(), the high-level API for I2cPort functions
  *
@@ -866,7 +866,7 @@ public class YI2cPort : YFunction
         obj = (YI2cPort) YFunction._FindFromCache("I2cPort", func);
         if (obj == null) {
             obj = new YI2cPort(func);
-            YFunction._AddToCache("I2cPort",  func, obj);
+            YFunction._AddToCache("I2cPort", func, obj);
         }
         return obj;
     }
@@ -920,10 +920,10 @@ public class YI2cPort : YFunction
     public static YI2cPort FindI2cPortInContext(YAPIContext yctx,string func)
     {
         YI2cPort obj;
-        obj = (YI2cPort) YFunction._FindFromCacheInContext(yctx,  "I2cPort", func);
+        obj = (YI2cPort) YFunction._FindFromCacheInContext(yctx, "I2cPort", func);
         if (obj == null) {
             obj = new YI2cPort(yctx, func);
-            YFunction._AddToCache("I2cPort",  func, obj);
+            YFunction._AddToCache("I2cPort", func, obj);
         }
         return obj;
     }
@@ -1066,7 +1066,7 @@ public class YI2cPort : YFunction
         List<string> res = new List<string>();
         int idx;
 
-        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString( maxWait)+"&pat="+pattern;
+        url = "rxmsg.json?pos="+Convert.ToString(_rxptr)+"&maxw="+Convert.ToString(maxWait)+"&pat="+pattern;
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.Count;
@@ -1142,7 +1142,7 @@ public class YI2cPort : YFunction
         databin = await this._download("rxcnt.bin?pos="+Convert.ToString(_rxptr));
         availPosStr = YAPI.DefaultEncoding.GetString(databin);
         atPos = (availPosStr).IndexOf("@");
-        res = YAPIContext.imm_atoi((availPosStr).Substring( 0, atPos));
+        res = YAPIContext.imm_atoi((availPosStr).Substring(0, atPos));
         return res;
     }
 
@@ -1156,7 +1156,7 @@ public class YI2cPort : YFunction
         databin = await this._download("rxcnt.bin?pos="+Convert.ToString(_rxptr));
         availPosStr = YAPI.DefaultEncoding.GetString(databin);
         atPos = (availPosStr).IndexOf("@");
-        res = YAPIContext.imm_atoi((availPosStr).Substring( atPos+1, (availPosStr).Length-atPos-1));
+        res = YAPIContext.imm_atoi((availPosStr).Substring(atPos+1, (availPosStr).Length-atPos-1));
         return res;
     }
 
@@ -1191,12 +1191,12 @@ public class YI2cPort : YFunction
         string res;
         if ((query).Length <= 80) {
             // fast query
-            url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=!"+this.imm_escapeAttr(query);
+            url = "rxmsg.json?len=1&maxw="+Convert.ToString(maxWait)+"&cmd=!"+this.imm_escapeAttr(query);
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload("txdata", YAPI.DefaultEncoding.GetBytes(query + "\r\n"));
-            url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&pos="+Convert.ToString(prevpos);
+            url = "rxmsg.json?len=1&maxw="+Convert.ToString(maxWait)+"&pos="+Convert.ToString(prevpos);
         }
 
         msgbin = await this._download(url);
@@ -1247,12 +1247,12 @@ public class YI2cPort : YFunction
         string res;
         if ((hexString).Length <= 80) {
             // fast query
-            url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=$"+hexString;
+            url = "rxmsg.json?len=1&maxw="+Convert.ToString(maxWait)+"&cmd=$"+hexString;
         } else {
             // long query
             prevpos = await this.end_tell();
             await this._upload("txdata", YAPIContext.imm_hexStrToBin(hexString));
-            url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&pos="+Convert.ToString(prevpos);
+            url = "rxmsg.json?len=1&maxw="+Convert.ToString(maxWait)+"&pos="+Convert.ToString(prevpos);
         }
 
         msgbin = await this._download(url);
@@ -1379,16 +1379,16 @@ public class YI2cPort : YFunction
         idx = 0;
         while (idx < nBytes) {
             val = buff[idx];
-            msg = ""+ msg+""+String.Format("{0:x02}",val);
+            msg = ""+msg+""+String.Format("{0:x02}",val);
             idx = idx + 1;
         }
 
         reply = await this.queryLine(msg, 1000);
-        if (!((reply).Length > 0)) { this._throw( YAPI.IO_ERROR, "No response from I2C device"); return YAPI.IO_ERROR; }
+        if (!((reply).Length > 0)) { this._throw(YAPI.IO_ERROR,"No response from I2C device"); return YAPI.IO_ERROR; }
         idx = (reply).IndexOf("[N]!");
-        if (!(idx < 0)) { this._throw( YAPI.IO_ERROR, "No I2C ACK received"); return YAPI.IO_ERROR; }
+        if (!(idx < 0)) { this._throw(YAPI.IO_ERROR,"No I2C ACK received"); return YAPI.IO_ERROR; }
         idx = (reply).IndexOf("!");
-        if (!(idx < 0)) { this._throw( YAPI.IO_ERROR, "I2C protocol error"); return YAPI.IO_ERROR; }
+        if (!(idx < 0)) { this._throw(YAPI.IO_ERROR,"I2C protocol error"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 
@@ -1424,16 +1424,16 @@ public class YI2cPort : YFunction
         idx = 0;
         while (idx < nBytes) {
             val = values[idx];
-            msg = ""+ msg+""+String.Format("{0:x02}",val);
+            msg = ""+msg+""+String.Format("{0:x02}",val);
             idx = idx + 1;
         }
 
         reply = await this.queryLine(msg, 1000);
-        if (!((reply).Length > 0)) { this._throw( YAPI.IO_ERROR, "No response from I2C device"); return YAPI.IO_ERROR; }
+        if (!((reply).Length > 0)) { this._throw(YAPI.IO_ERROR,"No response from I2C device"); return YAPI.IO_ERROR; }
         idx = (reply).IndexOf("[N]!");
-        if (!(idx < 0)) { this._throw( YAPI.IO_ERROR, "No I2C ACK received"); return YAPI.IO_ERROR; }
+        if (!(idx < 0)) { this._throw(YAPI.IO_ERROR,"No I2C ACK received"); return YAPI.IO_ERROR; }
         idx = (reply).IndexOf("!");
-        if (!(idx < 0)) { this._throw( YAPI.IO_ERROR, "I2C protocol error"); return YAPI.IO_ERROR; }
+        if (!(idx < 0)) { this._throw(YAPI.IO_ERROR,"I2C protocol error"); return YAPI.IO_ERROR; }
         return YAPI.SUCCESS;
     }
 
@@ -1470,13 +1470,13 @@ public class YI2cPort : YFunction
         string reply;
         byte[] rcvbytes = new byte[0];
         rcvbytes = new byte[0];
-        if (!(rcvCount<=512)) { this._throw( YAPI.INVALID_ARGUMENT, "Cannot read more than 512 bytes"); return rcvbytes; }
+        if (!(rcvCount<=512)) { this._throw(YAPI.INVALID_ARGUMENT,"Cannot read more than 512 bytes"); return rcvbytes; }
         msg = "@"+String.Format("{0:x02}",slaveAddr)+":";
         nBytes = (buff).Length;
         idx = 0;
         while (idx < nBytes) {
             val = buff[idx];
-            msg = ""+ msg+""+String.Format("{0:x02}",val);
+            msg = ""+msg+""+String.Format("{0:x02}",val);
             idx = idx + 1;
         }
         idx = 0;
@@ -1486,7 +1486,7 @@ public class YI2cPort : YFunction
                 idx = idx + 255;
             }
             if (rcvCount - idx > 2) {
-                msg = ""+ msg+"xx*"+String.Format("{0:X02}",(rcvCount - idx));
+                msg = ""+msg+"xx*"+String.Format("{0:X02}",(rcvCount - idx));
                 idx = rcvCount;
             }
         }
@@ -1496,12 +1496,12 @@ public class YI2cPort : YFunction
         }
 
         reply = await this.queryLine(msg, 1000);
-        if (!((reply).Length > 0)) { this._throw( YAPI.IO_ERROR, "No response from I2C device"); return rcvbytes; }
+        if (!((reply).Length > 0)) { this._throw(YAPI.IO_ERROR,"No response from I2C device"); return rcvbytes; }
         idx = (reply).IndexOf("[N]!");
-        if (!(idx < 0)) { this._throw( YAPI.IO_ERROR, "No I2C ACK received"); return rcvbytes; }
+        if (!(idx < 0)) { this._throw(YAPI.IO_ERROR,"No I2C ACK received"); return rcvbytes; }
         idx = (reply).IndexOf("!");
-        if (!(idx < 0)) { this._throw( YAPI.IO_ERROR, "I2C protocol error"); return rcvbytes; }
-        reply = (reply).Substring( (reply).Length-2*rcvCount, 2*rcvCount);
+        if (!(idx < 0)) { this._throw(YAPI.IO_ERROR,"I2C protocol error"); return rcvbytes; }
+        reply = (reply).Substring((reply).Length-2*rcvCount, 2*rcvCount);
         rcvbytes = YAPIContext.imm_hexStrToBin(reply);
         return rcvbytes;
     }
@@ -1540,13 +1540,13 @@ public class YI2cPort : YFunction
         byte[] rcvbytes = new byte[0];
         List<int> res = new List<int>();
         res.Clear();
-        if (!(rcvCount<=512)) { this._throw( YAPI.INVALID_ARGUMENT, "Cannot read more than 512 bytes"); return res; }
+        if (!(rcvCount<=512)) { this._throw(YAPI.INVALID_ARGUMENT,"Cannot read more than 512 bytes"); return res; }
         msg = "@"+String.Format("{0:x02}",slaveAddr)+":";
         nBytes = values.Count;
         idx = 0;
         while (idx < nBytes) {
             val = values[idx];
-            msg = ""+ msg+""+String.Format("{0:x02}",val);
+            msg = ""+msg+""+String.Format("{0:x02}",val);
             idx = idx + 1;
         }
         idx = 0;
@@ -1556,7 +1556,7 @@ public class YI2cPort : YFunction
                 idx = idx + 255;
             }
             if (rcvCount - idx > 2) {
-                msg = ""+ msg+"xx*"+String.Format("{0:X02}",(rcvCount - idx));
+                msg = ""+msg+"xx*"+String.Format("{0:X02}",(rcvCount - idx));
                 idx = rcvCount;
             }
         }
@@ -1566,12 +1566,12 @@ public class YI2cPort : YFunction
         }
 
         reply = await this.queryLine(msg, 1000);
-        if (!((reply).Length > 0)) { this._throw( YAPI.IO_ERROR, "No response from I2C device"); return res; }
+        if (!((reply).Length > 0)) { this._throw(YAPI.IO_ERROR,"No response from I2C device"); return res; }
         idx = (reply).IndexOf("[N]!");
-        if (!(idx < 0)) { this._throw( YAPI.IO_ERROR, "No I2C ACK received"); return res; }
+        if (!(idx < 0)) { this._throw(YAPI.IO_ERROR,"No I2C ACK received"); return res; }
         idx = (reply).IndexOf("!");
-        if (!(idx < 0)) { this._throw( YAPI.IO_ERROR, "I2C protocol error"); return res; }
-        reply = (reply).Substring( (reply).Length-2*rcvCount, 2*rcvCount);
+        if (!(idx < 0)) { this._throw(YAPI.IO_ERROR,"I2C protocol error"); return res; }
+        reply = (reply).Substring((reply).Length-2*rcvCount, 2*rcvCount);
         rcvbytes = YAPIContext.imm_hexStrToBin(reply);
         res.Clear();
         idx = 0;
@@ -1761,7 +1761,7 @@ public class YI2cPort : YFunction
         idx = 0;
         while (idx < nBytes) {
             val = buff[idx];
-            msg = ""+ msg+""+String.Format("{0:x02}",val);
+            msg = ""+msg+""+String.Format("{0:x02}",val);
             idx = idx + 1;
         }
 
@@ -1797,7 +1797,7 @@ public class YI2cPort : YFunction
         idx = 0;
         while (idx < nBytes) {
             val = byteList[idx];
-            msg = ""+ msg+""+String.Format("{0:x02}",val);
+            msg = ""+msg+""+String.Format("{0:x02}",val);
             idx = idx + 1;
         }
 
@@ -1837,7 +1837,7 @@ public class YI2cPort : YFunction
         List<YI2cSnoopingRecord> res = new List<YI2cSnoopingRecord>();
         int idx;
 
-        url = "rxmsg.json?pos="+Convert.ToString( _rxptr)+"&maxw="+Convert.ToString( maxWait)+"&t=0&len="+Convert.ToString(maxMsg);
+        url = "rxmsg.json?pos="+Convert.ToString(_rxptr)+"&maxw="+Convert.ToString(maxWait)+"&t=0&len="+Convert.ToString(maxMsg);
         msgbin = await this._download(url);
         msgarr = this.imm_json_get_array(msgbin);
         msglen = msgarr.Count;

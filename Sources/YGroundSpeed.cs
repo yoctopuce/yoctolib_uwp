@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YGroundSpeed.cs 39658 2020-03-12 15:36:29Z seb $
+ *  $Id: YGroundSpeed.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindGroundSpeed(), the high-level API for GroundSpeed functions
  *
@@ -157,7 +157,7 @@ public class YGroundSpeed : YSensor
         obj = (YGroundSpeed) YFunction._FindFromCache("GroundSpeed", func);
         if (obj == null) {
             obj = new YGroundSpeed(func);
-            YFunction._AddToCache("GroundSpeed",  func, obj);
+            YFunction._AddToCache("GroundSpeed", func, obj);
         }
         return obj;
     }
@@ -211,10 +211,10 @@ public class YGroundSpeed : YSensor
     public static YGroundSpeed FindGroundSpeedInContext(YAPIContext yctx,string func)
     {
         YGroundSpeed obj;
-        obj = (YGroundSpeed) YFunction._FindFromCacheInContext(yctx,  "GroundSpeed", func);
+        obj = (YGroundSpeed) YFunction._FindFromCacheInContext(yctx, "GroundSpeed", func);
         if (obj == null) {
             obj = new YGroundSpeed(yctx, func);
-            YFunction._AddToCache("GroundSpeed",  func, obj);
+            YFunction._AddToCache("GroundSpeed", func, obj);
         }
         return obj;
     }

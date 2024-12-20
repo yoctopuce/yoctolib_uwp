@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAudioOut.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YAudioOut.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindAudioOut(), the high-level API for AudioOut functions
  *
@@ -410,7 +410,7 @@ public class YAudioOut : YFunction
         obj = (YAudioOut) YFunction._FindFromCache("AudioOut", func);
         if (obj == null) {
             obj = new YAudioOut(func);
-            YFunction._AddToCache("AudioOut",  func, obj);
+            YFunction._AddToCache("AudioOut", func, obj);
         }
         return obj;
     }
@@ -464,10 +464,10 @@ public class YAudioOut : YFunction
     public static YAudioOut FindAudioOutInContext(YAPIContext yctx,string func)
     {
         YAudioOut obj;
-        obj = (YAudioOut) YFunction._FindFromCacheInContext(yctx,  "AudioOut", func);
+        obj = (YAudioOut) YFunction._FindFromCacheInContext(yctx, "AudioOut", func);
         if (obj == null) {
             obj = new YAudioOut(yctx, func);
-            YFunction._AddToCache("AudioOut",  func, obj);
+            YFunction._AddToCache("AudioOut", func, obj);
         }
         return obj;
     }

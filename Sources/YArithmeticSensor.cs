@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YArithmeticSensor.cs 48028 2022-01-12 09:20:48Z seb $
+ *  $Id: YArithmeticSensor.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindArithmeticSensor(), the high-level API for ArithmeticSensor functions
  *
@@ -263,7 +263,7 @@ public class YArithmeticSensor : YSensor
         obj = (YArithmeticSensor) YFunction._FindFromCache("ArithmeticSensor", func);
         if (obj == null) {
             obj = new YArithmeticSensor(func);
-            YFunction._AddToCache("ArithmeticSensor",  func, obj);
+            YFunction._AddToCache("ArithmeticSensor", func, obj);
         }
         return obj;
     }
@@ -317,10 +317,10 @@ public class YArithmeticSensor : YSensor
     public static YArithmeticSensor FindArithmeticSensorInContext(YAPIContext yctx,string func)
     {
         YArithmeticSensor obj;
-        obj = (YArithmeticSensor) YFunction._FindFromCacheInContext(yctx,  "ArithmeticSensor", func);
+        obj = (YArithmeticSensor) YFunction._FindFromCacheInContext(yctx, "ArithmeticSensor", func);
         if (obj == null) {
             obj = new YArithmeticSensor(yctx, func);
-            YFunction._AddToCache("ArithmeticSensor",  func, obj);
+            YFunction._AddToCache("ArithmeticSensor", func, obj);
         }
         return obj;
     }
@@ -444,14 +444,14 @@ public class YArithmeticSensor : YSensor
         string diags;
         double resval;
         id = await this.get_functionId();
-        id = (id).Substring( 16, (id).Length - 16);
+        id = (id).Substring(16, (id).Length - 16);
         fname = "arithmExpr"+id+".txt";
 
-        content = "// "+ descr+"\n"+expr;
+        content = "// "+descr+"\n"+expr;
         data = await this._uploadEx(fname, YAPI.DefaultEncoding.GetBytes(content));
         diags = YAPI.DefaultEncoding.GetString(data);
-        if (!((diags).Substring(0, 8) == "Result: ")) { this._throw( YAPI.INVALID_ARGUMENT, diags); return YAPI.INVALID_DOUBLE; }
-        resval = Double.Parse((diags).Substring( 8, (diags).Length-8));
+        if (!((diags).Substring(0, 8) == "Result: ")) { this._throw(YAPI.INVALID_ARGUMENT,diags); return YAPI.INVALID_DOUBLE; }
+        resval = YAPIContext.imm_atof((diags).Substring(8, (diags).Length-8));
         return resval;
     }
 
@@ -476,13 +476,13 @@ public class YArithmeticSensor : YSensor
         string content;
         int idx;
         id = await this.get_functionId();
-        id = (id).Substring( 16, (id).Length - 16);
+        id = (id).Substring(16, (id).Length - 16);
         fname = "arithmExpr"+id+".txt";
 
         content = YAPI.DefaultEncoding.GetString(await this._download(fname));
         idx = (content).IndexOf("\n");
         if (idx > 0) {
-            content = (content).Substring( idx+1, (content).Length-(idx+1));
+            content = (content).Substring(idx+1, (content).Length-(idx+1));
         }
         return content;
     }
@@ -525,14 +525,14 @@ public class YArithmeticSensor : YSensor
         double outputVal;
         string fname;
         siz = inputValues.Count;
-        if (!(siz > 1)) { this._throw( YAPI.INVALID_ARGUMENT, "auxiliary function must be defined by at least two points"); return YAPI.INVALID_ARGUMENT; }
-        if (!(siz == outputValues.Count)) { this._throw( YAPI.INVALID_ARGUMENT, "table sizes mismatch"); return YAPI.INVALID_ARGUMENT; }
+        if (!(siz > 1)) { this._throw(YAPI.INVALID_ARGUMENT,"auxiliary function must be defined by at least two points"); return YAPI.INVALID_ARGUMENT; }
+        if (!(siz == outputValues.Count)) { this._throw(YAPI.INVALID_ARGUMENT,"table sizes mismatch"); return YAPI.INVALID_ARGUMENT; }
         defstr = "";
         idx = 0;
         while (idx < siz) {
             inputVal = inputValues[idx];
             outputVal = outputValues[idx];
-            defstr = ""+ defstr+""+YAPIContext.imm_floatToStr( inputVal)+":"+YAPIContext.imm_floatToStr(outputVal)+"\n";
+            defstr = ""+defstr+""+YAPIContext.imm_floatToStr(inputVal)+":"+YAPIContext.imm_floatToStr(outputVal)+"\n";
             idx = idx + 1;
         }
         fname = "userMap"+name+".txt";
@@ -574,7 +574,7 @@ public class YArithmeticSensor : YSensor
         fname = "userMap"+name+".txt";
         defbin = await this._download(fname);
         siz = (defbin).Length;
-        if (!(siz > 0)) { this._throw( YAPI.INVALID_ARGUMENT, "auxiliary function does not exist"); return YAPI.INVALID_ARGUMENT; }
+        if (!(siz > 0)) { this._throw(YAPI.INVALID_ARGUMENT,"auxiliary function does not exist"); return YAPI.INVALID_ARGUMENT; }
         inputValues.Clear();
         outputValues.Clear();
         // FIXME: decode line by line

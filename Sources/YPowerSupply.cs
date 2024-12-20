@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPowerSupply.cs 55576 2023-07-25 06:26:34Z mvuilleu $
+ *  $Id: YPowerSupply.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindPowerSupply(), the high-level API for PowerSupply functions
  *
@@ -752,7 +752,7 @@ public class YPowerSupply : YFunction
         obj = (YPowerSupply) YFunction._FindFromCache("PowerSupply", func);
         if (obj == null) {
             obj = new YPowerSupply(func);
-            YFunction._AddToCache("PowerSupply",  func, obj);
+            YFunction._AddToCache("PowerSupply", func, obj);
         }
         return obj;
     }
@@ -806,10 +806,10 @@ public class YPowerSupply : YFunction
     public static YPowerSupply FindPowerSupplyInContext(YAPIContext yctx,string func)
     {
         YPowerSupply obj;
-        obj = (YPowerSupply) YFunction._FindFromCacheInContext(yctx,  "PowerSupply", func);
+        obj = (YPowerSupply) YFunction._FindFromCacheInContext(yctx, "PowerSupply", func);
         if (obj == null) {
             obj = new YPowerSupply(yctx, func);
-            YFunction._AddToCache("PowerSupply",  func, obj);
+            YFunction._AddToCache("PowerSupply", func, obj);
         }
         return obj;
     }
@@ -886,7 +886,7 @@ public class YPowerSupply : YFunction
         if (V_target < 0.0) {
             V_target  = 0.0;
         }
-        newval = ""+Convert.ToString( (int) Math.Round(V_target*65536))+":"+Convert.ToString(ms_duration);
+        newval = ""+Convert.ToString((int) Math.Round(V_target*65536))+":"+Convert.ToString(ms_duration);
 
         return await this.set_voltageTransition(newval);
     }

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPowerOutput.cs 38913 2019-12-20 18:59:49Z mvuilleu $
+ *  $Id: YPowerOutput.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindPowerOutput(), the high-level API for PowerOutput functions
  *
@@ -235,7 +235,7 @@ public class YPowerOutput : YFunction
         obj = (YPowerOutput) YFunction._FindFromCache("PowerOutput", func);
         if (obj == null) {
             obj = new YPowerOutput(func);
-            YFunction._AddToCache("PowerOutput",  func, obj);
+            YFunction._AddToCache("PowerOutput", func, obj);
         }
         return obj;
     }
@@ -289,10 +289,10 @@ public class YPowerOutput : YFunction
     public static YPowerOutput FindPowerOutputInContext(YAPIContext yctx,string func)
     {
         YPowerOutput obj;
-        obj = (YPowerOutput) YFunction._FindFromCacheInContext(yctx,  "PowerOutput", func);
+        obj = (YPowerOutput) YFunction._FindFromCacheInContext(yctx, "PowerOutput", func);
         if (obj == null) {
             obj = new YPowerOutput(yctx, func);
-            YFunction._AddToCache("PowerOutput",  func, obj);
+            YFunction._AddToCache("PowerOutput", func, obj);
         }
         return obj;
     }

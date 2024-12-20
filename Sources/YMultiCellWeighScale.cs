@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiCellWeighScale.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YMultiCellWeighScale.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindMultiCellWeighScale(), the high-level API for MultiCellWeighScale functions
  *
@@ -779,7 +779,7 @@ public class YMultiCellWeighScale : YSensor
         obj = (YMultiCellWeighScale) YFunction._FindFromCache("MultiCellWeighScale", func);
         if (obj == null) {
             obj = new YMultiCellWeighScale(func);
-            YFunction._AddToCache("MultiCellWeighScale",  func, obj);
+            YFunction._AddToCache("MultiCellWeighScale", func, obj);
         }
         return obj;
     }
@@ -833,10 +833,10 @@ public class YMultiCellWeighScale : YSensor
     public static YMultiCellWeighScale FindMultiCellWeighScaleInContext(YAPIContext yctx,string func)
     {
         YMultiCellWeighScale obj;
-        obj = (YMultiCellWeighScale) YFunction._FindFromCacheInContext(yctx,  "MultiCellWeighScale", func);
+        obj = (YMultiCellWeighScale) YFunction._FindFromCacheInContext(yctx, "MultiCellWeighScale", func);
         if (obj == null) {
             obj = new YMultiCellWeighScale(yctx, func);
-            YFunction._AddToCache("MultiCellWeighScale",  func, obj);
+            YFunction._AddToCache("MultiCellWeighScale", func, obj);
         }
         return obj;
     }
@@ -976,7 +976,7 @@ public class YMultiCellWeighScale : YSensor
      */
     public virtual async Task<int> setupSpan(double currWeight,double maxWeight)
     {
-        return await this.set_command("S"+Convert.ToString( (int) Math.Round(1000*currWeight))+":"+Convert.ToString((int) Math.Round(1000*maxWeight)));
+        return await this.set_command("S"+Convert.ToString((int) Math.Round(1000*currWeight))+":"+Convert.ToString((int) Math.Round(1000*maxWeight)));
     }
 
     /**

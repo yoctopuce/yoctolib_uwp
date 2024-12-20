@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YDataSet.cs 56045 2023-08-14 15:51:05Z seb $
+ * $Id: YDataSet.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements yFindDataSet(), the high-level API for DataSet functions
  *
@@ -237,33 +237,33 @@ public class YDataSet
         summaryStopMs = YAPI.MIN_DOUBLE;
 
         // Parse complete streams
-        for (int ii_0 = 0; ii_0 <  _streams.Count; ii_0++) {
-            streamStartTimeMs = Math.Round(await  _streams[ii_0].get_realStartTimeUTC() * 1000);
-            streamDuration = await  _streams[ii_0].get_realDuration();
+        for (int ii_0 = 0; ii_0 < _streams.Count; ii_0++) {
+            streamStartTimeMs = Math.Round(await _streams[ii_0].get_realStartTimeUTC() * 1000);
+            streamDuration = await _streams[ii_0].get_realDuration();
             streamEndTimeMs = streamStartTimeMs + Math.Round(streamDuration * 1000);
             if ((streamStartTimeMs >= _startTimeMs) && ((_endTimeMs == 0) || (streamEndTimeMs <= _endTimeMs))) {
                 // stream that are completely inside the dataset
-                previewMinVal = await  _streams[ii_0].get_minValue();
-                previewAvgVal = await  _streams[ii_0].get_averageValue();
-                previewMaxVal = await  _streams[ii_0].get_maxValue();
+                previewMinVal = await _streams[ii_0].get_minValue();
+                previewAvgVal = await _streams[ii_0].get_averageValue();
+                previewMaxVal = await _streams[ii_0].get_maxValue();
                 previewStartMs = streamStartTimeMs;
                 previewStopMs = streamEndTimeMs;
                 previewDuration = streamDuration;
             } else {
                 // stream that are partially in the dataset
                 // we need to parse data to filter value outside the dataset
-                if (!( _streams[ii_0].imm_wasLoaded())) {
-                    url =  _streams[ii_0].imm_get_url();
+                if (!(_streams[ii_0].imm_wasLoaded())) {
+                    url = _streams[ii_0].imm_get_url();
                     data = await _parent._download(url);
                     _streams[ii_0].imm_parseStream(data);
                 }
-                dataRows = await  _streams[ii_0].get_dataRows();
+                dataRows = await _streams[ii_0].get_dataRows();
                 if (dataRows.Count == 0) {
                     return await this.get_progress();
                 }
                 tim = streamStartTimeMs;
-                fitv = Math.Round(await  _streams[ii_0].get_firstDataSamplesInterval() * 1000);
-                itv = Math.Round(await  _streams[ii_0].get_dataSamplesInterval() * 1000);
+                fitv = Math.Round(await _streams[ii_0].get_firstDataSamplesInterval() * 1000);
+                itv = Math.Round(await _streams[ii_0].get_dataSamplesInterval() * 1000);
                 nCols = dataRows[0].Count;
                 minCol = 0;
                 if (nCols > 2) {
@@ -496,7 +496,7 @@ public class YDataSet
             return _hardwareId;
         }
         mo = await _parent.get_module();
-        _hardwareId = ""+ await mo.get_serialNumber()+"."+await this.get_functionId();
+        _hardwareId = ""+await mo.get_serialNumber()+"."+await this.get_functionId();
         return _hardwareId;
     }
 
@@ -630,7 +630,7 @@ public class YDataSet
         if (_progress >= _streams.Count) {
             return 100;
         }
-        return ((1 + (1 + _progress) * 98) / ((1 + _streams.Count)));
+        return ((1 + (1 + _progress) * 98) / (1 + _streams.Count));
     }
 
     /**

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPressure.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YPressure.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindPressure(), the high-level API for Pressure functions
  *
@@ -158,7 +158,7 @@ public class YPressure : YSensor
         obj = (YPressure) YFunction._FindFromCache("Pressure", func);
         if (obj == null) {
             obj = new YPressure(func);
-            YFunction._AddToCache("Pressure",  func, obj);
+            YFunction._AddToCache("Pressure", func, obj);
         }
         return obj;
     }
@@ -212,10 +212,10 @@ public class YPressure : YSensor
     public static YPressure FindPressureInContext(YAPIContext yctx,string func)
     {
         YPressure obj;
-        obj = (YPressure) YFunction._FindFromCacheInContext(yctx,  "Pressure", func);
+        obj = (YPressure) YFunction._FindFromCacheInContext(yctx, "Pressure", func);
         if (obj == null) {
             obj = new YPressure(yctx, func);
-            YFunction._AddToCache("Pressure",  func, obj);
+            YFunction._AddToCache("Pressure", func, obj);
         }
         return obj;
     }

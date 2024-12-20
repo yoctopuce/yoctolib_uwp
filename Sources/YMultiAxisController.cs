@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YMultiAxisController.cs 48028 2022-01-12 09:20:48Z seb $
+ *  $Id: YMultiAxisController.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindMultiAxisController(), the high-level API for MultiAxisController functions
  *
@@ -304,7 +304,7 @@ public class YMultiAxisController : YFunction
         obj = (YMultiAxisController) YFunction._FindFromCache("MultiAxisController", func);
         if (obj == null) {
             obj = new YMultiAxisController(func);
-            YFunction._AddToCache("MultiAxisController",  func, obj);
+            YFunction._AddToCache("MultiAxisController", func, obj);
         }
         return obj;
     }
@@ -358,10 +358,10 @@ public class YMultiAxisController : YFunction
     public static YMultiAxisController FindMultiAxisControllerInContext(YAPIContext yctx,string func)
     {
         YMultiAxisController obj;
-        obj = (YMultiAxisController) YFunction._FindFromCacheInContext(yctx,  "MultiAxisController", func);
+        obj = (YMultiAxisController) YFunction._FindFromCacheInContext(yctx, "MultiAxisController", func);
         if (obj == null) {
             obj = new YMultiAxisController(yctx, func);
-            YFunction._AddToCache("MultiAxisController",  func, obj);
+            YFunction._AddToCache("MultiAxisController", func, obj);
         }
         return obj;
     }
@@ -423,9 +423,9 @@ public class YMultiAxisController : YFunction
         retBin = await this._download(url);
         res = retBin[0];
         if (res < 58) {
-            if (!(res == 48)) { this._throw( YAPI.DEVICE_BUSY, "Motor command pipeline is full, try again later"); return YAPI.DEVICE_BUSY; }
+            if (!(res == 48)) { this._throw(YAPI.DEVICE_BUSY,"Motor command pipeline is full, try again later"); return YAPI.DEVICE_BUSY; }
         } else {
-            if (!(res == 48)) { this._throw( YAPI.IO_ERROR, "Motor command failed permanently"); return YAPI.IO_ERROR; }
+            if (!(res == 48)) { this._throw(YAPI.IO_ERROR,"Motor command failed permanently"); return YAPI.IO_ERROR; }
         }
         return YAPI.SUCCESS;
     }
@@ -469,7 +469,7 @@ public class YMultiAxisController : YFunction
         cmd = "H"+Convert.ToString((int) Math.Round(1000*speed[0]));
         i = 1;
         while (i < ndim) {
-            cmd = ""+ cmd+","+Convert.ToString((int) Math.Round(1000*speed[i]));
+            cmd = ""+cmd+","+Convert.ToString((int) Math.Round(1000*speed[i]));
             i = i + 1;
         }
         return await this.sendCommand(cmd);
@@ -501,7 +501,7 @@ public class YMultiAxisController : YFunction
         cmd = "M"+Convert.ToString((int) Math.Round(16*absPos[0]));
         i = 1;
         while (i < ndim) {
-            cmd = ""+ cmd+","+Convert.ToString((int) Math.Round(16*absPos[i]));
+            cmd = ""+cmd+","+Convert.ToString((int) Math.Round(16*absPos[i]));
             i = i + 1;
         }
         return await this.sendCommand(cmd);
@@ -533,7 +533,7 @@ public class YMultiAxisController : YFunction
         cmd = "m"+Convert.ToString((int) Math.Round(16*relPos[0]));
         i = 1;
         while (i < ndim) {
-            cmd = ""+ cmd+","+Convert.ToString((int) Math.Round(16*relPos[i]));
+            cmd = ""+cmd+","+Convert.ToString((int) Math.Round(16*relPos[i]));
             i = i + 1;
         }
         return await this.sendCommand(cmd);

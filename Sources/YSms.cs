@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSms.cs 50140 2022-06-16 10:26:30Z seb $
+ * $Id: YSms.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindSms(), the high-level API for Sms functions
  *
@@ -139,15 +139,15 @@ public class YSms
 
     public virtual async Task<int> get_msgClass()
     {
-        if (((_mclass) & (16)) == 0) {
+        if ((_mclass & 16) == 0) {
             return -1;
         }
-        return ((_mclass) & (3));
+        return (_mclass & 3);
     }
 
     public virtual async Task<int> get_dcs()
     {
-        return ((_mclass) | ((((_alphab) << (2)))));
+        return (_mclass | ((_alphab << 2)));
     }
 
     public virtual async Task<string> get_timestamp()
@@ -188,7 +188,7 @@ public class YSms
         }
         if (_alphab == 2) {
             // using UCS-2 alphabet
-            isosize = (((_udata).Length) >> (1));
+            isosize = (((_udata).Length) >> 1);
             isolatin = new byte[isosize];
             i = 0;
             while (i < isosize) {
@@ -213,7 +213,7 @@ public class YSms
         }
         if (_alphab == 2) {
             // using UCS-2 alphabet
-            unisize = (((_udata).Length) >> (1));
+            unisize = (((_udata).Length) >> 1);
             res.Clear();
             i = 0;
             while (i < unisize) {
@@ -349,8 +349,8 @@ public class YSms
 
     public virtual async Task<int> set_dcs(int val)
     {
-        _alphab = (((((val) >> (2)))) & (3));
-        _mclass = ((val) & (16+3));
+        _alphab = (((val >> 2)) & 3);
+        _mclass = (val & (16+3));
         _npdu = 0;
         return YAPI.SUCCESS;
     }
@@ -533,14 +533,14 @@ public class YSms
             uni = val[i];
             if (uni >= 65536) {
                 surrogate = uni - 65536;
-                uni = (((((surrogate) >> (10))) & (1023))) + 55296;
-                udata[udatalen] = (byte)(((uni) >> (8)) & 0xff);
-                udata[udatalen+1] = (byte)(((uni) & (255)) & 0xff);
+                uni = (((surrogate >> 10) & 1023)) + 55296;
+                udata[udatalen] = (byte)((uni >> 8) & 0xff);
+                udata[udatalen+1] = (byte)((uni & 255) & 0xff);
                 udatalen = udatalen + 2;
-                uni = (((surrogate) & (1023))) + 56320;
+                uni = ((surrogate & 1023)) + 56320;
             }
-            udata[udatalen] = (byte)(((uni) >> (8)) & 0xff);
-            udata[udatalen+1] = (byte)(((uni) & (255)) & 0xff);
+            udata[udatalen] = (byte)((uni >> 8) & 0xff);
+            udata[udatalen+1] = (byte)((uni & 255) & 0xff);
             udatalen = udatalen + 2;
             i = i + 1;
         }
@@ -646,7 +646,7 @@ public class YSms
             res[0] = (byte)(0 & 0xff);
             return res;
         }
-        res = new byte[2+((numlen+1) >> (1))];
+        res = new byte[2+((numlen+1) >> 1)];
         res[0] = (byte)(numlen & 0xff);
         if (bytes[0] == 43) {
             res[1] = (byte)(145 & 0xff);
@@ -659,18 +659,18 @@ public class YSms
         while (i < srclen) {
             val = bytes[i];
             if ((val >= 48) && (val < 58)) {
-                if (((numlen) & (1)) == 0) {
+                if ((numlen & 1) == 0) {
                     digit = val - 48;
                 } else {
-                    res[((numlen) >> (1))] = (byte)(digit + 16*(val-48) & 0xff);
+                    res[(numlen >> 1)] = (byte)(digit + 16*(val-48) & 0xff);
                 }
                 numlen = numlen + 1;
             }
             i = i + 1;
         }
         // pad with F if needed
-        if (((numlen) & (1)) != 0) {
-            res[((numlen) >> (1))] = (byte)(digit + 240 & 0xff);
+        if ((numlen & 1) != 0) {
+            res[(numlen >> 1)] = (byte)(digit + 240 & 0xff);
         }
         return res;
     }
@@ -689,10 +689,10 @@ public class YSms
             return "";
         }
         res = "";
-        addrType = ((addr[ofs]) & (112));
+        addrType = (addr[ofs] & 112);
         if (addrType == 80) {
             // alphanumeric number
-            siz = ((4*siz) / (7));
+            siz = ((4*siz) / 7);
             gsm7 = new byte[siz];
             rpos = 1;
             carry = 0;
@@ -706,8 +706,8 @@ public class YSms
                 } else {
                     byt = addr[ofs+rpos];
                     rpos = rpos + 1;
-                    gsm7[i] = (byte)(((carry) | ((((((byt) << (nbits)))) & (127)))) & 0xff);
-                    carry = ((byt) >> ((7 - nbits)));
+                    gsm7[i] = (byte)((carry | (((byt << nbits)) & 127)) & 0xff);
+                    carry = (byt >> (7 - nbits));
                     nbits = nbits + 1;
                 }
                 i = i + 1;
@@ -718,16 +718,16 @@ public class YSms
             if (addrType == 16) {
                 res = "+";
             }
-            siz = (((siz+1)) >> (1));
+            siz = ((siz+1) >> 1);
             i = 0;
             while (i < siz) {
                 byt = addr[ofs+i+1];
-                res = ""+ res+""+String.Format("{0:x}", ((byt) & (15)))+""+String.Format("{0:x}",((byt) >> (4)));
+                res = ""+res+""+String.Format("{0:x}",(byt & 15))+""+String.Format("{0:x}",(byt >> 4));
                 i = i + 1;
             }
             // remove padding digit if needed
-            if (((addr[ofs+siz]) >> (4)) == 15) {
-                res = (res).Substring( 0, (res).Length-1);
+            if (((addr[ofs+siz]) >> 4) == 15) {
+                res = (res).Substring(0, (res).Length-1);
             }
             return res;
         }
@@ -751,15 +751,15 @@ public class YSms
             n = YAPIContext.imm_atoi((exp).Substring(1, explen-1));
             res = new byte[1];
             if (n > 30*86400) {
-                n = 192+(((n+6*86400)) / ((7*86400)));
+                n = 192+((n+6*86400) / (7*86400));
             } else {
                 if (n > 86400) {
-                    n = 166+(((n+86399)) / (86400));
+                    n = 166+((n+86399) / 86400);
                 } else {
                     if (n > 43200) {
-                        n = 143+(((n-43200+1799)) / (1800));
+                        n = 143+((n-43200+1799) / 1800);
                     } else {
-                        n = -1+(((n+299)) / (300));
+                        n = -1+((n+299) / 300);
                     }
                 }
             }
@@ -771,7 +771,7 @@ public class YSms
         }
         if ((exp).Substring(4, 1) == "-" || (exp).Substring(4, 1) == "/") {
             // ignore century
-            exp = (exp).Substring( 2, explen-2);
+            exp = (exp).Substring(2, explen-2);
             explen = (exp).Length;
         }
         expasc = YAPI.DefaultEncoding.GetBytes(exp);
@@ -785,7 +785,7 @@ public class YSms
                 if ((v2 >= 48) && (v2 < 58)) {
                     v1 = v1 - 48;
                     v2 = v2 - 48;
-                    res[n] = (byte)((((v2) << (4))) + v1 & 0xff);
+                    res[n] = (byte)(((v2 << 4)) + v1 & 0xff);
                     n = n + 1;
                     i = i + 1;
                 }
@@ -804,7 +804,7 @@ public class YSms
                 v1 = expasc[i+1];
                 v2 = expasc[i+2];
                 if ((v1 >= 48) && (v1 < 58) && (v1 >= 48) && (v1 < 58)) {
-                    v1 = (((10*(v1 - 48)+(v2 - 48))) / (15));
+                    v1 = ((10*(v1 - 48)+(v2 - 48)) / 15);
                     n = n - 1;
                     v2 = 4 * res[n] + v1;
                     if (expasc[i-3] == 45) {
@@ -850,7 +850,7 @@ public class YSms
         i = 0;
         while ((i < siz) && (i < 6)) {
             byt = exp[ofs+i];
-            res = ""+ res+""+String.Format("{0:x}", ((byt) & (15)))+""+String.Format("{0:x}",((byt) >> (4)));
+            res = ""+res+""+String.Format("{0:x}",(byt & 15))+""+String.Format("{0:x}",(byt >> 4));
             if (i < 3) {
                 if (i < 2) {
                     res = ""+res+"-";
@@ -867,20 +867,20 @@ public class YSms
         if (siz == 7) {
             byt = exp[ofs+i];
             sign = "+";
-            if (((byt) & (8)) != 0) {
+            if ((byt & 8) != 0) {
                 byt = byt - 8;
                 sign = "-";
             }
-            byt = (10*(((byt) & (15)))) + (((byt) >> (4)));
-            hh = ""+Convert.ToString(((byt) >> (2)));
-            ss = ""+Convert.ToString(15*(((byt) & (3))));
+            byt = (10*((byt & 15))) + ((byt >> 4));
+            hh = ""+Convert.ToString((byt >> 2));
+            ss = ""+Convert.ToString(15*((byt & 3)));
             if ((hh).Length<2) {
                 hh = "0"+hh;
             }
             if ((ss).Length<2) {
                 ss = "0"+ss;
             }
-            res = ""+ res+""+ sign+""+ hh+":"+ss;
+            res = ""+res+""+sign+""+hh+":"+ss;
         }
         return res;
     }
@@ -893,9 +893,9 @@ public class YSms
         res = (_udata).Length;
         if (_alphab == 0) {
             if (udhsize > 0) {
-                res = res + (((8 + 8*udhsize + 6)) / (7));
+                res = res + ((8 + 8*udhsize + 6) / 7);
             }
-            res = (((res * 7 + 7)) / (8));
+            res = ((res * 7 + 7) / 8);
         } else {
             if (udhsize > 0) {
                 res = res + 1 + udhsize;
@@ -928,7 +928,7 @@ public class YSms
         if (_alphab == 0) {
             // 7-bit encoding
             if (udhsize > 0) {
-                udhlen = (((8 + 8*udhsize + 6)) / (7));
+                udhlen = ((8 + 8*udhsize + 6) / 7);
                 nbits = 7*udhlen - 8 - 8*udhsize;
             }
             res[0] = (byte)(udhlen+udlen & 0xff);
@@ -958,10 +958,10 @@ public class YSms
                     nbits = 7;
                 } else {
                     thi_b = _udata[i];
-                    res[wpos] = (byte)(((carry) | ((((((thi_b) << (nbits)))) & (255)))) & 0xff);
+                    res[wpos] = (byte)((carry | (((thi_b << nbits)) & 255)) & 0xff);
                     wpos = wpos + 1;
                     nbits = nbits - 1;
-                    carry = ((thi_b) >> ((7 - nbits)));
+                    carry = (thi_b >> (7 - nbits));
                 }
                 i = i + 1;
             }
@@ -996,9 +996,9 @@ public class YSms
         udlen = (_udata).Length;
         mss = 140 - 1 - 5 - udhsize;
         if (_alphab == 0) {
-            mss = (((mss * 8 - 6)) / (7));
+            mss = ((mss * 8 - 6) / 7);
         }
-        _npdu = (((udlen+mss-1)) / (mss));
+        _npdu = ((udlen+mss-1) / mss);
         _parts.Clear();
         partno = 0;
         wpos = 0;
@@ -1147,16 +1147,14 @@ public class YSms
             if (i + ielen <= udhlen) {
                 if ((iei == 0) && (ielen == 3)) {
                     // concatenated SMS, 8-bit ref
-                    sig = ""+ _orig+"-"+ _dest+"-"+String.Format("{0:x02}",
-                    _mref)+"-"+String.Format("{0:x02}",_udh[i]);
+                    sig = ""+_orig+"-"+_dest+"-"+String.Format("{0:x02}",_mref)+"-"+String.Format("{0:x02}",_udh[i]);
                     _aggSig = sig;
                     _aggCnt = _udh[i+1];
                     _aggIdx = _udh[i+2];
                 }
                 if ((iei == 8) && (ielen == 4)) {
                     // concatenated SMS, 16-bit ref
-                    sig = ""+ _orig+"-"+ _dest+"-"+String.Format("{0:x02}",
-                    _mref)+"-"+String.Format("{0:x02}", _udh[i])+""+String.Format("{0:x02}",_udh[i+1]);
+                    sig = ""+_orig+"-"+_dest+"-"+String.Format("{0:x02}",_mref)+"-"+String.Format("{0:x02}",_udh[i])+""+String.Format("{0:x02}",_udh[i+1]);
                     _aggSig = sig;
                     _aggCnt = _udh[i+2];
                     _aggIdx = _udh[i+3];
@@ -1184,15 +1182,15 @@ public class YSms
         _pdu = pdu;
         _npdu = 1;
         // parse meta-data
-        _smsc = await this.decodeAddress(pdu,  1, 2*(pdu[0]-1));
+        _smsc = await this.decodeAddress(pdu, 1, 2*(pdu[0]-1));
         rpos = 1+pdu[0];
         pdutyp = pdu[rpos];
         rpos = rpos + 1;
-        _deliv = (((pdutyp) & (3)) == 0);
+        _deliv = ((pdutyp & 3) == 0);
         if (_deliv) {
             addrlen = pdu[rpos];
             rpos = rpos + 1;
-            _orig = await this.decodeAddress(pdu,  rpos, addrlen);
+            _orig = await this.decodeAddress(pdu, rpos, addrlen);
             _dest = "";
             tslen = 7;
         } else {
@@ -1200,10 +1198,10 @@ public class YSms
             rpos = rpos + 1;
             addrlen = pdu[rpos];
             rpos = rpos + 1;
-            _dest = await this.decodeAddress(pdu,  rpos, addrlen);
+            _dest = await this.decodeAddress(pdu, rpos, addrlen);
             _orig = "";
-            if ((((pdutyp) & (16))) != 0) {
-                if ((((pdutyp) & (8))) != 0) {
+            if (((pdutyp & 16)) != 0) {
+                if (((pdutyp & 8)) != 0) {
                     tslen = 7;
                 } else {
                     tslen= 1;
@@ -1212,21 +1210,21 @@ public class YSms
                 tslen = 0;
             }
         }
-        rpos = rpos + ((((addrlen+3)) >> (1)));
+        rpos = rpos + (((addrlen+3) >> 1));
         _pid = pdu[rpos];
         rpos = rpos + 1;
         dcs = pdu[rpos];
         rpos = rpos + 1;
-        _alphab = (((((dcs) >> (2)))) & (3));
-        _mclass = ((dcs) & (16+3));
-        _stamp = await this.decodeTimeStamp(pdu,  rpos, tslen);
+        _alphab = (((dcs >> 2)) & 3);
+        _mclass = (dcs & (16+3));
+        _stamp = await this.decodeTimeStamp(pdu, rpos, tslen);
         rpos = rpos + tslen;
         // parse user data (including udh)
         nbits = 0;
         carry = 0;
         udlen = pdu[rpos];
         rpos = rpos + 1;
-        if (((pdutyp) & (64)) != 0) {
+        if ((pdutyp & 64) != 0) {
             udhsize = pdu[rpos];
             rpos = rpos + 1;
             _udh = new byte[udhsize];
@@ -1238,12 +1236,12 @@ public class YSms
             }
             if (_alphab == 0) {
                 // 7-bit encoding
-                udhlen = (((8 + 8*udhsize + 6)) / (7));
+                udhlen = ((8 + 8*udhsize + 6) / 7);
                 nbits = 7*udhlen - 8 - 8*udhsize;
                 if (nbits > 0) {
                     thi_b = pdu[rpos];
                     rpos = rpos + 1;
-                    carry = ((thi_b) >> (nbits));
+                    carry = (thi_b >> nbits);
                     nbits = 8 - nbits;
                 }
             } else {
@@ -1267,8 +1265,8 @@ public class YSms
                 } else {
                     thi_b = pdu[rpos];
                     rpos = rpos + 1;
-                    _udata[i] = (byte)(((carry) | ((((((thi_b) << (nbits)))) & (127)))) & 0xff);
-                    carry = ((thi_b) >> ((7 - nbits)));
+                    _udata[i] = (byte)((carry | (((thi_b << nbits)) & 127)) & 0xff);
+                    carry = (thi_b >> (7 - nbits));
                     nbits = nbits + 1;
                 }
                 i = i + 1;

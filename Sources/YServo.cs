@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YServo.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YServo.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindServo(), the high-level API for Servo functions
  *
@@ -658,7 +658,7 @@ public class YServo : YFunction
         obj = (YServo) YFunction._FindFromCache("Servo", func);
         if (obj == null) {
             obj = new YServo(func);
-            YFunction._AddToCache("Servo",  func, obj);
+            YFunction._AddToCache("Servo", func, obj);
         }
         return obj;
     }
@@ -712,10 +712,10 @@ public class YServo : YFunction
     public static YServo FindServoInContext(YAPIContext yctx,string func)
     {
         YServo obj;
-        obj = (YServo) YFunction._FindFromCacheInContext(yctx,  "Servo", func);
+        obj = (YServo) YFunction._FindFromCacheInContext(yctx, "Servo", func);
         if (obj == null) {
             obj = new YServo(yctx, func);
-            YFunction._AddToCache("Servo",  func, obj);
+            YFunction._AddToCache("Servo", func, obj);
         }
         return obj;
     }

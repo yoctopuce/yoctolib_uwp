@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YGyro.cs 54280 2023-04-28 10:11:44Z seb $
+ * $Id: YGyro.cs 63510 2024-11-28 10:46:59Z seb $
  *
  * Implements FindGyro(), the high-level API for Gyro functions
  *
@@ -376,7 +376,7 @@ public class YGyro : YSensor
         obj = (YGyro) YFunction._FindFromCache("Gyro", func);
         if (obj == null) {
             obj = new YGyro(func);
-            YFunction._AddToCache("Gyro",  func, obj);
+            YFunction._AddToCache("Gyro", func, obj);
         }
         return obj;
     }
@@ -430,10 +430,10 @@ public class YGyro : YSensor
     public static YGyro FindGyroInContext(YAPIContext yctx,string func)
     {
         YGyro obj;
-        obj = (YGyro) YFunction._FindFromCacheInContext(yctx,  "Gyro", func);
+        obj = (YGyro) YFunction._FindFromCacheInContext(yctx, "Gyro", func);
         if (obj == null) {
             obj = new YGyro(yctx, func);
-            YFunction._AddToCache("Gyro",  func, obj);
+            YFunction._AddToCache("Gyro", func, obj);
         }
         return obj;
     }
@@ -530,8 +530,8 @@ public class YGyro : YSensor
     {
         int now_stamp;
         int age_ms;
-        now_stamp = (int) ((YAPIContext.GetTickCount()) & (0x7FFFFFFF));
-        age_ms = (((now_stamp - _qt_stamp)) & (0x7FFFFFFF));
+        now_stamp = (int) ((YAPIContext.GetTickCount()) & 0x7FFFFFFF);
+        age_ms = ((now_stamp - _qt_stamp) & 0x7FFFFFFF);
         if ((age_ms >= 10) || (_qt_stamp == 0)) {
             if (await this.load(10) != YAPI.SUCCESS) {
                 return YAPI.DEVICE_NOT_FOUND;
@@ -885,7 +885,7 @@ public class YGyro : YSensor
         if (qtIndex < 4) {
             return 0;
         }
-        _qt_stamp = (int) ((YAPIContext.GetTickCount()) & (0x7FFFFFFF));
+        _qt_stamp = (int) ((YAPIContext.GetTickCount()) & 0x7FFFFFFF);
         if (_quatCallback != null) {
             await _quatCallback(this, _w, _x, _y, _z);
         }

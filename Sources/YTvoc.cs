@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YTvoc.cs 38899 2019-12-20 17:21:03Z mvuilleu $
+ *  $Id: YTvoc.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindTvoc(), the high-level API for Tvoc functions
  *
@@ -158,7 +158,7 @@ public class YTvoc : YSensor
         obj = (YTvoc) YFunction._FindFromCache("Tvoc", func);
         if (obj == null) {
             obj = new YTvoc(func);
-            YFunction._AddToCache("Tvoc",  func, obj);
+            YFunction._AddToCache("Tvoc", func, obj);
         }
         return obj;
     }
@@ -212,10 +212,10 @@ public class YTvoc : YSensor
     public static YTvoc FindTvocInContext(YAPIContext yctx,string func)
     {
         YTvoc obj;
-        obj = (YTvoc) YFunction._FindFromCacheInContext(yctx,  "Tvoc", func);
+        obj = (YTvoc) YFunction._FindFromCacheInContext(yctx, "Tvoc", func);
         if (obj == null) {
             obj = new YTvoc(yctx, func);
-            YFunction._AddToCache("Tvoc",  func, obj);
+            YFunction._AddToCache("Tvoc", func, obj);
         }
         return obj;
     }

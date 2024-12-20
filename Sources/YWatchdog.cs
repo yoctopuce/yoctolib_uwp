@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWatchdog.cs 44548 2021-04-13 09:56:42Z mvuilleu $
+ *  $Id: YWatchdog.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindWatchdog(), the high-level API for Watchdog functions
  *
@@ -1075,7 +1075,7 @@ public class YWatchdog : YFunction
         obj = (YWatchdog) YFunction._FindFromCache("Watchdog", func);
         if (obj == null) {
             obj = new YWatchdog(func);
-            YFunction._AddToCache("Watchdog",  func, obj);
+            YFunction._AddToCache("Watchdog", func, obj);
         }
         return obj;
     }
@@ -1129,10 +1129,10 @@ public class YWatchdog : YFunction
     public static YWatchdog FindWatchdogInContext(YAPIContext yctx,string func)
     {
         YWatchdog obj;
-        obj = (YWatchdog) YFunction._FindFromCacheInContext(yctx,  "Watchdog", func);
+        obj = (YWatchdog) YFunction._FindFromCacheInContext(yctx, "Watchdog", func);
         if (obj == null) {
             obj = new YWatchdog(yctx, func);
-            YFunction._AddToCache("Watchdog",  func, obj);
+            YFunction._AddToCache("Watchdog", func, obj);
         }
         return obj;
     }

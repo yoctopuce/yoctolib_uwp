@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YColorLed.cs 55978 2023-08-11 07:56:43Z seb $
+ *  $Id: YColorLed.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindColorLed(), the high-level API for ColorLed functions
  *
@@ -676,7 +676,7 @@ public class YColorLed : YFunction
         obj = (YColorLed) YFunction._FindFromCache("ColorLed", func);
         if (obj == null) {
             obj = new YColorLed(func);
-            YFunction._AddToCache("ColorLed",  func, obj);
+            YFunction._AddToCache("ColorLed", func, obj);
         }
         return obj;
     }
@@ -730,10 +730,10 @@ public class YColorLed : YFunction
     public static YColorLed FindColorLedInContext(YAPIContext yctx,string func)
     {
         YColorLed obj;
-        obj = (YColorLed) YFunction._FindFromCacheInContext(yctx,  "ColorLed", func);
+        obj = (YColorLed) YFunction._FindFromCacheInContext(yctx, "ColorLed", func);
         if (obj == null) {
             obj = new YColorLed(yctx, func);
-            YFunction._AddToCache("ColorLed",  func, obj);
+            YFunction._AddToCache("ColorLed", func, obj);
         }
         return obj;
     }

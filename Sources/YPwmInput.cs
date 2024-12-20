@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmInput.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YPwmInput.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindPwmInput(), the high-level API for PwmInput functions
  *
@@ -703,7 +703,7 @@ public class YPwmInput : YSensor
         obj = (YPwmInput) YFunction._FindFromCache("PwmInput", func);
         if (obj == null) {
             obj = new YPwmInput(func);
-            YFunction._AddToCache("PwmInput",  func, obj);
+            YFunction._AddToCache("PwmInput", func, obj);
         }
         return obj;
     }
@@ -757,10 +757,10 @@ public class YPwmInput : YSensor
     public static YPwmInput FindPwmInputInContext(YAPIContext yctx,string func)
     {
         YPwmInput obj;
-        obj = (YPwmInput) YFunction._FindFromCacheInContext(yctx,  "PwmInput", func);
+        obj = (YPwmInput) YFunction._FindFromCacheInContext(yctx, "PwmInput", func);
         if (obj == null) {
             obj = new YPwmInput(yctx, func);
-            YFunction._AddToCache("PwmInput",  func, obj);
+            YFunction._AddToCache("PwmInput", func, obj);
         }
         return obj;
     }

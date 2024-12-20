@@ -194,20 +194,20 @@ public class YRfidOptions
             opt = 0;
         }
         if (ForceMultiBlockAccess) {
-            opt = ((opt) | (2));
+            opt = (opt | 2);
         }
         if (EnableRawAccess) {
-            opt = ((opt) | (4));
+            opt = (opt | 4);
         }
         if (DisableBoundaryChecks) {
-            opt = ((opt) | (8));
+            opt = (opt | 8);
         }
         if (EnableDryRun) {
-            opt = ((opt) | (16));
+            opt = (opt | 16);
         }
         res = "&o="+Convert.ToString(opt);
         if (KeyType != 0) {
-            res = ""+ res+"&k="+String.Format("{0:x02}", KeyType)+":"+HexKey;
+            res = ""+res+"&k="+String.Format("{0:x02}",KeyType)+":"+HexKey;
         }
         return res;
     }

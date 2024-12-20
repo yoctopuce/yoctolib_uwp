@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCarbonDioxide.cs 44175 2021-03-11 11:27:12Z mvuilleu $
+ *  $Id: YCarbonDioxide.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindCarbonDioxide(), the high-level API for CarbonDioxide functions
  *
@@ -268,7 +268,7 @@ public class YCarbonDioxide : YSensor
         obj = (YCarbonDioxide) YFunction._FindFromCache("CarbonDioxide", func);
         if (obj == null) {
             obj = new YCarbonDioxide(func);
-            YFunction._AddToCache("CarbonDioxide",  func, obj);
+            YFunction._AddToCache("CarbonDioxide", func, obj);
         }
         return obj;
     }
@@ -322,10 +322,10 @@ public class YCarbonDioxide : YSensor
     public static YCarbonDioxide FindCarbonDioxideInContext(YAPIContext yctx,string func)
     {
         YCarbonDioxide obj;
-        obj = (YCarbonDioxide) YFunction._FindFromCacheInContext(yctx,  "CarbonDioxide", func);
+        obj = (YCarbonDioxide) YFunction._FindFromCacheInContext(yctx, "CarbonDioxide", func);
         if (obj == null) {
             obj = new YCarbonDioxide(yctx, func);
-            YFunction._AddToCache("CarbonDioxide",  func, obj);
+            YFunction._AddToCache("CarbonDioxide", func, obj);
         }
         return obj;
     }

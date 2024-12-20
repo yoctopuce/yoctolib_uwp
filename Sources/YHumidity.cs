@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YHumidity.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YHumidity.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindHumidity(), the high-level API for Humidity functions
  *
@@ -270,7 +270,7 @@ public class YHumidity : YSensor
         obj = (YHumidity) YFunction._FindFromCache("Humidity", func);
         if (obj == null) {
             obj = new YHumidity(func);
-            YFunction._AddToCache("Humidity",  func, obj);
+            YFunction._AddToCache("Humidity", func, obj);
         }
         return obj;
     }
@@ -324,10 +324,10 @@ public class YHumidity : YSensor
     public static YHumidity FindHumidityInContext(YAPIContext yctx,string func)
     {
         YHumidity obj;
-        obj = (YHumidity) YFunction._FindFromCacheInContext(yctx,  "Humidity", func);
+        obj = (YHumidity) YFunction._FindFromCacheInContext(yctx, "Humidity", func);
         if (obj == null) {
             obj = new YHumidity(yctx, func);
-            YFunction._AddToCache("Humidity",  func, obj);
+            YFunction._AddToCache("Humidity", func, obj);
         }
         return obj;
     }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 /// <summary>
 ///*******************************************************************
 /// 
-/// $Id: YDataStream.cs 54259 2023-04-28 08:06:26Z seb $
+/// $Id: YDataStream.cs 63510 2024-11-28 10:46:59Z seb $
 /// 
 /// YDataStream Class: Sequence of measured data, stored by the data logger
 /// 
@@ -118,15 +118,15 @@ public class YDataStream
         double fRef;
         List<int> iCalib = new List<int>();
         // decode sequence header to extract data
-        _runNo = encoded[0] + (((encoded[1]) << (16)));
-        _utcStamp = encoded[2] + (((encoded[3]) << (16)));
+        _runNo = encoded[0] + ((encoded[1] << 16));
+        _utcStamp = encoded[2] + ((encoded[3] << 16));
         val = encoded[4];
-        _isAvg = (((val) & (0x100)) == 0);
-        samplesPerHour = ((val) & (0xff));
-        if (((val) & (0x100)) != 0) {
+        _isAvg = ((val & 0x100) == 0);
+        samplesPerHour = (val & 0xff);
+        if ((val & 0x100) != 0) {
             samplesPerHour = samplesPerHour * 3600;
         } else {
-            if (((val) & (0x200)) != 0) {
+            if ((val & 0x200) != 0) {
                 samplesPerHour = samplesPerHour * 60;
             }
         }
@@ -198,9 +198,9 @@ public class YDataStream
         }
         // decode min/avg/max values for the sequence
         if (_nRows > 0) {
-            _avgVal = this.imm_decodeAvg(encoded[8] + (((((encoded[9]) ^ (0x8000))) << (16))), 1);
-            _minVal = this.imm_decodeVal(encoded[10] + (((encoded[11]) << (16))));
-            _maxVal = this.imm_decodeVal(encoded[12] + (((encoded[13]) << (16))));
+            _avgVal = this.imm_decodeAvg(encoded[8] + (((encoded[9] ^ 0x8000) << 16)), 1);
+            _minVal = this.imm_decodeVal(encoded[10] + ((encoded[11] << 16)));
+            _maxVal = this.imm_decodeVal(encoded[12] + ((encoded[13] << 16)));
         }
         return 0;
     }
@@ -229,9 +229,9 @@ public class YDataStream
                     dat.Add(Double.NaN);
                     dat.Add(Double.NaN);
                 } else {
-                    dat.Add(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << (16)))));
-                    dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
-                    dat.Add(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << (16)))));
+                    dat.Add(this.imm_decodeVal(udat[idx + 2] + (((udat[idx + 3]) << 16))));
+                    dat.Add(this.imm_decodeAvg(udat[idx] + ((((udat[idx + 1]) ^ 0x8000) << 16)), 1));
+                    dat.Add(this.imm_decodeVal(udat[idx + 4] + (((udat[idx + 5]) << 16))));
                 }
                 idx = idx + 6;
                 _values.Add(new List<double>(dat));
@@ -242,7 +242,7 @@ public class YDataStream
                 if ((udat[idx] == 65535) && (udat[idx + 1] == 65535)) {
                     dat.Add(Double.NaN);
                 } else {
-                    dat.Add(this.imm_decodeAvg(udat[idx] + (((((udat[idx + 1]) ^ (0x8000))) << (16))), 1));
+                    dat.Add(this.imm_decodeAvg(udat[idx] + ((((udat[idx + 1]) ^ 0x8000) << 16)), 1));
                 }
                 _values.Add(new List<double>(dat));
                 idx = idx + 2;
@@ -262,16 +262,14 @@ public class YDataStream
     public virtual string imm_get_url()
     {
         string url;
-        url = "logger.json?id="+
-        _functionId+"&run="+Convert.ToString(_runNo)+"&utc="+Convert.ToString(_utcStamp);
+        url = "logger.json?id="+_functionId+"&run="+Convert.ToString(_runNo)+"&utc="+Convert.ToString(_utcStamp);
         return url;
     }
 
     public virtual string imm_get_baseurl()
     {
         string url;
-        url = "logger.json?id="+
-        _functionId+"&run="+Convert.ToString(_runNo)+"&utc=";
+        url = "logger.json?id="+_functionId+"&run="+Convert.ToString(_runNo)+"&utc=";
         return url;
     }
 

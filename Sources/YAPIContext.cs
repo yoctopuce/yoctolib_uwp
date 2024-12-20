@@ -1,6 +1,6 @@
 ﻿/*********************************************************************
  *
- * $Id: YAPIContext.cs 54275 2023-04-28 08:36:55Z seb $
+ * $Id: YAPIContext.cs 62273 2024-08-23 07:20:59Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -406,6 +406,17 @@ public class YAPIContext
             }
 
             return 0;
+        }
+
+
+        internal static double imm_atof(string val)
+        {
+            try {
+                double res = Double.Parse(val);
+                return res;
+            } catch (FormatException) {
+                return 0.0;
+            }
         }
 
         protected const string _hexArray = "0123456789ABCDEF";
@@ -1237,7 +1248,7 @@ public class YAPIContext
          * <para>
          *   From an operating system standpoint, it is generally not required to call
          *   this function since the OS will automatically free allocated resources
-         *   once your program is completed. However there are two situations when
+         *   once your program is completed. However, there are two situations when
          *   you may really want to use that function:
          * </para>
          * <para>
@@ -1272,7 +1283,7 @@ public class YAPIContext
 
         /**
          * <summary>
-         *   Setup the Yoctopuce library to use modules connected on a given machine.
+         *   Set up the Yoctopuce library to use modules connected on a given machine.
          * <para>
          *   Idealy this
          *   call will be made once at the begining of your application.  The
@@ -1311,7 +1322,7 @@ public class YAPIContext
          *   while trying to access the USB modules. In particular, this means
          *   that you must stop the VirtualHub software before starting
          *   an application that uses direct USB access. The workaround
-         *   for this limitation is to setup the library to use the VirtualHub
+         *   for this limitation is to set up the library to use the VirtualHub
          *   rather than direct USB access.
          * </para>
          * <para>
@@ -1397,7 +1408,7 @@ public class YAPIContext
 
         /**
          * <summary>
-         *   Setup the Yoctopuce library to no more use modules connected on a previously
+         *   Set up the Yoctopuce library to no more use modules connected on a previously
          *   registered machine with RegisterHub.
          * <para>
          * </para>
@@ -1662,7 +1673,7 @@ public class YAPIContext
          *   Checks if a given string is valid as logical name for a module or a function.
          * <para>
          *   A valid logical name has a maximum of 19 characters, all among
-         *   <c>A..Z</c>, <c>a..z</c>, <c>0..9</c>, <c>_</c>, and <c>-</c>.
+         *   <c>A...Z</c>, <c>a...z</c>, <c>0...9</c>, <c>_</c>, and <c>-</c>.
          *   If you try to configure a logical name with an incorrect string,
          *   the invalid characters are ignored.
          * </para>

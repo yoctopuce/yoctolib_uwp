@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YCompass.cs 50689 2022-08-17 14:37:15Z mvuilleu $
+ *  $Id: YCompass.cs 63510 2024-11-28 10:46:59Z seb $
  *
  *  Implements FindCompass(), the high-level API for Compass functions
  *
@@ -296,7 +296,7 @@ public class YCompass : YSensor
         obj = (YCompass) YFunction._FindFromCache("Compass", func);
         if (obj == null) {
             obj = new YCompass(func);
-            YFunction._AddToCache("Compass",  func, obj);
+            YFunction._AddToCache("Compass", func, obj);
         }
         return obj;
     }
@@ -350,10 +350,10 @@ public class YCompass : YSensor
     public static YCompass FindCompassInContext(YAPIContext yctx,string func)
     {
         YCompass obj;
-        obj = (YCompass) YFunction._FindFromCacheInContext(yctx,  "Compass", func);
+        obj = (YCompass) YFunction._FindFromCacheInContext(yctx, "Compass", func);
         if (obj == null) {
             obj = new YCompass(yctx, func);
-            YFunction._AddToCache("Compass",  func, obj);
+            YFunction._AddToCache("Compass", func, obj);
         }
         return obj;
     }
