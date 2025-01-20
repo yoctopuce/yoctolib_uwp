@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YRangeFinder.cs 63510 2024-11-28 10:46:59Z seb $
+ *  $Id: YRangeFinder.cs 64093 2025-01-08 10:53:52Z seb $
  *
  *  Implements FindRangeFinder(), the high-level API for RangeFinder functions
  *
@@ -674,7 +674,7 @@ public class YRangeFinder : YSensor
      *   That
      *   calibration process needs no physical interaction with the sensor. It is performed
      *   automatically at device startup, but it is recommended to start it again when the
-     *   temperature delta since the latest calibration exceeds 8°C.
+     *   temperature delta since the latest calibration exceeds 8 degrees Celsius.
      * </para>
      * </summary>
      * <returns>

@@ -86,6 +86,14 @@ public class YSpectralSensor : YFunction
     public const  int GAIN_INVALID = YAPI.INVALID_INT;
     /**
      * <summary>
+     *   invalid estimationModel value
+     * </summary>
+     */
+    public const int ESTIMATIONMODEL_REFLECTION = 0;
+    public const int ESTIMATIONMODEL_EMISSION = 1;
+    public const int ESTIMATIONMODEL_INVALID = -1;
+    /**
+     * <summary>
      *   invalid saturation value
      * </summary>
      */
@@ -116,10 +124,34 @@ public class YSpectralSensor : YFunction
     public const  string ESTIMATEDOKLAB_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
-     *   invalid estimatedRAL value
+     *   invalid nearRAL1 value
      * </summary>
      */
-    public const  string ESTIMATEDRAL_INVALID = YAPI.INVALID_STRING;
+    public const  string NEARRAL1_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
+     *   invalid nearRAL2 value
+     * </summary>
+     */
+    public const  string NEARRAL2_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
+     *   invalid nearRAL3 value
+     * </summary>
+     */
+    public const  string NEARRAL3_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
+     *   invalid nearHTMLColor value
+     * </summary>
+     */
+    public const  string NEARHTMLCOLOR_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
+     *   invalid nearSimpleColor value
+     * </summary>
+     */
+    public const  string NEARSIMPLECOLOR_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
      *   invalid ledCurrentAtPowerOn value
@@ -142,12 +174,17 @@ public class YSpectralSensor : YFunction
     protected double _resolution = RESOLUTION_INVALID;
     protected int _integrationTime = INTEGRATIONTIME_INVALID;
     protected int _gain = GAIN_INVALID;
+    protected int _estimationModel = ESTIMATIONMODEL_INVALID;
     protected int _saturation = SATURATION_INVALID;
     protected int _estimatedRGB = ESTIMATEDRGB_INVALID;
     protected int _estimatedHSL = ESTIMATEDHSL_INVALID;
     protected string _estimatedXYZ = ESTIMATEDXYZ_INVALID;
     protected string _estimatedOkLab = ESTIMATEDOKLAB_INVALID;
-    protected string _estimatedRAL = ESTIMATEDRAL_INVALID;
+    protected string _nearRAL1 = NEARRAL1_INVALID;
+    protected string _nearRAL2 = NEARRAL2_INVALID;
+    protected string _nearRAL3 = NEARRAL3_INVALID;
+    protected string _nearHTMLColor = NEARHTMLCOLOR_INVALID;
+    protected string _nearSimpleColor = NEARSIMPLECOLOR_INVALID;
     protected int _ledCurrentAtPowerOn = LEDCURRENTATPOWERON_INVALID;
     protected int _integrationTimeAtPowerOn = INTEGRATIONTIMEATPOWERON_INVALID;
     protected int _gainAtPowerOn = GAINATPOWERON_INVALID;
@@ -200,6 +237,9 @@ public class YSpectralSensor : YFunction
         if (json_val.has("gain")) {
             _gain = json_val.getInt("gain");
         }
+        if (json_val.has("estimationModel")) {
+            _estimationModel = json_val.getInt("estimationModel");
+        }
         if (json_val.has("saturation")) {
             _saturation = json_val.getInt("saturation");
         }
@@ -215,8 +255,20 @@ public class YSpectralSensor : YFunction
         if (json_val.has("estimatedOkLab")) {
             _estimatedOkLab = json_val.getString("estimatedOkLab");
         }
-        if (json_val.has("estimatedRAL")) {
-            _estimatedRAL = json_val.getString("estimatedRAL");
+        if (json_val.has("nearRAL1")) {
+            _nearRAL1 = json_val.getString("nearRAL1");
+        }
+        if (json_val.has("nearRAL2")) {
+            _nearRAL2 = json_val.getString("nearRAL2");
+        }
+        if (json_val.has("nearRAL3")) {
+            _nearRAL3 = json_val.getString("nearRAL3");
+        }
+        if (json_val.has("nearHTMLColor")) {
+            _nearHTMLColor = json_val.getString("nearHTMLColor");
+        }
+        if (json_val.has("nearSimpleColor")) {
+            _nearSimpleColor = json_val.getString("nearSimpleColor");
         }
         if (json_val.has("ledCurrentAtPowerOn")) {
             _ledCurrentAtPowerOn = json_val.getInt("ledCurrentAtPowerOn");
@@ -265,9 +317,7 @@ public class YSpectralSensor : YFunction
      *   Changes the luminosity of the module leds.
      * <para>
      *   The parameter is a
-     *   value between 0 and 100.
-     *   Remember to call the <c>saveToFlash()</c> method of the module if the
-     *   modification must be kept.
+     *   value between 0 and 254.
      * </para>
      * <para>
      * </para>
@@ -325,21 +375,8 @@ public class YSpectralSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the resolution of the measured values.
-     * <para>
-     *   The resolution corresponds to the numerical precision
-     *   of the measures, which is not always the same as the actual precision of the sensor.
-     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
-     * </para>
-     * <para>
-     * </para>
+     *   throws an exception on error
      * </summary>
-     * <returns>
-     *   a floating point number corresponding to the resolution of the measured values
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns <c>YSpectralSensor.RESOLUTION_INVALID</c>.
-     * </para>
      */
     public async Task<double> get_resolution()
     {
@@ -477,6 +514,65 @@ public class YSpectralSensor : YFunction
 
     /**
      * <summary>
+     *   Returns the model for color estimation.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YSpectralSensor.ESTIMATIONMODEL_REFLECTION</c> or <c>YSpectralSensor.ESTIMATIONMODEL_EMISSION</c>,
+     *   according to the model for color estimation
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YSpectralSensor.ESTIMATIONMODEL_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_estimationModel()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return ESTIMATIONMODEL_INVALID;
+            }
+        }
+        res = _estimationModel;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the model for color estimation.
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YSpectralSensor.ESTIMATIONMODEL_REFLECTION</c> or <c>YSpectralSensor.ESTIMATIONMODEL_EMISSION</c>,
+     *   according to the model for color estimation
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_estimationModel(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval).ToString();
+        await _setAttr("estimationModel",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
      *   Returns the current saturation of the sensor.
      * <para>
      *   This function updates the sensor's saturation value.
@@ -506,7 +602,7 @@ public class YSpectralSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in RGB format.
+     *   Returns the estimated color in RGB format (0xRRGGBB).
      * <para>
      *   This method retrieves the estimated color values
      *   and returns them as an RGB object or structure.
@@ -515,7 +611,7 @@ public class YSpectralSensor : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the estimated color in RGB format
+     *   an integer corresponding to the estimated color in RGB format (0xRRGGBB)
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YSpectralSensor.ESTIMATEDRGB_INVALID</c>.
@@ -536,7 +632,7 @@ public class YSpectralSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in HSL format.
+     *   Returns the estimated color in HSL (Hue, Saturation, Lightness) format.
      * <para>
      *   This method retrieves the estimated color values
      *   and returns them as an HSL object or structure.
@@ -545,7 +641,7 @@ public class YSpectralSensor : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the estimated color in HSL format
+     *   an integer corresponding to the estimated color in HSL (Hue, Saturation, Lightness) format
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YSpectralSensor.ESTIMATEDHSL_INVALID</c>.
@@ -629,15 +725,99 @@ public class YSpectralSensor : YFunction
      *   throws an exception on error
      * </summary>
      */
-    public async Task<string> get_estimatedRAL()
+    public async Task<string> get_nearRAL1()
     {
         string res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
             if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return ESTIMATEDRAL_INVALID;
+                return NEARRAL1_INVALID;
             }
         }
-        res = _estimatedRAL;
+        res = _nearRAL1;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<string> get_nearRAL2()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return NEARRAL2_INVALID;
+            }
+        }
+        res = _nearRAL2;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<string> get_nearRAL3()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return NEARRAL3_INVALID;
+            }
+        }
+        res = _nearRAL3;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<string> get_nearHTMLColor()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return NEARHTMLCOLOR_INVALID;
+            }
+        }
+        res = _nearHTMLColor;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the estimated color.
+     * <para>
+     *   This method retrieves the estimated color values
+     *   and returns them as the color name.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string corresponding to the estimated color
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YSpectralSensor.NEARSIMPLECOLOR_INVALID</c>.
+     * </para>
+     */
+    public async Task<string> get_nearSimpleColor()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return NEARSIMPLECOLOR_INVALID;
+            }
+        }
+        res = _nearSimpleColor;
         return res;
     }
 
@@ -724,7 +904,8 @@ public class YSpectralSensor : YFunction
      * <summary>
      *   Sets the integration time at power-on.
      * <para>
-     *   This method takes a parameter `val` and assigns it to startupIntegTime, representing the integration time
+     *   This method takes a parameter `val` and assigns it to integrationTimeAtPowerOn, representing the
+     *   integration time
      *   defined at startup.
      *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>

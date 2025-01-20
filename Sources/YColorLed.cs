@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YColorLed.cs 63510 2024-11-28 10:46:59Z seb $
+ *  $Id: YColorLed.cs 64080 2025-01-07 09:33:07Z seb $
  *
  *  Implements FindColorLed(), the high-level API for ColorLed functions
  *
@@ -480,8 +480,9 @@ public class YColorLed : YFunction
      * <summary>
      *   Changes the color that the LED displays by default when the module is turned on.
      * <para>
-     *   Remember to call the <c>saveToFlash()</c>
-     *   method of the module if the modification must be kept.
+     *   Remember to call the <c>saveLedsConfigAtPowerOn()</c> method of the module if the modification must be kept.
+     *   Note: for the original modules Yocto-Color (version 1) et Yocto-PowerColor, the  <c>saveToFlash()</c>
+     *   method must be used instead.
      * </para>
      * <para>
      * </para>
@@ -885,6 +886,24 @@ public class YColorLed : YFunction
     public virtual async Task<int> resetBlinkSeq()
     {
         return await this.sendCommand("Z");
+    }
+
+    /**
+     * <summary>
+     *   Saves the LEDs power-on configuration.
+     * <para>
+     *   Warning: this method is not supported by
+     *   Yocto-Color (version 1) and Yocto-PowerColor modules. For these devices, the <c>saveToFlash()</c>
+     *   method of the module must be used instead.
+     * </para>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     * </summary>
+     */
+    public virtual async Task<int> saveLedsConfigAtPowerOn()
+    {
+        return await this.sendCommand("W");
     }
 
     /**

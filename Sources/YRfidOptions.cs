@@ -99,12 +99,12 @@ public class YRfidOptions
 
     /**
      * <summary>
-     *   Force the use of single-block commands to access RFID tag memory blocks.
+     *   Forces the use of single-block commands to access RFID tag memory blocks.
      * <para>
      *   By default, the Yoctopuce library uses the most efficient access strategy
      *   generally available for each tag type, but you can force the use of
      *   single-block commands if the RFID tags you are using do not support
-     *   multi-block commands. If opération speed is not a priority, choose
+     *   multi-block commands. If operation speed is not a priority, choose
      *   single-block mode as it will work with any mode.
      * </para>
      * </summary>
@@ -113,7 +113,7 @@ public class YRfidOptions
 
     /**
      * <summary>
-     *   Force the use of multi-block commands to access RFID tag memory blocks.
+     *   Forces the use of multi-block commands to access RFID tag memory blocks.
      * <para>
      *   By default, the Yoctopuce library uses the most efficient access strategy
      *   generally available for each tag type, but you can force the use of
@@ -121,7 +121,7 @@ public class YRfidOptions
      *   do support multi-block commands. Be  aware that even if a tag allows multi-block
      *   operations, the maximum number of blocks that can be written or read at the same
      *   time can be (very) limited. If the tag does not support multi-block mode
-     *   for the wanted opération, the option will be ignored.
+     *   for the wanted operation, the option will be ignored.
      * </para>
      * </summary>
      */
@@ -129,7 +129,7 @@ public class YRfidOptions
 
     /**
      * <summary>
-     *   Enable direct access to RFID tag control blocks.
+     *   Enables direct access to RFID tag control blocks.
      * <para>
      *   By default, Yoctopuce library read and write functions only work
      *   on data blocks and automatically skip special blocks, as specific functions are provided
@@ -159,7 +159,7 @@ public class YRfidOptions
 
     /**
      * <summary>
-     *   Enable simulation mode to check the affected block range as well
+     *   Enables simulation mode to check the affected block range as well
      *   as access rights.
      * <para>
      *   When this option is active, the operation is

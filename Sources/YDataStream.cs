@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 /// <summary>
 ///*******************************************************************
 /// 
-/// $Id: YDataStream.cs 63510 2024-11-28 10:46:59Z seb $
+/// $Id: YDataStream.cs 64034 2025-01-06 15:37:18Z seb $
 /// 
 /// YDataStream Class: Sequence of measured data, stored by the data logger
 /// 

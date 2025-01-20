@@ -1,6 +1,6 @@
-﻿/*********************************************************************
+/*********************************************************************
  *
- * $Id: YModule.cs 63510 2024-11-28 10:46:59Z seb $
+ * $Id: YModule.cs 64034 2025-01-06 15:37:18Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -1944,6 +1944,8 @@ public class YModule : YFunction
         string fun;
         string attr;
         string value;
+        string old_serial;
+        string new_serial;
         string url;
         string tmp;
         string new_calib;
@@ -1961,6 +1963,7 @@ public class YModule : YFunction
         if (!(tmp == "")) {
             settings = YAPI.DefaultEncoding.GetBytes(tmp);
         }
+        old_serial = "";
         oldval = "";
         newval = "";
         old_json_flat = this.imm_flattenJsonStruct(settings);
@@ -1980,6 +1983,9 @@ public class YModule : YFunction
             old_jpath.Add(jpath);
             old_jpath_len.Add((jpath).Length);
             old_val_arr.Add(value);
+            if (jpath == "module/serialNumber") {
+                old_serial = value;
+            }
         }
 
         try {
@@ -1988,6 +1994,10 @@ public class YModule : YFunction
             // retry silently after a short wait
             await YAPI.Sleep(500);
             actualSettings = await this._download("api.json");
+        }
+        new_serial = await this.get_serialNumber();
+        if (old_serial == new_serial || old_serial == "") {
+            old_serial = "_NO_SERIAL_FILTER_";
         }
         actualSettings = this.imm_flattenJsonStruct(actualSettings);
         new_dslist = this.imm_json_get_array(actualSettings);
@@ -2142,14 +2152,14 @@ public class YModule : YFunction
             }
             if (do_update) {
                 do_update = false;
-                newval = new_val_arr[i];
                 j = 0;
                 found = false;
+                newval = new_val_arr[i];
                 while ((j < old_jpath.Count) && !(found)) {
                     if ((new_jpath_len[i] == old_jpath_len[j]) && (new_jpath[i] == old_jpath[j])) {
                         found = true;
                         oldval = old_val_arr[j];
-                        if (!(newval == oldval)) {
+                        if (!(newval == oldval) && !(oldval == old_serial)) {
                             do_update = true;
                         }
                     }

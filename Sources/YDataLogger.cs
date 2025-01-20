@@ -1,6 +1,6 @@
-﻿/*********************************************************************
+/*********************************************************************
  *
- * $Id: YDataLogger.cs 63510 2024-11-28 10:46:59Z seb $
+ * $Id: YDataLogger.cs 64034 2025-01-06 15:37:18Z seb $
  *
  * Implements yFindDataLogger(), the high-level API for DataLogger functions
  *

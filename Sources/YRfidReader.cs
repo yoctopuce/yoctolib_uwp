@@ -65,8 +65,8 @@ namespace com.yoctopuce.YoctoAPI
  *   - At tag level, each block must be read and written in its entirety.
  * </para>
  * <para>
- *   - Some blocks are special configuration blocks, and may alter the tag's behaviour
- *   tag behavior if they are rewritten with arbitrary data.
+ *   - Some blocks are special configuration blocks, and may alter the tag's behavior
+ *   if they are rewritten with arbitrary data.
  * </para>
  * <para>
  *   - Data blocks can be set to read-only mode, but on many tags, this operation is irreversible.
@@ -76,7 +76,7 @@ namespace com.yoctopuce.YoctoAPI
  * <para>
  *   By default, the RfidReader class automatically manages these blocks so that
  *   arbitrary size data  can be manipulated of  without risk and without knowledge of
- *   tag architecture .
+ *   tag architecture.
  * </para>
  * </summary>
  */
@@ -486,9 +486,9 @@ public class YRfidReader : YFunction
 
     /**
      * <summary>
-     *   Retourne la description des propriétés d'un tag RFID présent.
+     *   Returns a description of the properties of an existing RFID tag.
      * <para>
-     *   Cette fonction peut causer des communications avec le tag.
+     *   This function can cause communications with the tag.
      * </para>
      * <para>
      * </para>
@@ -536,7 +536,7 @@ public class YRfidReader : YFunction
 
     /**
      * <summary>
-     *   Change an RFID tag configuration to prevents any further write to
+     *   Changes an RFID tag configuration to prevents any further write to
      *   the selected blocks.
      * <para>
      *   This operation is definitive and irreversible.
@@ -1125,7 +1125,7 @@ public class YRfidReader : YFunction
      * <para>
      *   The write operation may span accross multiple blocks if the
      *   number of bytes to write is larger than the RFID tag block size.
-     *   Note that only the characters présent  in  the provided string
+     *   Note that only the characters present in the provided string
      *   will be written, there is no notion of string length. If your
      *   string data have variable length, you'll have to encode the
      *   string length yourself, with a terminal zero for instannce.
@@ -1228,7 +1228,7 @@ public class YRfidReader : YFunction
 
     /**
      * <summary>
-     *   Change an RFID tag AFI byte (ISO 15693 only).
+     *   Changes an RFID tag AFI byte (ISO 15693 only).
      * <para>
      * </para>
      * </summary>
@@ -1353,7 +1353,7 @@ public class YRfidReader : YFunction
 
     /**
      * <summary>
-     *   Change an RFID tag DSFID byte (ISO 15693 only).
+     *   Changes an RFID tag DSFID byte (ISO 15693 only).
      * <para>
      * </para>
      * </summary>
