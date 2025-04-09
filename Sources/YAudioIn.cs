@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAudioIn.cs 63510 2024-11-28 10:46:59Z seb $
+ *  $Id: svn_id $
  *
  *  Implements FindAudioIn(), the high-level API for AudioIn functions
  *

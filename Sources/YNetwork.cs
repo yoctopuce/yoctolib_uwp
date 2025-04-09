@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YNetwork.cs 63510 2024-11-28 10:46:59Z seb $
+ *  $Id: svn_id $
  *
  *  Implements FindNetwork(), the high-level API for Network functions
  *

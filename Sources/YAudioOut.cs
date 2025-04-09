@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YAudioOut.cs 63510 2024-11-28 10:46:59Z seb $
+ *  $Id: svn_id $
  *
  *  Implements FindAudioOut(), the high-level API for AudioOut functions
  *

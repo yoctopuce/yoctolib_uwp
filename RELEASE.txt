@@ -1,4 +1,3 @@
-UWP v1.10.64286
+UWP v1.11.654
 
-- Add saveLedsConfigAtPowerOn() methods to YColorLed class
-- Fix invalid values returned by YHub object
+- test build version

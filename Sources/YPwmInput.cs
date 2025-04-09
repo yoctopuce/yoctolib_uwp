@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YPwmInput.cs 63510 2024-11-28 10:46:59Z seb $
+ *  $Id: svn_id $
  *
  *  Implements FindPwmInput(), the high-level API for PwmInput functions
  *
@@ -123,6 +123,12 @@ public class YPwmInput : YSensor
     public const  int DEBOUNCEPERIOD_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
+     *   invalid minFrequency value
+     * </summary>
+     */
+    public const  double MINFREQUENCY_INVALID = YAPI.INVALID_DOUBLE;
+    /**
+     * <summary>
      *   invalid bandwidth value
      * </summary>
      */
@@ -141,6 +147,7 @@ public class YPwmInput : YSensor
     protected long _pulseTimer = PULSETIMER_INVALID;
     protected int _pwmReportMode = PWMREPORTMODE_INVALID;
     protected int _debouncePeriod = DEBOUNCEPERIOD_INVALID;
+    protected double _minFrequency = MINFREQUENCY_INVALID;
     protected int _bandwidth = BANDWIDTH_INVALID;
     protected int _edgesPerPeriod = EDGESPERPERIOD_INVALID;
     protected ValueCallback _valueCallbackPwmInput = null;
@@ -204,6 +211,9 @@ public class YPwmInput : YSensor
         }
         if (json_val.has("debouncePeriod")) {
             _debouncePeriod = json_val.getInt("debouncePeriod");
+        }
+        if (json_val.has("minFrequency")) {
+            _minFrequency = Math.Round(json_val.getDouble("minFrequency") / 65.536) / 1000.0;
         }
         if (json_val.has("bandwidth")) {
             _bandwidth = json_val.getInt("bandwidth");
@@ -559,6 +569,65 @@ public class YPwmInput : YSensor
 
     /**
      * <summary>
+     *   Changes the minimum detected frequency, in Hz.
+     * <para>
+     *   Slower signals will be consider as zero frequency.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a floating point number corresponding to the minimum detected frequency, in Hz
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_minFrequency(double  newval)
+    {
+        string rest_val;
+        rest_val = Math.Round(newval * 65536.0).ToString();
+        await _setAttr("minFrequency",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the minimum detected frequency, in Hz.
+     * <para>
+     *   Slower signals will be consider as zero frequency.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating point number corresponding to the minimum detected frequency, in Hz
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YPwmInput.MINFREQUENCY_INVALID</c>.
+     * </para>
+     */
+    public async Task<double> get_minFrequency()
+    {
+        double res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return MINFREQUENCY_INVALID;
+            }
+        }
+        res = _minFrequency;
+        return res;
+    }
+
+
+    /**
+     * <summary>
      *   Returns the input signal sampling rate, in kHz.
      * <para>
      * </para>
@@ -855,7 +924,25 @@ public class YPwmInput : YSensor
 
     /**
      * <summary>
-     *   Returns the pulse counter value as well as its timer.
+     *   Resets the periodicity detection algorithm.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> resetPeriodDetection()
+    {
+        return await this.set_bandwidth(await this.get_bandwidth());
+    }
+
+    /**
+     * <summary>
+     *   Resets the pulse counter value as well as its timer.
      * <para>
      * </para>
      * </summary>

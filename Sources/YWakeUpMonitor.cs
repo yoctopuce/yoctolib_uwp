@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YWakeUpMonitor.cs 63510 2024-11-28 10:46:59Z seb $
+ *  $Id: svn_id $
  *
  *  Implements FindWakeUpMonitor(), the high-level API for WakeUpMonitor functions
  *
@@ -89,6 +89,7 @@ public class YWakeUpMonitor : YFunction
     public const int WAKEUPREASON_EXTSIG1 = 3;
     public const int WAKEUPREASON_SCHEDULE1 = 4;
     public const int WAKEUPREASON_SCHEDULE2 = 5;
+    public const int WAKEUPREASON_SCHEDULE3 = 6;
     public const int WAKEUPREASON_INVALID = -1;
     /**
      * <summary>
@@ -350,8 +351,8 @@ public class YWakeUpMonitor : YFunction
      * <returns>
      *   a value among <c>YWakeUpMonitor.WAKEUPREASON_USBPOWER</c>, <c>YWakeUpMonitor.WAKEUPREASON_EXTPOWER</c>,
      *   <c>YWakeUpMonitor.WAKEUPREASON_ENDOFSLEEP</c>, <c>YWakeUpMonitor.WAKEUPREASON_EXTSIG1</c>,
-     *   <c>YWakeUpMonitor.WAKEUPREASON_SCHEDULE1</c> and <c>YWakeUpMonitor.WAKEUPREASON_SCHEDULE2</c>
-     *   corresponding to the latest wake up reason
+     *   <c>YWakeUpMonitor.WAKEUPREASON_SCHEDULE1</c>, <c>YWakeUpMonitor.WAKEUPREASON_SCHEDULE2</c> and
+     *   <c>YWakeUpMonitor.WAKEUPREASON_SCHEDULE3</c> corresponding to the latest wake up reason
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YWakeUpMonitor.WAKEUPREASON_INVALID</c>.

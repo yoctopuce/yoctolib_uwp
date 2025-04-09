@@ -135,6 +135,9 @@
     <Compile Include="..\..\Sources\YColorLedCluster.cs">
       <Link>yoctolib\YColorLedCluster.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YColorSensor.cs">
+      <Link>yoctolib\YColorSensor.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YCompass.cs">
       <Link>yoctolib\YCompass.cs</Link>
     </Compile>
@@ -311,6 +314,9 @@
     </Compile>
     <Compile Include="..\..\Sources\YServo.cs">
       <Link>yoctolib\YServo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSpectralChannel.cs">
+      <Link>yoctolib\YSpectralChannel.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YSpiSnoopingRecord.cs">
       <Link>yoctolib\YSpiSnoopingRecord.cs</Link>
