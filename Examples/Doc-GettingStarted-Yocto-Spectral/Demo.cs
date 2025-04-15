@@ -48,8 +48,8 @@ namespace Demo
 
                 colorSensor = YColorSensor.FindColorSensor(Target + ".colorSensor");
                 if (await colorSensor.isOnline()) {
-                    await colorSensor.set_workingMode(0);
-                    await colorSensor.set_estimationModel(0);
+                    await colorSensor.set_workingMode(YColorSensor.WORKINGMODE_AUTO);
+                    await colorSensor.set_estimationModel(YColorSensor.ESTIMATIONMODEL_REFLECTION);
                     WriteLine("Module : " + Target);
                     WriteLine("Near estimated color : " + await colorSensor.get_nearSimpleColor());
                     WriteLine("HEX estimated : #" + await colorSensor.get_estimatedRGB());

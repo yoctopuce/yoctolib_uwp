@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YAPI.cs 65618 2025-04-08 07:55:42Z seb $
+ * $Id: YAPI.cs 65865 2025-04-15 06:42:38Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,8 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.11";
-        public const string YOCTO_API_BUILD_STR = "65654";
-        public const int YOCTO_API_VERSION_BCD = 0x010b;
+        public const string YOCTO_API_BUILD_STR = "65866";
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
         public const int YOCTO_DEVID_BOOTLOADER = 2;
@@ -327,7 +326,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return "1.11.654" + YUSBHub.imm_getAPIVersion();
+            return "1.11.5866" + YUSBHub.imm_getAPIVersion();
         }
 
         /**

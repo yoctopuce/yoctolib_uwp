@@ -51,8 +51,6 @@ namespace com.yoctopuce.YoctoAPI
  *   YColorSensor Class: color sensor control interface
  * <para>
  *   The <c>YColorSensor</c> class allows you to read and configure Yoctopuce color sensors.
- *   It inherits from <c>YSensor</c> class the core functions to read measurements,
- *   to register callback functions, and to access the autonomous datalogger.
  * </para>
  * </summary>
  */
@@ -78,12 +76,6 @@ public class YColorSensor : YFunction
     public const int WORKINGMODE_INVALID = -1;
     /**
      * <summary>
-     *   invalid saturation value
-     * </summary>
-     */
-    public const  int SATURATION_INVALID = YAPI.INVALID_UINT;
-    /**
-     * <summary>
      *   invalid ledCurrent value
      * </summary>
      */
@@ -106,6 +98,12 @@ public class YColorSensor : YFunction
      * </summary>
      */
     public const  int GAIN_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
+     *   invalid saturation value
+     * </summary>
+     */
+    public const  int SATURATION_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
      *   invalid estimatedRGB value
@@ -156,12 +154,6 @@ public class YColorSensor : YFunction
     public const  string NEARHTMLCOLOR_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
-     *   invalid nearSimpleColor value
-     * </summary>
-     */
-    public const  string NEARSIMPLECOLOR_INVALID = YAPI.INVALID_STRING;
-    /**
-     * <summary>
      *   invalid nearSimpleColorIndex value
      * </summary>
      */
@@ -177,13 +169,19 @@ public class YColorSensor : YFunction
     public const int NEARSIMPLECOLORINDEX_PURPLE = 9;
     public const int NEARSIMPLECOLORINDEX_PINK = 10;
     public const int NEARSIMPLECOLORINDEX_INVALID = -1;
+    /**
+     * <summary>
+     *   invalid nearSimpleColor value
+     * </summary>
+     */
+    public const  string NEARSIMPLECOLOR_INVALID = YAPI.INVALID_STRING;
     protected int _estimationModel = ESTIMATIONMODEL_INVALID;
     protected int _workingMode = WORKINGMODE_INVALID;
-    protected int _saturation = SATURATION_INVALID;
     protected int _ledCurrent = LEDCURRENT_INVALID;
     protected int _ledCalibration = LEDCALIBRATION_INVALID;
     protected int _integrationTime = INTEGRATIONTIME_INVALID;
     protected int _gain = GAIN_INVALID;
+    protected int _saturation = SATURATION_INVALID;
     protected int _estimatedRGB = ESTIMATEDRGB_INVALID;
     protected int _estimatedHSL = ESTIMATEDHSL_INVALID;
     protected string _estimatedXYZ = ESTIMATEDXYZ_INVALID;
@@ -192,8 +190,8 @@ public class YColorSensor : YFunction
     protected string _nearRAL2 = NEARRAL2_INVALID;
     protected string _nearRAL3 = NEARRAL3_INVALID;
     protected string _nearHTMLColor = NEARHTMLCOLOR_INVALID;
-    protected string _nearSimpleColor = NEARSIMPLECOLOR_INVALID;
     protected int _nearSimpleColorIndex = NEARSIMPLECOLORINDEX_INVALID;
+    protected string _nearSimpleColor = NEARSIMPLECOLOR_INVALID;
     protected ValueCallback _valueCallbackColorSensor = null;
 
     public new delegate Task ValueCallback(YColorSensor func, string value);
@@ -237,9 +235,6 @@ public class YColorSensor : YFunction
         if (json_val.has("workingMode")) {
             _workingMode = json_val.getInt("workingMode");
         }
-        if (json_val.has("saturation")) {
-            _saturation = json_val.getInt("saturation");
-        }
         if (json_val.has("ledCurrent")) {
             _ledCurrent = json_val.getInt("ledCurrent");
         }
@@ -251,6 +246,9 @@ public class YColorSensor : YFunction
         }
         if (json_val.has("gain")) {
             _gain = json_val.getInt("gain");
+        }
+        if (json_val.has("saturation")) {
+            _saturation = json_val.getInt("saturation");
         }
         if (json_val.has("estimatedRGB")) {
             _estimatedRGB = json_val.getInt("estimatedRGB");
@@ -276,18 +274,18 @@ public class YColorSensor : YFunction
         if (json_val.has("nearHTMLColor")) {
             _nearHTMLColor = json_val.getString("nearHTMLColor");
         }
-        if (json_val.has("nearSimpleColor")) {
-            _nearSimpleColor = json_val.getString("nearSimpleColor");
-        }
         if (json_val.has("nearSimpleColorIndex")) {
             _nearSimpleColorIndex = json_val.getInt("nearSimpleColorIndex");
+        }
+        if (json_val.has("nearSimpleColor")) {
+            _nearSimpleColor = json_val.getString("nearSimpleColor");
         }
         base.imm_parseAttr(json_val);
     }
 
     /**
      * <summary>
-     *   Returns the model for color estimation.
+     *   Returns the predictive model used for color estimation (reflective or emissive).
      * <para>
      * </para>
      * <para>
@@ -295,7 +293,7 @@ public class YColorSensor : YFunction
      * </summary>
      * <returns>
      *   either <c>YColorSensor.ESTIMATIONMODEL_REFLECTION</c> or <c>YColorSensor.ESTIMATIONMODEL_EMISSION</c>,
-     *   according to the model for color estimation
+     *   according to the predictive model used for color estimation (reflective or emissive)
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.ESTIMATIONMODEL_INVALID</c>.
@@ -316,7 +314,7 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Changes the model for color estimation.
+     *   Changes the mpredictive model to be used for color estimation (reflective or emissive).
      * <para>
      *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
@@ -325,7 +323,7 @@ public class YColorSensor : YFunction
      * </summary>
      * <param name="newval">
      *   either <c>YColorSensor.ESTIMATIONMODEL_REFLECTION</c> or <c>YColorSensor.ESTIMATIONMODEL_EMISSION</c>,
-     *   according to the model for color estimation
+     *   according to the mpredictive model to be used for color estimation (reflective or emissive)
      * </param>
      * <para>
      * </para>
@@ -346,15 +344,17 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the active working mode.
+     *   Returns the sensor working mode.
      * <para>
+     *   In Auto mode, sensor parameters are automatically set based on the selected estimation model.
+     *   In Expert mode, sensor parameters such as gain and integration time are configured manually.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
      *   either <c>YColorSensor.WORKINGMODE_AUTO</c> or <c>YColorSensor.WORKINGMODE_EXPERT</c>, according to
-     *   the active working mode
+     *   the sensor working mode
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.WORKINGMODE_INVALID</c>.
@@ -375,8 +375,10 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Changes the operating mode.
+     *   Changes the sensor working mode.
      * <para>
+     *   In Auto mode, sensor parameters are automatically set based on the selected estimation model.
+     *   In Expert mode, sensor parameters such as gain and integration time are configured manually.
      *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
@@ -384,7 +386,7 @@ public class YColorSensor : YFunction
      * </summary>
      * <param name="newval">
      *   either <c>YColorSensor.WORKINGMODE_AUTO</c> or <c>YColorSensor.WORKINGMODE_EXPERT</c>, according to
-     *   the operating mode
+     *   the sensor working mode
      * </param>
      * <para>
      * </para>
@@ -405,43 +407,15 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the current saturation of the sensor.
+     *   Returns the amount of current sent to the illumination LEDs, for reflection measurements.
      * <para>
-     *   This function updates the sensor's saturation value.
+     *   The value is an integer ranging from 0 (LEDs off) to 254 (LEDs at maximum intensity).
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the current saturation of the sensor
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns <c>YColorSensor.SATURATION_INVALID</c>.
-     * </para>
-     */
-    public async Task<int> get_saturation()
-    {
-        int res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return SATURATION_INVALID;
-            }
-        }
-        res = _saturation;
-        return res;
-    }
-
-
-    /**
-     * <summary>
-     *   Returns the current value of the LED.
-     * <para>
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <returns>
-     *   an integer corresponding to the current value of the LED
+     *   an integer corresponding to the amount of current sent to the illumination LEDs, for reflection measurements
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.LEDCURRENT_INVALID</c>.
@@ -462,16 +436,15 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Changes the luminosity of the module leds.
+     *   Changes the amount of current sent to the illumination LEDs, for reflection measurements.
      * <para>
-     *   The parameter is a
-     *   value between 0 and 254.
+     *   The value is an integer ranging from 0 (LEDs off) to 254 (LEDs at maximum intensity).
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the luminosity of the module leds
+     *   an integer corresponding to the amount of current sent to the illumination LEDs, for reflection measurements
      * </param>
      * <para>
      * </para>
@@ -492,14 +465,14 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the LED current at calibration.
+     *   Returns the current sent to the illumination LEDs during the last calibration.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the LED current at calibration
+     *   an integer corresponding to the current sent to the illumination LEDs during the last calibration
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.LEDCALIBRATION_INVALID</c>.
@@ -520,8 +493,9 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Sets the LED current for calibration.
+     *   Remember the LED current sent to the illumination LEDs during a calibration.
      * <para>
+     *   Thanks to this, the device will be able to use the same current during measurements.
      *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
@@ -549,16 +523,16 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the current integration time.
+     *   Returns the current integration time for spectral measurement, in milliseconds.
      * <para>
-     *   This method retrieves the integration time value
-     *   used for data processing and returns it as an integer or an object.
+     *   A longer integration time increase the sensitivity for low light conditions,
+     *   but reduces the measurement rate and may lead to saturation for lighter colors.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the current integration time
+     *   an integer corresponding to the current integration time for spectral measurement, in milliseconds
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.INTEGRATIONTIME_INVALID</c>.
@@ -579,18 +553,19 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Changes the integration time for data processing.
+     *   Changes the integration time for spectral measurement, in milliseconds.
      * <para>
-     *   This method takes a parameter and assigns it
-     *   as the new integration time. This affects the duration
-     *   for which data is integrated before being processed.
+     *   A longer integration time increase the sensitivity for low light conditions,
+     *   but reduces the measurement rate and may lead to saturation for lighter colors.
+     *   This method can only be used when the sensor is configured in expert mode;
+     *   when running in auto mode, the change will be ignored.
      *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the integration time for data processing
+     *   an integer corresponding to the integration time for spectral measurement, in milliseconds
      * </param>
      * <para>
      * </para>
@@ -611,15 +586,16 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the current gain.
+     *   Returns the current spectral channel detector gain exponent.
      * <para>
-     *   This method updates the gain value.
+     *   For a value <c>n</c> ranging from 0 to 12, the applied gain is 2^(n-1).
+     *   0 corresponds to a gain of 0.5, and 12 corresponds to a gain of 2048.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the current gain
+     *   an integer corresponding to the current spectral channel detector gain exponent
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.GAIN_INVALID</c>.
@@ -640,18 +616,19 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Changes the gain for signal processing.
+     *   Changes the spectral channel detector gain exponent.
      * <para>
-     *   This method takes a parameter and assigns it
-     *   as the new gain. This affects the sensitivity and
-     *   intensity of the processed signal.
+     *   For a value <c>n</c> ranging from 0 to 12, the applied gain is 2^(n-1).
+     *   0 corresponds to a gain of 0.5, and 12 corresponds to a gain of 2048.
+     *   This method can only be used when the sensor is configured in expert mode;
+     *   when running in auto mode, the change will be ignored.
      *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   an integer corresponding to the gain for signal processing
+     *   an integer corresponding to the spectral channel detector gain exponent
      * </param>
      * <para>
      * </para>
@@ -672,14 +649,56 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in RGB format (0xRRGGBB).
+     *   Returns the current saturation state of the sensor, as an integer.
      * <para>
+     *   Bit 0 indicates saturation of the analog sensor, which can only
+     *   be corrected by reducing the gain parameters or the luminosity.
+     *   Bit 1 indicates saturation of the digital interface, which can
+     *   be corrected by reducing the integration time or the gain.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the estimated color in RGB format (0xRRGGBB)
+     *   an integer corresponding to the current saturation state of the sensor, as an integer
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YColorSensor.SATURATION_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_saturation()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return SATURATION_INVALID;
+            }
+        }
+        res = _saturation;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the estimated color in RGB color model (0xRRGGBB).
+     * <para>
+     *   The RGB color model describes each color using a combination of 3 components:
+     * </para>
+     * <para>
+     *   - Red (R): the intensity of red, in thee range 0...255
+     * </para>
+     * <para>
+     *   - Green (G): the intensity of green, in thee range 0...255
+     * </para>
+     * <para>
+     *   - Blue (B): the intensity of blue, in thee range 0...255
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the estimated color in RGB color model (0xRRGGBB)
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.ESTIMATEDRGB_INVALID</c>.
@@ -700,14 +719,24 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in HSL (Hue, Saturation, Lightness) format.
+     *   Returns the estimated color in HSL color model (0xHHSSLL).
      * <para>
+     *   The HSL color model describes each color using a combination of 3 components:
+     * </para>
+     * <para>
+     *   - Hue (H): the angle on the color wheel (0-360 degrees), mapped to 0...255
+     * </para>
+     * <para>
+     *   - Saturation (S): the intensity of the color (0-100%), mapped to 0...255
+     * </para>
+     * <para>
+     *   - Lightness (L): the brightness of the color (0-100%), mapped to 0...255
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   an integer corresponding to the estimated color in HSL (Hue, Saturation, Lightness) format
+     *   an integer corresponding to the estimated color in HSL color model (0xHHSSLL)
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.ESTIMATEDHSL_INVALID</c>.
@@ -728,14 +757,25 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in XYZ format.
+     *   Returns the estimated color according to the CIE XYZ color model.
      * <para>
+     *   This color model is based on human vision and light perception, with three components
+     *   represented by real numbers between 0 and 1:
+     * </para>
+     * <para>
+     *   - X: corresponds to a component mixing sensitivity to red and green
+     * </para>
+     * <para>
+     *   - Y: represents luminance (perceived brightness)
+     * </para>
+     * <para>
+     *   - Z: corresponds to sensitivity to blue
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a string corresponding to the estimated color in XYZ format
+     *   a string corresponding to the estimated color according to the CIE XYZ color model
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.ESTIMATEDXYZ_INVALID</c>.
@@ -756,14 +796,27 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in OkLab format.
+     *   Returns the estimated color according to the OkLab color model.
      * <para>
+     *   OkLab is a perceptual color model that aims to align human color perception with numerical
+     *   values, so that visually near colors are also numerically near. Colors are represented using three components:
+     * </para>
+     * <para>
+     *   - L: lightness, a real number between 0 and 1
+     *   -
+     * </para>
+     * <para>
+     *   - a: color variations between green and red, between -0.5 and 0.5
+     *   -
+     * </para>
+     * <para>
+     *   - b: color variations between blue and yellow, between -0.5 and 0.5.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a string corresponding to the estimated color in OkLab format
+     *   a string corresponding to the estimated color according to the OkLab color model
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.ESTIMATEDOKLAB_INVALID</c>.
@@ -784,14 +837,14 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in RAL format.
+     *   Returns the RAL Classic color closest to the estimated color, with a similarity ratio.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a string corresponding to the estimated color in RAL format
+     *   a string corresponding to the RAL Classic color closest to the estimated color, with a similarity ratio
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.NEARRAL1_INVALID</c>.
@@ -812,14 +865,14 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in RAL format.
+     *   Returns the second closest RAL Classic color to the estimated color, with a similarity ratio.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a string corresponding to the estimated color in RAL format
+     *   a string corresponding to the second closest RAL Classic color to the estimated color, with a similarity ratio
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.NEARRAL2_INVALID</c>.
@@ -840,14 +893,14 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color in RAL format.
+     *   Returns the third closest RAL Classic color to the estimated color, with a similarity ratio.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a string corresponding to the estimated color in RAL format
+     *   a string corresponding to the third closest RAL Classic color to the estimated color, with a similarity ratio
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.NEARRAL3_INVALID</c>.
@@ -868,14 +921,14 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated HTML color .
+     *   Returns the name of the HTML color closest to the estimated color.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a string corresponding to the estimated HTML color
+     *   a string corresponding to the name of the HTML color closest to the estimated color
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.NEARHTMLCOLOR_INVALID</c>.
@@ -896,36 +949,42 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Returns the estimated color .
+     *   Returns the index of the basic color typically used to refer to the estimated color (enumerated value).
      * <para>
+     *   The list of basic colors recognized is:
      * </para>
      * <para>
+     *   - 0 - Brown
      * </para>
-     * </summary>
-     * <returns>
-     *   a string corresponding to the estimated color
-     * </returns>
      * <para>
-     *   On failure, throws an exception or returns <c>YColorSensor.NEARSIMPLECOLOR_INVALID</c>.
+     *   - 1 - Red
      * </para>
-     */
-    public async Task<string> get_nearSimpleColor()
-    {
-        string res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return NEARSIMPLECOLOR_INVALID;
-            }
-        }
-        res = _nearSimpleColor;
-        return res;
-    }
-
-
-    /**
-     * <summary>
-     *   Returns the estimated color as an index.
      * <para>
+     *   - 2 - Orange
+     * </para>
+     * <para>
+     *   - 3 - Yellow
+     * </para>
+     * <para>
+     *   - 4 - White
+     * </para>
+     * <para>
+     *   - 5 - Gray
+     * </para>
+     * <para>
+     *   - 6 - Black
+     * </para>
+     * <para>
+     *   - 7 - Green
+     * </para>
+     * <para>
+     *   - 8 - Blue
+     * </para>
+     * <para>
+     *   - 9 - Purple
+     * </para>
+     * <para>
+     *   - 10 - Pink
      * </para>
      * <para>
      * </para>
@@ -937,7 +996,7 @@ public class YColorSensor : YFunction
      *   <c>YColorSensor.NEARSIMPLECOLORINDEX_GRAY</c>, <c>YColorSensor.NEARSIMPLECOLORINDEX_BLACK</c>,
      *   <c>YColorSensor.NEARSIMPLECOLORINDEX_GREEN</c>, <c>YColorSensor.NEARSIMPLECOLORINDEX_BLUE</c>,
      *   <c>YColorSensor.NEARSIMPLECOLORINDEX_PURPLE</c> and <c>YColorSensor.NEARSIMPLECOLORINDEX_PINK</c>
-     *   corresponding to the estimated color as an index
+     *   corresponding to the index of the basic color typically used to refer to the estimated color (enumerated value)
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YColorSensor.NEARSIMPLECOLORINDEX_INVALID</c>.
@@ -952,6 +1011,34 @@ public class YColorSensor : YFunction
             }
         }
         res = _nearSimpleColorIndex;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the name of the basic color typically used to refer to the estimated color.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string corresponding to the name of the basic color typically used to refer to the estimated color
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YColorSensor.NEARSIMPLECOLOR_INVALID</c>.
+     * </para>
+     */
+    public async Task<string> get_nearSimpleColor()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return NEARSIMPLECOLOR_INVALID;
+            }
+        }
+        res = _nearSimpleColor;
         return res;
     }
 
@@ -1123,9 +1210,9 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Turns on the LEDs at the current used during calibration.
+     *   Turns on the built-in illumination LEDs using the same current as used during last calibration.
      * <para>
-     *   On failure, throws an exception or returns YColorSensor.DATA_INVALID.
+     *   On failure, throws an exception or returns a negative error code.
      * </para>
      * </summary>
      */
@@ -1136,9 +1223,9 @@ public class YColorSensor : YFunction
 
     /**
      * <summary>
-     *   Turns off the LEDs.
+     *   Turns off the built-in illumination LEDs.
      * <para>
-     *   On failure, throws an exception or returns YColorSensor.DATA_INVALID.
+     *   On failure, throws an exception or returns a negative error code.
      * </para>
      * </summary>
      */
