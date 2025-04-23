@@ -66,7 +66,21 @@ public class YSpectralChannel : YSensor
      * </summary>
      */
     public const  int RAWCOUNT_INVALID = YAPI.INVALID_INT;
+    /**
+     * <summary>
+     *   invalid channelName value
+     * </summary>
+     */
+    public const  string CHANNELNAME_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
+     *   invalid peakWavelength value
+     * </summary>
+     */
+    public const  int PEAKWAVELENGTH_INVALID = YAPI.INVALID_INT;
     protected int _rawCount = RAWCOUNT_INVALID;
+    protected string _channelName = CHANNELNAME_INVALID;
+    protected int _peakWavelength = PEAKWAVELENGTH_INVALID;
     protected ValueCallback _valueCallbackSpectralChannel = null;
     protected TimedReportCallback _timedReportCallbackSpectralChannel = null;
 
@@ -108,12 +122,18 @@ public class YSpectralChannel : YSensor
         if (json_val.has("rawCount")) {
             _rawCount = json_val.getInt("rawCount");
         }
+        if (json_val.has("channelName")) {
+            _channelName = json_val.getString("channelName");
+        }
+        if (json_val.has("peakWavelength")) {
+            _peakWavelength = json_val.getInt("peakWavelength");
+        }
         base.imm_parseAttr(json_val);
     }
 
     /**
      * <summary>
-     *   Retrieves the raw cspectral intensity value as measured by the sensor, without any scaling or calibration.
+     *   Retrieves the raw spectral intensity value as measured by the sensor, without any scaling or calibration.
      * <para>
      * </para>
      * <para>
@@ -135,6 +155,62 @@ public class YSpectralChannel : YSensor
             }
         }
         res = _rawCount;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the target spectral band name.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string corresponding to the target spectral band name
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YSpectralChannel.CHANNELNAME_INVALID</c>.
+     * </para>
+     */
+    public async Task<string> get_channelName()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return CHANNELNAME_INVALID;
+            }
+        }
+        res = _channelName;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the target spectral band peak wavelenght, in nm.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the target spectral band peak wavelenght, in nm
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YSpectralChannel.PEAKWAVELENGTH_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_peakWavelength()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return PEAKWAVELENGTH_INVALID;
+            }
+        }
+        res = _peakWavelength;
         return res;
     }
 
