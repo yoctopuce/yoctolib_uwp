@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YAPI.cs 65865 2025-04-15 06:42:38Z seb $
+ * $Id: YAPI.cs 66103 2025-05-02 06:55:47Z seb $
  *
  * High-level programming interface, common to all modules
  *
@@ -66,7 +66,7 @@ public class YAPI
         public const long INVALID_LONG = -9223372036854775807L;
         public const int INVALID_UINT = -1;
         public const string YOCTO_API_VERSION_STR = "1.11";
-        public const string YOCTO_API_BUILD_STR = "65971";
+        public const string YOCTO_API_BUILD_STR = "66320";
         public const int YOCTO_VENDORID = 0x24e0;
         public const int YOCTO_DEVID_FACTORYBOOT = 1;
         public const int YOCTO_DEVID_BOOTLOADER = 2;
@@ -93,6 +93,8 @@ public class YAPI
         public const int RFID_SOFT_ERROR = -16;         // Recoverable error with RFID tag (eg. tag out of reach), check YRfidStatus for details
         public const int RFID_HARD_ERROR = -17;         // Serious RFID error (eg. write-protected, out-of-boundary), check YRfidStatus for details
         public const int BUFFER_TOO_SMALL = -18;        // The buffer provided is too small
+        public const int DNS_ERROR = -19;               // Error during name resolutions (invalid hostname or dns communication error)
+        public const int SSL_UNK_CERT = -20;            // The certificate is not correctly signed by the trusted CA
 
 //--- (end of generated code: YFunction return codes)
         internal static Encoding DefaultEncoding = System.Text.Encoding.GetEncoding("iso-8859-1");
@@ -326,7 +328,7 @@ public class YAPI
          */
         public static string GetAPIVersion()
         {
-            return "1.11.5971" + YUSBHub.imm_getAPIVersion();
+            return "1.11.6320" + YUSBHub.imm_getAPIVersion();
         }
 
         /**

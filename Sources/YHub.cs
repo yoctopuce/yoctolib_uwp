@@ -48,7 +48,9 @@ namespace com.yoctopuce.YoctoAPI
 //--- (generated code: YHub class start)
 /**
  * <summary>
- *   YHub Class: Hub Interface
+ *   YHub Class: YoctoHub or VirtualHub currently in use by the API.
+ * <para>
+ * </para>
  * <para>
  * </para>
  * <para>
