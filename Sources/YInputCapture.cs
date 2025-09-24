@@ -893,7 +893,7 @@ public class YInputCapture : YFunction
         if (msDuration > 1000) {
             msDuration = 1000;
         }
-        snapStart = ((-msDuration) / 2);
+        snapStart = (-msDuration / 2);
         snapUrl = "snap.bin?t="+Convert.ToString(snapStart)+"&d="+Convert.ToString(msDuration);
 
         snapData = await this._download(snapUrl);

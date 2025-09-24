@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YModule.cs 64034 2025-01-06 15:37:18Z seb $
+ * $Id: YModule.cs 67279 2025-06-05 06:41:21Z seb $
  *
  * YModule Class: Module control interface
  *
@@ -2294,7 +2294,7 @@ public class YModule : YFunction
      *   a binary buffer with the file content
      * </returns>
      * <para>
-     *   On failure, throws an exception or returns  <c>YAPI.INVALID_STRING</c>.
+     *   On failure, throws an exception or returns an empty content.
      * </para>
      */
     public virtual async Task<byte[]> download(string pathname)
@@ -2314,7 +2314,7 @@ public class YModule : YFunction
      * </summary>
      * <returns>
      *   a binary buffer with module icon, in png format.
-     *   On failure, throws an exception or returns  <c>YAPI.INVALID_STRING</c>.
+     *   On failure, throws an exception or returns an empty content.
      * </returns>
      */
     public virtual async Task<byte[]> get_icon2d()
@@ -2342,6 +2342,9 @@ public class YModule : YFunction
         byte[] content = new byte[0];
 
         content = await this._download("logs.txt");
+        if ((content).Length == 0) {
+            return YAPI.INVALID_STRING;
+        }
         return YAPI.DefaultEncoding.GetString(content);
     }
 

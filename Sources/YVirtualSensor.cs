@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  Implements FindVoltage(), the high-level API for Voltage functions
+ *  Implements FindVirtualSensor(), the high-level API for VirtualSensor functions
  *
  *  - - - - - - - - - License information: - - - - - - - - -
  *
@@ -43,46 +43,39 @@ using System.Threading.Tasks;
 namespace com.yoctopuce.YoctoAPI
 {
 
-//--- (YVoltage return codes)
-//--- (end of YVoltage return codes)
-//--- (YVoltage class start)
+//--- (YVirtualSensor return codes)
+//--- (end of YVirtualSensor return codes)
+//--- (YVirtualSensor class start)
 /**
  * <summary>
- *   YVoltage Class: voltage sensor control interface, available for instance in the Yocto-Motor-DC, the
- *   Yocto-Volt or the Yocto-Watt
+ *   YVirtualSensor Class: virtual sensor control interface
  * <para>
- *   The <c>YVoltage</c> class allows you to read and configure Yoctopuce voltage sensors.
- *   It inherits from <c>YSensor</c> class the core functions to read measurements,
- *   to register callback functions, and to access the autonomous datalogger.
+ *   The <c>YVirtualSensor</c> class allows you to use Yoctopuce virtual sensors.
+ *   These sensors make it possible to show external data collected by the user
+ *   as a Yoctopuce Sensor. This class inherits from <c>YSensor</c> class the core
+ *   functions to read measurements, to register callback functions, and to access
+ *   the autonomous datalogger. It adds the ability to change the sensor value as
+ *   needed, or to mark current value as invalid.
  * </para>
  * </summary>
  */
-public class YVoltage : YSensor
+public class YVirtualSensor : YSensor
 {
-//--- (end of YVoltage class start)
-//--- (YVoltage definitions)
+//--- (end of YVirtualSensor class start)
+//--- (YVirtualSensor definitions)
     /**
      * <summary>
-     *   invalid enabled value
+     *   invalid invalidValue value
      * </summary>
      */
-    public const int ENABLED_FALSE = 0;
-    public const int ENABLED_TRUE = 1;
-    public const int ENABLED_INVALID = -1;
-    /**
-     * <summary>
-     *   invalid signalBias value
-     * </summary>
-     */
-    public const  double SIGNALBIAS_INVALID = YAPI.INVALID_DOUBLE;
-    protected int _enabled = ENABLED_INVALID;
-    protected double _signalBias = SIGNALBIAS_INVALID;
-    protected ValueCallback _valueCallbackVoltage = null;
-    protected TimedReportCallback _timedReportCallbackVoltage = null;
+    public const  double INVALIDVALUE_INVALID = YAPI.INVALID_DOUBLE;
+    protected double _invalidValue = INVALIDVALUE_INVALID;
+    protected ValueCallback _valueCallbackVirtualSensor = null;
+    protected TimedReportCallback _timedReportCallbackVirtualSensor = null;
 
-    public new delegate Task ValueCallback(YVoltage func, string value);
-    public new delegate Task TimedReportCallback(YVoltage func, YMeasure measure);
-    //--- (end of YVoltage definitions)
+    public new delegate Task ValueCallback(YVirtualSensor func, string value);
+    public new delegate Task TimedReportCallback(YVirtualSensor func, YMeasure measure);
+    //--- (end of YVirtualSensor definitions)
 
 
     /**
@@ -92,11 +85,11 @@ public class YVoltage : YSensor
      *   functionid
      * </param>
      */
-    protected YVoltage(YAPIContext ctx, string func)
-        : base(ctx, func, "Voltage")
+    protected YVirtualSensor(YAPIContext ctx, string func)
+        : base(ctx, func, "VirtualSensor")
     {
-        //--- (YVoltage attributes initialization)
-        //--- (end of YVoltage attributes initialization)
+        //--- (YVirtualSensor attributes initialization)
+        //--- (end of YVirtualSensor attributes initialization)
     }
 
     /**
@@ -106,70 +99,33 @@ public class YVoltage : YSensor
      *   functionid
      * </param>
      */
-    protected YVoltage(string func)
+    protected YVirtualSensor(string func)
         : this(YAPI.imm_GetYCtx(), func)
     {
     }
 
-    //--- (YVoltage implementation)
+    //--- (YVirtualSensor implementation)
 #pragma warning disable 1998
     internal override void imm_parseAttr(YJSONObject json_val)
     {
-        if (json_val.has("enabled")) {
-            _enabled = json_val.getInt("enabled") > 0 ? 1 : 0;
-        }
-        if (json_val.has("signalBias")) {
-            _signalBias = Math.Round(json_val.getDouble("signalBias") / 65.536) / 1000.0;
+        if (json_val.has("invalidValue")) {
+            _invalidValue = Math.Round(json_val.getDouble("invalidValue") / 65.536) / 1000.0;
         }
         base.imm_parseAttr(json_val);
     }
 
     /**
      * <summary>
-     *   Returns the activation state of this input.
+     *   Changes the measuring unit for the measured value.
      * <para>
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <returns>
-     *   either <c>YVoltage.ENABLED_FALSE</c> or <c>YVoltage.ENABLED_TRUE</c>, according to the activation
-     *   state of this input
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns <c>YVoltage.ENABLED_INVALID</c>.
-     * </para>
-     */
-    public async Task<int> get_enabled()
-    {
-        int res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return ENABLED_INVALID;
-            }
-        }
-        res = _enabled;
-        return res;
-    }
-
-
-    /**
-     * <summary>
-     *   Changes the activation state of this voltage input.
-     * <para>
-     *   When AC measurements are disabled,
-     *   the device will always assume a DC signal, and vice-versa. When both AC and DC measurements
-     *   are active, the device switches between AC and DC mode based on the relative amplitude
-     *   of variations compared to the average value.
-     *   Remember to call the <c>saveToFlash()</c>
-     *   method of the module if the modification must be kept.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the
+     *   modification must be kept.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   either <c>YVoltage.ENABLED_FALSE</c> or <c>YVoltage.ENABLED_TRUE</c>, according to the activation
-     *   state of this voltage input
+     *   a string corresponding to the measuring unit for the measured value
      * </param>
      * <para>
      * </para>
@@ -180,28 +136,24 @@ public class YVoltage : YSensor
      *   On failure, throws an exception or returns a negative error code.
      * </para>
      */
-    public async Task<int> set_enabled(int  newval)
+    public async Task<int> set_unit(string  newval)
     {
         string rest_val;
-        rest_val = (newval > 0 ? "1" : "0");
-        await _setAttr("enabled",rest_val);
+        rest_val = newval;
+        await _setAttr("unit",rest_val);
         return YAPI.SUCCESS;
     }
 
     /**
      * <summary>
-     *   Changes the DC bias configured for zero shift adjustment.
+     *   Changes the current value of the sensor (raw value, before calibration).
      * <para>
-     *   If your DC current reads positive when it should be zero, set up
-     *   a positive signalBias of the same value to fix the zero shift.
-     *   Remember to call the <c>saveToFlash()</c>
-     *   method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   a floating point number corresponding to the DC bias configured for zero shift adjustment
+     *   a floating point number corresponding to the current value of the sensor (raw value, before calibration)
      * </param>
      * <para>
      * </para>
@@ -212,47 +164,89 @@ public class YVoltage : YSensor
      *   On failure, throws an exception or returns a negative error code.
      * </para>
      */
-    public async Task<int> set_signalBias(double  newval)
+    public async Task<int> set_currentRawValue(double  newval)
     {
         string rest_val;
         rest_val = Math.Round(newval * 65536.0).ToString();
-        await _setAttr("signalBias",rest_val);
+        await _setAttr("currentRawValue",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    public async Task<int> set_sensorState(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval).ToString();
+        await _setAttr("sensorState",rest_val);
         return YAPI.SUCCESS;
     }
 
     /**
      * <summary>
-     *   Returns the DC bias configured for zero shift adjustment.
+     *   Changes the invalid value of the sensor, returned if the sensor is read when in invalid state
+     *   (for instance before having been set).
      * <para>
-     *   A positive bias value is used to correct a positive DC bias,
-     *   while a negative bias value is used to correct a negative DC bias.
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a floating point number corresponding to the invalid value of the sensor, returned if the sensor is
+     *   read when in invalid state
+     *   (for instance before having been set)
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_invalidValue(double  newval)
+    {
+        string rest_val;
+        rest_val = Math.Round(newval * 65536.0).ToString();
+        await _setAttr("invalidValue",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the invalid value of the sensor, returned if the sensor is read when in invalid state
+     *   (for instance before having been set).
+     * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a floating point number corresponding to the DC bias configured for zero shift adjustment
+     *   a floating point number corresponding to the invalid value of the sensor, returned if the sensor is
+     *   read when in invalid state
+     *   (for instance before having been set)
      * </returns>
      * <para>
-     *   On failure, throws an exception or returns <c>YVoltage.SIGNALBIAS_INVALID</c>.
+     *   On failure, throws an exception or returns <c>YVirtualSensor.INVALIDVALUE_INVALID</c>.
      * </para>
      */
-    public async Task<double> get_signalBias()
+    public async Task<double> get_invalidValue()
     {
         double res;
         if (_cacheExpiration <= YAPIContext.GetTickCount()) {
             if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return SIGNALBIAS_INVALID;
+                return INVALIDVALUE_INVALID;
             }
         }
-        res = _signalBias;
+        res = _invalidValue;
         return res;
     }
 
 
     /**
      * <summary>
-     *   Retrieves a voltage sensor for a given identifier.
+     *   Retrieves a virtual sensor for a given identifier.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -276,11 +270,11 @@ public class YVoltage : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the voltage sensor is online at the time
+     *   This function does not require that the virtual sensor is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YVoltage.isOnline()</c> to test if the voltage sensor is
+     *   Use the method <c>YVirtualSensor.isOnline()</c> to test if the virtual sensor is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a voltage sensor by logical name, no error is notified: the first instance
+     *   a virtual sensor by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -293,27 +287,27 @@ public class YVoltage : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the voltage sensor, for instance
-     *   <c>MOTORCTL.voltage</c>.
+     *   a string that uniquely characterizes the virtual sensor, for instance
+     *   <c>MyDevice.virtualSensor1</c>.
      * </param>
      * <returns>
-     *   a <c>YVoltage</c> object allowing you to drive the voltage sensor.
+     *   a <c>YVirtualSensor</c> object allowing you to drive the virtual sensor.
      * </returns>
      */
-    public static YVoltage FindVoltage(string func)
+    public static YVirtualSensor FindVirtualSensor(string func)
     {
-        YVoltage obj;
-        obj = (YVoltage) YFunction._FindFromCache("Voltage", func);
+        YVirtualSensor obj;
+        obj = (YVirtualSensor) YFunction._FindFromCache("VirtualSensor", func);
         if (obj == null) {
-            obj = new YVoltage(func);
-            YFunction._AddToCache("Voltage", func, obj);
+            obj = new YVirtualSensor(func);
+            YFunction._AddToCache("VirtualSensor", func, obj);
         }
         return obj;
     }
 
     /**
      * <summary>
-     *   Retrieves a voltage sensor for a given identifier in a YAPI context.
+     *   Retrieves a virtual sensor for a given identifier in a YAPI context.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -337,11 +331,11 @@ public class YVoltage : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the voltage sensor is online at the time
+     *   This function does not require that the virtual sensor is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YVoltage.isOnline()</c> to test if the voltage sensor is
+     *   Use the method <c>YVirtualSensor.isOnline()</c> to test if the virtual sensor is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a voltage sensor by logical name, no error is notified: the first instance
+     *   a virtual sensor by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -350,20 +344,20 @@ public class YVoltage : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the voltage sensor, for instance
-     *   <c>MOTORCTL.voltage</c>.
+     *   a string that uniquely characterizes the virtual sensor, for instance
+     *   <c>MyDevice.virtualSensor1</c>.
      * </param>
      * <returns>
-     *   a <c>YVoltage</c> object allowing you to drive the voltage sensor.
+     *   a <c>YVirtualSensor</c> object allowing you to drive the virtual sensor.
      * </returns>
      */
-    public static YVoltage FindVoltageInContext(YAPIContext yctx,string func)
+    public static YVirtualSensor FindVirtualSensorInContext(YAPIContext yctx,string func)
     {
-        YVoltage obj;
-        obj = (YVoltage) YFunction._FindFromCacheInContext(yctx, "Voltage", func);
+        YVirtualSensor obj;
+        obj = (YVirtualSensor) YFunction._FindFromCacheInContext(yctx, "VirtualSensor", func);
         if (obj == null) {
-            obj = new YVoltage(yctx, func);
-            YFunction._AddToCache("Voltage", func, obj);
+            obj = new YVirtualSensor(yctx, func);
+            YFunction._AddToCache("VirtualSensor", func, obj);
         }
         return obj;
     }
@@ -394,7 +388,7 @@ public class YVoltage : YSensor
         } else {
             await YFunction._UpdateValueCallbackList(this, false);
         }
-        _valueCallbackVoltage = callback;
+        _valueCallbackVirtualSensor = callback;
         // Immediately invoke value callback with current value
         if (callback != null && await this.isOnline()) {
             val = _advertisedValue;
@@ -407,8 +401,8 @@ public class YVoltage : YSensor
 
     public override async Task<int> _invokeValueCallback(string value)
     {
-        if (_valueCallbackVoltage != null) {
-            await _valueCallbackVoltage(this, value);
+        if (_valueCallbackVirtualSensor != null) {
+            await _valueCallbackVirtualSensor(this, value);
         } else {
             await base._invokeValueCallback(value);
         }
@@ -442,14 +436,14 @@ public class YVoltage : YSensor
         } else {
             await YFunction._UpdateTimedReportCallbackList(sensor, false);
         }
-        _timedReportCallbackVoltage = callback;
+        _timedReportCallbackVirtualSensor = callback;
         return 0;
     }
 
     public override async Task<int> _invokeTimedReportCallback(YMeasure value)
     {
-        if (_timedReportCallbackVoltage != null) {
-            await _timedReportCallbackVoltage(this, value);
+        if (_timedReportCallbackVirtualSensor != null) {
+            await _timedReportCallbackVirtualSensor(this, value);
         } else {
             await base._invokeTimedReportCallback(value);
         }
@@ -458,14 +452,8 @@ public class YVoltage : YSensor
 
     /**
      * <summary>
-     *   Calibrate the device by adjusting <c>signalBias</c> so that the current
-     *   input voltage is precisely seen as zero.
+     *   Changes the current sensor state to invalid (as if no value would have been ever set).
      * <para>
-     *   Before calling this method, make
-     *   sure to short the power source inputs as close as possible to the connector, and
-     *   to disconnect the load to ensure the wires don't capture radiated noise.
-     *   Remember to call the <c>saveToFlash()</c>
-     *   method of the module if the modification must be kept.
      * </para>
      * </summary>
      * <returns>
@@ -475,32 +463,27 @@ public class YVoltage : YSensor
      *   On failure, throws an exception or returns a negative error code.
      * </para>
      */
-    public virtual async Task<int> zeroAdjust()
+    public virtual async Task<int> set_sensorAsInvalid()
     {
-        double currSignal;
-        double bias;
-        currSignal = await this.get_currentRawValue();
-        bias = await this.get_signalBias() + currSignal;
-        if (!(bias > -0.5 && bias < 0.5)) { this._throw(YAPI.INVALID_ARGUMENT,"suspicious zeroAdjust, please ensure that the power source inputs are shorted"); return YAPI.INVALID_ARGUMENT; }
-        return await this.set_signalBias(bias);
+        return await this.set_sensorState(1);
     }
 
     /**
      * <summary>
-     *   Continues the enumeration of voltage sensors started using <c>yFirstVoltage()</c>.
+     *   Continues the enumeration of virtual sensors started using <c>yFirstVirtualSensor()</c>.
      * <para>
-     *   Caution: You can't make any assumption about the returned voltage sensors order.
-     *   If you want to find a specific a voltage sensor, use <c>Voltage.findVoltage()</c>
+     *   Caution: You can't make any assumption about the returned virtual sensors order.
+     *   If you want to find a specific a virtual sensor, use <c>VirtualSensor.findVirtualSensor()</c>
      *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>
-     *   a pointer to a <c>YVoltage</c> object, corresponding to
-     *   a voltage sensor currently online, or a <c>null</c> pointer
-     *   if there are no more voltage sensors to enumerate.
+     *   a pointer to a <c>YVirtualSensor</c> object, corresponding to
+     *   a virtual sensor currently online, or a <c>null</c> pointer
+     *   if there are no more virtual sensors to enumerate.
      * </returns>
      */
-    public YVoltage nextVoltage()
+    public YVirtualSensor nextVirtualSensor()
     {
         string next_hwid;
         try {
@@ -510,57 +493,57 @@ public class YVoltage : YSensor
             next_hwid = null;
         }
         if(next_hwid == null) return null;
-        return FindVoltageInContext(_yapi, next_hwid);
+        return FindVirtualSensorInContext(_yapi, next_hwid);
     }
 
     /**
      * <summary>
-     *   Starts the enumeration of voltage sensors currently accessible.
+     *   Starts the enumeration of virtual sensors currently accessible.
      * <para>
-     *   Use the method <c>YVoltage.nextVoltage()</c> to iterate on
-     *   next voltage sensors.
+     *   Use the method <c>YVirtualSensor.nextVirtualSensor()</c> to iterate on
+     *   next virtual sensors.
      * </para>
      * </summary>
      * <returns>
-     *   a pointer to a <c>YVoltage</c> object, corresponding to
-     *   the first voltage sensor currently online, or a <c>null</c> pointer
+     *   a pointer to a <c>YVirtualSensor</c> object, corresponding to
+     *   the first virtual sensor currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
-    public static YVoltage FirstVoltage()
+    public static YVirtualSensor FirstVirtualSensor()
     {
         YAPIContext yctx = YAPI.imm_GetYCtx();
-        string next_hwid = yctx._yHash.imm_getFirstHardwareId("Voltage");
+        string next_hwid = yctx._yHash.imm_getFirstHardwareId("VirtualSensor");
         if (next_hwid == null)  return null;
-        return FindVoltageInContext(yctx, next_hwid);
+        return FindVirtualSensorInContext(yctx, next_hwid);
     }
 
     /**
      * <summary>
-     *   Starts the enumeration of voltage sensors currently accessible.
+     *   Starts the enumeration of virtual sensors currently accessible.
      * <para>
-     *   Use the method <c>YVoltage.nextVoltage()</c> to iterate on
-     *   next voltage sensors.
+     *   Use the method <c>YVirtualSensor.nextVirtualSensor()</c> to iterate on
+     *   next virtual sensors.
      * </para>
      * </summary>
      * <param name="yctx">
      *   a YAPI context.
      * </param>
      * <returns>
-     *   a pointer to a <c>YVoltage</c> object, corresponding to
-     *   the first voltage sensor currently online, or a <c>null</c> pointer
+     *   a pointer to a <c>YVirtualSensor</c> object, corresponding to
+     *   the first virtual sensor currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
-    public static YVoltage FirstVoltageInContext(YAPIContext yctx)
+    public static YVirtualSensor FirstVirtualSensorInContext(YAPIContext yctx)
     {
-        string next_hwid = yctx._yHash.imm_getFirstHardwareId("Voltage");
+        string next_hwid = yctx._yHash.imm_getFirstHardwareId("VirtualSensor");
         if (next_hwid == null)  return null;
-        return FindVoltageInContext(yctx, next_hwid);
+        return FindVirtualSensorInContext(yctx, next_hwid);
     }
 
 #pragma warning restore 1998
-    //--- (end of YVoltage implementation)
+    //--- (end of YVirtualSensor implementation)
 }
 }
 

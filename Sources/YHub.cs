@@ -439,7 +439,7 @@ public class YHub
      * </summary>
      * <returns>
      *   a pointer to a <c>YHub</c> object, corresponding to
-     *   the next hub currenlty in use, or a <c>null</c> pointer
+     *   the next hub currently in use, or a <c>null</c> pointer
      *   if there are no more hubs to enumerate.
      * </returns>
      */

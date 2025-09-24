@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YGyro.cs 63510 2024-11-28 10:46:59Z seb $
+ * $Id: YGyro.cs 67411 2025-06-12 08:58:19Z seb $
  *
  * Implements FindGyro(), the high-level API for Gyro functions
  *
@@ -530,7 +530,7 @@ public class YGyro : YSensor
     {
         int now_stamp;
         int age_ms;
-        now_stamp = (int) ((YAPIContext.GetTickCount()) & 0x7FFFFFFF);
+        now_stamp = (int) (YAPIContext.GetTickCount() & 0x7FFFFFFF);
         age_ms = ((now_stamp - _qt_stamp) & 0x7FFFFFFF);
         if ((age_ms >= 10) || (_qt_stamp == 0)) {
             if (await this.load(10) != YAPI.SUCCESS) {
@@ -885,7 +885,7 @@ public class YGyro : YSensor
         if (qtIndex < 4) {
             return 0;
         }
-        _qt_stamp = (int) ((YAPIContext.GetTickCount()) & 0x7FFFFFFF);
+        _qt_stamp = (int) (YAPIContext.GetTickCount() & 0x7FFFFFFF);
         if (_quatCallback != null) {
             await _quatCallback(this, _w, _x, _y, _z);
         }

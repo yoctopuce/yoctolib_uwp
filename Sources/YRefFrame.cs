@@ -810,7 +810,7 @@ public class YRefFrame : YFunction
         _calibStageProgress = 0;
         _calibProgress = 1;
         _calibInternalPos = 0;
-        _calibPrevTick = (int) ((YAPIContext.GetTickCount()) & 0x7FFFFFFF);
+        _calibPrevTick = (int) (YAPIContext.GetTickCount() & 0x7FFFFFFF);
         _calibOrient.Clear();
         _calibDataAccX.Clear();
         _calibDataAccY.Clear();
@@ -865,7 +865,7 @@ public class YRefFrame : YFunction
             return YAPI.SUCCESS;
         }
         // make sure we leave at least 160 ms between samples
-        currTick =  (int) ((YAPIContext.GetTickCount()) & 0x7FFFFFFF);
+        currTick =  (int) (YAPIContext.GetTickCount() & 0x7FFFFFFF);
         if (((currTick - _calibPrevTick) & 0x7FFFFFFF) < 160) {
             return YAPI.SUCCESS;
         }
@@ -1059,7 +1059,7 @@ public class YRefFrame : YFunction
         }
         // make sure we don't start before previous calibration is cleared
         if (_calibStage == 1) {
-            currTick = (int) ((YAPIContext.GetTickCount()) & 0x7FFFFFFF);
+            currTick = (int) (YAPIContext.GetTickCount() & 0x7FFFFFFF);
             currTick = ((currTick - _calibPrevTick) & 0x7FFFFFFF);
             if (currTick < 1600) {
                 _calibStageHint = "Set down the device on a steady horizontal surface";
