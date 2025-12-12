@@ -339,6 +339,9 @@
     <Compile Include="..\..\Sources\YTvoc.cs">
       <Link>yoctolib\YTvoc.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YVirtualSensor.cs">
+      <Link>yoctolib\YVirtualSensor.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YVoc.cs">
       <Link>yoctolib\YVoc.cs</Link>
     </Compile>

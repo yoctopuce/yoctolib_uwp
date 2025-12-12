@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFunction.cs 64034 2025-01-06 15:37:18Z seb $
+ * $Id: YFunction.cs 70668 2025-12-09 10:29:44Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -567,6 +567,25 @@ public class YFunction
     public virtual async Task<int> _parserHelper()
     {
         return 0;
+    }
+
+    public virtual bool _is_valid_pass(string passwd)
+    {
+        string tmp;
+        if ((passwd).Length > YAPI.HASH_BUF_SIZE) {
+            tmp = "Password too long (max "+Convert.ToString(YAPI.HASH_BUF_SIZE)+" chars) :"+passwd;
+            this._throw(YAPI.INVALID_ARGUMENT, tmp);
+            return false;
+        }
+        if ((passwd).IndexOf("@") >=0) {
+            this._throw(YAPI.INVALID_ARGUMENT, "Character @ is not allowed in password");
+            return false;
+        }
+        if ((passwd).IndexOf("/") >=0) {
+            this._throw(YAPI.INVALID_ARGUMENT, "Character / is not allowed in password");
+            return false;
+        }
+        return true;
     }
 
     /**

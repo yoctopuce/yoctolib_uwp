@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YSensor.cs 64034 2025-01-06 15:37:18Z seb $
+ * $Id: YSensor.cs 69181 2025-09-22 08:35:52Z seb $
  *
  * Implements yFindSensor(), the high-level API for Sensor functions
  *
@@ -393,8 +393,7 @@ public class YSensor : YFunction
         if (res == CURRENTVALUE_INVALID) {
             res = _currentValue;
         }
-        res = res * _iresol;
-        res = Math.Round(res) / _iresol;
+        res = Math.Round(res * _iresol) / _iresol;
         return res;
     }
 
@@ -453,8 +452,7 @@ public class YSensor : YFunction
                 return LOWESTVALUE_INVALID;
             }
         }
-        res = _lowestValue * _iresol;
-        res = Math.Round(res) / _iresol;
+        res = Math.Round(_lowestValue * _iresol) / _iresol;
         return res;
     }
 
@@ -513,8 +511,7 @@ public class YSensor : YFunction
                 return HIGHESTVALUE_INVALID;
             }
         }
-        res = _highestValue * _iresol;
-        res = Math.Round(res) / _iresol;
+        res = Math.Round(_highestValue * _iresol) / _iresol;
         return res;
     }
 

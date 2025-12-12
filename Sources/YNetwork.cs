@@ -855,8 +855,8 @@ public class YNetwork : YFunction
     public async Task<int> set_userPassword(string  newval)
     {
         string rest_val;
-        if (newval.Length > YAPI.HASH_BUF_SIZE)
-            _throw(YAPI.INVALID_ARGUMENT,"Password too long :" + newval);
+        if (!_is_valid_pass(newval))
+            return YAPI.INVALID_ARGUMENT;
         rest_val = newval;
         await _setAttr("userPassword",rest_val);
         return YAPI.SUCCESS;
@@ -920,8 +920,8 @@ public class YNetwork : YFunction
     public async Task<int> set_adminPassword(string  newval)
     {
         string rest_val;
-        if (newval.Length > YAPI.HASH_BUF_SIZE)
-            _throw(YAPI.INVALID_ARGUMENT,"Password too long :" + newval);
+        if (!_is_valid_pass(newval))
+            return YAPI.INVALID_ARGUMENT;
         rest_val = newval;
         await _setAttr("adminPassword",rest_val);
         return YAPI.SUCCESS;
