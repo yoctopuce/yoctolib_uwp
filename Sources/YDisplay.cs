@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 63510 2024-11-28 10:46:59Z seb $
+ * $Id: YDisplay.cs 71578 2026-01-28 15:59:12Z mvuilleu $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -94,6 +94,12 @@ public class YDisplay : YFunction
     public const  int BRIGHTNESS_INVALID = YAPI.INVALID_UINT;
     /**
      * <summary>
+     *   invalid autoInvertDelay value
+     * </summary>
+     */
+    public const  int AUTOINVERTDELAY_INVALID = YAPI.INVALID_UINT;
+    /**
+     * <summary>
      *   invalid orientation value
      * </summary>
      */
@@ -102,6 +108,12 @@ public class YDisplay : YFunction
     public const int ORIENTATION_RIGHT = 2;
     public const int ORIENTATION_DOWN = 3;
     public const int ORIENTATION_INVALID = -1;
+    /**
+     * <summary>
+     *   invalid displayPanel value
+     * </summary>
+     */
+    public const  string DISPLAYPANEL_INVALID = YAPI.INVALID_STRING;
     /**
      * <summary>
      *   invalid displayWidth value
@@ -122,6 +134,7 @@ public class YDisplay : YFunction
     public const int DISPLAYTYPE_MONO = 0;
     public const int DISPLAYTYPE_GRAY = 1;
     public const int DISPLAYTYPE_RGB = 2;
+    public const int DISPLAYTYPE_EPAPER = 3;
     public const int DISPLAYTYPE_INVALID = -1;
     /**
      * <summary>
@@ -150,7 +163,9 @@ public class YDisplay : YFunction
     protected int _enabled = ENABLED_INVALID;
     protected string _startupSeq = STARTUPSEQ_INVALID;
     protected int _brightness = BRIGHTNESS_INVALID;
+    protected int _autoInvertDelay = AUTOINVERTDELAY_INVALID;
     protected int _orientation = ORIENTATION_INVALID;
+    protected string _displayPanel = DISPLAYPANEL_INVALID;
     protected int _displayWidth = DISPLAYWIDTH_INVALID;
     protected int _displayHeight = DISPLAYHEIGHT_INVALID;
     protected int _displayType = DISPLAYTYPE_INVALID;
@@ -205,8 +220,14 @@ public class YDisplay : YFunction
         if (json_val.has("brightness")) {
             _brightness = json_val.getInt("brightness");
         }
+        if (json_val.has("autoInvertDelay")) {
+            _autoInvertDelay = json_val.getInt("autoInvertDelay");
+        }
         if (json_val.has("orientation")) {
             _orientation = json_val.getInt("orientation");
+        }
+        if (json_val.has("displayPanel")) {
+            _displayPanel = json_val.getString("displayPanel");
         }
         if (json_val.has("displayWidth")) {
             _displayWidth = json_val.getInt("displayWidth");
@@ -409,6 +430,72 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
+     *   Returns the interval between automatic display inversions, or 0 if automatic
+     *   inversion is disabled.
+     * <para>
+     *   Using the automatic inversion mechanism reduces the
+     *   burn-in that occurs on OLED screens over long periods when the same content
+     *   remains displayed on the screen.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   an integer corresponding to the interval between automatic display inversions, or 0 if automatic
+     *   inversion is disabled
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YDisplay.AUTOINVERTDELAY_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_autoInvertDelay()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return AUTOINVERTDELAY_INVALID;
+            }
+        }
+        res = _autoInvertDelay;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the interval between automatic display inversions.
+     * <para>
+     *   The parameter is the number of seconds, or 0 to disable automatic inversion.
+     *   Using the automatic inversion mechanism reduces the burn-in that occurs on OLED
+     *   screens over long periods when the same content remains displayed on the screen.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the
+     *   modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   an integer corresponding to the interval between automatic display inversions
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_autoInvertDelay(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval).ToString();
+        await _setAttr("autoInvertDelay",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
      *   Returns the currently selected display orientation.
      * <para>
      * </para>
@@ -465,6 +552,66 @@ public class YDisplay : YFunction
         string rest_val;
         rest_val = (newval).ToString();
         await _setAttr("orientation",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the exact model of the display panel.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string corresponding to the exact model of the display panel
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YDisplay.DISPLAYPANEL_INVALID</c>.
+     * </para>
+     */
+    public async Task<string> get_displayPanel()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return DISPLAYPANEL_INVALID;
+            }
+        }
+        res = _displayPanel;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the model of display to match the connected display panel.
+     * <para>
+     *   This function has no effect if the module does not support the selected
+     *   display panel.
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a string corresponding to the model of display to match the connected display panel
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_displayPanel(string  newval)
+    {
+        string rest_val;
+        rest_val = newval;
+        await _setAttr("displayPanel",rest_val);
         return YAPI.SUCCESS;
     }
 
@@ -533,8 +680,9 @@ public class YDisplay : YFunction
      * </para>
      * </summary>
      * <returns>
-     *   a value among <c>YDisplay.DISPLAYTYPE_MONO</c>, <c>YDisplay.DISPLAYTYPE_GRAY</c> and
-     *   <c>YDisplay.DISPLAYTYPE_RGB</c> corresponding to the display type: monochrome, gray levels or full color
+     *   a value among <c>YDisplay.DISPLAYTYPE_MONO</c>, <c>YDisplay.DISPLAYTYPE_GRAY</c>,
+     *   <c>YDisplay.DISPLAYTYPE_RGB</c> and <c>YDisplay.DISPLAYTYPE_EPAPER</c> corresponding to the display
+     *   type: monochrome, gray levels or full color
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YDisplay.DISPLAYTYPE_INVALID</c>.
@@ -854,6 +1002,74 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
+     *   Forces an ePaper screen to perform a regenerative update using the slow
+     *   update method.
+     * <para>
+     *   Periodic use of the slow method (total panel update with
+     *   multiple inversions) prevents ghosting effects and improves contrast.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> regenerateDisplay()
+    {
+        return await this.sendCommand("z");
+    }
+
+    /**
+     * <summary>
+     *   Disables screen refresh for a short period of time.
+     * <para>
+     *   The combination of
+     *   <c>postponeRefresh</c> and <c>triggerRefresh</c> can be used as an
+     *   alternative to double-buffering to avoid flickering during display updates.
+     * </para>
+     * </summary>
+     * <param name="duration">
+     *   duration of deactivation in milliseconds (max. 30 seconds)
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> postponeRefresh(int duration)
+    {
+        return await this.sendCommand("H"+Convert.ToString(duration));
+    }
+
+    /**
+     * <summary>
+     *   Trigger an immediate screen refresh.
+     * <para>
+     *   The combination of
+     *   <c>postponeRefresh</c> and <c>triggerRefresh</c> can be used as an
+     *   alternative to double-buffering to avoid flickering during display updates.
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> triggerRefresh()
+    {
+        return await this.sendCommand("H0");
+    }
+
+    /**
+     * <summary>
      *   Smoothly changes the brightness of the screen to produce a fade-in or fade-out
      *   effect.
      * <para>
@@ -1122,6 +1338,204 @@ public class YDisplay : YFunction
             }
         }
         return _allDisplayLayers[layerId];
+    }
+
+    /**
+     * <summary>
+     *   Returns a color image with the current content of the display.
+     * <para>
+     *   The image is returned as a binary object, where each byte represents a pixel,
+     *   from left to right and from top to bottom. The palette used to map byte
+     *   values to RGB colors is filled into the list provided as argument.
+     *   In all cases, the first palette entry (value 0) corresponds to the
+     *   screen default background color.
+     *   The image dimensions are given by the display width and height.
+     * </para>
+     * </summary>
+     * <param name="palette">
+     *   a list to be filled with the image palette
+     * </param>
+     * <returns>
+     *   a binary object if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns an empty binary object.
+     * </para>
+     */
+    public virtual async Task<byte[]> readDisplay(List<int> palette)
+    {
+        byte[] zipmap = new byte[0];
+        int zipsize;
+        int zipwidth;
+        int zipheight;
+        int ziprotate;
+        int zipcolors;
+        int zipcol;
+        int zipbits;
+        int zipmask;
+        int srcpos;
+        int endrun;
+        int srcpat;
+        int srcbit;
+        int srcval;
+        int srcx;
+        int srcy;
+        int srci;
+        int incx;
+        byte[] pixmap = new byte[0];
+        int pixcount;
+        int pixval;
+        int pixpos;
+        byte[] rotmap = new byte[0];
+        pixmap = new byte[0];
+        // Check if the display firmware has autoInvertDelay and pixels.bin support
+
+        if (await this.get_autoInvertDelay() < 0) {
+            // Old firmware, use uncompressed GIF output to rebuild pixmap
+            zipmap = await this._download("display.gif");
+            zipsize = (zipmap).Length;
+            if (zipsize == 0) {
+                return pixmap;
+            }
+            if (!(zipsize >= 32)) { this._throw(YAPI.IO_ERROR,"not a GIF image"); return pixmap; }
+            if (!((zipmap[0] == 71) && (zipmap[2] == 70))) { this._throw(YAPI.INVALID_ARGUMENT,"not a GIF image"); return pixmap; }
+            zipwidth = zipmap[6] + 256 * zipmap[7];
+            zipheight = zipmap[8] + 256 * zipmap[9];
+            palette.Clear();
+            zipcol = zipmap[13] * 65536 + zipmap[14] * 256 + zipmap[15];
+            palette.Add(zipcol);
+            zipcol = zipmap[16] * 65536 + zipmap[17] * 256 + zipmap[18];
+            palette.Add(zipcol);
+            pixcount = zipwidth * zipheight;
+            pixmap = new byte[pixcount];
+            pixpos = 0;
+            srcpos = 30;
+            zipsize = zipsize - 2;
+            while (srcpos < zipsize) {
+                // load next run size
+                endrun = srcpos + 1 + zipmap[srcpos];
+                srcpos = srcpos + 1;
+                while (srcpos < endrun) {
+                    srcval = zipmap[srcpos];
+                    srcpos = srcpos + 1;
+                    srcbit = 8;
+                    while (srcbit != 0) {
+                        if (srcbit < 3) {
+                            srcval = srcval + (zipmap[srcpos] << srcbit);
+                            srcpos = srcpos + 1;
+                        }
+                        pixval = (srcval & 7);
+                        srcval = (srcval >> 3);
+                        if (!((pixval > 1) && (pixval != 4))) { this._throw(YAPI.INVALID_ARGUMENT,"unexpected encoding"); return pixmap; }
+                        pixmap[pixpos] = (byte)(pixval & 0xff);
+                        pixpos = pixpos + 1;
+                        srcbit = srcbit - 3;
+                    }
+                }
+            }
+            return pixmap;
+        }
+        // New firmware, use compressed pixels.bin
+        zipmap = await this._download("pixels.bin");
+        zipsize = (zipmap).Length;
+        if (zipsize == 0) {
+            return pixmap;
+        }
+        if (!(zipsize >= 16)) { this._throw(YAPI.IO_ERROR,"not a pixmap"); return pixmap; }
+        if (!((zipmap[0] == 80) && (zipmap[2] == 88))) { this._throw(YAPI.INVALID_ARGUMENT,"not a pixmap"); return pixmap; }
+        zipwidth = zipmap[4] + 256 * zipmap[5];
+        zipheight = zipmap[6] + 256 * zipmap[7];
+        ziprotate = zipmap[8];
+        zipcolors = zipmap[9];
+        palette.Clear();
+        srcpos = 10;
+        srci = 0;
+        while (srci < zipcolors) {
+            zipcol = zipmap[srcpos] * 65536 + zipmap[srcpos+1] * 256 + zipmap[srcpos+2];
+            palette.Add(zipcol);
+            srcpos = srcpos + 3;
+            srci = srci + 1;
+        }
+        zipbits = 1;
+        while ((1 << zipbits) < zipcolors) {
+            zipbits = zipbits + 1;
+        }
+        zipmask = (1 << zipbits) - 1;
+        pixcount = zipwidth * zipheight;
+        pixmap = new byte[pixcount];
+        srcx = 0;
+        srcy = 0;
+        incx = (8 / zipbits);
+        srcval = 0;
+        while (srcpos < zipsize) {
+            // load next compression pattern byte
+            srcpat = zipmap[srcpos];
+            srcpos = srcpos + 1;
+            srcbit = 7;
+            while (srcbit >= 0) {
+                // get next bitmap byte
+                if ((srcpat & 128) != 0) {
+                    srcval = zipmap[srcpos];
+                    srcpos = srcpos + 1;
+                }
+                srcpat = (srcpat << 1);
+                pixpos = srcy * zipwidth + srcx;
+                // produce 8 pixels (or 4, if bitmap uses 2 bits per pixel)
+                srci = 8 - zipbits;
+                while (srci >= 0) {
+                    pixval = ((srcval >> srci) & zipmask);
+                    pixmap[pixpos] = (byte)(pixval & 0xff);
+                    pixpos = pixpos + 1;
+                    srci = srci - zipbits;
+                }
+                srcy = srcy + 1;
+                if (srcy >= zipheight) {
+                    srcy = 0;
+                    srcx = srcx + incx;
+                    // drop last bytes if image is not a multiple of 8
+                    if (srcx >= zipwidth) {
+                        srcbit = 0;
+                    }
+                }
+                srcbit = srcbit - 1;
+            }
+        }
+        // rotate pixmap to match display orientation
+        if (ziprotate == 0) {
+            return pixmap;
+        }
+        if ((ziprotate & 2) != 0) {
+            // rotate buffer 180 degrees by swapping pixels
+            srcpos = 0;
+            pixpos = pixcount - 1;
+            while (srcpos < pixpos) {
+                pixval = pixmap[srcpos];
+                pixmap[srcpos] = (byte)(pixmap[pixpos] & 0xff);
+                pixmap[pixpos] = (byte)(pixval & 0xff);
+                srcpos = srcpos + 1;
+                pixpos = pixpos - 1;
+            }
+        }
+        if ((ziprotate & 1) == 0) {
+            return pixmap;
+        }
+        // rotate 90 ccw: first pixel is bottom left
+        rotmap = new byte[pixcount];
+        srcx = 0;
+        srcy = zipwidth - 1;
+        srcpos = 0;
+        while (srcpos < pixcount) {
+            pixval = pixmap[srcpos];
+            pixpos = srcy * zipheight + srcx;
+            rotmap[pixpos] = (byte)(pixval & 0xff);
+            srcy = srcy - 1;
+            if (srcy < 0) {
+                srcx = srcx + 1;
+                srcy = zipwidth - 1;
+            }
+            srcpos = srcpos + 1;
+        }
+        return rotmap;
     }
 
     /**
