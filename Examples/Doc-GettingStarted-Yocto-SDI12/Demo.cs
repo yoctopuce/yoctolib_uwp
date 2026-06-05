@@ -1,10 +1,12 @@
 /*********************************************************************
  *
- *  $Id: Demo.cs 63137 2024-10-31 09:38:54Z tiago $
+ *  $Id: Demo.cs 72782 2026-04-17 08:45:12Z seb $
  *
- *  Doc-GettingStarted-Yocto-SDI12 example
+ *  An example that shows how to use a  Yocto-SDI12
  *
  *  You can find more information on our web site:
+ *   Yocto-SDI12 documentation:
+ *      https://www.yoctopuce.com/EN/products/yocto-sdi12/doc.html
  *   uwp API Reference:
  *      https://www.yoctopuce.com/EN/doc/reference/yoctolib-uwp-EN.html
  *

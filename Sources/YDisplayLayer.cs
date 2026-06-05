@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplayLayer.cs 71629 2026-01-29 15:08:26Z mvuilleu $
+ * $Id: YDisplayLayer.cs 74506 2026-06-01 15:57:01Z seb $
  *
  * Implements FindDisplayLayer(), the high-level API for DisplayLayer functions
  *
@@ -86,6 +86,8 @@ public class YDisplayLayer
         BASELINE_RIGHT = 14,
         BOTTOM_RIGHT = 15}
 
+    protected string _cmdbuff = "";
+    protected bool _hidden = false;
     protected int _polyPrevX = 0;
     protected int _polyPrevY = 0;
 
@@ -93,56 +95,6 @@ public class YDisplayLayer
 
         private YDisplay _display;
         private int _id;
-        private StringBuilder _cmdbuff;
-        private bool _hidden;
-
-
-        public virtual int imm_resetHiddenFlag()
-        {
-            _hidden = false;
-            return YAPI.SUCCESS;
-        }
-
-
-        // internal function to flush any pending command for this layer
-        internal async Task<int> flush_now()
-        {
-
-            int res = YAPI.SUCCESS;
-            if (_cmdbuff.Length > 0) {
-                res = await this._display.sendCommand(this._cmdbuff.ToString());
-                _cmdbuff.Clear();
-            }
-            return res;
-        }
-
-        // internal function to buffer a command for this layer
-        private async Task<int> command_push(String cmd)
-        {
-            int res = YAPI.SUCCESS;
-
-            if (_cmdbuff.Length + cmd.Length >= 100) {
-                // force flush before, to prevent overflow
-                res = await flush_now();
-            }
-            if (_cmdbuff.Length == 0) {
-                // always prepend layer ID first
-                _cmdbuff.Append(this._id);
-            }
-            _cmdbuff.Append(cmd);
-            return res;
-
-        }
-
-        // internal function to send a command for this layer
-        private async Task<int> command_flush(String cmd)
-        {
-            int res =await command_push(cmd);
-            if (_hidden) {
-                return res;
-            }
-            return await flush_now();
-        }
 
         internal YDisplayLayer(YDisplay parent, int id)
         {
@@ -150,14 +102,64 @@ public class YDisplayLayer
         //--- (end of generated code: YDisplayLayer attributes initialization)
             _display = parent;
             _id = id;
-            _cmdbuff = new StringBuilder(128);
-            _hidden = false;
         }
 
 
 
         //--- (generated code: YDisplayLayer implementation)
 #pragma warning disable 1998
+
+    public virtual bool must_be_flushed()
+    {
+        return (_cmdbuff).Length > 0;
+    }
+
+    public virtual int resetHiddenFlag()
+    {
+        _hidden = false;
+        return YAPI.SUCCESS;
+    }
+
+    public virtual async Task<int> flush_now()
+    {
+        int res;
+        res = YAPI.SUCCESS;
+        if ((_cmdbuff).Length > 0) {
+            res = await _display.sendCommand(_cmdbuff);
+            _cmdbuff = "";
+        }
+        return res;
+    }
+
+    public virtual async Task<int> command_push(string cmd)
+    {
+        int res;
+        res = YAPI.SUCCESS;
+        if ((_cmdbuff).Length + (cmd).Length >= 100) {
+            // force flush before, to prevent overflow
+            await this.flush_now();
+        }
+        if ((_cmdbuff).Length == 0) {
+            // always prepend layer ID first
+            _cmdbuff = (_id).ToString();
+        }
+        _cmdbuff = _cmdbuff + cmd;
+        return res;
+    }
+
+    public virtual async Task<int> command_flush(string cmd)
+    {
+        int res;
+
+        res = await this.command_push(cmd);
+        if (_hidden) {
+            return res;
+        }
+        if (_display.isFrozen()) {
+            return res;
+        }
+        return await this.flush_now();
+    }
 
     /**
      * <summary>
@@ -1112,12 +1114,6 @@ public class YDisplayLayer
     public virtual async Task<int> get_layerHeight()
     {
         return await _display.get_layerHeight();
-    }
-
-    public virtual async Task<int> resetHiddenFlag()
-    {
-        _hidden = false;
-        return YAPI.SUCCESS;
     }
 
 #pragma warning restore 1998

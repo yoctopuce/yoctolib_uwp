@@ -60,6 +60,29 @@ public class YOrientation : YSensor
 {
 //--- (end of YOrientation class start)
 //--- (YOrientation definitions)
+    /**
+     * <summary>
+     *   invalid counterClockwise value
+     * </summary>
+     */
+    public const int COUNTERCLOCKWISE_FALSE = 0;
+    public const int COUNTERCLOCKWISE_TRUE = 1;
+    public const int COUNTERCLOCKWISE_INVALID = -1;
+    /**
+     * <summary>
+     *   invalid command value
+     * </summary>
+     */
+    public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
+    /**
+     * <summary>
+     *   invalid zeroOffset value
+     * </summary>
+     */
+    public const  double ZEROOFFSET_INVALID = YAPI.INVALID_DOUBLE;
+    protected int _counterClockwise = COUNTERCLOCKWISE_INVALID;
+    protected string _command = COMMAND_INVALID;
+    protected double _zeroOffset = ZEROOFFSET_INVALID;
     protected ValueCallback _valueCallbackOrientation = null;
     protected TimedReportCallback _timedReportCallbackOrientation = null;
 
@@ -98,8 +121,163 @@ public class YOrientation : YSensor
 #pragma warning disable 1998
     internal override void imm_parseAttr(YJSONObject json_val)
     {
+        if (json_val.has("counterClockwise")) {
+            _counterClockwise = json_val.getInt("counterClockwise") > 0 ? 1 : 0;
+        }
+        if (json_val.has("command")) {
+            _command = json_val.getString("command");
+        }
+        if (json_val.has("zeroOffset")) {
+            _zeroOffset = Math.Round(json_val.getDouble("zeroOffset") / 65.536) / 1000.0;
+        }
         base.imm_parseAttr(json_val);
     }
+
+    /**
+     * <summary>
+     *   Returns a value indicating whether the sensor is operating in a counterclockwise direction.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YOrientation.COUNTERCLOCKWISE_FALSE</c> or <c>YOrientation.COUNTERCLOCKWISE_TRUE</c>,
+     *   according to a value indicating whether the sensor is operating in a counterclockwise direction
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YOrientation.COUNTERCLOCKWISE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_counterClockwise()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return COUNTERCLOCKWISE_INVALID;
+            }
+        }
+        res = _counterClockwise;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Defines the operating direction of the sensor.
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the
+     *   modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YOrientation.COUNTERCLOCKWISE_FALSE</c> or <c>YOrientation.COUNTERCLOCKWISE_TRUE</c>
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_counterClockwise(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval > 0 ? "1" : "0");
+        await _setAttr("counterClockwise",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<string> get_command()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return COMMAND_INVALID;
+            }
+        }
+        res = _command;
+        return res;
+    }
+
+
+    public async Task<int> set_command(string  newval)
+    {
+        string rest_val;
+        rest_val = newval;
+        await _setAttr("command",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Sets an offset between the orientation reported by the sensor and the actual orientation.
+     * <para>
+     *   This
+     *   can typically be used  to compensate for mechanical offset. This offset can also be set
+     *   automatically using the zero() method.
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   a floating point number
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_zeroOffset(double  newval)
+    {
+        string rest_val;
+        rest_val = Math.Round(newval * 65536.0).ToString();
+        await _setAttr("zeroOffset",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the Offset between the orientation reported by the sensor and the actual orientation.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating point number corresponding to the Offset between the orientation reported by the sensor
+     *   and the actual orientation
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YOrientation.ZEROOFFSET_INVALID</c>.
+     * </para>
+     */
+    public async Task<double> get_zeroOffset()
+    {
+        double res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return ZEROOFFSET_INVALID;
+            }
+        }
+        res = _zeroOffset;
+        return res;
+    }
+
 
     /**
      * <summary>
@@ -223,9 +401,11 @@ public class YOrientation : YSensor
      * <summary>
      *   Registers the callback function that is invoked on every change of advertised value.
      * <para>
-     *   The callback is invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
-     *   This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     *   one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     *   The callback is then invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
+     *   This provides control over the time when the callback is triggered. For good responsiveness,
+     *   remember to call one of these two functions periodically. The callback is called once juste after beeing
+     *   registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     *   To unregister a callback, pass a null pointer as argument.
      * </para>
      * <para>
      * </para>
@@ -305,6 +485,134 @@ public class YOrientation : YSensor
             await base._invokeTimedReportCallback(value);
         }
         return 0;
+    }
+
+    public virtual async Task<int> sendCommand(string command)
+    {
+        return await this.set_command(command);
+    }
+
+    /**
+     * <summary>
+     *   Reset the sensor's zero to current position by automatically setting a new offset.
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     *   On failure, throws an exception or returns a negative error code.
+     * </returns>
+     */
+    public virtual async Task<int> zero()
+    {
+        return await this.sendCommand("Z");
+    }
+
+    /**
+     * <summary>
+     *   Modifies the calibration of the MA600A sensor using an array of 32
+     *   values representing the offset in degrees between the true values and
+     *   those measured regularly every 11.25 degrees starting from zero.
+     * <para>
+     *   The calibration
+     *   is applied immediately and is stored permanently in the MA600A sensor.
+     *   Before calculating the offset values, remember to clear any previous
+     *   calibration using the <c>clearCalibration</c> function and set
+     *   the zero offset  to 0. After a calibration change, the sensor will stop
+     *   measurements for about one second.
+     *   Do not confuse this function with the generic <c>calibrateFromPoints</c> function,
+     *   which works at the YSensor level and is not necessarily well suited to
+     *   a sensor returning circular values.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="offsetValues">
+     *   array of 32 floating point values in the [-11.25..+11.25] range
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> set_calibration(List<double> offsetValues)
+    {
+        string res;
+        int npt;
+        int idx;
+        int corr;
+        npt = offsetValues.Count;
+        if (npt != 32) {
+            this._throw(YAPI.INVALID_ARGUMENT, "Invalid calibration parameters (32 expected)");
+            return YAPI.INVALID_ARGUMENT;
+        }
+        res = "C";
+        idx = 0;
+        while (idx < npt) {
+            corr = (int) Math.Round(offsetValues[idx] * 128 / 11.25);
+            if ((corr < -128) || (corr > 127)) {
+                this._throw(YAPI.INVALID_ARGUMENT, "Calibration parameter exceeds permitted range (+/-11.25)");
+                return YAPI.INVALID_ARGUMENT;
+            }
+            if (corr < 0) {
+                corr = corr + 256;
+            }
+            res = ""+res+""+String.Format("{0:x02}",corr);
+            idx = idx + 1;
+        }
+        return await this.sendCommand(res);
+    }
+
+    /**
+     * <summary>
+     *   Retrieves offset correction data points previously entered using the method
+     *   <c>set_calibration</c>.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="offsetValues">
+     *   array of 32 floating point numbers, that will be filled by the
+     *   function with the offset values for the correction points.
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> get_Calibration(List<double> offsetValues)
+    {
+        return 0;
+    }
+
+    /**
+     * <summary>
+     *   Cancels any calibration set with <c>set_calibration</c>.
+     * <para>
+     *   This function
+     *   is equivalent to calling <c>set_calibration</c> with only zeros.
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> clearCalibration()
+    {
+        return await this.sendCommand("-");
     }
 
     /**

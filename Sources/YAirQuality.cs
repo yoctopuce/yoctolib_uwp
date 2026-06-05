@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  Implements FindSoundLevel(), the high-level API for SoundLevel functions
+ *  Implements FindAirQuality(), the high-level API for AirQuality functions
  *
  *  - - - - - - - - - License information: - - - - - - - - -
  *
@@ -43,43 +43,52 @@ using System.Threading.Tasks;
 namespace com.yoctopuce.YoctoAPI
 {
 
-//--- (YSoundLevel return codes)
-//--- (end of YSoundLevel return codes)
-//--- (YSoundLevel class start)
+//--- (YAirQuality return codes)
+//--- (end of YAirQuality return codes)
+//--- (YAirQuality class start)
 /**
  * <summary>
- *   YSoundLevel Class: sound pressure level meter control interface
+ *   YAirQuality Class: air quality sensor control interface
  * <para>
- *   The <c>YSoundLevel</c> class allows you to read and configure Yoctopuce sound pressure level meters.
+ *   The <c>YAirQuality</c> class allows you to read and configure Yoctopuce air quality sensors.
  *   It inherits from <c>YSensor</c> class the core functions to read measurements,
  *   to register callback functions, and to access the autonomous datalogger.
  * </para>
  * </summary>
  */
-public class YSoundLevel : YSensor
+public class YAirQuality : YSensor
 {
-//--- (end of YSoundLevel class start)
-//--- (YSoundLevel definitions)
+//--- (end of YAirQuality class start)
+//--- (YAirQuality definitions)
     /**
      * <summary>
-     *   invalid label value
+     *   invalid ubaIndex value
      * </summary>
      */
-    public const  string LABEL_INVALID = YAPI.INVALID_STRING;
+    public const  double UBAINDEX_INVALID = YAPI.INVALID_DOUBLE;
     /**
      * <summary>
-     *   invalid integrationTime value
+     *   invalid relativeIndex value
      * </summary>
      */
-    public const  int INTEGRATIONTIME_INVALID = YAPI.INVALID_UINT;
-    protected string _label = LABEL_INVALID;
-    protected int _integrationTime = INTEGRATIONTIME_INVALID;
-    protected ValueCallback _valueCallbackSoundLevel = null;
-    protected TimedReportCallback _timedReportCallbackSoundLevel = null;
+    public const  double RELATIVEINDEX_INVALID = YAPI.INVALID_DOUBLE;
+    /**
+     * <summary>
+     *   invalid aqiMode value
+     * </summary>
+     */
+    public const int AQIMODE_RELATIVE = 0;
+    public const int AQIMODE_UBA = 1;
+    public const int AQIMODE_INVALID = -1;
+    protected double _ubaIndex = UBAINDEX_INVALID;
+    protected double _relativeIndex = RELATIVEINDEX_INVALID;
+    protected int _aqiMode = AQIMODE_INVALID;
+    protected ValueCallback _valueCallbackAirQuality = null;
+    protected TimedReportCallback _timedReportCallbackAirQuality = null;
 
-    public new delegate Task ValueCallback(YSoundLevel func, string value);
-    public new delegate Task TimedReportCallback(YSoundLevel func, YMeasure measure);
-    //--- (end of YSoundLevel definitions)
+    public new delegate Task ValueCallback(YAirQuality func, string value);
+    public new delegate Task TimedReportCallback(YAirQuality func, YMeasure measure);
+    //--- (end of YAirQuality definitions)
 
 
     /**
@@ -89,11 +98,11 @@ public class YSoundLevel : YSensor
      *   functionid
      * </param>
      */
-    protected YSoundLevel(YAPIContext ctx, string func)
-        : base(ctx, func, "SoundLevel")
+    protected YAirQuality(YAPIContext ctx, string func)
+        : base(ctx, func, "AirQuality")
     {
-        //--- (YSoundLevel attributes initialization)
-        //--- (end of YSoundLevel attributes initialization)
+        //--- (YAirQuality attributes initialization)
+        //--- (end of YAirQuality attributes initialization)
     }
 
     /**
@@ -103,37 +112,126 @@ public class YSoundLevel : YSensor
      *   functionid
      * </param>
      */
-    protected YSoundLevel(string func)
+    protected YAirQuality(string func)
         : this(YAPI.imm_GetYCtx(), func)
     {
     }
 
-    //--- (YSoundLevel implementation)
+    //--- (YAirQuality implementation)
 #pragma warning disable 1998
     internal override void imm_parseAttr(YJSONObject json_val)
     {
-        if (json_val.has("label")) {
-            _label = json_val.getString("label");
+        if (json_val.has("ubaIndex")) {
+            _ubaIndex = Math.Round(json_val.getDouble("ubaIndex") / 65.536) / 1000.0;
         }
-        if (json_val.has("integrationTime")) {
-            _integrationTime = json_val.getInt("integrationTime");
+        if (json_val.has("relativeIndex")) {
+            _relativeIndex = Math.Round(json_val.getDouble("relativeIndex") / 65.536) / 1000.0;
+        }
+        if (json_val.has("aqiMode")) {
+            _aqiMode = json_val.getInt("aqiMode");
         }
         base.imm_parseAttr(json_val);
     }
 
     /**
      * <summary>
-     *   Changes the measuring unit for the sound pressure level (dBA, dBC or dBZ).
+     *   Returns the current air quality index, according to UBA (from 1 to 5).
      * <para>
-     *   That unit will directly determine frequency weighting to be used to compute
-     *   the measured value. Remember to call the <c>saveToFlash()</c> method of the
-     *   module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating point number corresponding to the current air quality index, according to UBA (from 1 to 5)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YAirQuality.UBAINDEX_INVALID</c>.
+     * </para>
+     */
+    public async Task<double> get_ubaIndex()
+    {
+        double res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return UBAINDEX_INVALID;
+            }
+        }
+        res = _ubaIndex;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the relative air quality index, according to ScioSense (from 0 to 500).
+     * <para>
+     *   A value below 100 indicates better-than-average air quality compared to the past 24 hours,
+     *   while a value above 100 indicates poorer-than-average air quality compared to the past 24 hours.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating point number corresponding to the relative air quality index, according to ScioSense (from 0 to 500)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YAirQuality.RELATIVEINDEX_INVALID</c>.
+     * </para>
+     */
+    public async Task<double> get_relativeIndex()
+    {
+        double res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return RELATIVEINDEX_INVALID;
+            }
+        }
+        res = _relativeIndex;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the type of index reported by the get_currentValue function and callbacks (UBA index or relative index).
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YAirQuality.AQIMODE_RELATIVE</c> or <c>YAirQuality.AQIMODE_UBA</c>, according to the type
+     *   of index reported by the get_currentValue function and callbacks (UBA index or relative index)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YAirQuality.AQIMODE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_aqiMode()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return AQIMODE_INVALID;
+            }
+        }
+        res = _aqiMode;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the the type of index reported by the get_currentValue function and callbacks (UBA index or relative index).
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
      * </summary>
      * <param name="newval">
-     *   a string corresponding to the measuring unit for the sound pressure level (dBA, dBC or dBZ)
+     *   either <c>YAirQuality.AQIMODE_RELATIVE</c> or <c>YAirQuality.AQIMODE_UBA</c>, according to the the
+     *   type of index reported by the get_currentValue function and callbacks (UBA index or relative index)
      * </param>
      * <para>
      * </para>
@@ -144,75 +242,17 @@ public class YSoundLevel : YSensor
      *   On failure, throws an exception or returns a negative error code.
      * </para>
      */
-    public async Task<int> set_unit(string  newval)
+    public async Task<int> set_aqiMode(int  newval)
     {
         string rest_val;
-        rest_val = newval;
-        await _setAttr("unit",rest_val);
+        rest_val = (newval).ToString();
+        await _setAttr("aqiMode",rest_val);
         return YAPI.SUCCESS;
     }
 
     /**
      * <summary>
-     *   Returns the label for the sound pressure level measurement, as per
-     *   IEC standard 61672-1:2013.
-     * <para>
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <returns>
-     *   a string corresponding to the label for the sound pressure level measurement, as per
-     *   IEC standard 61672-1:2013
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns <c>YSoundLevel.LABEL_INVALID</c>.
-     * </para>
-     */
-    public async Task<string> get_label()
-    {
-        string res;
-        if (_cacheExpiration == 0) {
-            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return LABEL_INVALID;
-            }
-        }
-        res = _label;
-        return res;
-    }
-
-
-    /**
-     * <summary>
-     *   Returns the integration time in milliseconds for measuring the sound pressure level.
-     * <para>
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <returns>
-     *   an integer corresponding to the integration time in milliseconds for measuring the sound pressure level
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns <c>YSoundLevel.INTEGRATIONTIME_INVALID</c>.
-     * </para>
-     */
-    public async Task<int> get_integrationTime()
-    {
-        int res;
-        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
-            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
-                return INTEGRATIONTIME_INVALID;
-            }
-        }
-        res = _integrationTime;
-        return res;
-    }
-
-
-    /**
-     * <summary>
-     *   Retrieves a sound pressure level meter for a given identifier.
+     *   Retrieves a air quality sensor for a given identifier.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -236,11 +276,11 @@ public class YSoundLevel : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the sound pressure level meter is online at the time
+     *   This function does not require that the air quality sensor is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YSoundLevel.isOnline()</c> to test if the sound pressure level meter is
+     *   Use the method <c>YAirQuality.isOnline()</c> to test if the air quality sensor is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a sound pressure level meter by logical name, no error is notified: the first instance
+     *   a air quality sensor by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -253,27 +293,27 @@ public class YSoundLevel : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the sound pressure level meter, for instance
-     *   <c>MyDevice.soundLevel1</c>.
+     *   a string that uniquely characterizes the air quality sensor, for instance
+     *   <c>MyDevice.airQuality</c>.
      * </param>
      * <returns>
-     *   a <c>YSoundLevel</c> object allowing you to drive the sound pressure level meter.
+     *   a <c>YAirQuality</c> object allowing you to drive the air quality sensor.
      * </returns>
      */
-    public static YSoundLevel FindSoundLevel(string func)
+    public static YAirQuality FindAirQuality(string func)
     {
-        YSoundLevel obj;
-        obj = (YSoundLevel) YFunction._FindFromCache("SoundLevel", func);
+        YAirQuality obj;
+        obj = (YAirQuality) YFunction._FindFromCache("AirQuality", func);
         if (obj == null) {
-            obj = new YSoundLevel(func);
-            YFunction._AddToCache("SoundLevel", func, obj);
+            obj = new YAirQuality(func);
+            YFunction._AddToCache("AirQuality", func, obj);
         }
         return obj;
     }
 
     /**
      * <summary>
-     *   Retrieves a sound pressure level meter for a given identifier in a YAPI context.
+     *   Retrieves a air quality sensor for a given identifier in a YAPI context.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -297,11 +337,11 @@ public class YSoundLevel : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the sound pressure level meter is online at the time
+     *   This function does not require that the air quality sensor is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YSoundLevel.isOnline()</c> to test if the sound pressure level meter is
+     *   Use the method <c>YAirQuality.isOnline()</c> to test if the air quality sensor is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a sound pressure level meter by logical name, no error is notified: the first instance
+     *   a air quality sensor by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -310,20 +350,20 @@ public class YSoundLevel : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the sound pressure level meter, for instance
-     *   <c>MyDevice.soundLevel1</c>.
+     *   a string that uniquely characterizes the air quality sensor, for instance
+     *   <c>MyDevice.airQuality</c>.
      * </param>
      * <returns>
-     *   a <c>YSoundLevel</c> object allowing you to drive the sound pressure level meter.
+     *   a <c>YAirQuality</c> object allowing you to drive the air quality sensor.
      * </returns>
      */
-    public static YSoundLevel FindSoundLevelInContext(YAPIContext yctx,string func)
+    public static YAirQuality FindAirQualityInContext(YAPIContext yctx,string func)
     {
-        YSoundLevel obj;
-        obj = (YSoundLevel) YFunction._FindFromCacheInContext(yctx, "SoundLevel", func);
+        YAirQuality obj;
+        obj = (YAirQuality) YFunction._FindFromCacheInContext(yctx, "AirQuality", func);
         if (obj == null) {
-            obj = new YSoundLevel(yctx, func);
-            YFunction._AddToCache("SoundLevel", func, obj);
+            obj = new YAirQuality(yctx, func);
+            YFunction._AddToCache("AirQuality", func, obj);
         }
         return obj;
     }
@@ -356,7 +396,7 @@ public class YSoundLevel : YSensor
         } else {
             await YFunction._UpdateValueCallbackList(this, false);
         }
-        _valueCallbackSoundLevel = callback;
+        _valueCallbackAirQuality = callback;
         // Immediately invoke value callback with current value
         if (callback != null && await this.isOnline()) {
             val = _advertisedValue;
@@ -369,8 +409,8 @@ public class YSoundLevel : YSensor
 
     public override async Task<int> _invokeValueCallback(string value)
     {
-        if (_valueCallbackSoundLevel != null) {
-            await _valueCallbackSoundLevel(this, value);
+        if (_valueCallbackAirQuality != null) {
+            await _valueCallbackAirQuality(this, value);
         } else {
             await base._invokeValueCallback(value);
         }
@@ -404,14 +444,14 @@ public class YSoundLevel : YSensor
         } else {
             await YFunction._UpdateTimedReportCallbackList(sensor, false);
         }
-        _timedReportCallbackSoundLevel = callback;
+        _timedReportCallbackAirQuality = callback;
         return 0;
     }
 
     public override async Task<int> _invokeTimedReportCallback(YMeasure value)
     {
-        if (_timedReportCallbackSoundLevel != null) {
-            await _timedReportCallbackSoundLevel(this, value);
+        if (_timedReportCallbackAirQuality != null) {
+            await _timedReportCallbackAirQuality(this, value);
         } else {
             await base._invokeTimedReportCallback(value);
         }
@@ -420,20 +460,20 @@ public class YSoundLevel : YSensor
 
     /**
      * <summary>
-     *   Continues the enumeration of sound pressure level meters started using <c>yFirstSoundLevel()</c>.
+     *   Continues the enumeration of air quality sensors started using <c>yFirstAirQuality()</c>.
      * <para>
-     *   Caution: You can't make any assumption about the returned sound pressure level meters order.
-     *   If you want to find a specific a sound pressure level meter, use <c>SoundLevel.findSoundLevel()</c>
+     *   Caution: You can't make any assumption about the returned air quality sensors order.
+     *   If you want to find a specific a air quality sensor, use <c>AirQuality.findAirQuality()</c>
      *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>
-     *   a pointer to a <c>YSoundLevel</c> object, corresponding to
-     *   a sound pressure level meter currently online, or a <c>null</c> pointer
-     *   if there are no more sound pressure level meters to enumerate.
+     *   a pointer to a <c>YAirQuality</c> object, corresponding to
+     *   a air quality sensor currently online, or a <c>null</c> pointer
+     *   if there are no more air quality sensors to enumerate.
      * </returns>
      */
-    public YSoundLevel nextSoundLevel()
+    public YAirQuality nextAirQuality()
     {
         string next_hwid;
         try {
@@ -443,57 +483,57 @@ public class YSoundLevel : YSensor
             next_hwid = null;
         }
         if(next_hwid == null) return null;
-        return FindSoundLevelInContext(_yapi, next_hwid);
+        return FindAirQualityInContext(_yapi, next_hwid);
     }
 
     /**
      * <summary>
-     *   Starts the enumeration of sound pressure level meters currently accessible.
+     *   Starts the enumeration of air quality sensors currently accessible.
      * <para>
-     *   Use the method <c>YSoundLevel.nextSoundLevel()</c> to iterate on
-     *   next sound pressure level meters.
+     *   Use the method <c>YAirQuality.nextAirQuality()</c> to iterate on
+     *   next air quality sensors.
      * </para>
      * </summary>
      * <returns>
-     *   a pointer to a <c>YSoundLevel</c> object, corresponding to
-     *   the first sound pressure level meter currently online, or a <c>null</c> pointer
+     *   a pointer to a <c>YAirQuality</c> object, corresponding to
+     *   the first air quality sensor currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
-    public static YSoundLevel FirstSoundLevel()
+    public static YAirQuality FirstAirQuality()
     {
         YAPIContext yctx = YAPI.imm_GetYCtx();
-        string next_hwid = yctx._yHash.imm_getFirstHardwareId("SoundLevel");
+        string next_hwid = yctx._yHash.imm_getFirstHardwareId("AirQuality");
         if (next_hwid == null)  return null;
-        return FindSoundLevelInContext(yctx, next_hwid);
+        return FindAirQualityInContext(yctx, next_hwid);
     }
 
     /**
      * <summary>
-     *   Starts the enumeration of sound pressure level meters currently accessible.
+     *   Starts the enumeration of air quality sensors currently accessible.
      * <para>
-     *   Use the method <c>YSoundLevel.nextSoundLevel()</c> to iterate on
-     *   next sound pressure level meters.
+     *   Use the method <c>YAirQuality.nextAirQuality()</c> to iterate on
+     *   next air quality sensors.
      * </para>
      * </summary>
      * <param name="yctx">
      *   a YAPI context.
      * </param>
      * <returns>
-     *   a pointer to a <c>YSoundLevel</c> object, corresponding to
-     *   the first sound pressure level meter currently online, or a <c>null</c> pointer
+     *   a pointer to a <c>YAirQuality</c> object, corresponding to
+     *   the first air quality sensor currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
-    public static YSoundLevel FirstSoundLevelInContext(YAPIContext yctx)
+    public static YAirQuality FirstAirQualityInContext(YAPIContext yctx)
     {
-        string next_hwid = yctx._yHash.imm_getFirstHardwareId("SoundLevel");
+        string next_hwid = yctx._yHash.imm_getFirstHardwareId("AirQuality");
         if (next_hwid == null)  return null;
-        return FindSoundLevelInContext(yctx, next_hwid);
+        return FindAirQualityInContext(yctx, next_hwid);
     }
 
 #pragma warning restore 1998
-    //--- (end of YSoundLevel implementation)
+    //--- (end of YAirQuality implementation)
 }
 }
 

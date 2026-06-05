@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 71578 2026-01-28 15:59:12Z mvuilleu $
+ * $Id: YDisplay.cs 73876 2026-05-27 20:45:51Z mvuilleu $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -132,9 +132,9 @@ public class YDisplay : YFunction
      * </summary>
      */
     public const int DISPLAYTYPE_MONO = 0;
-    public const int DISPLAYTYPE_GRAY = 1;
-    public const int DISPLAYTYPE_RGB = 2;
-    public const int DISPLAYTYPE_EPAPER = 3;
+    public const int DISPLAYTYPE_EPAPER_BW = 1;
+    public const int DISPLAYTYPE_EPAPER_BWR = 2;
+    public const int DISPLAYTYPE_EPAPER_BWRY = 3;
     public const int DISPLAYTYPE_INVALID = -1;
     /**
      * <summary>
@@ -160,6 +160,13 @@ public class YDisplay : YFunction
      * </summary>
      */
     public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
+    public enum DISPLAYSTATE {
+        FAILURE = 0,
+        OFF = 1,
+        POWERING = 2,
+        IDLE = 3,
+        REFRESHING = 4}
+
     protected int _enabled = ENABLED_INVALID;
     protected string _startupSeq = STARTUPSEQ_INVALID;
     protected int _brightness = BRIGHTNESS_INVALID;
@@ -175,6 +182,9 @@ public class YDisplay : YFunction
     protected string _command = COMMAND_INVALID;
     protected ValueCallback _valueCallbackDisplay = null;
     protected List<YDisplayLayer> _allDisplayLayers = new List<YDisplayLayer>();
+    protected ulong _frozenUntil = 0;
+    protected bool _recording;
+    protected string _sequence;
 
     public new delegate Task ValueCallback(YDisplay func, string value);
     public new delegate Task TimedReportCallback(YDisplay func, YMeasure measure);
@@ -673,16 +683,16 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
-     *   Returns the display type: monochrome, gray levels or full color.
+     *   Returns the display type: monochrome OLED, black and white ePaper, color ePaper, etc.
      * <para>
      * </para>
      * <para>
      * </para>
      * </summary>
      * <returns>
-     *   a value among <c>YDisplay.DISPLAYTYPE_MONO</c>, <c>YDisplay.DISPLAYTYPE_GRAY</c>,
-     *   <c>YDisplay.DISPLAYTYPE_RGB</c> and <c>YDisplay.DISPLAYTYPE_EPAPER</c> corresponding to the display
-     *   type: monochrome, gray levels or full color
+     *   a value among <c>YDisplay.DISPLAYTYPE_MONO</c>, <c>YDisplay.DISPLAYTYPE_EPAPER_BW</c>,
+     *   <c>YDisplay.DISPLAYTYPE_EPAPER_BWR</c> and <c>YDisplay.DISPLAYTYPE_EPAPER_BWRY</c> corresponding to
+     *   the display type: monochrome OLED, black and white ePaper, color ePaper, etc
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YDisplay.DISPLAYTYPE_INVALID</c>.
@@ -933,9 +943,11 @@ public class YDisplay : YFunction
      * <summary>
      *   Registers the callback function that is invoked on every change of advertised value.
      * <para>
-     *   The callback is invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
-     *   This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     *   one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     *   The callback is then invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
+     *   This provides control over the time when the callback is triggered. For good responsiveness,
+     *   remember to call one of these two functions periodically. The callback is called once juste after beeing
+     *   registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     *   To unregister a callback, pass a null pointer as argument.
      * </para>
      * <para>
      * </para>
@@ -976,6 +988,45 @@ public class YDisplay : YFunction
         return 0;
     }
 
+    public virtual async Task<int> sendCommand(string cmd)
+    {
+        if (!(_recording)) {
+            return await this.set_command(cmd);
+        }
+        _sequence = ""+_sequence+""+cmd+"\n";
+        return YAPI.SUCCESS;
+    }
+
+    public virtual async Task<int> flushLayers()
+    {
+        for (int ii_0 = 0; ii_0 < _allDisplayLayers.Count; ii_0++) {
+            if (_allDisplayLayers[ii_0].must_be_flushed()) {
+                await _allDisplayLayers[ii_0].flush_now();
+            }
+        }
+        return YAPI.SUCCESS;
+    }
+
+    public virtual int resetHiddenLayerFlags()
+    {
+        for (int ii_0 = 0; ii_0 < _allDisplayLayers.Count; ii_0++) {
+            _allDisplayLayers[ii_0].resetHiddenFlag();
+        }
+        return YAPI.SUCCESS;
+    }
+
+    public virtual bool isFrozen()
+    {
+        if (_frozenUntil == 0) {
+            return false;
+        }
+        if (_frozenUntil <= YAPIContext.GetTickCount()) {
+            _frozenUntil = 0;
+            return false;
+        }
+        return true;
+    }
+
     /**
      * <summary>
      *   Clears the display screen and resets all display layers to their default state.
@@ -996,7 +1047,7 @@ public class YDisplay : YFunction
     public virtual async Task<int> resetAll()
     {
         await this.flushLayers();
-        this.imm_resetHiddenLayerFlags();
+        this.resetHiddenLayerFlags();
         return await this.sendCommand("Z");
     }
 
@@ -1025,6 +1076,65 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
+     *   Returns the current state of an ePaper display, specifically to
+     *   determine whether an update is in progress or whether a
+     *   configuration issue has been detected.
+     * <para>
+     *   If a display configuration
+     *   error has been detected, the error message can be retrieved.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="errmsg">
+     *   a string passed by reference to receive the error message.
+     * </param>
+     * <returns>
+     *   a value among the enumeration <c>YDisplay.DISPLAYSTATE</c>
+     *   (<c>YDisplay.DISPLAYSTATE.FAILURE</c>, <c>YDisplay.DISPLAYSTATE.OFF</c>,
+     *   <c>YDisplay.DISPLAYSTATE.POWERING</c>, <c>YDisplay.DISPLAYSTATE.IDLE</c>,
+     *   <c>YDisplay.DISPLAYSTATE.REFRESHING</c>)
+     *   corresponding to the current display state.
+     * </returns>
+     */
+    public virtual async Task<DISPLAYSTATE> get_ePaperState(string errmsg)
+    {
+        byte[] json = new byte[0];
+        string jsonStr;
+        string dispError;
+        int dispState;
+
+        if (await this.get_displayType() == DISPLAYTYPE_MONO) {
+            errmsg = "Not an ePaper display";
+            return (DISPLAYSTATE) 0;
+        }
+        json = await this._download("disp.json");
+        if ((json).Length == 0) {
+            errmsg = this.get_errorMessage();
+            return (DISPLAYSTATE) 0;
+        } else {
+            jsonStr = YAPI.DefaultEncoding.GetString(json);
+            dispError = this.imm_decode_json_string(this.imm_get_json_path(jsonStr, "err"));
+            errmsg = dispError;
+            if ((dispError).Length > 0) {
+                return (DISPLAYSTATE) 0;
+            }
+            dispState = YAPIContext.imm_atoi(this.imm_json_get_key(json, "state"));
+            if (dispState > 10) {
+                return (DISPLAYSTATE) 4;
+            }
+            if (dispState == 10) {
+                return (DISPLAYSTATE) 3;
+            }
+            if (dispState > 0) {
+                return (DISPLAYSTATE) 2;
+            }
+        }
+        return (DISPLAYSTATE) 1;
+    }
+
+    /**
+     * <summary>
      *   Disables screen refresh for a short period of time.
      * <para>
      *   The combination of
@@ -1044,6 +1154,7 @@ public class YDisplay : YFunction
      */
     public virtual async Task<int> postponeRefresh(int duration)
     {
+        _frozenUntil = YAPIContext.GetTickCount() + (ulong)(duration);
         return await this.sendCommand("H"+Convert.ToString(duration));
     }
 
@@ -1065,6 +1176,8 @@ public class YDisplay : YFunction
      */
     public virtual async Task<int> triggerRefresh()
     {
+        _frozenUntil = 0;
+        await this.flushLayers();
         return await this.sendCommand("H0");
     }
 
@@ -1241,6 +1354,7 @@ public class YDisplay : YFunction
      */
     public virtual async Task<int> upload(string pathname,byte[] content)
     {
+        await this.flushLayers();
         return await this._upload(pathname, content);
     }
 
@@ -1381,7 +1495,6 @@ public class YDisplay : YFunction
         int srcx;
         int srcy;
         int srci;
-        int incx;
         byte[] pixmap = new byte[0];
         int pixcount;
         int pixval;
@@ -1465,7 +1578,6 @@ public class YDisplay : YFunction
         pixmap = new byte[pixcount];
         srcx = 0;
         srcy = 0;
-        incx = (8 / zipbits);
         srcval = 0;
         while (srcpos < zipsize) {
             // load next compression pattern byte
@@ -1477,11 +1589,15 @@ public class YDisplay : YFunction
                 if ((srcpat & 128) != 0) {
                     srcval = zipmap[srcpos];
                     srcpos = srcpos + 1;
+                    if (zipbits > 1) {
+                        srcval = (srcval << 8) + zipmap[srcpos];
+                        srcpos = srcpos + 1;
+                    }
                 }
                 srcpat = (srcpat << 1);
                 pixpos = srcy * zipwidth + srcx;
-                // produce 8 pixels (or 4, if bitmap uses 2 bits per pixel)
-                srci = 8 - zipbits;
+                // produce 8 pixels
+                srci = 7 * zipbits;
                 while (srci >= 0) {
                     pixval = ((srcval >> srci) & zipmask);
                     pixmap[pixpos] = (byte)(pixval & 0xff);
@@ -1491,7 +1607,7 @@ public class YDisplay : YFunction
                 srcy = srcy + 1;
                 if (srcy >= zipheight) {
                     srcy = 0;
-                    srcx = srcx + incx;
+                    srcx = srcx + 8;
                     // drop last bytes if image is not a multiple of 8
                     if (srcx >= zipwidth) {
                         srcbit = 0;
@@ -1614,48 +1730,6 @@ public class YDisplay : YFunction
 
 #pragma warning restore 1998
     //--- (end of generated code: YDisplay implementation)
-        private bool _recording = false;
-        private string _sequence;
-
-        public virtual async Task<int> flushLayers()
-        {
-            if (_allDisplayLayers.Count > 0) {
-                for (int i = 0; i < _allDisplayLayers.Count; i++) {
-                    await _allDisplayLayers[i].flush_now();
-                }
-            }
-            return YAPI.SUCCESS;
-
-        }
-
-        public virtual async Task resetHiddenLayerFlags()
-        {
-            if (_allDisplayLayers.Count > 0) {
-                for (int i = 0; i < _allDisplayLayers.Count; i++) {
-                    await _allDisplayLayers[i].resetHiddenFlag();
-                }
-            }
-        }
-
-        internal virtual void imm_resetHiddenLayerFlags()
-        {
-            if (_allDisplayLayers.Count > 0) {
-                for (int i = 0; i < _allDisplayLayers.Count; i++) {
-                    _allDisplayLayers[i].imm_resetHiddenFlag();
-                }
-            }
-        }
-
-
-        public virtual async Task<int> sendCommand(string cmd)
-        {
-            if (!_recording) {
-                return await this.set_command(cmd);
-            }
-            this._sequence += cmd + "\n";
-            return YAPI.SUCCESS;
-
-        }
     }
 
 

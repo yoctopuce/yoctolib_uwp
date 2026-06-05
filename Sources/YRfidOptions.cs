@@ -67,6 +67,13 @@ public class YRfidOptions
     public const int NO_RFID_KEY = 0;
     public const int MIFARE_KEY_A = 1;
     public const int MIFARE_KEY_B = 2;
+    public const int ST25DV_CONFIG_PWD = 3;
+    public const int ST25DV_PWD1 = 4;
+    public const int ST25DV_PWD2 = 5;
+    public const int ST25DV_PWD3 = 6;
+    public const int ST25TV_CONFIG_PWD = 7;
+    public const int ST25TV_PWD1 = 8;
+    public const int ST25TV_PWD2 = 9;
 
     /**
      * <summary>

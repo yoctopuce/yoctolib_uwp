@@ -99,6 +99,12 @@
     <Compile Include="..\..\Sources\YCurrent.cs">
       <Link>yoctolib\YCurrent.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YInputCaptureData.cs">
+      <Link>yoctolib\YInputCaptureData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YInputCapture.cs">
+      <Link>yoctolib\YInputCapture.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YPower.cs">
       <Link>yoctolib\YPower.cs</Link>
     </Compile>

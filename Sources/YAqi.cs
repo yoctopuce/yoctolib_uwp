@@ -2,7 +2,7 @@
  *
  *  $Id: svn_id $
  *
- *  Implements FindPressure(), the high-level API for Pressure functions
+ *  Implements FindAqi(), the high-level API for Aqi functions
  *
  *  - - - - - - - - - License information: - - - - - - - - -
  *
@@ -43,30 +43,52 @@ using System.Threading.Tasks;
 namespace com.yoctopuce.YoctoAPI
 {
 
-//--- (YPressure return codes)
-//--- (end of YPressure return codes)
-//--- (YPressure class start)
+//--- (YAqi return codes)
+//--- (end of YAqi return codes)
+//--- (YAqi class start)
 /**
  * <summary>
- *   YPressure Class: pressure sensor control interface, available for instance in the
- *   Yocto-Altimeter-V2, the Yocto-CO2-V2, the Yocto-Meteo-V2 or the Yocto-Pressure
+ *   YAqi Class: air quality sensor control interface
  * <para>
- *   The <c>YPressure</c> class allows you to read and configure Yoctopuce pressure sensors.
+ *   The <c>YAqi</c> class allows you to read and configure Yoctopuce air quality sensors.
  *   It inherits from <c>YSensor</c> class the core functions to read measurements,
  *   to register callback functions, and to access the autonomous datalogger.
  * </para>
  * </summary>
  */
-public class YPressure : YSensor
+public class YAqi : YSensor
 {
-//--- (end of YPressure class start)
-//--- (YPressure definitions)
-    protected ValueCallback _valueCallbackPressure = null;
-    protected TimedReportCallback _timedReportCallbackPressure = null;
+//--- (end of YAqi class start)
+//--- (YAqi definitions)
+    /**
+     * <summary>
+     *   invalid ubaIndex value
+     * </summary>
+     */
+    public const  double UBAINDEX_INVALID = YAPI.INVALID_DOUBLE;
+    /**
+     * <summary>
+     *   invalid relativeIndex value
+     * </summary>
+     */
+    public const  double RELATIVEINDEX_INVALID = YAPI.INVALID_DOUBLE;
+    /**
+     * <summary>
+     *   invalid aqiMode value
+     * </summary>
+     */
+    public const int AQIMODE_RELATIVE = 0;
+    public const int AQIMODE_UBA = 1;
+    public const int AQIMODE_INVALID = -1;
+    protected double _ubaIndex = UBAINDEX_INVALID;
+    protected double _relativeIndex = RELATIVEINDEX_INVALID;
+    protected int _aqiMode = AQIMODE_INVALID;
+    protected ValueCallback _valueCallbackAqi = null;
+    protected TimedReportCallback _timedReportCallbackAqi = null;
 
-    public new delegate Task ValueCallback(YPressure func, string value);
-    public new delegate Task TimedReportCallback(YPressure func, YMeasure measure);
-    //--- (end of YPressure definitions)
+    public new delegate Task ValueCallback(YAqi func, string value);
+    public new delegate Task TimedReportCallback(YAqi func, YMeasure measure);
+    //--- (end of YAqi definitions)
 
 
     /**
@@ -76,11 +98,11 @@ public class YPressure : YSensor
      *   functionid
      * </param>
      */
-    protected YPressure(YAPIContext ctx, string func)
-        : base(ctx, func, "Pressure")
+    protected YAqi(YAPIContext ctx, string func)
+        : base(ctx, func, "Aqi")
     {
-        //--- (YPressure attributes initialization)
-        //--- (end of YPressure attributes initialization)
+        //--- (YAqi attributes initialization)
+        //--- (end of YAqi attributes initialization)
     }
 
     /**
@@ -90,21 +112,147 @@ public class YPressure : YSensor
      *   functionid
      * </param>
      */
-    protected YPressure(string func)
+    protected YAqi(string func)
         : this(YAPI.imm_GetYCtx(), func)
     {
     }
 
-    //--- (YPressure implementation)
+    //--- (YAqi implementation)
 #pragma warning disable 1998
     internal override void imm_parseAttr(YJSONObject json_val)
     {
+        if (json_val.has("ubaIndex")) {
+            _ubaIndex = Math.Round(json_val.getDouble("ubaIndex") / 65.536) / 1000.0;
+        }
+        if (json_val.has("relativeIndex")) {
+            _relativeIndex = Math.Round(json_val.getDouble("relativeIndex") / 65.536) / 1000.0;
+        }
+        if (json_val.has("aqiMode")) {
+            _aqiMode = json_val.getInt("aqiMode");
+        }
         base.imm_parseAttr(json_val);
     }
 
     /**
      * <summary>
-     *   Retrieves a pressure sensor for a given identifier.
+     *   Returns the current air quality index, according to UBA (from 1 to 5).
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating point number corresponding to the current air quality index, according to UBA (from 1 to 5)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YAqi.UBAINDEX_INVALID</c>.
+     * </para>
+     */
+    public async Task<double> get_ubaIndex()
+    {
+        double res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return UBAINDEX_INVALID;
+            }
+        }
+        res = _ubaIndex;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the relative air quality index, according to ScioSense (from 0 to 500).
+     * <para>
+     *   A value below 100 indicates better-than-average air quality compared to the past 24 hours,
+     *   while a value above 100 indicates poorer-than-average air quality compared to the past 24 hours.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a floating point number corresponding to the relative air quality index, according to ScioSense (from 0 to 500)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YAqi.RELATIVEINDEX_INVALID</c>.
+     * </para>
+     */
+    public async Task<double> get_relativeIndex()
+    {
+        double res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return RELATIVEINDEX_INVALID;
+            }
+        }
+        res = _relativeIndex;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Returns the type of index reported by the get_currentValue function and callbacks (UBA index or relative index).
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YAqi.AQIMODE_RELATIVE</c> or <c>YAqi.AQIMODE_UBA</c>, according to the type of index
+     *   reported by the get_currentValue function and callbacks (UBA index or relative index)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YAqi.AQIMODE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_aqiMode()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return AQIMODE_INVALID;
+            }
+        }
+        res = _aqiMode;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the the type of index reported by the get_currentValue function and callbacks (UBA index or relative index).
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YAqi.AQIMODE_RELATIVE</c> or <c>YAqi.AQIMODE_UBA</c>, according to the the type of index
+     *   reported by the get_currentValue function and callbacks (UBA index or relative index)
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_aqiMode(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval).ToString();
+        await _setAttr("aqiMode",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Retrieves a air quality sensor for a given identifier.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -128,11 +276,11 @@ public class YPressure : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the pressure sensor is online at the time
+     *   This function does not require that the air quality sensor is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YPressure.isOnline()</c> to test if the pressure sensor is
+     *   Use the method <c>YAqi.isOnline()</c> to test if the air quality sensor is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a pressure sensor by logical name, no error is notified: the first instance
+     *   a air quality sensor by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -145,27 +293,27 @@ public class YPressure : YSensor
      * </para>
      * </summary>
      * <param name="func">
-     *   a string that uniquely characterizes the pressure sensor, for instance
-     *   <c>YALTIMK2.pressure</c>.
+     *   a string that uniquely characterizes the air quality sensor, for instance
+     *   <c>MyDevice.aqi</c>.
      * </param>
      * <returns>
-     *   a <c>YPressure</c> object allowing you to drive the pressure sensor.
+     *   a <c>YAqi</c> object allowing you to drive the air quality sensor.
      * </returns>
      */
-    public static YPressure FindPressure(string func)
+    public static YAqi FindAqi(string func)
     {
-        YPressure obj;
-        obj = (YPressure) YFunction._FindFromCache("Pressure", func);
+        YAqi obj;
+        obj = (YAqi) YFunction._FindFromCache("Aqi", func);
         if (obj == null) {
-            obj = new YPressure(func);
-            YFunction._AddToCache("Pressure", func, obj);
+            obj = new YAqi(func);
+            YFunction._AddToCache("Aqi", func, obj);
         }
         return obj;
     }
 
     /**
      * <summary>
-     *   Retrieves a pressure sensor for a given identifier in a YAPI context.
+     *   Retrieves a air quality sensor for a given identifier in a YAPI context.
      * <para>
      *   The identifier can be specified using several formats:
      * </para>
@@ -189,11 +337,11 @@ public class YPressure : YSensor
      * <para>
      * </para>
      * <para>
-     *   This function does not require that the pressure sensor is online at the time
+     *   This function does not require that the air quality sensor is online at the time
      *   it is invoked. The returned object is nevertheless valid.
-     *   Use the method <c>YPressure.isOnline()</c> to test if the pressure sensor is
+     *   Use the method <c>YAqi.isOnline()</c> to test if the air quality sensor is
      *   indeed online at a given time. In case of ambiguity when looking for
-     *   a pressure sensor by logical name, no error is notified: the first instance
+     *   a air quality sensor by logical name, no error is notified: the first instance
      *   found is returned. The search is performed first by hardware name,
      *   then by logical name.
      * </para>
@@ -202,20 +350,20 @@ public class YPressure : YSensor
      *   a YAPI context
      * </param>
      * <param name="func">
-     *   a string that uniquely characterizes the pressure sensor, for instance
-     *   <c>YALTIMK2.pressure</c>.
+     *   a string that uniquely characterizes the air quality sensor, for instance
+     *   <c>MyDevice.aqi</c>.
      * </param>
      * <returns>
-     *   a <c>YPressure</c> object allowing you to drive the pressure sensor.
+     *   a <c>YAqi</c> object allowing you to drive the air quality sensor.
      * </returns>
      */
-    public static YPressure FindPressureInContext(YAPIContext yctx,string func)
+    public static YAqi FindAqiInContext(YAPIContext yctx,string func)
     {
-        YPressure obj;
-        obj = (YPressure) YFunction._FindFromCacheInContext(yctx, "Pressure", func);
+        YAqi obj;
+        obj = (YAqi) YFunction._FindFromCacheInContext(yctx, "Aqi", func);
         if (obj == null) {
-            obj = new YPressure(yctx, func);
-            YFunction._AddToCache("Pressure", func, obj);
+            obj = new YAqi(yctx, func);
+            YFunction._AddToCache("Aqi", func, obj);
         }
         return obj;
     }
@@ -248,7 +396,7 @@ public class YPressure : YSensor
         } else {
             await YFunction._UpdateValueCallbackList(this, false);
         }
-        _valueCallbackPressure = callback;
+        _valueCallbackAqi = callback;
         // Immediately invoke value callback with current value
         if (callback != null && await this.isOnline()) {
             val = _advertisedValue;
@@ -261,8 +409,8 @@ public class YPressure : YSensor
 
     public override async Task<int> _invokeValueCallback(string value)
     {
-        if (_valueCallbackPressure != null) {
-            await _valueCallbackPressure(this, value);
+        if (_valueCallbackAqi != null) {
+            await _valueCallbackAqi(this, value);
         } else {
             await base._invokeValueCallback(value);
         }
@@ -296,14 +444,14 @@ public class YPressure : YSensor
         } else {
             await YFunction._UpdateTimedReportCallbackList(sensor, false);
         }
-        _timedReportCallbackPressure = callback;
+        _timedReportCallbackAqi = callback;
         return 0;
     }
 
     public override async Task<int> _invokeTimedReportCallback(YMeasure value)
     {
-        if (_timedReportCallbackPressure != null) {
-            await _timedReportCallbackPressure(this, value);
+        if (_timedReportCallbackAqi != null) {
+            await _timedReportCallbackAqi(this, value);
         } else {
             await base._invokeTimedReportCallback(value);
         }
@@ -312,20 +460,20 @@ public class YPressure : YSensor
 
     /**
      * <summary>
-     *   Continues the enumeration of pressure sensors started using <c>yFirstPressure()</c>.
+     *   Continues the enumeration of air quality sensors started using <c>yFirstAqi()</c>.
      * <para>
-     *   Caution: You can't make any assumption about the returned pressure sensors order.
-     *   If you want to find a specific a pressure sensor, use <c>Pressure.findPressure()</c>
+     *   Caution: You can't make any assumption about the returned air quality sensors order.
+     *   If you want to find a specific a air quality sensor, use <c>Aqi.findAqi()</c>
      *   and a hardwareID or a logical name.
      * </para>
      * </summary>
      * <returns>
-     *   a pointer to a <c>YPressure</c> object, corresponding to
-     *   a pressure sensor currently online, or a <c>null</c> pointer
-     *   if there are no more pressure sensors to enumerate.
+     *   a pointer to a <c>YAqi</c> object, corresponding to
+     *   a air quality sensor currently online, or a <c>null</c> pointer
+     *   if there are no more air quality sensors to enumerate.
      * </returns>
      */
-    public YPressure nextPressure()
+    public YAqi nextAqi()
     {
         string next_hwid;
         try {
@@ -335,57 +483,57 @@ public class YPressure : YSensor
             next_hwid = null;
         }
         if(next_hwid == null) return null;
-        return FindPressureInContext(_yapi, next_hwid);
+        return FindAqiInContext(_yapi, next_hwid);
     }
 
     /**
      * <summary>
-     *   Starts the enumeration of pressure sensors currently accessible.
+     *   Starts the enumeration of air quality sensors currently accessible.
      * <para>
-     *   Use the method <c>YPressure.nextPressure()</c> to iterate on
-     *   next pressure sensors.
+     *   Use the method <c>YAqi.nextAqi()</c> to iterate on
+     *   next air quality sensors.
      * </para>
      * </summary>
      * <returns>
-     *   a pointer to a <c>YPressure</c> object, corresponding to
-     *   the first pressure sensor currently online, or a <c>null</c> pointer
+     *   a pointer to a <c>YAqi</c> object, corresponding to
+     *   the first air quality sensor currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
-    public static YPressure FirstPressure()
+    public static YAqi FirstAqi()
     {
         YAPIContext yctx = YAPI.imm_GetYCtx();
-        string next_hwid = yctx._yHash.imm_getFirstHardwareId("Pressure");
+        string next_hwid = yctx._yHash.imm_getFirstHardwareId("Aqi");
         if (next_hwid == null)  return null;
-        return FindPressureInContext(yctx, next_hwid);
+        return FindAqiInContext(yctx, next_hwid);
     }
 
     /**
      * <summary>
-     *   Starts the enumeration of pressure sensors currently accessible.
+     *   Starts the enumeration of air quality sensors currently accessible.
      * <para>
-     *   Use the method <c>YPressure.nextPressure()</c> to iterate on
-     *   next pressure sensors.
+     *   Use the method <c>YAqi.nextAqi()</c> to iterate on
+     *   next air quality sensors.
      * </para>
      * </summary>
      * <param name="yctx">
      *   a YAPI context.
      * </param>
      * <returns>
-     *   a pointer to a <c>YPressure</c> object, corresponding to
-     *   the first pressure sensor currently online, or a <c>null</c> pointer
+     *   a pointer to a <c>YAqi</c> object, corresponding to
+     *   the first air quality sensor currently online, or a <c>null</c> pointer
      *   if there are none.
      * </returns>
      */
-    public static YPressure FirstPressureInContext(YAPIContext yctx)
+    public static YAqi FirstAqiInContext(YAPIContext yctx)
     {
-        string next_hwid = yctx._yHash.imm_getFirstHardwareId("Pressure");
+        string next_hwid = yctx._yHash.imm_getFirstHardwareId("Aqi");
         if (next_hwid == null)  return null;
-        return FindPressureInContext(yctx, next_hwid);
+        return FindAqiInContext(yctx, next_hwid);
     }
 
 #pragma warning restore 1998
-    //--- (end of YPressure implementation)
+    //--- (end of YAqi implementation)
 }
 }
 

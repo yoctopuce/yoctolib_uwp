@@ -557,9 +557,11 @@ public class YColorLedCluster : YFunction
      * <summary>
      *   Registers the callback function that is invoked on every change of advertised value.
      * <para>
-     *   The callback is invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
-     *   This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     *   one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     *   The callback is then invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
+     *   This provides control over the time when the callback is triggered. For good responsiveness,
+     *   remember to call one of these two functions periodically. The callback is called once juste after beeing
+     *   registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     *   To unregister a callback, pass a null pointer as argument.
      * </para>
      * <para>
      * </para>
@@ -787,6 +789,98 @@ public class YColorLedCluster : YFunction
     public virtual async Task<int> hsl_move(int ledIndex,int count,int hslValue,int delay)
     {
         return await this.sendCommand("MH"+Convert.ToString(ledIndex)+","+Convert.ToString(count)+","+String.Format("{0:x}",hslValue)+","+Convert.ToString(delay));
+    }
+
+    /**
+     * <summary>
+     *   Changes the color displayed by the last LED and shifts all currently displayed colors
+     *   toward the beginning of the RGB LED string.
+     * <para>
+     *   The new color is encoded as follows: 0xRRGGBB.
+     * </para>
+     * </summary>
+     * <param name="rgbValue">
+     *   new color.
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> shl_rgb(int rgbValue)
+    {
+        return await this.sendCommand("<R"+String.Format("{0:x}",rgbValue));
+    }
+
+    /**
+     * <summary>
+     *   Changes the color displayed by the first LED and shifts all currently displayed colors
+     *   toward the end of the RGB LED string.
+     * <para>
+     *   The new color is encoded as follows: 0xRRGGBB.
+     * </para>
+     * </summary>
+     * <param name="rgbValue">
+     *   new color.
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> shr_rgb(int rgbValue)
+    {
+        return await this.sendCommand(">R"+String.Format("{0:x}",rgbValue));
+    }
+
+    /**
+     * <summary>
+     *   Changes the color displayed by the last LED and shifts all currently displayed colors
+     *   toward the beginning of the RGB LED string.
+     * <para>
+     *   The new color is encoded as follows: 0xHHSSLL.
+     * </para>
+     * </summary>
+     * <param name="hslValue">
+     *   new color.
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> shl_hsl(int hslValue)
+    {
+        return await this.sendCommand("<H"+String.Format("{0:x}",hslValue));
+    }
+
+    /**
+     * <summary>
+     *   Changes the color displayed by the first LED and shifts all currently displayed colors
+     *   toward the end of the RGB LED string.
+     * <para>
+     *   The new color is encoded as follows: 0xHHSSLL.
+     * </para>
+     * </summary>
+     * <param name="hslValue">
+     *   new color.
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> shr_hsl(int hslValue)
+    {
+        return await this.sendCommand(">H"+String.Format("{0:x}",hslValue));
     }
 
     /**

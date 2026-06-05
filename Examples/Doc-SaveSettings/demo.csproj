@@ -105,6 +105,9 @@
     <Compile Include="..\..\Sources\YAnButton.cs">
       <Link>yoctolib\YAnButton.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YAngularSpeed.cs">
+      <Link>yoctolib\YAngularSpeed.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YArithmeticSensor.cs">
       <Link>yoctolib\YArithmeticSensor.cs</Link>
     </Compile>
@@ -140,6 +143,9 @@
     </Compile>
     <Compile Include="..\..\Sources\YCompass.cs">
       <Link>yoctolib\YCompass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YCounter.cs">
+      <Link>yoctolib\YCounter.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YCurrent.cs">
       <Link>yoctolib\YCurrent.cs</Link>
@@ -237,6 +243,9 @@
     <Compile Include="..\..\Sources\YNetwork.cs">
       <Link>yoctolib\YNetwork.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YOrientation.cs">
+      <Link>yoctolib\YOrientation.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YOsControl.cs">
       <Link>yoctolib\YOsControl.cs</Link>
     </Compile>
@@ -314,6 +323,12 @@
     </Compile>
     <Compile Include="..\..\Sources\YServo.cs">
       <Link>yoctolib\YServo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSoundLevel.cs">
+      <Link>yoctolib\YSoundLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Sources\YSoundSpectrum.cs">
+      <Link>yoctolib\YSoundSpectrum.cs</Link>
     </Compile>
     <Compile Include="..\..\Sources\YSpectralChannel.cs">
       <Link>yoctolib\YSpectralChannel.cs</Link>

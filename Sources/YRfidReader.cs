@@ -369,9 +369,11 @@ public class YRfidReader : YFunction
      * <summary>
      *   Registers the callback function that is invoked on every change of advertised value.
      * <para>
-     *   The callback is invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
-     *   This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     *   one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     *   The callback is then invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
+     *   This provides control over the time when the callback is triggered. For good responsiveness,
+     *   remember to call one of these two functions periodically. The callback is called once juste after beeing
+     *   registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     *   To unregister a callback, pass a null pointer as argument.
      * </para>
      * <para>
      * </para>
@@ -541,7 +543,13 @@ public class YRfidReader : YFunction
      * <para>
      *   This operation is definitive and irreversible.
      *   Depending on the tag type and block index, adjascent blocks may become
-     *   read-only as well, based on the locking granularity.
+     *   read-only as well, based on the locking granularity.  Note that some tags
+     *   may allow only a few blocks to be locked, for instance ST25DVxxx  tags
+     *   allows a lock on block 0 and 1 only.
+     * </para>
+     * <para>
+     * </para>
+     * <para>
      * </para>
      * <para>
      * </para>
@@ -1224,6 +1232,167 @@ public class YRfidReader : YFunction
             res = await status.get_yapiError();
         }
         return res;
+    }
+
+    /**
+     * <summary>
+     *   Reads a byte from the Tag configuration (ISO 15693 ST25DVxx only).
+     * <para>
+     *   This function is actually a call to the 0xA0 RFID command and is specific to
+     *   ST25DVxx tags. Check ST25DVxx datasheet for more information about
+     *   the data organisation of ST25DVxx tags configuration.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="addr">
+     *   offset of the byte in the tag configuation
+     * </param>
+     * <para>
+     * </para>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   the requested byte value (0...255)
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagGetConfigByte(string tagId,int addr,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        int res;
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=gcfg&t="+tagId+"&b="+Convert.ToString(addr)+""+optstr;
+
+        json = await this._download(url);
+        await this._chkerror(tagId, json, status);
+        if (await status.get_yapiError() == YAPI.SUCCESS) {
+            res = YAPIContext.imm_atoi(this.imm_json_get_key(json, "res"));
+        } else {
+            res = await status.get_yapiError();
+        }
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Changes a byte in the tag's configuration (ISO 15693 ST25DVxx only).
+     * <para>
+     *   Warning: modifing the tag configation may alter its behavior in a non-reversible way.
+     *   This operation requires the CONFIG_PWD password to be set in the options,
+     *   default value is "0000000000000000" (16 zeros). This function is actually
+     *   a call to the 0xA1 RFID command and is specific to ST25DVxx tags. Check
+     *   ST25DVxx datasheet for more information about the data organisation
+     *   of ST25DVxx tags configuration.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="addr">
+     *   address of the byte to write
+     * </param>
+     * <param name="value">
+     *   the value to write (0...255)
+     * </param>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagSetConfigByte(string tagId,int addr,int value,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=scfg&t="+tagId+"&b="+Convert.ToString(addr)+"&v="+Convert.ToString(value)+""+optstr;
+
+        json = await this._download(url);
+        return await this._chkerror(tagId, json, status);
+    }
+
+    /**
+     * <summary>
+     *   Set a password that will be required to access the tag  (ISO 15693 ST25DVxx only).
+     * <para>
+     *   The password must be a string of characters representing 8 bytes in hexadecimal.
+     *   There are several types of password for the same tag; please consult your tags
+     *   documentation to understand their respective applications. Once the password
+     *   has been configured, operations requiring this password must be initiated with
+     *   the password defined in the <c>KeyType</c> and <c>HexKey</c> fields of the
+     *   <c>options</c> parameter for the operations in question. It is not necessarily
+     *   required to consistently provide the same password for every operation during the
+     *   same session with a tag.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="tagId">
+     *   identifier of the tag to use
+     * </param>
+     * <param name="passwordType">
+     *   type of password to be set (YRfidOptions.ST25D_CONFIG_PWD,YRfidOptions.ST25D_PWD1,YRfidOptions.ST25D_PWD2..)
+     * </param>
+     * <param name="password">
+     *   the password (16 characters hex string encoding 8 bytes)
+     * </param>
+     * <param name="options">
+     *   an <c>YRfidOptions</c> object with the optional
+     *   command execution parameters, such as security key
+     *   if required
+     * </param>
+     * <param name="status">
+     *   an <c>RfidStatus</c> object that will contain
+     *   the detailled status of the operation
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code. When it
+     *   happens, you can get more information from the <c>status</c> object.
+     * </para>
+     */
+    public virtual async Task<int> tagSetPassword(string tagId,int passwordType,string password,YRfidOptions options,YRfidStatus status)
+    {
+        string optstr;
+        string url;
+        byte[] json = new byte[0];
+        optstr = options.imm_getParams();
+        url = "rfid.json?a=spwd&t="+tagId+"&b="+Convert.ToString(passwordType)+"&p="+password+""+optstr;
+
+        json = await this._download(url);
+        return await this._chkerror(tagId, json, status);
     }
 
     /**

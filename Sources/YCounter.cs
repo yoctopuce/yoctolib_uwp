@@ -60,6 +60,22 @@ public class YCounter : YSensor
 {
 //--- (end of YCounter class start)
 //--- (YCounter definitions)
+    /**
+     * <summary>
+     *   invalid decimalMode value
+     * </summary>
+     */
+    public const int DECIMALMODE_FALSE = 0;
+    public const int DECIMALMODE_TRUE = 1;
+    public const int DECIMALMODE_INVALID = -1;
+    /**
+     * <summary>
+     *   invalid command value
+     * </summary>
+     */
+    public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
+    protected int _decimalMode = DECIMALMODE_INVALID;
+    protected string _command = COMMAND_INVALID;
     protected ValueCallback _valueCallbackCounter = null;
     protected TimedReportCallback _timedReportCallbackCounter = null;
 
@@ -98,7 +114,98 @@ public class YCounter : YSensor
 #pragma warning disable 1998
     internal override void imm_parseAttr(YJSONObject json_val)
     {
+        if (json_val.has("decimalMode")) {
+            _decimalMode = json_val.getInt("decimalMode") > 0 ? 1 : 0;
+        }
+        if (json_val.has("command")) {
+            _command = json_val.getString("command");
+        }
         base.imm_parseAttr(json_val);
+    }
+
+    /**
+     * <summary>
+     *   Returns a value indicating if the senseur compute whole or fractional values.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YCounter.DECIMALMODE_FALSE</c> or <c>YCounter.DECIMALMODE_TRUE</c>, according to a value
+     *   indicating if the senseur compute whole or fractional values
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YCounter.DECIMALMODE_INVALID</c>.
+     * </para>
+     */
+    public async Task<int> get_decimalMode()
+    {
+        int res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return DECIMALMODE_INVALID;
+            }
+        }
+        res = _decimalMode;
+        return res;
+    }
+
+
+    /**
+     * <summary>
+     *   Changes the sensor's operating mode so that it computes integer or decimal values.
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c> method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YCounter.DECIMALMODE_FALSE</c> or <c>YCounter.DECIMALMODE_TRUE</c>, according to the
+     *   sensor's operating mode so that it computes integer or decimal values
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public async Task<int> set_decimalMode(int  newval)
+    {
+        string rest_val;
+        rest_val = (newval > 0 ? "1" : "0");
+        await _setAttr("decimalMode",rest_val);
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   throws an exception on error
+     * </summary>
+     */
+    public async Task<string> get_command()
+    {
+        string res;
+        if (_cacheExpiration <= YAPIContext.GetTickCount()) {
+            if (await this.load(await _yapi.GetCacheValidity()) != YAPI.SUCCESS) {
+                return COMMAND_INVALID;
+            }
+        }
+        res = _command;
+        return res;
+    }
+
+
+    public async Task<int> set_command(string  newval)
+    {
+        string rest_val;
+        rest_val = newval;
+        await _setAttr("command",rest_val);
+        return YAPI.SUCCESS;
     }
 
     /**
@@ -223,9 +330,11 @@ public class YCounter : YSensor
      * <summary>
      *   Registers the callback function that is invoked on every change of advertised value.
      * <para>
-     *   The callback is invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
-     *   This provides control over the time when the callback is triggered. For good responsiveness, remember to call
-     *   one of these two functions periodically. To unregister a callback, pass a null pointer as argument.
+     *   The callback is then invoked only during the execution of <c>ySleep</c> or <c>yHandleEvents</c>.
+     *   This provides control over the time when the callback is triggered. For good responsiveness,
+     *   remember to call one of these two functions periodically. The callback is called once juste after beeing
+     *   registered, passing the current advertised value  of the function, provided that it is not an empty string.
+     *   To unregister a callback, pass a null pointer as argument.
      * </para>
      * <para>
      * </para>
@@ -305,6 +414,32 @@ public class YCounter : YSensor
             await base._invokeTimedReportCallback(value);
         }
         return 0;
+    }
+
+    public virtual async Task<int> sendCommand(string command)
+    {
+        return await this.set_command(command);
+    }
+
+    /**
+     * <summary>
+     *   Reset the counter to zero.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds. Please note that this function only resets
+     *   the integer part of the counter. In <c>CONTINUOUS</c> mode, the decimal part is calculated
+     *   from the angle measured by the sensor. To set the decimal part of the sensor to zero,
+     *   the origin of the sensor must be changed with the <c>YOrientation.zero()</c>.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> zero()
+    {
+        return await this.sendCommand("Z");
     }
 
     /**
