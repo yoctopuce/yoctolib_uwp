@@ -96,6 +96,9 @@
       <Link>yoctolib\NotificationHandler.cs</Link>
     </Compile>
     
+    <Compile Include="..\..\Sources\YAirQuality.cs">
+      <Link>yoctolib\YAirQuality.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YHumidity.cs">
       <Link>yoctolib\YHumidity.cs</Link>
     </Compile>

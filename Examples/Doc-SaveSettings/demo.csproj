@@ -99,6 +99,9 @@
     <Compile Include="..\..\Sources\YAccelerometer.cs">
       <Link>yoctolib\YAccelerometer.cs</Link>
     </Compile>
+    <Compile Include="..\..\Sources\YAirQuality.cs">
+      <Link>yoctolib\YAirQuality.cs</Link>
+    </Compile>
     <Compile Include="..\..\Sources\YAltitude.cs">
       <Link>yoctolib\YAltitude.cs</Link>
     </Compile>
