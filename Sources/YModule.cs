@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YModule.cs 72057 2026-02-17 09:44:53Z mvuilleu $
+ * $Id: YModule.cs 75351 2026-08-02 19:45:07Z mvuilleu $
  *
  * YModule Class: Module control interface
  *
@@ -1109,7 +1109,12 @@ public class YModule : YFunction
      */
     public virtual async Task<int> revertFromFlash()
     {
-        return await this.set_persistentSettings(PERSISTENTSETTINGS_LOADED);
+        int res;
+
+        res = await this.set_persistentSettings(PERSISTENTSETTINGS_LOADED);
+        if (!(res==YAPI.SUCCESS)) { this._throw(res,"unable to trigger revert settings"); return res; }
+        await this._clearLazyCache();
+        return res;
     }
 
     /**

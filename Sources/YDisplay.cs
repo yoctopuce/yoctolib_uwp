@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplay.cs 73876 2026-05-27 20:45:51Z mvuilleu $
+ * $Id: YDisplay.cs 75525 2026-08-14 08:04:04Z mvuilleu $
  *
  * Implements FindDisplay(), the high-level API for Display functions
  *
@@ -160,6 +160,41 @@ public class YDisplay : YFunction
      * </summary>
      */
     public const  string COMMAND_INVALID = YAPI.INVALID_STRING;
+    public enum FASTREFRESH {
+        WHENEVER_POSSIBLE = 0,
+        WHENEVER_SUPPORTED = 1,
+        NEVER = 2,
+        INVALID = 3}
+
+    public enum REGENERATE {
+        ON_REQUEST_ONLY = 0,
+        EVERY_DAY = 1,
+        EVERY_12H = 2,
+        EVERY_6H = 3,
+        EVERY_3H = 4,
+        EVERY_2H = 5,
+        EVERY_HOUR = 6,
+        EVERY_30MIN = 7,
+        EVERY_15MIN = 8,
+        EVERY_480 = 9,
+        EVERY_432 = 10,
+        EVERY_360 = 11,
+        EVERY_288 = 12,
+        EVERY_240 = 13,
+        EVERY_192 = 14,
+        EVERY_144 = 15,
+        EVERY_96 = 16,
+        EVERY_48 = 17,
+        EVERY_36 = 18,
+        EVERY_24 = 19,
+        EVERY_12 = 20,
+        EVERY_10 = 21,
+        EVERY_8 = 22,
+        EVERY_6 = 23,
+        EVERY_4 = 24,
+        ALWAYS = 25,
+        INVALID = 26}
+
     public enum DISPLAYSTATE {
         FAILURE = 0,
         OFF = 1,
@@ -351,7 +386,7 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
-     *   Changes the name of the sequence to play when the displayed is powered on.
+     *   Changes the name of the sequence to play when the display is powered on.
      * <para>
      *   Remember to call the <c>saveToFlash()</c> method of the module if the
      *   modification must be kept.
@@ -360,7 +395,7 @@ public class YDisplay : YFunction
      * </para>
      * </summary>
      * <param name="newval">
-     *   a string corresponding to the name of the sequence to play when the displayed is powered on
+     *   a string corresponding to the name of the sequence to play when the display is powered on
      * </param>
      * <para>
      * </para>
@@ -508,6 +543,9 @@ public class YDisplay : YFunction
      * <summary>
      *   Returns the currently selected display orientation.
      * <para>
+     *   The orientation is defined as the side of the screen where the
+     *   USB connector (for OLED displays) or the ribbon cable (for ePaper panels) is located when the
+     *   display is up straight.
      * </para>
      * <para>
      * </para>
@@ -538,7 +576,9 @@ public class YDisplay : YFunction
      * <summary>
      *   Changes the display orientation.
      * <para>
-     *   Remember to call the <c>saveToFlash()</c>
+     *   he orientation is defined as the side of the screen where the
+     *   USB connector (for OLED displays) or the ribbon cable (for ePaper panels) is located when the
+     *   display is up straight. Remember to call the <c>saveToFlash()</c>
      *   method of the module if the modification must be kept.
      * </para>
      * <para>
@@ -562,6 +602,7 @@ public class YDisplay : YFunction
         string rest_val;
         rest_val = (newval).ToString();
         await _setAttr("orientation",rest_val);
+        await _clearLazyCache();
         return YAPI.SUCCESS;
     }
 
@@ -598,8 +639,7 @@ public class YDisplay : YFunction
      *   Changes the model of display to match the connected display panel.
      * <para>
      *   This function has no effect if the module does not support the selected
-     *   display panel.
-     *   Remember to call the <c>saveToFlash()</c>
+     *   display panel. Remember to call the <c>saveToFlash()</c>
      *   method of the module if the modification must be kept.
      * </para>
      * <para>
@@ -622,6 +662,7 @@ public class YDisplay : YFunction
         string rest_val;
         rest_val = newval;
         await _setAttr("displayPanel",rest_val);
+        await _clearLazyCache();
         return YAPI.SUCCESS;
     }
 
@@ -683,7 +724,7 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
-     *   Returns the display type: monochrome OLED, black and white ePaper, color ePaper, etc.
+     *   Returns the display type: monochrome OLED, black and white ePaper, color ePaper, and so on.
      * <para>
      * </para>
      * <para>
@@ -692,7 +733,7 @@ public class YDisplay : YFunction
      * <returns>
      *   a value among <c>YDisplay.DISPLAYTYPE_MONO</c>, <c>YDisplay.DISPLAYTYPE_EPAPER_BW</c>,
      *   <c>YDisplay.DISPLAYTYPE_EPAPER_BWR</c> and <c>YDisplay.DISPLAYTYPE_EPAPER_BWRY</c> corresponding to
-     *   the display type: monochrome OLED, black and white ePaper, color ePaper, etc
+     *   the display type: monochrome OLED, black and white ePaper, color ePaper, and so on
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YDisplay.DISPLAYTYPE_INVALID</c>.
@@ -1029,9 +1070,154 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
+     *   Returns the fast refresh usage policy in use (ePaper displays only).
+     * <para>
+     *   This setting is combined with the regenerate policy to determine when the screen
+     *   should be updated using a fast update versus or regenerated using a slower,
+     *   flickering full refresh.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a value among the <c>YDisplay.FASTREFRESH</c> enumeration
+     *   (<c>YDisplay.FASTREFRESH_WHENEVER_POSSIBLE</c>,
+     *   <c>YDisplay.FASTREFRESH_WHENEVER_SUPPORTED</c>,
+     *   <c>YDisplay.FASTREFRESH_NEVER</c>).
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YDisplay.FASTREFRESH_INVALID</c>.
+     * </para>
+     */
+    public virtual async Task<FASTREFRESH> get_fastRefreshPolicy()
+    {
+        int combined;
+        int fmod;
+        combined = await this.get_brightness();
+        if (combined < 0) {
+            return FASTREFRESH.INVALID;
+        }
+        fmod = (combined / 25);
+        if (fmod >= 2) {
+            fmod = fmod - 2;
+        }
+        return (FASTREFRESH) fmod;
+    }
+
+    /**
+     * <summary>
+     *   Returns the display regeneration minimal frequency (ePaper displays only).
+     * <para>
+     *   This setting is combined with the fast refresh usage policy to determine
+     *   when the screen should be updated using a fast update versus or regenerated
+     *   using a slower, flickering full refresh. To change the display regeneration minimal
+     *   frequency, use methode <c>set_fastRefreshPolicy()</c>.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a value among the <c>YDisplay.REGENERATE</c> enumeration
+     *   (<c>YDisplay.REGENERATE_ON_REQUEST_ONLY</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_DAY</c>, <c>YDisplay.REGENERATE_EVERY_12H</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_6H</c>, <c>YDisplay.REGENERATE_EVERY_3H</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_2H</c>, <c>YDisplay.REGENERATE_EVERY_HOUR</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_30MIN</c>, <c>YDisplay.REGENERATE_EVERY_15MIN</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_480</c>, <c>YDisplay.REGENERATE_EVERY_432</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_360</c>, <c>YDisplay.REGENERATE_EVERY_288</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_240</c>, <c>YDisplay.REGENERATE_EVERY_192</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_144</c>, <c>YDisplay.REGENERATE_EVERY_96</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_48</c>, <c>YDisplay.REGENERATE_EVERY_36</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_24</c>, <c>YDisplay.REGENERATE_EVERY_12</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_10</c>, <c>YDisplay.REGENERATE_EVERY_8</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_6</c>, <c>YDisplay.REGENERATE_EVERY_4</c>,
+     *   <c>YDisplay.REGENERATE_ALWAYS</c>).
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YDisplay.REGENERATE_INVALID</c>.
+     * </para>
+     */
+    public virtual async Task<REGENERATE> get_regeneratePolicy()
+    {
+        int combined;
+        int fval;
+        combined= await this.get_brightness();
+        if (combined < 0) {
+            return REGENERATE.INVALID;
+        }
+        if (combined >= 100) {
+            fval = 25;
+        } else {
+            fval = (combined % 25);
+        }
+        return (REGENERATE) fval;
+    }
+
+    /**
+     * <summary>
+     *   Changes the fast refresh usage policy and display regeneration minimal frequency
+     *   (ePaper displays only).
+     * <para>
+     *   These settings jointly determine when the screen should be
+     *   updated using a fast update versus or regenerated using a slower, flickering full
+     *   refresh.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="fastRefresh">
+     *   a value among the <c>YDisplay.FASTREFRESH</c> enumeration
+     *   (<c>YDisplay.FASTREFRESH_WHENEVER_POSSIBLE</c>,
+     *   <c>YDisplay.FASTREFRESH_WHENEVER_SUPPORTED</c>,
+     *   <c>YDisplay.FASTREFRESH_NEVER</c>),
+     *   corresponding to the policy for using fast refresh.
+     * </param>
+     * <param name="regenerate">
+     *   a value among the enumeration <c>YRefFrame.REGENERATE</c>
+     *   (<c>YDisplay.REGENERATE_ON_REQUEST_ONLY</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_DAY</c>, <c>YDisplay.REGENERATE_EVERY_12H</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_6H</c>, <c>YDisplay.REGENERATE_EVERY_3H</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_2H</c>, <c>YDisplay.REGENERATE_EVERY_HOUR</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_30MIN</c>, <c>YDisplay.REGENERATE_EVERY_15MIN</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_480</c>, <c>YDisplay.REGENERATE_EVERY_432</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_360</c>, <c>YDisplay.REGENERATE_EVERY_288</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_240</c>, <c>YDisplay.REGENERATE_EVERY_192</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_144</c>, <c>YDisplay.REGENERATE_EVERY_96</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_48</c>, <c>YDisplay.REGENERATE_EVERY_36</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_24</c>, <c>YDisplay.REGENERATE_EVERY_12</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_10</c>, <c>YDisplay.REGENERATE_EVERY_8</c>,
+     *   <c>YDisplay.REGENERATE_EVERY_6</c>, <c>YDisplay.REGENERATE_EVERY_4</c>,
+     *   <c>YDisplay.REGENERATE_ALWAYS</c>),
+     *   corresponding to the display minimal regeneration frequency.
+     * </param>
+     * <para>
+     *   Remember to call the <c>saveToFlash()</c>
+     *   method of the module if the modification must be kept.
+     * </para>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> set_fastRefreshPolicy(FASTREFRESH fastRefresh,REGENERATE regenerate)
+    {
+        int combined;
+        int fmod;
+        int fval;
+        fmod = (int)fastRefresh;
+        fval = (int)regenerate;
+        if ((fval == 25) || (fmod == 2)) {
+            combined = 100;
+        } else {
+            combined = 50 + fmod * 25 + fval;
+        }
+        return await this.set_brightness(combined);
+    }
+
+    /**
+     * <summary>
      *   Clears the display screen and resets all display layers to their default state.
      * <para>
-     *   Using this function in a sequence will kill the sequence play-back. Don't use that
+     *   Using this function in a sequence will kill the sequence play-back. Do not use that
      *   function to reset the display at sequence start-up.
      * </para>
      * <para>
@@ -1160,7 +1346,7 @@ public class YDisplay : YFunction
 
     /**
      * <summary>
-     *   Trigger an immediate screen refresh.
+     *   Triggers an immediate screen refresh.
      * <para>
      *   The combination of
      *   <c>postponeRefresh</c> and <c>triggerRefresh</c> can be used as an

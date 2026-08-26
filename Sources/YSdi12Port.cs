@@ -1612,7 +1612,8 @@ public class YSdi12Port : YFunction
         reqlen = 1024;
         buff = await this.readBin(reqlen);
         bufflen = (buff).Length;
-        if (_rxptr == currpos+bufflen) {
+        if ((bufflen > 0) && (_rxptr == currpos+bufflen)) {
+            // up to 1024 bytes in buffer, all in direction Rx
             res = buff[0];
             _rxptr = currpos+1;
             _rxbuffptr = currpos;
@@ -1624,7 +1625,8 @@ public class YSdi12Port : YFunction
         reqlen = 16;
         buff = await this.readBin(reqlen);
         bufflen = (buff).Length;
-        if (_rxptr == currpos+bufflen) {
+        if ((bufflen > 0) && (_rxptr == currpos+bufflen)) {
+            // up to 16 bytes in buffer, all in direction Rx
             res = buff[0];
             _rxptr = currpos+1;
             _rxbuffptr = currpos;

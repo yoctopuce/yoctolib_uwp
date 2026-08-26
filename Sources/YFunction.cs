@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YFunction.cs 72057 2026-02-17 09:44:53Z mvuilleu $
+ * $Id: YFunction.cs 75366 2026-08-03 15:14:22Z seb $
  *
  * YFunction Class (virtual class, used internally)
  *
@@ -1095,6 +1095,14 @@ public class YFunction
             }
         }
 
+        public virtual async Task _clearLazyCache()
+        {
+            await clearCache();
+            _cacheExpiration = 0;
+
+        }
+
+        
 
         /// <summary>
         /// Preloads the function cache with a specified validity duration.

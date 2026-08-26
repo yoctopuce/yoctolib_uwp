@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: YSpiPort.cs 72057 2026-02-17 09:44:53Z mvuilleu $
+ *  $Id: YSpiPort.cs 75483 2026-08-12 06:29:41Z mvuilleu $
  *
  *  Implements FindSpiPort(), the high-level API for SpiPort functions
  *
@@ -1755,7 +1755,8 @@ public class YSpiPort : YFunction
         reqlen = 1024;
         buff = await this.readBin(reqlen);
         bufflen = (buff).Length;
-        if (_rxptr == currpos+bufflen) {
+        if ((bufflen > 0) && (_rxptr == currpos+bufflen)) {
+            // up to 1024 bytes in buffer, all in direction Rx
             res = buff[0];
             _rxptr = currpos+1;
             _rxbuffptr = currpos;
@@ -1767,7 +1768,8 @@ public class YSpiPort : YFunction
         reqlen = 16;
         buff = await this.readBin(reqlen);
         bufflen = (buff).Length;
-        if (_rxptr == currpos+bufflen) {
+        if ((bufflen > 0) && (_rxptr == currpos+bufflen)) {
+            // up to 16 bytes in buffer, all in direction Rx
             res = buff[0];
             _rxptr = currpos+1;
             _rxbuffptr = currpos;

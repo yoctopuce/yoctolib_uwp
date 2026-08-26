@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:f2="http://schemas.microsoft.com/appx/manifest/foundation/windows10/2" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp f2">
   <Identity Name="743649b1-00eb-4946-b21b-6c4c60cb46a7" Publisher="CN=seb" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="743649b1-00eb-4946-b21b-6c4c60cb46a7" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
@@ -24,9 +24,652 @@
     <Capability Name="internetClient" />
     <Capability Name="privateNetworkClientServer" />
     <DeviceCapability Name="humaninterfacedevice">
-    <Device Id="any">
-      <Function Type="usage:ff00 0001" />
-    </Device>
-    </DeviceCapability>
+<!-- USABLE DEVICES START -->
+      <!-- VirtualStepper -->
+      <f2:Device Id="vidpid:24e0 0000">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Demo -->
+      <f2:Device Id="vidpid:24e0 0009">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Knob -->
+      <f2:Device Id="vidpid:24e0 000a">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Temperature -->
+      <f2:Device Id="vidpid:24e0 000b">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Relay -->
+      <f2:Device Id="vidpid:24e0 000c">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PowerRelay -->
+      <f2:Device Id="vidpid:24e0 000d">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-Ethernet -->
+      <f2:Device Id="vidpid:24e0 000e">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Servo -->
+      <f2:Device Id="vidpid:24e0 0012">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Color -->
+      <f2:Device Id="vidpid:24e0 0014">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Motor-DC -->
+      <f2:Device Id="vidpid:24e0 0016">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PowerColor -->
+      <f2:Device Id="vidpid:24e0 0017">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Meteo -->
+      <f2:Device Id="vidpid:24e0 0018">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Light -->
+      <f2:Device Id="vidpid:24e0 0019">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Volt -->
+      <f2:Device Id="vidpid:24e0 001b">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-Shield -->
+      <f2:Device Id="vidpid:24e0 001c">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Amp -->
+      <f2:Device Id="vidpid:24e0 001f">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-Wireless -->
+      <f2:Device Id="vidpid:24e0 0023">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-CO2 -->
+      <f2:Device Id="vidpid:24e0 0027">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Thermocouple -->
+      <f2:Device Id="vidpid:24e0 0028">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-VOC -->
+      <f2:Device Id="vidpid:24e0 0029">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Watt -->
+      <f2:Device Id="vidpid:24e0 002a">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Display -->
+      <f2:Device Id="vidpid:24e0 002d">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-TimerDC -->
+      <f2:Device Id="vidpid:24e0 002e">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MiniDisplay -->
+      <f2:Device Id="vidpid:24e0 002f">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiDisplay -->
+      <f2:Device Id="vidpid:24e0 0030">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiCoupler -->
+      <f2:Device Id="vidpid:24e0 0031">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-LatchedRelay -->
+      <f2:Device Id="vidpid:24e0 0032">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-WatchdogDC -->
+      <f2:Device Id="vidpid:24e0 0033">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-GSM-4G -->
+      <f2:Device Id="vidpid:24e0 0034">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PT100 -->
+      <f2:Device Id="vidpid:24e0 0035">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-4-20mA-Rx -->
+      <f2:Device Id="vidpid:24e0 0037">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-0-10V-Rx -->
+      <f2:Device Id="vidpid:24e0 0038">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Maxi-IO -->
+      <f2:Device Id="vidpid:24e0 0039">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-Wireless-SR -->
+      <f2:Device Id="vidpid:24e0 003a">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-3D -->
+      <f2:Device Id="vidpid:24e0 003b">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PWM-Tx -->
+      <f2:Device Id="vidpid:24e0 003c">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-GSM-2G -->
+      <f2:Device Id="vidpid:24e0 003e">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Altimeter -->
+      <f2:Device Id="vidpid:24e0 003f">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-milliVolt-Rx -->
+      <f2:Device Id="vidpid:24e0 0040">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Sonometer -->
+      <f2:Device Id="vidpid:24e0 0041">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-milliVolt-Rx-BNC -->
+      <f2:Device Id="vidpid:24e0 0042">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Light-V2 -->
+      <f2:Device Id="vidpid:24e0 0043">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-Wireless-g -->
+      <f2:Device Id="vidpid:24e0 0046">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RS232 -->
+      <f2:Device Id="vidpid:24e0 0047">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RS485 -->
+      <f2:Device Id="vidpid:24e0 0048">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PWM-Rx -->
+      <f2:Device Id="vidpid:24e0 0049">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiDisplay-G -->
+      <f2:Device Id="vidpid:24e0 004a">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiPowerRelay -->
+      <f2:Device Id="vidpid:24e0 004b">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Thermistor-C -->
+      <f2:Device Id="vidpid:24e0 004d">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Light-V3 -->
+      <f2:Device Id="vidpid:24e0 0050">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiThermistor -->
+      <f2:Device Id="vidpid:24e0 0051">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Buzzer -->
+      <f2:Device Id="vidpid:24e0 0052">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-GPS -->
+      <f2:Device Id="vidpid:24e0 0053">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Serial -->
+      <f2:Device Id="vidpid:24e0 0054">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-4-20mA-Tx -->
+      <f2:Device Id="vidpid:24e0 005c">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-GSM-3G-EU -->
+      <f2:Device Id="vidpid:24e0 0060">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-GSM-3G-NA -->
+      <f2:Device Id="vidpid:24e0 0061">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Color-V2 -->
+      <f2:Device Id="vidpid:24e0 0065">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-SPI -->
+      <f2:Device Id="vidpid:24e0 0066">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-StepperMotor -->
+      <f2:Device Id="vidpid:24e0 0067">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-3D-V2 -->
+      <f2:Device Id="vidpid:24e0 006a">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RangeFinder -->
+      <f2:Device Id="vidpid:24e0 006f">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Proximity -->
+      <f2:Device Id="vidpid:24e0 0071">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-IO -->
+      <f2:Device Id="vidpid:24e0 0072">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Pressure -->
+      <f2:Device Id="vidpid:24e0 0075">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Bridge -->
+      <f2:Device Id="vidpid:24e0 0076">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-VOC-V2 -->
+      <f2:Device Id="vidpid:24e0 0077">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Maxi-IO-V2 -->
+      <f2:Device Id="vidpid:24e0 0079">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PowerSupply -->
+      <f2:Device Id="vidpid:24e0 007a">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-0-10V-Tx -->
+      <f2:Device Id="vidpid:24e0 007d">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PowerRelay-V2 -->
+      <f2:Device Id="vidpid:24e0 007e">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiBridge -->
+      <f2:Device Id="vidpid:24e0 007f">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Meteo-V2 -->
+      <f2:Device Id="vidpid:24e0 0084">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-CurrentDriver -->
+      <f2:Device Id="vidpid:24e0 0085">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Light-RGB -->
+      <f2:Device Id="vidpid:24e0 0088">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PowerRelay-V3 -->
+      <f2:Device Id="vidpid:24e0 008a">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-CO2-V2 -->
+      <f2:Device Id="vidpid:24e0 008b">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-VOC-V3 -->
+      <f2:Device Id="vidpid:24e0 008c">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Temperature-IR -->
+      <f2:Device Id="vidpid:24e0 008d">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Altimeter-V2 -->
+      <f2:Device Id="vidpid:24e0 008e">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- YoctoHub-Wireless-n -->
+      <f2:Device Id="vidpid:24e0 0091">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiMicroVolt-Rx -->
+      <f2:Device Id="vidpid:24e0 0092">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-I2C -->
+      <f2:Device Id="vidpid:24e0 0093">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RS485-V2 -->
+      <f2:Device Id="vidpid:24e0 0094">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiCoupler-V2 -->
+      <f2:Device Id="vidpid:24e0 0095">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-GPS-V2 -->
+      <f2:Device Id="vidpid:24e0 0096">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiBuzzer -->
+      <f2:Device Id="vidpid:24e0 0098">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-UPS-18650 -->
+      <f2:Device Id="vidpid:24e0 009a">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Pressure-Diff -->
+      <f2:Device Id="vidpid:24e0 009c">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiKnob -->
+      <f2:Device Id="vidpid:24e0 009e">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Inclinometer -->
+      <f2:Device Id="vidpid:24e0 009f">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Light-V4 -->
+      <f2:Device Id="vidpid:24e0 00a2">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Temperature-V2 -->
+      <f2:Device Id="vidpid:24e0 00a9">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-SDI12 -->
+      <f2:Device Id="vidpid:24e0 00ab">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-IO-V2 -->
+      <f2:Device Id="vidpid:24e0 00af">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RFID-15693 -->
+      <f2:Device Id="vidpid:24e0 00b0">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-LatchingRelay -->
+      <f2:Device Id="vidpid:24e0 00b1">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-TinySupply -->
+      <f2:Device Id="vidpid:24e0 00b3">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Multiplexer -->
+      <f2:Device Id="vidpid:24e0 00b7">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Maxi-IO-V3 -->
+      <f2:Device Id="vidpid:24e0 00bb">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Spectral -->
+      <f2:Device Id="vidpid:24e0 00bd">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Thermocouple-C -->
+      <f2:Device Id="vidpid:24e0 00bf">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-WatchdogDC-C -->
+      <f2:Device Id="vidpid:24e0 00c0">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Volt-C -->
+      <f2:Device Id="vidpid:24e0 00c1">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiBridge-C -->
+      <f2:Device Id="vidpid:24e0 00c2">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Servo-C -->
+      <f2:Device Id="vidpid:24e0 00c3">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Meteo-V2-C -->
+      <f2:Device Id="vidpid:24e0 00c4">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Light-V5 -->
+      <f2:Device Id="vidpid:24e0 00c5">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Light-V5-C -->
+      <f2:Device Id="vidpid:24e0 00c6">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-4-20mA-Rx-C -->
+      <f2:Device Id="vidpid:24e0 00c7">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-0-10V-Rx-C -->
+      <f2:Device Id="vidpid:24e0 00c8">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiBuzzer-C -->
+      <f2:Device Id="vidpid:24e0 00c9">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Amp-C -->
+      <f2:Device Id="vidpid:24e0 00ca">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Bridge-C -->
+      <f2:Device Id="vidpid:24e0 00cb">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Inclinometer-C -->
+      <f2:Device Id="vidpid:24e0 00cc">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Spectral-C -->
+      <f2:Device Id="vidpid:24e0 00cd">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RS232-C -->
+      <f2:Device Id="vidpid:24e0 00ce">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-IO-V2-C -->
+      <f2:Device Id="vidpid:24e0 00cf">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-3D-V2-C -->
+      <f2:Device Id="vidpid:24e0 00d0">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PWM-Tx-C -->
+      <f2:Device Id="vidpid:24e0 00d1">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PowerRelay-V2-C -->
+      <f2:Device Id="vidpid:24e0 00d2">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PowerRelay-V3-C -->
+      <f2:Device Id="vidpid:24e0 00d3">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PT100-C -->
+      <f2:Device Id="vidpid:24e0 00d4">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Proximity-C -->
+      <f2:Device Id="vidpid:24e0 00d5">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-I2C-C -->
+      <f2:Device Id="vidpid:24e0 00d6">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiThermistor-C -->
+      <f2:Device Id="vidpid:24e0 00d7">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Color-V2-C -->
+      <f2:Device Id="vidpid:24e0 00d8">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-LatchingRelay-C -->
+      <f2:Device Id="vidpid:24e0 00d9">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-milliVolt-Rx-BNC-C -->
+      <f2:Device Id="vidpid:24e0 00da">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Relay-C -->
+      <f2:Device Id="vidpid:24e0 00db">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Temperature-C -->
+      <f2:Device Id="vidpid:24e0 00dc">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiPowerRelay-C -->
+      <f2:Device Id="vidpid:24e0 00dd">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-4-20mA-Tx-V2-C -->
+      <f2:Device Id="vidpid:24e0 00de">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Buzzer-C -->
+      <f2:Device Id="vidpid:24e0 00df">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-GPS-V2-C -->
+      <f2:Device Id="vidpid:24e0 00e0">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-UV -->
+      <f2:Device Id="vidpid:24e0 00e5">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-milliVolt-Rx-C -->
+      <f2:Device Id="vidpid:24e0 00e8">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Watt-V2-C -->
+      <f2:Device Id="vidpid:24e0 00e4">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-0-10V-Tx-C -->
+      <f2:Device Id="vidpid:24e0 00e2">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RangeFinder-C -->
+      <f2:Device Id="vidpid:24e0 00e1">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Knob-C -->
+      <f2:Device Id="vidpid:24e0 00e3">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiCoupler-V2-C -->
+      <f2:Device Id="vidpid:24e0 00e7">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-DataLogger-C -->
+      <f2:Device Id="vidpid:24e0 00e9">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Maxi-IO-V3-C -->
+      <f2:Device Id="vidpid:24e0 00ea">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RS485-V2-C -->
+      <f2:Device Id="vidpid:24e0 00eb">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Pressure-C -->
+      <f2:Device Id="vidpid:24e0 00ec">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-SPI-C -->
+      <f2:Device Id="vidpid:24e0 00ed">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Serial-C -->
+      <f2:Device Id="vidpid:24e0 00ee">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Temperature-IR-C -->
+      <f2:Device Id="vidpid:24e0 00ef">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiKnob-C -->
+      <f2:Device Id="vidpid:24e0 00f0">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiMicroVolt-Rx-C -->
+      <f2:Device Id="vidpid:24e0 00f1">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Altimeter-V2-C -->
+      <f2:Device Id="vidpid:24e0 00f2">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-SDI12-C -->
+      <f2:Device Id="vidpid:24e0 00f3">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-MaxiDisplay-C -->
+      <f2:Device Id="vidpid:24e0 00f4">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-RFID-15693-C -->
+      <f2:Device Id="vidpid:24e0 00f5">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-PWM-Rx-C -->
+      <f2:Device Id="vidpid:24e0 00f6">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-CO2-V2-C -->
+      <f2:Device Id="vidpid:24e0 00f7">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Display-ePaper-C -->
+      <f2:Device Id="vidpid:24e0 00f9">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-SoundLevel-C -->
+      <f2:Device Id="vidpid:24e0 00fa">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-Rotation-C -->
+      <f2:Device Id="vidpid:24e0 00fb">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+      <!-- Yocto-VOC-V4-C -->
+      <f2:Device Id="vidpid:24e0 00fc">
+        <f2:Function Type="usage:ff00 0001" />
+      </f2:Device>
+<!-- USABLE DEVICES STOP -->
+  </DeviceCapability>
   </Capabilities>
 </Package>

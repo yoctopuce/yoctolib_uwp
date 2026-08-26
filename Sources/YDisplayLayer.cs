@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: YDisplayLayer.cs 74506 2026-06-01 15:57:01Z seb $
+ * $Id: YDisplayLayer.cs 75451 2026-08-09 06:13:05Z mvuilleu $
  *
  * Implements FindDisplayLayer(), the high-level API for DisplayLayer functions
  *
@@ -135,7 +135,7 @@ public class YDisplayLayer
     {
         int res;
         res = YAPI.SUCCESS;
-        if ((_cmdbuff).Length + (cmd).Length >= 100) {
+        if ((_cmdbuff).Length + (cmd).Length >= 64) {
             // force flush before, to prevent overflow
             await this.flush_now();
         }
@@ -602,6 +602,18 @@ public class YDisplayLayer
      */
     public virtual async Task<int> drawText(int x,int y,ALIGN anchor,string text)
     {
+        int textlen;
+        string destname;
+        textlen = (text).Length;
+        if (textlen > 60) {
+            if (textlen > 1000) {
+                _display._throw(YAPI.INVALID_ARGUMENT, "text too large (max 1000 characters)");
+                return YAPI.INVALID_ARGUMENT;
+            }
+            await _display.flushLayers();
+            destname = "layer"+Convert.ToString(_id)+":T"+Convert.ToString(x)+","+Convert.ToString(y)+","+((int)(anchor)).ToString()+",";
+            return await _display.upload(destname, YAPI.DefaultEncoding.GetBytes(text));
+        }
         return await this.command_flush("T"+Convert.ToString(x)+","+Convert.ToString(y)+","+((int)(anchor)).ToString()+","+text+""+((char)(27)).ToString());
     }
 
@@ -637,49 +649,6 @@ public class YDisplayLayer
 
     /**
      * <summary>
-     *   Draws a bitmap at the specified position.
-     * <para>
-     *   The bitmap is provided as a binary object,
-     *   where each pixel maps to a bit, from left to right and from top to bottom.
-     *   The most significant bit of each byte maps to the leftmost pixel, and the least
-     *   significant bit maps to the rightmost pixel. Bits set to 1 are drawn using the
-     *   layer selected pen color. Bits set to 0 are drawn using the specified background
-     *   gray level, unless -1 is specified, in which case they are not drawn at all
-     *   (as if transparent).
-     * </para>
-     * </summary>
-     * <param name="x">
-     *   the distance from left of layer to the left of the bitmap, in pixels
-     * </param>
-     * <param name="y">
-     *   the distance from top of layer to the top of the bitmap, in pixels
-     * </param>
-     * <param name="w">
-     *   the width of the bitmap, in pixels
-     * </param>
-     * <param name="bitmap">
-     *   a binary object
-     * </param>
-     * <param name="bgcol">
-     *   the background gray level to use for zero bits (0 = black,
-     *   255 = white), or -1 to leave the pixels unchanged
-     * </param>
-     * <returns>
-     *   <c>YAPI.SUCCESS</c> if the call succeeds.
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns a negative error code.
-     * </para>
-     */
-    public virtual async Task<int> drawBitmap(int x,int y,int w,byte[] bitmap,int bgcol)
-    {
-        string destname;
-        destname = "layer"+Convert.ToString(_id)+":"+Convert.ToString(w)+","+Convert.ToString(bgcol)+"@"+Convert.ToString(x)+","+Convert.ToString(y);
-        return await _display.upload(destname, bitmap);
-    }
-
-    /**
-     * <summary>
      *   Draws a GIF image provided as a binary buffer at the specified position.
      * <para>
      *   If the image drawing must be included in an animation sequence, save it
@@ -705,8 +674,80 @@ public class YDisplayLayer
     public virtual async Task<int> drawGIF(int x,int y,byte[] gifimage)
     {
         string destname;
+        await _display.flushLayers();
         destname = "layer"+Convert.ToString(_id)+":G,-1@"+Convert.ToString(x)+","+Convert.ToString(y);
         return await _display.upload(destname, gifimage);
+    }
+
+    /**
+     * <summary>
+     *   Draws a bitmap at the specified position.
+     * <para>
+     *   The bitmap is provided as a binary object,
+     *   where each pixel maps to a bit, from left to right and from top to bottom.
+     *   The most significant bit of each byte maps to the leftmost pixel, and the least
+     *   significant bit maps to the rightmost pixel. Bits set to 1 are drawn using the
+     *   layer selected pen color. Bits set to 0 are drawn using the specified background
+     *   color, unless <c>NO_INK</c> (-1) is specified, in which case they are not
+     *   drawn at all (as if transparent).
+     * </para>
+     * </summary>
+     * <param name="x">
+     *   the distance from left of layer to the left of the bitmap, in pixels
+     * </param>
+     * <param name="y">
+     *   the distance from top of layer to the top of the bitmap, in pixels
+     * </param>
+     * <param name="w">
+     *   the width of the bitmap, in pixels
+     * </param>
+     * <param name="bitmap">
+     *   a binary object
+     * </param>
+     * <param name="bgcol">
+     *   the RGB background color to use for zero bits, as a 24-bit RGB value,
+     *   or one of the constants <c>NO_INK</c>, <c>FG_INK</c> or <c>BG_INK</c>
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual async Task<int> drawBitmap(int x,int y,int w,byte[] bitmap,int bgcol)
+    {
+        string destname;
+        int r;
+        int g;
+        int b;
+        string rgbcol;
+        if ((w < 0) || (w > 512)) {
+            _display._throw(YAPI.INVALID_ARGUMENT, "bitmap width must be in range 1..512");
+            return YAPI.INVALID_ARGUMENT;
+        }
+        await _display.flushLayers();
+        if (bgcol <= 255) {
+            if (bgcol >= -1) {
+                // backward-compatible behaviour (gray level)
+                rgbcol = ""+Convert.ToString(bgcol);
+            } else {
+                // background color or foreground color
+                if (bgcol <= -3) {
+                    rgbcol = "#.";
+                } else {
+                    rgbcol = "#-";
+                }
+            }
+        } else {
+            // RGB color
+            r = ((bgcol >> 20) & 15);
+            g = ((bgcol >> 12) & 15);
+            b = ((bgcol >> 4) & 15);
+            rgbcol = "#"+String.Format("{0:x}",r)+""+String.Format("{0:x}",g)+""+String.Format("{0:x}",b);
+        }
+        destname = "layer"+Convert.ToString(_id)+":"+Convert.ToString(w)+","+rgbcol+"@"+Convert.ToString(x)+","+Convert.ToString(y);
+        return await _display.upload(destname, bitmap);
     }
 
     /**
@@ -818,7 +859,7 @@ public class YDisplayLayer
 
     /**
      * <summary>
-     *   Close the currently open polygon, fill its content the fill color currently
+     *   Closes the currently open polygon, fill its content the fill color currently
      *   selected for the layer, and draw its outline using the selected line color.
      * <para>
      * </para>
@@ -857,6 +898,18 @@ public class YDisplayLayer
      */
     public virtual async Task<int> consoleOut(string text)
     {
+        int textlen;
+        string destname;
+        textlen = (text).Length;
+        if (textlen > 60) {
+            if (textlen > 1000) {
+                _display._throw(YAPI.INVALID_ARGUMENT, "text too large (max 1000 characters)");
+                return YAPI.INVALID_ARGUMENT;
+            }
+            await _display.flushLayers();
+            destname = "layer"+Convert.ToString(_id)+":!";
+            return await _display.upload(destname, YAPI.DefaultEncoding.GetBytes(text));
+        }
         return await this.command_flush("!"+text+""+((char)(27)).ToString());
     }
 

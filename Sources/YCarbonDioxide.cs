@@ -66,7 +66,7 @@ public class YCarbonDioxide : YSensor
      *   invalid abcPeriod value
      * </summary>
      */
-    public const  int ABCPERIOD_INVALID = YAPI.INVALID_UINT;
+    public const  int ABCPERIOD_INVALID = YAPI.INVALID_INT;
     /**
      * <summary>
      *   invalid command value
@@ -444,7 +444,7 @@ public class YCarbonDioxide : YSensor
      */
     public virtual async Task<int> triggerForcedCalibration(double refVal)
     {
-        return await this.set_command("F"+Convert.ToString((int) Math.Round(1000*refVal))+"C");
+        return await this.set_command("F"+Convert.ToString((int) Math.Round(refVal))+"C");
     }
 
     /**
